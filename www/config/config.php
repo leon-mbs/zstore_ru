@@ -7,7 +7,7 @@ $_config['common']['salt']     = 'qwerty';
 $_config['common']['loglevel'] = 100  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;
  
 $_config['db']['host'] = 'localhost'  ;
-$_config['db']['name'] = 'zstore'  ;
+$_config['db']['name'] = 'zstoreru'  ;
 $_config['db']['user'] = 'root'  ;
 $_config['db']['pass'] = 'root'  ;
 

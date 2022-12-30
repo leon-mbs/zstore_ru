@@ -1,4 +1,4 @@
-update  metadata set  menugroup ='Продажі' where  meta_name='ItemOrder';
+update  metadata set  menugroup ='Продажи' where  meta_name='ItemOrder';
 
 DROP VIEW cust_acc_view  ;
 
