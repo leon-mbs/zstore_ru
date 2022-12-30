@@ -136,9 +136,9 @@ class Util
  
  
 
-    public static function money2str_ua($number) {
+    public static function money2str_ru($number) {
 
-        return money2str_ua($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
+        return money2str_ru($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
     }
 
     /**
@@ -178,7 +178,7 @@ class Util
         return $tel;
     }
 
-    //генерация слуяайного цвета
+    //генерация случайного цвета
     public static function genColor() {
         $color = dechex(rand(0x000000, 0xFFFFFF));
         return $color;
