@@ -38,7 +38,7 @@ class Order extends Base
         
         $form = $this->add(new Form('orderform'));
         $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
-     //   $form->add(new DropDownChoice('payment', array(),0)) ;
+
         
 
         if ($this->_tvars["isfood"]) {
@@ -130,8 +130,6 @@ class Order extends Base
         $firstname = trim($this->orderform->firstname->getText());
         $lastname = trim($this->orderform->lastname->getText());
         $delivery = $this->orderform->delivery->getValue();
-      //  $payment = $this->orderform->payment->getValue();
-        $payment=1;
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
@@ -139,11 +137,7 @@ class Order extends Base
             $this->setError("enterdelivery");
             return;
         }
-        if ($payment == 0) {
-
-            $this->setError("enterpayment");
-            return;
-        }
+ 
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
 
             $this->setError("enteraddress");
@@ -302,12 +296,7 @@ class Order extends Base
     
         System::setSuccessMsg( \App\Helper::l("createdorder"), $number) ;
           
-        if($payment == 1) {
-            
-            App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay",array($order->document_id)) ;
-              
-        }
-        
+     
         
     }
 

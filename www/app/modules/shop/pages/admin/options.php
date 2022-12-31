@@ -50,17 +50,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new CheckBox('usemainpage'));
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
         
-        
-        $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
-        $this->pay->add(new DropDownChoice('paysystem',array() ))->onChange($this, 'onPaySystem');
-        $this->pay->add(new DropDownChoice('mf', \App\Entity\MoneyFund::getList(2) ));
-        $this->pay->add(new TextInput('lqpublic'  ));
-        $this->pay->add(new TextInput('lqpriv'  ));
-        $this->pay->add(new TextInput('wpsecret'  ));
-        $this->pay->add(new TextInput('wpmacc'  ));
-        $this->pay->add(new TextInput('wpsite'  ));
-        
-        
+   
    
  
         $shop = System::getOptions("shop");
@@ -87,52 +77,11 @@ class Options extends \App\Pages\Base
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
         
-        $this->pay->paysystem->setValue($shop['paysystem']);
-        $this->pay->mf->setValue($shop['mf_id']);
-        $this->pay->lqpublic->setText($shop['lqpublic']);
-        $this->pay->lqpriv->setText($shop['lqpriv']);
-        $this->pay->wpsecret->setText($shop['wpsecret']);
-        $this->pay->wpmacc->setText($shop['wpmacc']);
-        $this->pay->wpsite->setText($shop['wpsite']);
-        $this->onPaySystem(null);
-        
 
     
     }
 
-    public function savePayOnClick($sender) {
-        $shop = System::getOptions("shop");
-        if (!is_array($shop)) {
-            $shop = array();
-        }
-        $shop['paysystem'] = $sender->paysystem->getValue();
-        $shop['mf_id'] =  intval($sender->mf->getValue() ); 
-        if($shop['mf_id']==0) {
-            $this->setError('noselmf');
-            return;
-        }
-        $shop['lqpriv'] =  $sender->lqpriv->getText() ; 
-        $shop['lqpublic'] = $sender->lqpublic->getText() ; 
-        $shop['wpsecret'] = $sender->wpsecret->getText() ; 
-        $shop['wpmacc'] = $sender->wpmacc->getText() ; 
-        $shop['wpsite'] = $sender->wpsite->getText() ; 
-
-        System::setOptions("shop", $shop);
-        $this->setSuccess('saved');
-        
-    }
     
-    public function onPaySystem($sender) {
-   
-         $ps = intval($this->pay->paysystem->getValue()) ;
-         $this->pay->mf->setVisible($ps>0);
-         $this->pay->lqpriv->setVisible($ps==2);
-         $this->pay->lqpublic->setVisible($ps==2);
-         $this->pay->wpsecret->setVisible($ps==1);
-         $this->pay->wpmacc->setVisible($ps==1);
-         $this->pay->wpsite->setVisible($ps==1);
-
-    }    
     
     public function saveShopOnClick($sender) {
         $shop = System::getOptions("shop");
