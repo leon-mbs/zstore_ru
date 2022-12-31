@@ -4,7 +4,7 @@ Zippy Store
 Предназначена для автоматизации малого бизнеса с упрощенной формой учета, не использующего
 полноценный бухгалтерский учет.
    
-Русифицированная (в  процессе перевода)   версия проекта: [https://github.com/leon-mbs/zstore](https://github.com/leon-mbs/zstore)
+Русифицированная (в  процессе перевода)   версия проекта: [https://github.com/leon-mbs/zstore](https://github.com/leon-mbs/zstore)  
 Домашняя страница: [https://zippy.com.ua/zstore](https://zippy.com.ua/zstore)
 
 ####
@@ -39,10 +39,10 @@ Zippy Store
 Настройка системы.
 --------------------
 
-   Создать БД (кодирование utf8_general_ci), выполнить SQL скрипты (папка DB) сначала структуру db.sql затем данные инициализации initdata.sql .
+   Создать БД (кодировка utf8_general_ci), выполнить SQL скрипты (папка DB) сначала структуру db.sql затем данные инициализации initdata.sql .
   
    Скопировать содержимое папки www в корневой каталог сайта.
-   Выполнить composer.json для загрузки сторонних библиотек (или скопировать  готовую  папку  vendor с  [https://zippy.com.ua/download/fullzstore.zip](архива)  ).
+   Выполнить composer.json для загрузки сторонних библиотек (или скопировать  готовую  папку  vendor с  [архива](https://zippy.com.ua/download/fullzstore.zip)  ).
 
   
    Конфигурационные файлы находятся в папке config.
