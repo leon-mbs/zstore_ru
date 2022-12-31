@@ -32,7 +32,7 @@
    {{#edrpou}}
     <tr>
         <td></td>
-        <td valign="top">ЄДРПОУ</td>
+        <td valign="top">ОКПО</td>
         <td colspan="7">{{edrpou}}</td>
     </tr>
      {{/edrpou}}       
@@ -57,7 +57,7 @@
     {{#fedrpou}}
     <tr>
         <td></td>
-        <td valign="top">ЄДРПОУ</td>
+        <td valign="top">ОКПО</td>
         <td colspan="7">{{fedrpou}}</td>
     </tr>
      {{/fedrpou}}     

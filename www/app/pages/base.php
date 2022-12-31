@@ -106,10 +106,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["note"] = $modules['note'] == 1;
         $this->_tvars["issue"] = $modules['issue'] == 1;
 
-        $this->_tvars["ppo"] = $modules['ppo'] == 1;
         $this->_tvars["np"] = $modules['np'] == 1;
-        $this->_tvars["promua"] = $modules['promua'] == 1;
-        $this->_tvars["paperless"] = $modules['paperless'] == 1;
+        $this->_tvars["ppo"] = false;
 
       //  $printer = System::getOptions('printer');
 
@@ -134,27 +132,18 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["woocomerce"] = false;
         }
   
-        if (strpos(System::getUser()->modules, 'ppo') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["ppo"] = false;
-        }
+      
         if (strpos(System::getUser()->modules, 'np') === false && System::getUser()->rolename != 'admins') {
             $this->_tvars["np"] = false;
         }
-        if (strpos(System::getUser()->modules, 'promua') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["promua"] = false;
-        }
-        if (strpos(System::getUser()->modules, 'paperless') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["paperless"] = false;
-        }
+   
 
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||
             $this->_tvars["note"] ||
             $this->_tvars["issue"] ||
-            $this->_tvars["promua"] ||
-            $this->_tvars["paperless"] ||
-            $this->_tvars["ppo"] ||
+
             $this->_tvars["np"]
         ) {
             $this->_tvars["showmodmenu"] = true;

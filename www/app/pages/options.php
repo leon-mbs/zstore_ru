@@ -67,7 +67,7 @@ class Options extends \App\Pages\Base
 
 
         
-        $this->common->add(new CheckBox('printoutqrcode'));
+
         $this->common->add(new CheckBox('nocheckarticle'));
         
         $this->common->add(new CheckBox('allowminus'));
@@ -112,7 +112,7 @@ class Options extends \App\Pages\Base
 
 
         
-        $this->common->printoutqrcode->setChecked($common['printoutqrcode']);
+
         $this->common->nocheckarticle->setChecked($common['nocheckarticle']);
         
         $this->common->showactiveusers->setChecked($common['showactiveusers']);
@@ -281,10 +281,7 @@ class Options extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnote', $modules['note']));
         $this->modules->add(new CheckBox('modissue', $modules['issue']));
         $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
-        $this->modules->add(new CheckBox('modppo', $modules['ppo']));
         $this->modules->add(new CheckBox('modnp', $modules['np']));
-        $this->modules->add(new CheckBox('modpromua', $modules['promua']));
-        $this->modules->add(new CheckBox('modpaperless', $modules['paperless']));
        
         
         
@@ -323,7 +320,7 @@ class Options extends \App\Pages\Base
         $common['usemobilescanner'] = $this->common->usemobilescanner->isChecked() ? 1 : 0;
         $common['useimages'] = $this->common->useimages->isChecked() ? 1 : 0;
 
-        $common['printoutqrcode'] = $this->common->printoutqrcode->isChecked() ? 1 : 0;
+
         
         $common['nocheckarticle'] = $this->common->nocheckarticle->isChecked() ? 1 : 0;
 
@@ -536,10 +533,8 @@ class Options extends \App\Pages\Base
          $modules['ocstore'] = $sender->modocstore->isChecked() ? 1:0;
          $modules['shop'] = $sender->modshop->isChecked() ? 1:0;
          $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1:0;
-         $modules['ppo'] = $sender->modppo->isChecked() ? 1:0;
+
          $modules['np'] = $sender->modnp->isChecked() ? 1:0;
-         $modules['promua'] = $sender->modpromua->isChecked() ? 1:0;
-         $modules['paperless'] = $sender->modpaperless->isChecked() ? 1:0;
          $modules['issue'] = $sender->modissue->isChecked() ? 1:0;
          $modules['note'] = $sender->modnote->isChecked() ? 1:0;
          

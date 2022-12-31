@@ -201,14 +201,6 @@
 
 
                      
-                              {{#ppo}} 
-                            <div class="form-check">
-                                <input zippy="printoutqrcode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="printoutqrcode">Друкувати QR коди  на  фiскальних чеках</label>
-                                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Дозволяє за допомогою сканера QR кода  знайти  документ на  сайтi податковоi "></i>
-                            </div>
-                               {{/ppo}}
                        
               
                             <div class="form-group  "><br>
@@ -281,27 +273,15 @@
                                 <label class="form-check-label" for="modwoocomerce"> Iнтеграція з woocomerce
                                 <a href="https://zippy.com.ua/ua/ext#5" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
-                            <div class="form-check">
-                                <input zippy="modppo" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modppo"> Фіскалізація (ПРРО)
-                                <a href="https://zippy.com.ua/ua/ext#6" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
+                            {{#hideblock}}
                             <div class="form-check">
                                 <input zippy="modnp" type="checkbox" class="form-check-input">
                                 <label class="form-check-label" for="modnp"> Iнтеграція з Нова Пошта
                                 <a href="https://zippy.com.ua/ua/ext#8" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
                             </div>
+                            {{/hideblock}}
                             
-                            <div class="form-check">
-                                <input zippy="modpromua" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modpromua"> Iнтеграція з PromUA
-                                <a href="https://zippy.com.ua/ua/ext#9" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
-                           <div class="form-check">
-                                <input zippy="modpaperless" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="modpaperless"> Iнтеграція з paperless.com.ua
-                                <a href="https://zippy.com.ua/ua/ext#7" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
-                            </div>
+                      
                             
                           
                         

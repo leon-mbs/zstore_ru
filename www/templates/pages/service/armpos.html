@@ -50,13 +50,7 @@
 
             <h4 class="mb-2  ">Оформлення  чеку</h4>
             <a zippy="tochecklist"  ><i class="fa fa-list"></i> Список  чекiв</a>    &nbsp;  &nbsp; &nbsp;  &nbsp; 
-             {{#ppo}}
-                
-                        <a zippy="openshift"><i class="fa fa-bullhorn"/> Вiдкрити змiну</a>
-                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"/> Закрити змiну</a>
-                        
-             
-                {{/ppo}}
+     
             <form zippy="form2" class="mt-2 ">
              
                 <div class="row">
@@ -265,12 +259,7 @@
                         <div class="form-group  ">
                             <input type="button" value="< назад" zippy="cancel2" class="btn  btn-outline-info">
                             &nbsp;&nbsp;<input type="submit" value="Зберегти  " zippy="save" class="btn  btn-info">
-                            {{#ppo}}
-                            &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Вiдкласти  фiскалiзацiю  
-                           <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="На випадок збою інтернету фіскалізацію можна пропустити. Чек може бути фіскалізований ДО закриття зміни на сторінці ручного закриття зміни в модулі РРО "></i>
-                                              
-                            {{/ppo}}
+                      
                             
                         </div>
 
@@ -586,15 +575,7 @@
                 $('#save').attr('disabled', 'disabled');
                 return true;
             }
-            function check_openshift(ele) {
-                
-                $('#openshift').attr('disabled', 'disabled');
-                return true;
-            }
-            function check_closeshift(ele) {
-                $('#closeshift').attr('disabled', 'disabled');
-                return true;
-            }
+    
 
         </script>
 

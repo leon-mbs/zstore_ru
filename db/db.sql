@@ -927,40 +927,6 @@ CREATE TABLE `poslist` (
   PRIMARY KEY (`pos_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `ppo_zformrep`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ppo_zformrep` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `createdon` date NOT NULL,
-  `fnpos` varchar(255) NOT NULL,
-  `fndoc` varchar(255) NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
-  `cnt` smallint(6) NOT NULL,
-  `ramount` decimal(10,2) NOT NULL,
-  `rcnt` smallint(6) NOT NULL,
-  `sentxml` longtext NOT NULL,
-  `taxanswer` longblob NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `ppo_zformstat`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ppo_zformstat` (
-  `zf_id` int(11) NOT NULL AUTO_INCREMENT,
-  `pos_id` int(11) NOT NULL,
-  `checktype` int(11) NOT NULL,
-  `createdon` datetime NOT NULL,
-  `amount0` decimal(10,2) NOT NULL,
-  `amount1` decimal(10,2) NOT NULL,
-  `amount2` decimal(10,2) NOT NULL,
-  `amount3` decimal(10,2) NOT NULL,
-  `document_number` varchar(255) DEFAULT NULL,
-  `fiscnumber` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`zf_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `prodproc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
