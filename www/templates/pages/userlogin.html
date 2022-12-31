@@ -50,7 +50,7 @@
 
                     <form zippy="loginform">
                         <div class="form-group  ">
-                            <label for="userlogin">Логін</label>
+                            <label for="userlogin">Логин</label>
                             <input zippy="userlogin" required="required" class="form-control"  >
                            
                         </div>
@@ -64,7 +64,7 @@
                             <input zippy="capchacode" required="required" class="form-control mr-4"
                                    placeholder="Введiть код">
                             <div class="input-group-append">
-                                <img zippy="capcha" style="cursor:pointer" title="Оновити..."/>
+                                <img zippy="capcha" style="cursor:pointer" title="Обновить..."/>
                             </div>
                         </div>
                         {{/capcha}}
@@ -74,13 +74,13 @@
                                 <div class="icheck-primary">
                                     <input type="checkbox" zippy="remember">
                                     <label for="remember">
-                                        Запам'ятати
+                                        Запомнить
                                     </label>
                                 </div>
                             </div>
                             <!-- /.col -->
                             <div class="col-4">
-                                <button type="submit" class="btn btn-primary btn-block btn-flat">Увійти</button>
+                                <button type="submit" class="btn btn-primary btn-block btn-flat">Войти</button>
                             </div>
                             <!-- /.col -->
                         </div>
@@ -88,8 +88,9 @@
                     {{#isnewversion}}
                     <div class="row">
                         <div class="col-12">
-                            <span> Доступна нова версiя </span> <span class="badge badge-info"> {{newversion}} </span> <a
-                                href="https://zippy.com.ua/ua/zstore#newver">Перейти...</a>
+                            <span> Доступная новая версия </span> <span class="badge badge-info"> {{newversion}} </span> 
+                            <a href="https://github.com/leon-mbs/zstore_ru/releases">Перейти...</a>
+
 
                         </div>
                     </div>

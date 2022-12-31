@@ -24,7 +24,7 @@
         <script src="/assets/js/toastr.min.js" type="text/javascript"></script>
         <script src="/assets/js/printThis.js" type="text/javascript"></script>
         <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
-        <script src="/assets/js/summernote/lang/summernote-uk-UA.js" type="text/javascript"></script>
+        <script src="/assets/js/summernote/lang/summernote-ru-RU.js" type="text/javascript"></script>
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
         <script src="/assets/js/vue/vue.min.js"></script>     
         <script src="/assets/js/vue/httpvueloader.js"></script>     
@@ -69,9 +69,9 @@
                     {{#usebranch}}
                     <li class="nav-item">
                         <form zippy="nbform" class="form-inline ">
-                            Філія
+                            Филиал
                             <select zippy="nbbranch" class="form-control ml-1 ">
-                                <option value="0">Всі доступні</option>
+                                <option value="0">Все доступные</option>
                             </select>
 
 
@@ -80,7 +80,7 @@
                     {{/usebranch}}
                     {{#showactiveusers}}     
                     <li class="nav-item dropdown">
-                        <a title="Активнi користувачi" class="nav-link" data-toggle="dropdown" href="#">
+                        <a title="Активные пользователи" class="nav-link" data-toggle="dropdown" href="#">
                             <i class="fa fa-users"></i>
                             <span  class="badge badge-success navbar-badge">{{activeuserscnt}}</span>
                         </a>
@@ -104,7 +104,7 @@
                     {{#showchat}} 
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/Chat">
-                            <i title="Загальний чат" class="fa fa-comments "></i>
+                            <i title="Общий чат" class="fa fa-comments "></i>
                             {{#chatcnt}}
                             <span class="badge badge-success  navbar-badge">{{chatcnt}}</span>
                             {{/chatcnt}}
@@ -115,7 +115,7 @@
                     {{#taskcnt}} 
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/Jobs">
-                            <i title="Мої завдання" class="fa fa-gavel "></i>
+                            <i title="Мои задания" class="fa fa-gavel "></i>
 
                             <span class="badge badge-danger  navbar-badge">{{taskcnt}}</span>
 
@@ -125,7 +125,7 @@
 
                     <li class="nav-item  ">
                         <a class="nav-link  " href="/index.php?p=App/Pages/NotifyList">
-                            <i title="Повiдомлення" class="fa fa-bell "></i>
+                            <i title="Уведомления" class="fa fa-bell "></i>
                             {{#notcnt}}
                             <span class="badge badge-danger  navbar-badge">{{notcnt}}</span>
                             {{/notcnt}}
@@ -137,28 +137,28 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/Jobs"><i
-                                        class="fa fa-gavel"></i>  Мої завдання</a>
+                                        class="fa fa-gavel"></i>  Мои задания</a>
                             </li>
                              {{#showtimesheet}} 
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/TimeSheet"><i
-                                        class="fa fa-calendar-alt"></i> Облiк роб. часу</a>
+                                        class="fa fa-calendar-alt"></i> Учет раб. времени</a>
                             </li>
                             {{/showtimesheet}} 
 
                             {{#isemp}}
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/EmpAcc"><i
-                                        class="fa fa-money-bill-alt"></i> Особовий рахунок</a>
+                                        class="fa fa-money-bill-alt"></i> Личный счет</a>
                             </li>
                             {{/isemp}}
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/UserProfile"><i class="fa fa-user"></i>
-                                    Мій профіль</a>
+                                    Мой профиль</a>
                             </li>
                             <li class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item  " zippy="logout"><i class="fa fa-door-open"></i> Вийти</a>
+                                <a class="dropdown-item  " zippy="logout"><i class="fa fa-door-open"></i> Выйти</a>
                             </li>
                         </ul>
                     </li>
@@ -186,7 +186,7 @@
                                 <a href="/index.php" class="nav-link">
                                     <i class="nav-icon fa fa-home"></i>
                                     <p>
-                                        Головна
+                                        Главная
                                     </p>
                                 </a>
                             </li>
@@ -204,7 +204,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-file"></i>
                                     <p>
-                                        Документи
+                                        Документы
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -252,7 +252,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-chart-bar"></i>
                                     <p>
-                                        Звіти
+                                        Отчеты
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -301,7 +301,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-list"></i>
                                     <p>
-                                        Журнали
+                                        Журналы
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -348,7 +348,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-book"></i>
                                     <p>
-                                        Довідники
+                                        Справочники
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -398,7 +398,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-project-diagram"></i>
                                     <p>
-                                        Сервісні сторінки
+                                        Снрвисные страницы
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -446,7 +446,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-puzzle-piece"></i>
                                     <p>
-                                        Модулі
+                                        Модули
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -465,13 +465,13 @@
                                             <li class="nav-item">
                                                 <a href="/shop" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Перейти  до  каталогу</p>
+                                                    <p>&nbsp;&nbsp;Перейти  в  каталог</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/Admin/GroupList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Атрибути товарiв</p>
+                                                    <p>&nbsp;&nbsp;Атрибуты товаров</p>
                                                 </a>
                                             </li>
                                             <li>
@@ -483,7 +483,7 @@
                                             <li>
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/Admin/VarList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Варiацiї товарiв</p>
+                                                    <p>&nbsp;&nbsp;Вариации товаров</p>
                                                 </a>
                                             </li>
                                                 
@@ -498,13 +498,13 @@
                                             <li>
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Custom" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Кастомiзацiя</p>
+                                                    <p>&nbsp;&nbsp;Кастомизация</p>
                                                 </a>
                                             </li>     
                                             <li>
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                    <p>&nbsp;&nbsp;Настройки</p>
                                                 </a>
                                             </li>     
                                             {{/isadmins}}
@@ -516,7 +516,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Обмін з ОпенКарт
+                                            <p>Обмен з ОпенКарт
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -526,20 +526,20 @@
                                                <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/OCStore/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                    <p>&nbsp;&nbsp;Настройки</p>
                                                 </a>
                                             </li>
                                                {{/isadmins}}
                                             <li>
                                                 <a href="/index.php?p=App/Modules/OCStore/Orders" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Замовлення</p>
+                                                    <p>&nbsp;&nbsp;Заказы</p>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="/index.php?p=App/Modules/OCStore/Items" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Товари</p>
+                                                    <p>&nbsp;&nbsp;Товары</p>
                                                 </a>
                                             </li>
                                         </ul>
@@ -560,20 +560,20 @@
                                                <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/WC/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                    <p>&nbsp;&nbsp;Настройки</p>
                                                 </a>
                                                  {{/isadmins}}
                                             </li>
                                             <li>
                                                 <a href="/index.php?p=App/Modules/WC/Orders" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Замовлення</p>
+                                                    <p>&nbsp;&nbsp;Заказы</p>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="/index.php?p=App/Modules/WC/Items" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Товари</p>
+                                                    <p>&nbsp;&nbsp;Товары</p>
                                                 </a>
                                             </li>
                                         </ul>
@@ -584,7 +584,7 @@
                                     <li class="nav-item  has-treeview">
                                         <a href="/index.php?p=App/Modules/Note/Pages/Main" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>База знань</p>
+                                            <p>База знаний</p>
                                         </a>
                                     </li>
                                     {{/note}}
@@ -592,7 +592,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Проекти та завдання
+                                            <p>Проекты и задачи
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -601,16 +601,16 @@
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/ProjectList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Проекти</p>
+                                                    <p>&nbsp;&nbsp;Проекты</p>
                                                 </a>
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/IssueList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Завдання</p>
+                                                    <p>&nbsp;&nbsp;Задачи</p>
                                                 </a>
                                                
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/TimeSheet" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Облік  часу</p>
+                                                    <p>&nbsp;&nbsp;Учет времени</p>
                                                 </a>
                                               
                                              
@@ -626,7 +626,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Нова Пошта
+                                            <p>Новаяф Почта
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -635,13 +635,13 @@
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/NP/TTNList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Перелiк доставок</p>
+                                                    <p>&nbsp;&nbsp;Доставки</p>
                                                 </a>
                                             </li>     {{#isadmins}}
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/NP/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Налаштування</p>
+                                                    <p>&nbsp;&nbsp;Настройки</p>
                                                 </a>
                                             </li>      {{/isadmins}}
 
@@ -670,7 +670,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Налаштування
+                                            <p>Настройки
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -680,13 +680,13 @@
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Pages/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Загальнi</p>
+                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Общие</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Pages/MenuList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Налаштування меню</p>
+                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Настройки меню</p>
                                                 </a>
                                             </li>
                                         </ul>
@@ -696,7 +696,8 @@
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Компанії</p>
+                                            <p>&nbsp;&nbsp;Компании</p>
+                                        </a>
                                         </a>
                                     </li>
 
@@ -705,7 +706,7 @@
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/BranchList" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Філії</p>
+                                            <p>&nbsp;&nbsp;Филиалы</p>
                                         </a>
                                     </li>
                                     {{/usebranch}}
@@ -714,33 +715,33 @@
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Roles" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Ролі</p>
+                                            <p>&nbsp;&nbsp;Роли</p>
                                         </a>
                                     </li>
                                     {{/isadmin}}
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Users" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Користувачі</p>
+                                            <p>&nbsp;&nbsp;Пользователи</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/PosList" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;POS термінали</p>
+                                            <p>&nbsp;&nbsp;POS терминалы</p>
                                         </a>
                                     </li>
 
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/Subscribes" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Пiдписки</p>
+                                            <p>&nbsp;&nbsp;Подписки</p>
                                         </a>
                                     </li>                            
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/SystemLog" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Системний лог</p>
+                                            <p>&nbsp;&nbsp;Системный лог</p>
                                         </a>
                                     </li>
                                 </ul>
@@ -797,7 +798,7 @@
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Вiдправити повiдомлення</h5>
+                            <h5 class="modal-title">Отправить сообщение</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -805,20 +806,20 @@
                         <div class="modal-body">
                              <form id="sendmsgform"  >
                                <div class="form-group">
-                                  <label  >Отримувач</label>
+                                  <label  >Получатель</label>
                                   <input  id="sendmsgrecname"  name="sendmsgrecname"  readonly class="form-control-plaintext"  />  
                                   <input  id="sendmsgrecid" name="sendmsgrecid" type="hidden"     />  
                                </div>
                               <div class="form-group">
-                                  <label for="sendmsgtext">Повiдомлення</label>
+                                  <label for="sendmsgtext">Сообщение</label>
                                   <textarea required="required" class="form-control" name="sendmsgtext" id="sendmsgtext"  >  </textarea>
                                </div>
                              
                              </form>
                         </div>
                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
-                    <button onclick="sendSendMsg()" type="submit" class="btn btn-primary">Вiдправити</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    <button onclick="sendSendMsg()" type="submit" class="btn btn-primary">Отправить</button>
                   </div>
                     </div>
                 </div>
@@ -885,7 +886,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
                 callPageMethod('sendMsg',null,formdata,(data)=> 
                 {
                          
-                     toastr.success('Вiдправлено','',{'timeOut':'2000'})     
+                     toastr.success('Отправлено','',{'timeOut':'2000'})     
                     
          
                 } )
@@ -976,7 +977,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
               })
               .then((data) => {
                  if(data == ""){
-                     toastr.success("Вiдправлено на принтер" )   
+                     toastr.success("ОТправлено на принтер" )   
                  }   else {
                     toastr.error(data )        
                  }
