@@ -213,33 +213,16 @@ class Options extends \App\Pages\Base
         $this->sms->add(new SubmitButton('smssubmit'))->onClick($this, 'saveSMSOnClick');
         $this->sms->add(new SubmitButton('smstest'))->onClick($this, 'testSMSOnClick');
         $this->sms->add(new Label('semysmssite'));
-        $this->sms->add(new Label('smsclubsite'));
-        $this->sms->add(new Label('smsflysite'));
-        $this->sms->add(new TextInput('smsclubtoken'));
-        $this->sms->add(new TextInput('smsclublogin'));
-        $this->sms->add(new TextInput('smsclubpass'));
-        $this->sms->add(new TextInput('smscluban'));
-        $this->sms->add(new TextInput('smsclubvan'));
+
         $this->sms->add(new TextInput('smssemytoken'));
         $this->sms->add(new TextInput('smssemydevid'));
         $this->sms->add(new TextInput('smstestphone'));
         $this->sms->add(new TextInput('smstesttext'));
-        $this->sms->add(new TextInput('flysmslogin'));
-        $this->sms->add(new TextInput('flysmspass'));
-        $this->sms->add(new TextInput('flysmsan'));
-        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",  '2' => "SMSClub",  '3' => 'SMS-Fly'), 0))->onChange($this, 'onSMSType');
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS"), 0))->onChange($this, 'onSMSType');
         $sms = System::getOptions("sms");
 
         $this->sms->smssemytoken->setText($sms['smssemytoken']);
         $this->sms->smssemydevid->setText($sms['smssemydevid']);
-        $this->sms->flysmslogin->setText($sms['flysmslogin']);
-        $this->sms->flysmspass->setText($sms['flysmspass']);
-        $this->sms->flysmsan->setText($sms['flysmsan']);
-        $this->sms->smsclubtoken->setText($sms['smsclubtoken']);
-        $this->sms->smsclublogin->setText($sms['smsclublogin']);
-        $this->sms->smsclubpass->setText($sms['smsclubpass']);
-        $this->sms->smscluban->setText($sms['smscluban']);
-        $this->sms->smsclubvan->setText($sms['smsclubvan']);
 
         $this->sms->smstype->setValue($sms['smstype']);
 
@@ -388,34 +371,16 @@ class Options extends \App\Pages\Base
         $type = $this->sms->smstype->getValue();
         $this->sms->smssemytoken->setVisible($type == 1);
         $this->sms->smssemydevid->setVisible($type == 1);
-        $this->sms->smsclubtoken->setVisible($type == 2);
-        $this->sms->smsclublogin->setVisible($type == 2);
-        $this->sms->smsclubpass->setVisible($type == 2);
-        $this->sms->smscluban->setVisible($type == 2);
-        $this->sms->smsclubvan->setVisible($type == 2);
-        $this->sms->flysmslogin->setVisible($type == 3);
-        $this->sms->flysmspass->setVisible($type == 3);
-        $this->sms->flysmsan->setVisible($type == 3);
-
         $this->sms->semysmssite->setVisible($type == 1);
-        $this->sms->smsclubsite->setVisible($type == 2);
-        $this->sms->smsflysite->setVisible($type == 3);
 
         //  $this->goAnkor('atype');
     }
 
     public function saveSMSOnClick($sender) {
         $sms = array();
-        $sms['smsclubtoken'] = $this->sms->smsclubtoken->getText();
-        $sms['smsclublogin'] = $this->sms->smsclublogin->getText();
-        $sms['smsclubpass'] = $this->sms->smsclubpass->getText();
-        $sms['smscluban'] = $this->sms->smscluban->getText();
-        $sms['smsclubvan'] = $this->sms->smsclubvan->getText();
+
         $sms['smssemytoken'] = $this->sms->smssemytoken->getText();
         $sms['smssemydevid'] = $this->sms->smssemydevid->getText();
-        $sms['flysmslogin'] = $this->sms->flysmslogin->getText();
-        $sms['flysmspass'] = $this->sms->flysmspass->getText();
-        $sms['flysmsan'] = $this->sms->flysmsan->getText();
         $sms['smstype'] = $this->sms->smstype->getValue();
 
         System::setOptions("sms", $sms);
