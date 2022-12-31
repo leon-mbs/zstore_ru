@@ -2,19 +2,8 @@
     <tr style="font-weight: bolder;">
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
-    {{#fiscalnumber}}
-    <tr>
-        <td colspan="3">Фiскальний чек</td>
-    </tr>
-    <tr>
-        <td colspan="3">ФН чека {{fiscalnumber}}</td>
-    </tr>
-    {{/fiscalnumber}}
-   {{#fiscalnumberpos}}
-    <tr>
-        <td colspan="3">ФН РРО {{fiscalnumberpos}}</td>
-    </tr>
-    {{/fiscalnumberpos}}
+ 
+ 
    
 
     <tr>

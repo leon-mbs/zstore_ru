@@ -3,14 +3,7 @@
 <font >a</font>
 <text>вiд {{date}}</text>
 <align>left</align>
-
-    {{#fiscalnumber}}
-<text>Фiскальний чек</text>
-<text>ФН чека {{fiscalnumber}}</text>
-    {{/fiscalnumber}}
-   {{#fiscalnumberpos}}
-<text>ФН РРО {{fiscalnumberpos}}</text>   
-    {{/fiscalnumberpos}}
+ 
 
 <text>{{firm_name}}</text>   
 <text>ІПН {{inn}}</text>   
