@@ -1,13 +1,13 @@
 <align>center</align>
 <font bold="true">a</font>
-<text>Квитанцiя про  оплату</text>
+<text>Квитанция об  оплате</text>
 <newline ></newline>
 <font >a</font>
 <align>left</align>
-<text>Пiдстава {{document_number}}</text>
+<text>Основание {{document_number}}</text>
 <text>{{firm_name}}</text>
 <text>{{customer_name}}</text>
-<text>Оплати:</text>
+<text>Оплаты:</text>
 {{#plist}}
 <row>
   <col length="22">{{pdate}}</col><col align="right" length="10" >{{ppay}}</col>
@@ -15,7 +15,7 @@
 {{/plist}}
 <font bold="true">a</font>
 <align>right</align>
-<text>Всього: {{pall}}</text>
+<text>Всего: {{pall}}</text>
 <newline ></newline>
 
  

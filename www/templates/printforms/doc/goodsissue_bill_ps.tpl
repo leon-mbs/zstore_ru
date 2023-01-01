@@ -1,12 +1,12 @@
 <align>center</align>
 <font bold="true">a</font>
-<text>Накладна {{document_number}}</text>
+<text>Накладная {{document_number}}</text>
 <font >a</font>
-<text>вiд {{date}}</text>
+<text>от {{date}}</text>
 <align>left</align>
-<text>Продавець: {{firm_name}}</text>
+<text>Продавец: {{firm_name}}</text>
 <text>Тел. {{phone}}</text>
-<text>Покупець: {{customer_name}}</text>
+<text>Покупатель: {{customer_name}}</text>
 <separator>-</separator>
  {{#_detail}}
  <text>{{tovar_name}}</text>
@@ -19,5 +19,5 @@
 <font bold="true">a</font>
 <separator>-</separator>
 <align>right</align>
-<text>Всього: {{total}}</text>
+<text>Всего: {{total}}</text>
 <newline ></newline>

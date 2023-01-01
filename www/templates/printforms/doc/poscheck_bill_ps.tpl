@@ -1,11 +1,11 @@
 <font bold="true">a</font>
 <text>Чек {{document_number}}</text>
 <font >a</font>
-<text>вiд {{date}}</text>
+<text>от {{date}}</text>
 <align>left</align>
 
 <text>{{firm_name}}</text>   
-<text>ІПН {{inn}}</text>   
+<text>ІНН {{inn}}</text>   
 <text>{{shopname}}</text>   
   {{#shopname}}
 <text>{{shopname}}</text>   
@@ -13,11 +13,11 @@
 <text>{{address}}</text>    
  
     {{#customer_name}}
-<text>Покупець: {{customer_name}}</text>    
+<text>Покупатель: {{customer_name}}</text>    
 
     {{/customer_name}}
-<text>Термінал: {{pos_name}}</text>    
-<text>Касир: {{username}}</text>    
+<text>Терминал: {{pos_name}}</text>    
+<text>Кассир: {{username}}</text>    
 
  
 
@@ -35,13 +35,13 @@
 <font bold="true">a</font>
 
 <align>right</align>
-<text>Всього: {{total}}</text>
+<text>Всего: {{total}}</text>
 <font >a</font>
  
 
     {{^prepaid}}
     {{#isdisc}}
-<text>Знижка: {{paydisc}}</text>
+<text>Скидка: {{paydisc}}</text>
  
     {{/isdisc}}
    {{#delbonus}}
@@ -49,34 +49,34 @@
  
     {{/delbonus}}
 
- <text>До сплати: {{payamount}}</text>
+ <text>К оплате: {{payamount}}</text>
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
- <text>Решта: {{exchange}}</text>
+ <text>Сдача: {{exchange}}</text>
  {{/exchange}} 
     {{/prepaid}}
     
     
         {{#nal}}
- <text>Форма оплати: готiвка</text>        
+ <text>Форма оплаты: нал</text>        
 
         {{/nal}}
         {{^nal}}
- <text>Форма оплати: банкiвська карта</text>        
+ <text>Форма оплаты: безнал</text>        
 
         {{/nal}}    
     
         {{#trans}}
- <text>№ транзакції  {{trans}}</text>        
+ <text>№ транзакции  {{trans}}</text>        
           
         {{/trans}}    
     {{#addbonus}}
- <text>Нараховано бонусiв: {{addbonus}}</text>
+ <text>Насчитано бонусов: {{addbonus}}</text>
  
     {{/addbonus}}
     {{#allbonus}}
 
- <text>Всього бонусiв: {{allbonus}}</text>
+ <text>Всего бонусов: {{allbonus}}</text>
  
     {{/allbonus}}
     
