@@ -1,19 +1,19 @@
 <html>
       <head>
-        <title> Імпорт номенклатури  </title>
+        <title> Импорт номенклатуры  </title>
 
     </head>
 
     <body>
         <div class="row">
             <div class="col-12   card">
-                <h3>Імпорт номенклатури
+                <h3>Импорт номенклатуры
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-html="true" data-content="Імпорт ТМЦ з Excel файлу.
-                       Для вказівки розташування даних необхідно вказати номери відповідних колонок. перевіряється на                                 унікальність артикул і найменування
-                       Може бути виконаний імпорт номенклатури в довідник, або якщо вказано кількість оприбуткування на склад.                       У цьому випадку створюється документ Оприбуткування товару
-                       <br>Також є можливість попереднього перегляду даних. "></i>
+                       data-placement="bottom" data-html="true" data-content="Импорт ТМЦ из Excel файла.
+                       Для указания размещения данных необходимо указать номера соответствующих колонок. Проверяется на уникальность артикулов и наименований.
+                       Может быть исполнен импорт номенклатуры в справочниках или если указано количество оприходования на складе. В этом случае создается документ Оприходование товара.
+                       <br>Также есть возможность предварительного просмотра данных. "></i>
                 </h3>
 
                 <br><br>
@@ -21,20 +21,20 @@
                     <div class="col-4">
 
                         <div class="form-group  ">
-                            <label for="itype">Тип імпорту</label>
+                            <label for="itype">Тип импорта</label>
                             <select zippy="itype" class="form-control  ">
-                                <option value="0">Тiльки довiдник</option>
-                                <option value="1">З оприходуванням на склад</option>
+                                <option value="0">Только справочник</option>
+                                <option value="1">С оприходованием на склад</option>
                                 
                             </select>
                         </div>
                         <div class="form-group  ">
-                            <label for="icompare">Спiвставлення при оновленнi</label>
+                            <label for="icompare">Сопоставление при обновлении</label>
                             <select zippy="icompare" class="form-control  ">
                                 <option value="0">По артикулу</option>
-                                <option value="1">По найменуванню</option>
-                                <option value="2">По найменуванню та бренду</option>
-                                <option value="3">По артикулу та бренду</option>
+                                <option value="1">По наименованию</option>
+                                <option value="2">По наименованию и бренду</option>
+                                <option value="3">По артикулу и бренду</option>
                                
                                 
                             </select>
@@ -47,11 +47,11 @@
                         </div>
 
                         <div class="form-group  ">
-                            <label for="filename">Файл імпорту</label>
+                            <label for="filename">Файл импорта</label>
                             <input type="file" zippy="filename" class="form-control  "/>
                         </div>
                         <div class="form-group  ">
-                            <label for="item_type" data-label="item_type">Оприходувати як</label>
+                            <label for="item_type" data-label="item_type">Оприходовать как</label>
                             <select zippy="item_type" class="form-control   ">
 
                             </select>
@@ -59,41 +59,41 @@
 
                         <div class="  form-check">
                             <input zippy="passfirst" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
+                            <label class="form-check-label" for="passfirst">Пропустить первую строку</label>
                         </div>
                        
                         <div class="  form-check">
                             <input zippy="noshowprice" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowprice">Не показувати в  прайсi</label>
+                            <label class="form-check-label" for="noshowprice">Не показывать в прайсе</label>
                         </div>
                         <div class="  form-check">
                             <input zippy="noshowshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowshop">Не показувати в  онлайн каталозi </label>
+                            <label class="form-check-label" for="noshowshop">Не показывать в онлайн каталоге </label>
                         </div>
                         
 
                         <div class="  form-check">
                             <input zippy="preview" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="preview">Попередній перегляд</label>
+                            <label class="form-check-label" for="preview">Предыдущий просмотр</label>
                         </div>
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Загрузити"/>
+                            <input class="btn btn-info" type="submit" value="Загрузить"/>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="form-group  ">
-                            <label><b>Номери колонок Excel файлу</b> </label>
+                            <label><b>Номера колонок Excel файла</b> </label>
 
                         </div>
                         <div class="form-group row">
-                            <label  class="col-8 col-form-label" for="colname">Найменування</label>
+                            <label  class="col-8 col-form-label" for="colname">Наименование</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colname" class="form-control  ">
                             </select>   </div> 
                         </div>
                        <div class="form-group row">
-                            <label  class="col-8 col-form-label" for="colshortname">Коротке найменування</label>
+                            <label  class="col-8 col-form-label" for="colshortname">Короткое наименование</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colshortname" class="form-control  ">
                             </select>   </div> 
@@ -105,13 +105,13 @@
                             </select>   </div> 
                         </div>
                         <div class="form-group row ">
-                            <label  class="col-8 col-form-label" for="colbarcode">Штрих код</label>
+                            <label  class="col-8 col-form-label" for="colbarcode">Штрих-код</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colbarcode" class="form-control  ">
                             </select>   </div> 
                         </div>
                         <div class="form-group row ">
-                            <label  class="col-8 col-form-label" for="colcat">Категорiя</label>
+                            <label  class="col-8 col-form-label" for="colcat">Категория</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colcat" class="form-control  ">
                             </select>   </div> 
@@ -132,13 +132,13 @@
                         </div>
                       
                    <div class="form-group  row">
-                            <label  class="col-8 col-form-label" data-label="colqty" for="colqty">Кількість</label>
+                            <label  class="col-8 col-form-label" data-label="colqty" for="colqty">Количество</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colqty" class="form-control  ">
                             </select>  </div> 
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label"  data-label="colinprice" for="colinprice">Облікова ціна</label>
+                            <label class="col-8 col-form-label"  data-label="colinprice" for="colinprice">Учетная цена</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colinprice" class="form-control  ">
                             </select>  </div> 
@@ -152,27 +152,27 @@
 
                         </div>
   <div class="form-group  row">
-                            <label class="col-8 col-form-label"  for="colmsr">Од. виміру</label>
+                            <label class="col-8 col-form-label"  for="colmsr">Ед. измерения</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colmsr" class="form-control  ">
                             </select>   </div> 
                         </div>
                                                
          <div class="form-group  row  ">
-                            <label class="col-8 col-form-label" for="coldesc">Опис</label>
+                            <label class="col-8 col-form-label" for="coldesc">Описание</label>
                             <div class="col-4">
                                 <select   zippy="coldesc" class="form-control  ">
                                 </select>
                             </div>  
                         </div>                        
                        <div class="form-group  row">
-                            <label class="col-8 col-form-label"  for="colcell">Комiрка</label>
+                            <label class="col-8 col-form-label"  for="colcell">Ячейка</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colcell" class="form-control  ">
                             </select>   </div> 
                         </div>
                        <div class="form-group  row">
-                            <label class="col-8 col-form-label"  for="colwar">Гарантiя</label>
+                            <label class="col-8 col-form-label"  for="colwar">Гарантия</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colwar" class="form-control  ">
                             </select>   </div> 
@@ -215,18 +215,18 @@
                     <div class="col-12 col-lg-10 ">
                         <table class="table table-sm">
                             <tr>
-                                <th>Найменування</th>
+                                <th>Наименование</th>
                                 <th>Код</th>
-                                <th>Група</th>
+                                <th>Группа</th>
                                 <th>Бренд</th>
-                                <th>Од.</th>
-                                <th class="text-right">Кіл.</th>
-                                <th class="text-right">Обл. ціна</th>
-                                <th class="text-right">Вiдп. ціна1</th>
-                                <th class="text-right">Вiдп. ціна2</th>
-                                <th class="text-right">Вiдп. ціна3</th>
-                                <th class="text-right">Вiдп. ціна4</th>
-                                <th class="text-right">Вiдп. ціна5</th>
+                                <th>Ед.</th>
+                                <th class="text-right">Кол.</th>
+                                <th class="text-right">Учет. цена</th>
+                                <th class="text-right">Отп. цена1</th>
+                                <th class="text-right">Отп. цена2</th>
+                                <th class="text-right">Отп. цена3</th>
+                                <th class="text-right">Отп. цена4</th>
+                                <th class="text-right">Отп. цена5</th>
 
                             </tr>
                             {{#list}}
@@ -253,14 +253,14 @@
             </div>
 
             <div class="col-12 col-lg-6  card">
-                <h3>Імпорт накладної
+                <h3>Импорт накладной
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-html="true" data-content="Імпорт накладної з  Excel файлу.
-                       Для вказівки розташування даних необхідно вказати номери відповідних колонок. перевіряється на    унікальність артикул і найменування
+                       data-placement="bottom" data-html="true" data-content="Импорт накладной из Excel файла.
+                       Для указания размещения данных необходимо указать номера соответствующих колонок. Проверяется на уникальность артикул и наименование.
 
-                       В результатi створюется докусмент Прибуткова накладна який слiд  провести  пiсля вводу                         оплат и других атрибцутов
-                       <br>Також є можливість попереднього перегляду даних. "></i>
+                       В результате создается документ Прибыльная накладная, котрый следует провести после ввода оплат и других атрибутов.
+                       <br>Также есть возможность предварительного просмотра данных. "></i>
                 </h3>
 
                 <br><br>
@@ -279,30 +279,30 @@
                         </div>
 
                         <div class="form-group  ">
-                            <label for="nfilename">Файл імпорту</label>
+                            <label for="nfilename">Файл импорта</label>
                             <input type="file" zippy="nfilename" class="form-control  "/>
                         </div>
                         <div class="  form-check">
                             <input zippy="npassfirst" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="npassfirst">Пропустити першу строку</label>
+                            <label class="form-check-label" for="npassfirst">Пропустить первую строку</label>
                         </div>
                      
                         <div class="  form-check">
                             <input zippy="npreview" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="npreview">Попередній перегляд</label>
+                            <label class="form-check-label" for="npreview">Предварительный просмотр</label>
                         </div>
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Загрузити"/>
+                            <input class="btn btn-info" type="submit" value="Загрузить"/>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="form-group  ">
-                            <label><b>Номери колонок Excel файлу</b> </label>
+                            <label><b>Номера колонок Excel файла</b> </label>
 
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="ncolname">Найменування</label>
+                            <label class="col-8 col-form-label" for="ncolname">Наименование</label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="ncolname" class="form-control  ">
                             </select>  </div>
@@ -321,26 +321,26 @@
                         </div>
 
                         <div class="form-group row ">
-                            <label class="col-8 col-form-label" for="ncolmsr">Од. виміру</label>
+                            <label class="col-8 col-form-label" for="ncolmsr">Ед. измерения</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="ncolmsr" class="form-control  ">
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="ncoldesc">Опис </label>
+                            <label class="col-8 col-form-label" for="ncoldesc">Описание </label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="ncoldesc" class="form-control  ">
                             </select>   </div>
                         </div>
 
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" data-label="ncolqty" for="ncolqty">Кількість</label>
+                            <label class="col-8 col-form-label" data-label="ncolqty" for="ncolqty">Количество</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="ncolqty" class="form-control  ">
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="ncolprice">Вхiдна ціна</label>
+                            <label class="col-8 col-form-label" for="ncolprice">Входящая цена</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="ncolprice" class="form-control  ">
                             </select>  </div>
@@ -356,13 +356,13 @@
                     <div class="col-12 col-lg-10 ">
                         <table class="table table-sm">
                             <tr>
-                                <th>Найменування</th>
+                                <th>Наименование</th>
                                 <th>Код</th>
                                 <th>Штрих-код</th>
 
-                                <th>Од.</th>
-                                <th class="text-right">Кіл.</th>
-                                <th class="text-right">Цiна</th>
+                                <th>Ед.</th>
+                                <th class="text-right">Кол.</th>
+                                <th class="text-right">Цена</th>
 
                             </tr>
                             {{#list}}
@@ -385,13 +385,13 @@
 
 
             <div class="col-12 col-lg-6  card">
-                <h3>Імпорт контрагентів
+                <h3>Импорт контрагентов
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-html="true" data-content="Імпорт контрагентів з Excel файлу.
-                       Для вказівки розташування даних необхідно вказати номери відповідних колонок.
-                       Перевіряється на унікальність телефон 
-                       <br>Також є можливість попереднього перегляду даних. "></i>
+                       data-placement="bottom" data-html="true" data-content="Импорт контрагентов из Excel файла.
+                       Для указания размещения данных необходимо указать номера соответствующих колонок.
+                       Проверяется на уникальность телефона.
+                       <br>Также есть возможность предварительного просмотра данных. "></i>
                 </h3>
 
                 <br><br>
@@ -402,11 +402,11 @@
 
                         </div>
                         <div class="form-group  ">
-                            <label for="ctype">Імпортувати як</label>
+                            <label for="ctype">Импортировать как</label>
                             <select zippy="ctype" class="form-control   ">
-                                <option value="0">Не вибрано</option>
-                                <option value="1">Покупцi</option>
-                                <option value="2">Постачальники</option>
+                                <option value="0">Не выбрано</option>
+                                <option value="1">Покупатели</option>
+                                <option value="2">Поставщики</option>
                                 
 
                             </select>
@@ -414,32 +414,32 @@
 
 
                         <div class="form-group  ">
-                            <label for="cfilename">Файл імпорту</label>
+                            <label for="cfilename">Файл импорта</label>
                             <input type="file" zippy="cfilename" class="form-control  "/>
 
                         </div>
                         <div class="  form-check">
                             <input zippy="cpassfirst" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="cpassfirst">Пропустити першу строку</label>
+                            <label class="form-check-label" for="cpassfirst">Пропустить первую строку</label>
                         </div>
 
                         <div class="  form-check">
                             <input zippy="cpreview" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="cpreview">Попередній перегляд</label>
+                            <label class="form-check-label" for="cpreview">Предварительный просмотр</label>
                         </div>
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Загрузити"/>
+                            <input class="btn btn-info" type="submit" value="Загрузить"/>
                         </div>
 
                     </div>
                     <div class="col-6">
                         <div class="form-group  ">
-                            <label><b>Номери колонок Excel файлу</b> </label>
+                            <label><b>Номера колонок Excel файла</b> </label>
 
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="colcname">Найменування</label>
+                            <label class="col-8 col-form-label" for="colcname">Наименование</label>
                             <div class="col-4">
                               <select style="width:100px;" zippy="colcname" class="form-control  ">
                             </select> </div>
@@ -457,13 +457,13 @@
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="colcity">Місто</label>
+                            <label class="col-8 col-form-label" for="colcity">Город</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="colcity" class="form-control  ">
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="coladdress">Адреса</label>
+                            <label class="col-8 col-form-label" for="coladdress">Адрес</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="coladdress" class="form-control  ">
                             </select>  </div>
@@ -479,11 +479,11 @@
                     <div class="col-12 col-lg-10 ">
                         <table class="table table-sm">
                             <tr>
-                                <th>Найменування</th>
+                                <th>Наименование</th>
                                 <th>Тел.</th>
-                                <th>Email</th>
-                                <th>Місто</th>
-                                <th>Адреса</th>
+                                <th>E-mail</th>
+                                <th>Город</th>
+                                <th>Адрес</th>
 
                             </tr>
                             {{#list2}}

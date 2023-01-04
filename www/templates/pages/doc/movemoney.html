@@ -1,16 +1,16 @@
 <html>
     <head>
-          <title> Перемiщення  грошей</title>
+          <title> Перемещение денег</title>
     </head>
     <body>
 
 
         <form zippy="docform">
-            <h3> Перемiщення  грошей</h3>
+            <h3> Перемещение денег</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
@@ -19,22 +19,22 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="paymentfrom">З рахунку</label>
+                        <label for="paymentfrom">Со счета</label>
                         <select class="form-control" zippy="paymentfrom">
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="paymentto">На рахунок</label>
+                        <label for="paymentto">На счет</label>
                         <select class="form-control" zippy="paymentto">
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="amount">Сума</label>
+                        <label for="amount">Сумма</label>
                         <input pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="amount">
                     </div>
 
                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -46,8 +46,8 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>

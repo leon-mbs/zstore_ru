@@ -1,27 +1,27 @@
 <html>
     <head>
-        <title> Журнал документів  </title>
+        <title> Журнал документов  </title>
 
     </head>
    <body>
         <div class="row">
             <div class="col-12 col-xl-11">
 
-                <h3>Журнал документів
+                <h3>Журнал документов
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-content="Загальний журнал для всіх документів з можливістю їх скасування та видалення.
-                       Більш детальне управління статусами проводиться у відповідних спеціалізованих журналах."></i>
+                       data-placement="bottom" data-content="Общий журнал для всех документов с возможностью их отмены и удаления.
+                       Более детальное управление статусами проводится в соответствующих специализированных журналах."></i>
                 </h3>
 
 
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline ">
                         <label for="searchnumber">№ </label>
-                        <input placeholder="Пошук..." class="form-control mr-2" type="text" zippy="searchnumber"
-                               autocomplete="off" autofocus  onkeydown="onBarCode()"         style="width:175px" title="Якщо  пошук по номеру iншi елементи  фiльтру  iгноруются">
+                        <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"
+                               autocomplete="off" autofocus  onkeydown="onBarCode()"         style="width:175px" title="Если поиск по номеру, другие элементы фильтра игнорируются">
 
-                        <label for="from">З </label>
+                        <label for="from">С </label>
                         <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
 
 
@@ -30,45 +30,45 @@
 
                         <label for="status"> Статус </label>
                         <select class="form-control mr-2" zippy="status">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
 
                         <label for="doctype"> Тип </label>
                         <select class="form-control mr-sm-1  " zippy="doctype">
-                            <option value="0">Не встановлено</option>
+                            <option value="0">Не установлено</option>
                         </select>
                         <label for="searchcust"> Контрагент </label>
-                        <input placeholder="Почніть вводити..." class="form-control mr-1" type="text" zippy="searchcust">
+                        <input placeholder="Начните вводить..." class="form-control mr-1" type="text" zippy="searchcust">
 
-                        <label for="author"> Відповідальний </label>
+                        <label for="author"> Ответственный </label>
                         <select class="form-control    " zippy="author">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не выбран</option>
                         </select>
-                        <input class="form-control ml-2  mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту"   >
+                        <input class="form-control ml-2  mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту"   >
 
 
                         <input type="submit" class="  ml-2  mr-2  btn btn-outline-success  " value="ОК">
-                        <a zippy="erase" title="Скинути фільтр"><i class="fa fa-eraser"></i></a>
+                        <a zippy="erase" title="Скинуть фильтр"><i class="fa fa-eraser"></i></a>
 
 
                     </form>
                 </div>
-                <a zippy="csv">Експорт в Excel</a>
+                <a zippy="csv">Экспорт в Excel</a>
                 <table class="table   table-sm  table-hover   ">
                     <tr>
                         <th></th>
 
-                         <th class="text-nowrap  "><a zippy="sortdoc">Тип  документу</a></th>
+                         <th class="text-nowrap  "><a zippy="sortdoc">Тип документа</a></th>
                         <th class="text-nowrap  "><a zippy="sortnum">Номер</a></th>
                         <th class="text-nowrap  "><a zippy="sortdate">Дата</a></th>
                         <th class="text-nowrap  "><a zippy="sortcust">Контрагент</a></th>
-                        <th class="text-right   "><a zippy="sortamount">Сума</a></th>
+                        <th class="text-right   "><a zippy="sortamount">Сумма</a></th>
                         <th  > Статус </th>
                         {{#usebranch}}
-                        <th>Філія</th>
+                        <th>Филиал</th>
                         {{/usebranch}}
 
-                        <th>Підстава</th>
+                        <th>Основание</th>
                         <th></th>
                         <th></th>
 
@@ -82,8 +82,8 @@
                     <tbody>
                         <tr zippy="doclist">
                             <td>
-                           <a  zippy="tofav"><i title="Додати в вибране" zippy="top" class="far fa-star"  ></i></a>
-                            <a  zippy="fromfav"><i title="Видалити  з  вибраного" zippy="nottop" class="fas fa-star"  ></i></a>
+                           <a  zippy="tofav"><i title="Добавить в избранное" zippy="top" class="far fa-star"  ></i></a>
+                            <a  zippy="fromfav"><i title="Удалить из избранного" zippy="nottop" class="fas fa-star"  ></i></a>
                             </td>
                            
                             <td zippy="name"></td>
@@ -99,26 +99,26 @@
 
                             <td><a zippy="parentdoc"></a></td>
                             <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
-                            <td><i zippy="hasscan" class="far fa-image" title="Прикрiплено  скан оригiналу"></i></td>
+                            <td><i zippy="hasscan" class="far fa-image" title="Прикреплено скан оригинала"></i></td>
 
-                            <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланований"></i></td>
-                            <td><i zippy="waitapp" class="fa fa-gavel" title="Очікує затвердження "></i></td>
+                            <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланирован"></i></td>
+                            <td><i zippy="waitapp" class="fa fa-gavel" title="Ожидает утверджения "></i></td>
 
 
                             <td style="white-space:   nowrap"> &nbsp;&nbsp;
-                                <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i> </a>
-                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="Редагування"><i class="fa fa-edit"/> </a>
-                                <a zippy="cancel" title="Скасувати виконання"><i class="fa fa-undo"></i> </a>
+                                <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i> </a>
+                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="Редактирование"><i class="fa fa-edit"/> </a>
+                                <a zippy="cancel" title="Отменить выполнение"><i class="fa fa-undo"></i> </a>
 
                             </td>
                             <td>
-                                <a zippy="delete" title="Видалення"><i class="fa fa-trash"></i></a>
+                                <a zippy="delete" title="Удаление"><i class="fa fa-trash"></i></a>
                             </td>
                             <td>
                                 <div class="btn-group" zippy="basedon">
-                                    <button title="Створити на підставі" type="button"
+                                    <button title="Создать на основании" type="button"
                                             class="btn btn-outline-secondary btn-sm  dropdown-toggle" data-toggle="dropdown">
-                                        Створити <span class="caret"></span>
+                                        Создать <span class="caret"></span>
                                     </button>
                                     <div class="dropdown-menu" role="menu" zippy="basedlist">
 
@@ -134,24 +134,24 @@
 
                 <div class="navbar nav">
                     <form zippy="statusform" class="form-inline ">
-                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатити</a>
-                        <button zippy="bap" class="btn btn-success  mr-2"><i class="fas fa-thumbs-up"></i> Затвердити</button>
-                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Відхилити</button>
-                        <input class="form-control mr-4" zippy="refcomment" placeholder="Коментар до скасування">
+                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатить</a>
+                        <button zippy="bap" class="btn btn-success  mr-2"><i class="fas fa-thumbs-up"></i> Утвердить</button>
+                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Отклонить</button>
+                        <input class="form-control mr-4" zippy="refcomment" placeholder="Комментарий к отклонению">
                          <label data-label="mstates" for="mstates"> Статус </label>
                          <select zippy="mstates" class="form-control mr-2">
-                         <option value="0">Не вибрано</option>
+                         <option value="0">Не выбрано</option>
                          </select>
-                         <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
-                         <label data-label="musers" for="mstates"> Відповідальний </label>
+                         <button zippy="bstatus" class="btn btn-success  mr-2"> Применить</button>
+                         <label data-label="musers" for="mstates"> Ответственный </label>
                          <select zippy="musers" class="form-control mr-2">
-                         <option value="0">Не вибраний</option>
+                         <option value="0">Не выбран</option>
                          </select>
                          <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
                          
                          
                          
-                         <a zippy="bprint" class="btn btn-success  mr-2 ml-4"><i class="fa fa-print"></i> Друк этекеток</a>
+                         <a zippy="bprint" class="btn btn-success  mr-2 ml-4"><i class="fa fa-print"></i> Печать этикеток</a>
                       
                     </form>
                 </div>
@@ -176,7 +176,7 @@
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#tag').printThis();$('#pform').modal('hide')"
-                                                      class="btn btn-success btn-sm">Друк</a></td>
+                                                      class="btn btn-success btn-sm">Печать</a></td>
                             <tr>
                         </table>
                     </div>
@@ -198,7 +198,7 @@
 
 
             function check_delete() {
-                return confirm("Видалити документ?")
+                return confirm("Удалить документ?")
             }
         </script>
     </body>

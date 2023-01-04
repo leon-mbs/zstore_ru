@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td colspan="5">
-            Виконавець: {{customer_name}}
+            Исполнитель: {{customer_name}}
         </td>
 
 
@@ -9,7 +9,7 @@
     {{#isfirm}}
     <tr>
         <td colspan="5">
-          Замовник: {{firm_name}}
+          Заказчик: {{firm_name}}
         </td>
 
     </tr>
@@ -17,7 +17,7 @@
     {{#iscontract}}
     <tr>
         <td colspan="5">
-            Угода: {{contract}} вiд {{createdon}}
+            Договор: {{contract}} от {{createdon}}
         </td>
 
     </tr>
@@ -26,7 +26,7 @@
     {{#isdevice}}
     <tr>
         <td colspan="5">
-            Виріб, матеріали: {{device}} с/н: {{devsn}}
+            Изделие, материалы: {{device}} с/н: {{devsn}}
         </td>
 
     </tr>
@@ -37,7 +37,7 @@
     
     <tr style="font-weight: bolder;">
         <td colspan="5" align="center">
-            Отриманi послуги № {{document_number}} від {{date}}
+            Полученные услуги № {{document_number}} от {{date}}
         </td>
     </tr>
 
@@ -46,10 +46,10 @@
 <table class="ctable" width="600" cellspacing="0" cellpadding="1" border="0">
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
-        <th style="border: 1px solid black;">Найменування</th>
-        <th style="border: 1px solid black;">Опис</th>
-        <th style="border: 1px solid black;" align="right">Вартість</th>
-        <th style="border: 1px solid black;" align="right">Сума</th>
+        <th style="border: 1px solid black;">Наименование</th>
+        <th style="border: 1px solid black;">Описание</th>
+        <th style="border: 1px solid black;" align="right">Стоимость</th>
+        <th style="border: 1px solid black;" align="right">Сумма</th>
         {{#hasitems}}
         <th style="border: 1px solid black;" align="right">ТМЦ</th>
             
@@ -67,9 +67,9 @@
          {{#hasitems}}  
            <td  > 
            <table style="font-size:smaller"  >
-               <tr> <td >Найменування</td>
-                <td align="right">&nbsp;Кіл.&nbsp;</td>
-                <td align="right">Ціна.</td></tr>
+               <tr> <td >Наименование</td>
+                <td align="right">&nbsp;Кол.&nbsp;</td>
+                <td align="right">Цена</td></tr>
              {{#items}}
                <tr> <td  >{{itemname}}</td>
                 <td align="right">{{qty}}</td>
@@ -83,12 +83,12 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td colspan="4" style="border-top: 1px solid black;" align="right">Всього:</td>
+        <td colspan="4" style="border-top: 1px solid black;" align="right">Всего:</td>
         <td style="border-top: 1px solid black;" align="right">{{total}}</td>
     </tr>
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="4" align="right">До оплати:</td>
+        <td colspan="4" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
@@ -100,7 +100,7 @@
      {{/payed}}  
     <tr>
         <td colspan="5"><br>
-            Гарантія: {{gar}}
+            Гарантия: {{gar}}
         </td>
     </tr>
 

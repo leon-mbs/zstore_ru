@@ -3,17 +3,17 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
-            Списання на виробництво № {{document_number}} від {{date}} <br>
+            Списание на производство № {{document_number}} от {{date}} <br>
         </td>
     </tr>
     <tr>
         <td colspan="8" valign="middle">
-            Виробнича ділянка <b>{{pareaname}}</b><br>
+            Производственный участок <b>{{pareaname}}</b><br>
         </td>
     </tr>
    <tr>
         <td colspan="8" valign="middle">
-            Зi складу <b>{{storename}}</b><br>
+            Со склада <b>{{storename}}</b><br>
         </td>
     </tr>
     <tr>
@@ -24,12 +24,10 @@
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування
-        </th>
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
-
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
     </tr>
     {{#_detail}}
     <tr>

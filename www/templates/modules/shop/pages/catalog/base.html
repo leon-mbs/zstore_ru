@@ -59,7 +59,7 @@
                                     <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0">
                                         
                                        <div class="input-group mr-3">
-                                          <input zippy="searchitem"   class="form-control" type="search" placeholder="Почнiть вводити...">
+                                          <input zippy="searchitem"   class="form-control" type="search" placeholder="Начните вводить...">
                                           <div class="input-group-append">
                                             <span class="input-group-text"  ><i class="fas fa-search"></i></span>
                                           </div>
@@ -70,17 +70,17 @@
                                  
                                   <li class="nav-item">
                                      <a class="btn btn-outline-info   mr-sm-2" zippy="shopcart"><i class="fa fa-shopping-cart"></i>
-                                            Кошик <span class="badge badge-danger  navbar-badge">{{basketcnt}}</span> </a>
+                                            Крзина <span class="badge badge-danger  navbar-badge">{{basketcnt}}</span> </a>
                                       
                                    </li>
                                   <li class="nav-item">
                                        <a class="btn btn-outline-info  " zippy="showcompare"><i class="fas fa-balance-scale "></i>
-                                            Порiвняти <span class="badge badge-danger  navbar-badge">{{comparecnt}}</span></a>
+                                            Сравнить <span class="badge badge-danger  navbar-badge">{{comparecnt}}</span></a>
                                         
                                    </li>
                                    {{^islogined}}
                                    <li class="nav-item">
-                                       <a    href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin"> Мiй кабiнет</a>
+                                       <a    href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin"> Мой кабинет</a>
                                         
                                    </li>
                                    {{/islogined}}    
@@ -91,15 +91,15 @@
                                   <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <span> {{custname}} </span></a>
                                     <ul class="dropdown-menu">                                         
                                         <li>
-                                            <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"> Мої замовлення</a>
+                                            <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"> Мои заказы</a>
                                         </li>
                                      
                                         <li>
-                                            <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/UserProfile">  Мій профіль</a>
+                                            <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/UserProfile">  Мой профиль</a>
                                         </li>
                                         <li class="dropdown-divider"></li>
                                         <li>
-                                            <a class="dropdown-item  " zippy="logout">  Вийти</a>
+                                            <a class="dropdown-item  " zippy="logout">  Выйти</a>
                                         </li>     
                                     </ul>
                                 </li>

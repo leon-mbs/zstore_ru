@@ -5,7 +5,7 @@
  
     <tr>
 
-        <td colspan="3">від {{time}}</td>
+        <td colspan="3">от {{time}}</td>
     </tr>
     <tr>
 
@@ -13,7 +13,7 @@
     </tr>
     <tr>
 
-        <td colspan="3">ІПН {{inn}}</td>
+        <td colspan="3">ІНН {{inn}}</td>
     </tr>
     {{#shopname}}
     <tr>
@@ -30,7 +30,7 @@
     </tr>
     {{#customer_name}}
     <tr>
-        <td colspan="3"> Покупець:</td>
+        <td colspan="3"> Покупатель:</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -39,10 +39,10 @@
     {{/customer_name}}
 
     <tr>
-        <td colspan="3">Термінал: {{pos_name}}</td>
+        <td colspan="3">Терминал: {{pos_name}}</td>
     </tr>
     <tr>
-        <td colspan="3">Касир:</td>
+        <td colspan="3">Кассир:</td>
     </tr>
     <tr>
         <td colspan="3"> {{username}}</td>
@@ -63,27 +63,27 @@
     </tr>
     {{/_detail}}
     <tr>
-        <td colspan="2" align="right">Всього:</td>
+        <td colspan="2" align="right">Всего:</td>
         <td align="right">{{total}}</td>
     </tr>
 
     {{^prepaid}}
     {{#isdisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Знижка:</td>
+        <td colspan="2" align="right">Скидка:</td>
         <td align="right">{{paydisc}}</td>
     </tr>
     {{/isdisc}}
    {{#delbonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Списано бонусiв::</td>
+        <td colspan="2" align="right">Списано бонусов::</td>
         <td align="right">{{delbonus}}</td>
     </tr>
     {{/delbonus}}
 
     
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">До сплати:</td>
+        <td colspan="2" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
@@ -91,19 +91,19 @@
         <td align="right">{{payed}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Решта:</td>
+        <td colspan="2" align="right">Сдача:</td>
         <td align="right">{{exchange}}</td>
     </tr>
     {{/prepaid}}
     {{#addbonus}}
     <tr >
-        <td colspan="2" align="right">Нараховано бонусiв::</td>
+        <td colspan="2" align="right">Насчитано бонусов::</td>
         <td align="right">{{addbonus}}</td>
     </tr>
     {{/addbonus}}
     {{#allbonus}}
     <tr >
-        <td colspan="2" align="right">Всього бонусiв::</td>
+        <td colspan="2" align="right">Всего бонусов::</td>
         <td align="right">{{allbonus}}</td>
     </tr>
     {{/allbonus}}

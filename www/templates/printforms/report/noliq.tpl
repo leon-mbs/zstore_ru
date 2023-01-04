@@ -2,24 +2,24 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Неліквідні товари
+            Неликвидные товары
         </td>
     </tr>
     {{#cust}}
     <tr>
 
         <td colspan="3">
-            <b> Постачальник:</b> {{customer_name}}
+            <b> Поставщик:</b> {{customer_name}}
         </td>
     </tr>
     {{/cust}}
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px"> Найменування</th>
+        <th style="border: solid black 1px"> Наименование</th>
 
-        <th style="border: solid black 1px">Од.</th>
-        <th align="right" style="border: solid black 1px">На складi</th>
+        <th style="border: solid black 1px">Ед.</th>
+        <th align="right" style="border: solid black 1px">На складе</th>
 
 
     </tr>

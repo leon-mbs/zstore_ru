@@ -2,13 +2,13 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Звіт по заробітній платі
+            Отчет о зароботной плате
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="3">
-            Перiод з {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
+            Период с {{mfrom}} {{yfrom}} по {{mto}} {{yto}}
         </td>
     </tr>
     {{#isemp}}
@@ -31,7 +31,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td class="text-right">Всього:</td>
+        <td class="text-right">Всего:</td>
 
         <td class="text-right">{{total}}</td>
       <td></td>
@@ -39,7 +39,7 @@
      <tr >
 
         <td style="font-weight: bolder;" colspan="3">
-         <br>   Нарахування  та  утримання
+         <br>   Начисление и удержание
         </td>
     </tr>
     {{#_detail2}}

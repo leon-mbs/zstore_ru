@@ -1,17 +1,17 @@
 <html>
     <head>
-          <title> Прибутковий ордер</title>
+          <title> Доходный ордер</title>
     </head>
     <body>
 
 
         <form zippy="docform">
-            <h3> Прибутковий ордер</h3>
+            <h3> Доходный ордер</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
@@ -19,30 +19,30 @@
                         <input class="form-control" type="text" zippy="document_date" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="payment">Каса, рахунок</label>
+                        <label for="payment">Касса, счет</label>
                         <select class="form-control" zippy="payment">
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="amount">Сума</label>
+                        <label for="amount">Сумма</label>
                         <input pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="amount">
                     </div>
                     <div class="form-group">
-                        <label for="mtype">Тип доходу</label>
+                        <label for="mtype">Тип дохода</label>
                         <select class="form-control" zippy="mtype">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
 
                 </div>
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="detail">Тип операцiї</label>
+                        <label for="detail">Тип операции</label>
                         <select class="form-control" zippy="detail">
-                            <option value="0">Не вказана</option>
-                            <option value="1">Оплата вiд покупця</option>
-                            <option value="2">Повернення вiд постачальника</option>
-                            <option value="3">Прибуток вiд спiвробiтника</option>
+                            <option value="0">Не указано</option>
+                            <option value="1">Оплата от покупателя</option>
+                            <option value="2">Возврат от поставщика</option>
+                            <option value="3">Прибыль от сотрудника</option>
                         </select>
                     </div>
 
@@ -51,28 +51,28 @@
                         <input class="form-control" type="text" zippy="customer">
                     </div>
                     <div class="form-group">
-                        <label data-label="contract" for="contract">Угода</label>
+                        <label data-label="contract" for="contract">Договор</label>
                         <select class="form-control  " zippy="contract">
-                            <option value="0">Не вибрана</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label data-label="emp" for="emp">Спiвробiтник</label>
+                        <label data-label="emp" for="emp">Сотрудник</label>
                         <select class="form-control select2" zippy="emp">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                   <div class="form-group">
-                        <label   for="begval">Внести  початковий  залишок</label>
+                        <label   for="begval">Внести начальный остаток</label>
                         <select class="form-control select2" zippy="begval">
-                            <option value="0">Не вносити</option>
-                            <option value="1">Не використовувати  проводку  по  касi</option>
-                            <option value="2">Тiльки проводка  по  касi</option>
+                            <option value="0">Не вносить</option>
+                            <option value="1">Не использовать проводку по кассе</option>
+                            <option value="2">Только проводка по кассе</option>
                         </select>
                     </div>
 
                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -83,8 +83,8 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>

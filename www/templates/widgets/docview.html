@@ -16,7 +16,7 @@
     <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Связанные документы <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Коментарии  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Комментарии  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
   </li>
  <li class="nav-item">
     <a class="nav-link" data-toggle="tab" href="#tfiles"><i class="fa fa-paperclip"></i> Прикрепленные файлы <span   class="badge badge-pill badge-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
@@ -33,19 +33,19 @@
   
   <div class="tab-pane   show active" id="tprint"> 
        
-       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Друк"><i class="fa fa-print mr-2"></i> </a>
+       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Печать"><i class="fa fa-print mr-2"></i> </a>
        <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print mr-2"></i></a>   
     
         
         <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Экспорт в Word"><i class="fa fa-file-word mr-2"></i>   </a>
         <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
         <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Экспорт в PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
-        <a v-show="docdata.exports.email" v-on:click="sendmail"   href="javascript:void(0)"  title="Отпроавка почтой"> <i class="fa fa-envelope mr-2"></i>  </a>
+        <a v-show="docdata.exports.email" v-on:click="sendmail"   href="javascript:void(0)"  title="Отправка почтой"> <i class="fa fa-envelope mr-2"></i>  </a>
     
         <span v-show="docdata.exports.pos">
        
-       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Печать на  чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Печать на  чековом принтере"><i class="fas fa-cash-register mr-1"></i> </a>
+       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Печать на чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Печать на чековом принтере"><i class="fas fa-cash-register mr-1"></i> </a>
          </span>            
        
        <br>
@@ -109,7 +109,7 @@
                             <textarea  name="msgtext"  class="form-control" required="required"  
                                       style=" height:120px;"></textarea>
                         </div>
-                        <input v-on:click="onaddmsg" class="btn btn-success  " type="button" value="Додати">
+                        <input v-on:click="onaddmsg" class="btn btn-success  " type="button" value="Добавить">
                     </form>   
   </div>
   </div>
@@ -263,7 +263,7 @@
                       if(data.error  != "") {
                           toastr.error(data.error)
                       } else {
-                         //отправояем на  принтер 
+                         //отправляем на  принтер 
                          sendPS("["+data.buf+"]" )                             
                           
                       }

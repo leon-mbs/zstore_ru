@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title> Товари на складі  </title>
+        <title> Товары на складе  </title>
 
    
         <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
@@ -12,29 +12,29 @@
         <div class="row">
 
             <div class="col-12    " zippy="itempanel">
-                <h3>Товари на складі </h3>
+                <h3>Товары на складе </h3>
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline">
 
 
-                        <input autocomplete="off" placeholder="Имя  или  код..." class="form-control mr-sm-2" type="text"
+                        <input autocomplete="off" placeholder="Имя или код..." class="form-control mr-sm-2" type="text"
                                onkeydown="onSearch()" zippy="searchkey">
 
-                        <label for="searchcat">категорія</label>
+                        <label for="searchcat">категория</label>
 
                         <select class="form-control mr-sm-2" zippy="searchcat">
                             <option value="0">Не задано</option>
                         </select>
                         <label for="searchstore">Склад</label>
                         <select class="form-control mr-sm-2" zippy="searchstore">
-                            <option value="0">По всім</option>
+                            <option value="0">По всем</option>
                         </select>
 
                         <input class="btn btn-outline-success  " type="submit" value="ОК">
 
                     </form>
                 </div>
-                <a zippy="csv">Експорт в Excel</a>
+                <a zippy="csv">Экспорт в Excel</a>
 
                 <table class="table      table-sm  table-hover ">
                     <tr>
@@ -42,19 +42,19 @@
                         <th></th>
                         {{/useimages}}
 
-                        <th>Назва</th>
+                        <th>Название</th>
 
 
                         <th>Артикул</th>
-                        <th>Категорія</th>
+                        <th>Категория</th>
                         <th>Бренд</th>
-                        <th>Од.</th>
+                        <th>Ед.</th>
                         <th> </th>
 
-                        <th class="text-right  ">Мін. Кіл.</th>
-                        <th class="text-right  ">Кіл.</th>
+                        <th class="text-right  ">Мин. кол.</th>
+                        <th class="text-right  ">Кол.</th>
                         {{^noshowpartion}}
-                        <th class="text-right  ">На суму</th>
+                        <th class="text-right  ">На сумму</th>
 
                         {{/noshowpartion}}                        
 
@@ -86,7 +86,7 @@
                         <td zippy="cat_name"></td>
                         <td zippy="brand"></td>
                         <td zippy="msr"></td>
-                        <td  class="text-right"><i title="Акцiя" zippy="hasaction" class="fa fa-gift"/></td>
+                        <td  class="text-right"><i title="Акция" zippy="hasaction" class="fa fa-gift"/></td>
 
                         <td zippy="minqty" class="text-right  "></td>
                         <td zippy="iqty" class="text-right  "></td>
@@ -105,7 +105,7 @@
                         {{^noshowpartion}}
 
 
-                        <td><a zippy="show" title="Детальна інформація"><i class="fa fa-eye"></i></a></td>
+                        <td><a zippy="show" title="Детальная информация"><i class="fa fa-eye"></i></a></td>
                         {{/noshowpartion}}
 
 
@@ -116,7 +116,7 @@
                         {{/useimages}}
 
                         {{^noshowpartion}}
-                        <td colspan="8" class="text-right font-weight-bolder"> Всього на суму:</td>
+                        <td colspan="8" class="text-right font-weight-bolder"> Всего на сумму:</td>
                         <td class="text-right font-weight-bolder" zippy="totamount"></td>
                         <td></td>    {{/noshowpartion}}
                     </tr>
@@ -125,23 +125,23 @@
 
             </div>
             <div class="col-12   col-xl-10" zippy="detailpanel">
-                <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> До списку</a>
+                <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> К списку</a>
                 <h4 zippy="itemdetname"></h4>
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
                         {{#usesnumber}}
-                        <th class="text-right text-nowrap">Серія</th>
+                        <th class="text-right text-nowrap">Серия</th>
 
-                        <th class="text-right text-nowrap">Придатний до</th>
+                        <th class="text-right text-nowrap">Годен до</th>
                         {{/usesnumber}}
-                        <th class="text-right text-nowrap">Обл. ціна</th>
+                        <th class="text-right text-nowrap">Уч. цена</th>
                         {{#useval}}
                         <th class="  text-nowrap">По курсу</th>
                         {{/useval}}
-                        <th class="text-right text-nowrap">Кіл.</th>
-                        <th class="text-right text-nowrap">На суму</th>
-                        <th class="text-right text-nowrap ">Прод. ціна</th>
+                        <th class="text-right text-nowrap">Кол.</th>
+                        <th class="text-right text-nowrap">На сумму</th>
+                        <th class="text-right text-nowrap ">Прод. цена</th>
 
                           <th  > </th>
 
@@ -161,13 +161,13 @@
                         <td zippy="qty" class="text-right  "></td>
                         <td zippy="amount" class="text-right  "></td>
                         <td zippy="price" class="text-right  "></td>
-                         <td  ><a zippy="createmove" >Створоти перемiщення</a></td>
+                         <td  ><a zippy="createmove" >Создать перемещение</a></td>
 
 
                     </tr>
                 </table>
-                <small><i class="fa fa-exclamation-triangle"/> Скоригувати партii наприклад коли утворився мiнус можна
-                    документом Перемiщення партiй .</small>
+                <small><i class="fa fa-exclamation-triangle"/> Скорректировать партии, например, когда образовался минус, можно
+                    документом Перемещение партий .</small>
 
             </div>
 
@@ -175,7 +175,7 @@
         </div>
         <script>
             function check_delete() {
-                return confirm("Видалити партію?")
+                return confirm("Удалить партию?")
             }
 
             $(document).ready(function () {

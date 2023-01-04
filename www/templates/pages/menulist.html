@@ -1,11 +1,11 @@
 <html>
    <head>
-        <title>  Налаштування меню  </title>
+        <title>  Настройка меню  </title>
 
     </head>
   <body>
-        <h2>Налаштування меню</h2>
-        <small>Для поновлення стану меню потрібно перейти на будь-яку іншу сторінку</small>
+        <h2>Настройка меню</h2>
+        <small>Для возобновления состояния меню необходимо перейти на любую другую страницу</small>
         <div class="row">
 
             <div class="col-12 col-lg-10 col-xl-8  ">
@@ -17,39 +17,39 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fdoc">
-                            <label class="form-check-label mr-sm-2" for="fdoc">Документи</label>
+                            <label class="form-check-label mr-sm-2" for="fdoc">Документы</label>
                         </div>
 
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fref">
-                            <label class="form-check-label mr-sm-2" for="fref">Довідники</label>
+                            <label class="form-check-label mr-sm-2" for="fref">Справочники</label>
                         </div>
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="frep">
-                            <label class="form-check-label mr-sm-2" for="frep">Звіти</label>
+                            <label class="form-check-label mr-sm-2" for="frep">Отчеты</label>
                         </div>
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="freg">
-                            <label class="form-check-label mr-sm-2" for="freg">Журнали</label>
+                            <label class="form-check-label mr-sm-2" for="freg">Журналы</label>
                         </div>
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fser">
-                            <label class="form-check-label mr-sm-2" for="fser">Сервіс</label>
+                            <label class="form-check-label mr-sm-2" for="fser">Сервис</label>
                         </div>
 
-                        <button type="submit" class="btn btn-success   ">Оновити</button>
+                        <button type="submit" class="btn btn-success   ">Обновить</button>
                     </form>
-                    <a class="btn btn-info   " zippy="addnew">Додати</a>
+                    <a class="btn btn-info   " zippy="addnew">Добавить</a>
                     <table class="table table-sm table-striped  ">
                         <tr>
-                            <th>Назва</th>
-                            <th>Ім'я PHP класу</th>
+                            <th>Название</th>
+                            <th>Имя PHP класа</th>
                             <th>Тип</th>
-                            <th>Група</th>
+                            <th>Группа</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -58,8 +58,8 @@
                             <td><span zippy="meta_name"></span></td>
                             <td><span zippy="type"></span></td>
                             <td><span zippy="menugroup"></span></td>
-                            <td><a title="Деактивувати пункт меню" zippy="ton"><i class="fa fa-toggle-on text-success"></i></a> 
-                                <a title="Активувати пункт меню" zippy="toff"><i class="fa fa-toggle-off"></i></a>&nbsp;&nbsp;</td>
+                            <td><a title="Деактивировать пункт меню" zippy="ton"><i class="fa fa-toggle-on text-success"></i></a> 
+                                <a title="Активировать пункт меню" zippy="toff"><i class="fa fa-toggle-off"></i></a>&nbsp;&nbsp;</td>
                             <td style="white-space:   nowrap"><a zippy="rowedit"><i class="fa fa-edit"/></a>
                                 &nbsp;&nbsp;<a class="text-danger"   zippy="rowdelete"> <i class="fa fa-trash"/></a></td>
                         </tr>
@@ -71,20 +71,20 @@
 
             <div class="col-12  col-md-4 col-xl-3">
                 <div zippy="editpan">
-                    <h5> Редагування пункту меню</h5>
+                    <h5> Редактирование пункта меню</h5>
                     <form zippy="editform" role="form">
                         <input type="hidden" zippy="meta_id" value="0">
 
                         <div class="form-group">
-                            <label for="edit_description">Найменування</label>
+                            <label for="edit_description">Наименование</label>
                             <input class="form-control" zippy="edit_description" required="required">
                         </div>
                         <div class="form-group">
-                            <label for="edit_meta_name">Ім'я PHP класу</label>
+                            <label for="edit_meta_name">Имя PHP класа</label>
                             <input class="form-control" zippy="edit_meta_name" required="required">
                         </div>
                         <div class="form-group">
-                            <label for="edit_menugroup">Група підменю</label>
+                            <label for="edit_menugroup">Группа подменю</label>
                             <input class="form-control" zippy="edit_menugroup">
                         </div>
                         <div class="form-group">
@@ -97,14 +97,14 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="edit_disabled">
-                            <label class="form-check-label mr-sm-2" for="edit_disabled">Не показувати в
+                            <label class="form-check-label mr-sm-2" for="edit_disabled">Не показывать в
                                 меню</label>
                         </div>
 
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary  ">Зберегти</button>
-                            &nbsp;&nbsp;&nbsp; <a zippy="mcancel" class="btn btn-outline-secondary  ">Скасувати</a>
+                            <button type="submit" class="btn btn-primary  ">Сохранить</button>
+                            &nbsp;&nbsp;&nbsp; <a zippy="mcancel" class="btn btn-outline-secondary  ">Отменить</a>
                         </div>
 
                     </form>
@@ -121,7 +121,7 @@
 
         <script>
             function check_rowdelete() {
-                return confirm("Видалити об'єкт із системи?")
+                return confirm("Удалить объект из системы?")
             }
         </script>
 

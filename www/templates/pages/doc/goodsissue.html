@@ -1,51 +1,51 @@
 <html>
      <head>
-          <title> Видаткова накладна</title>
+          <title> Расходная накладная</title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>Видаткова накладна </h3>
+            <h3>Расходная накладная </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number" required="required">
                     </div>
 
                     <div class="form-group  ">
-                        <label for="store">З складу</label>
+                        <label for="store">Со склада</label>
 
                         <select class="form-control" zippy="store">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                      <div class="form-group  ">
-                        <label for="customer">Покупець</label>
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
+                        <label for="customer">Покупатель</label>
+                        <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
                         <span zippy="discount" style="display:block;font-size:smaller"></span>
-                        <a style="font-size:smaller" zippy="addcust">Додати нового</a>
+                        <a style="font-size:smaller" zippy="addcust">Добавить нового</a>
 
                     </div>
                      <div class="form-group  ">
-                        <label for="pricetype">Тип ціни</label>
+                        <label for="pricetype">Тип цены</label>
                         <select class="form-control" zippy="pricetype">
                         </select>
                     </div>
 
                     <div class="form-group  ">
-                        <label for="firm">Продавець</label>
+                        <label for="firm">Продавец</label>
                         <select class="form-control" zippy="firm">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не выбран</option>
                         </select>
                     </div>
 
                     <div class="form-group  ">
                         <label for="contract" data-label="contract">Контракт</label>
                         <select class="form-control" zippy="contract">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не выбран</option>
                         </select>
 
 
@@ -57,24 +57,24 @@
                         <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
                     </div>
                     <div class="form-group">
-                        <label for="order">Замовлення</label>
+                        <label for="order">Заказ</label>
                         <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order">
                     </div>
                     <div class="form-group  ">
-                        <label for="payment">Каса, рахунок</label>
+                        <label for="payment">Касса, счет</label>
                         <select class="form-control" zippy="payment">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="salesource">Джерело продаж</label>
+                        <label for="salesource">Источник продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
 
                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -94,30 +94,30 @@
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                       {{#usemobilescanner}}  
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
-                                                       title="Сканувати  мобiльним пристроєм"
+                                                       title="Сканирование мобильным устройством"
                                                        style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
                       {{/usemobilescanner}}  
                     </div>
                     {{/usescanner}}
 
-                    <a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
-                    &nbsp;&nbsp;&nbsp;<a zippy="paste"><i class="fa fa-paste"/> Вставити</a>
+                    <a class="btn btn-info btn-sm" zippy="addrow">Добавить позицию</a>
+                    &nbsp;&nbsp;&nbsp;<a zippy="paste"><i class="fa fa-paste"/> Вставить</a>
                     <table class="table table-sm">
                         <tr>
                             <th></th>
-                            <th>Назва</th>
+                            <th>Название</th>
                             <th>Код</th>
-                            <th>Од.</th>
+                            <th>Ед.</th>
                             {{#usesnumber}}
-                            <th>Серія</th>
+                            <th>Серия</th>
                             <th>Дата</th>
                             {{/usesnumber}}
 
 
-                            <th class="text-right">Кіл.</th>
-                            <th class="text-right">Ціна</th>
+                            <th class="text-right">Кол.</th>
+                            <th class="text-right">Цена</th>
 
-                            <th class="text-right">Сума</th>
+                            <th class="text-right">Сумма</th>
                             <th  ></th>
                         </tr>
                         <tr zippy="detail">
@@ -152,7 +152,7 @@
 
 
                             <td class="text-right"></td>
-                            <td class="text-right">На суму:</td>
+                            <td class="text-right">На сумму:</td>
 
 
                             <td zippy="total" class="text-right"></td>
@@ -162,7 +162,7 @@
 
                         <tr style="font-weight: bolder;">
 
-                            <td colspan={{colspan}} class="text-right"><span data-label="paydisc">Знижка:</span></td>
+                            <td colspan={{colspan}} class="text-right"><span data-label="paydisc">Скидка:</span></td>
 
 
                             <td zippy="paydisc" class="text-right"></td>
@@ -175,7 +175,7 @@
 
                         <tr style="font-weight: bolder;">
 
-                            <td colspan={{colspan}} class="text-right"><span data-label="payamount">Всього:</span></td>
+                            <td colspan={{colspan}} class="text-right"><span data-label="payamount">Всего:</span></td>
 
 
                             <td zippy="payamount" class="text-right"></td>
@@ -184,14 +184,14 @@
                         </tr>
               {{#prepaid}}
                        <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan={{colspan}} class="text-right">Передплата:</td>
+                            <td data-label="prepaid" colspan={{colspan}} class="text-right">Предоплата:</td>
                             <td zippy="prepaid" class="text-right">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}                        
                         <tr style="font-weight: bolder;">
 
-                            <td colspan={{colspan}} class="text-right"><span data-label="payed">Внесена оплата:</span></td>
+                            <td colspan={{colspan}} class="text-right"><span data-label="payed">Внесенная оплата:</span></td>
 
 
                             <td zippy="payed" class="text-right"></td>
@@ -204,8 +204,8 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  ">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
 
@@ -216,7 +216,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Знижка</h5>
+                            <h5 class="modal-title">Скидка</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -240,7 +240,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Всього</h5>
+                            <h5 class="modal-title">Всего</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -287,36 +287,36 @@
         <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
                 <form zippy="editdetail">
-                    <h4>Введення товару </h4>
+                    <h4>Введение товара </h4>
 
 
                     <div class="form-group">
-                        <label for="edittovar">Назва</label>
-                        <input placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>
-                        <a zippy="openitemsel">Відкрити довідник</a>
-                        <br>Наявність: <span zippy="qtystock"></span>
+                        <label for="edittovar">Название</label>
+                        <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
+                        <a zippy="openitemsel">Открыть справочник</a>
+                        <br>Наличие: <span zippy="qtystock"></span>
                          {{^noshowpartion}}
-                        <br>Облікова  ціна: <span zippy="pricestock"></span>
+                        <br>Учетная цена: <span zippy="pricestock"></span>
                          {{/noshowpartion}}
 
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
-                        <label for="editserial">Серія виробника </label>
+                        <label for="editserial">Серия производителя </label>
                         <input class="form-control " zippy="editserial"/>
 
                     </div>
 
                     {{/usesnumber}}
                     <div class="form-group">
-                        <label for="editquantity">Кількість</label>
+                        <label for="editquantity">Количество</label>
                         <input  class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.\s]+"
                                style="width: 70px;">
 
                     </div>
 
                     <div class="form-group">
-                        <label for="editprice">Ціна </label>
+                        <label for="editprice">Цена </label>
                         <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9,\.\s]+"
                                style="width: 70px;">
 
@@ -324,8 +324,8 @@
 
 
                     <div class="form-group">
-                        <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="До списку" class="btn btn-secondary ">
+                        <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-primary ">
+                        &nbsp; <input type="button" zippy="cancelrow" value="В список" class="btn btn-secondary ">
                     </div>
 
 
@@ -339,12 +339,12 @@
             </div>
         </div>
         <form zippy="editcust">
-            <h3>&nbsp;Новий покупець </h3>
+            <h3>&nbsp;Новый покупатель </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
-                        <label for="editcustname">Назва </label>
+                        <label for="editcustname">Название </label>
                         <input class="form-control " zippy="editcustname" required="required"/>
                     </div>
                     <div class="form-group">
@@ -358,8 +358,8 @@
 
 
                     <div class="form-group">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary ">
+                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-outline-secondary ">
                     </div>
                 </div>
             </div>
@@ -368,14 +368,14 @@
             <div class="modal-dialog modal-dialog-centered  modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Сканування</h5>
+                        <h5 class="modal-title">Сканирование</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
-                            <b>Налаштування камери <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
+                            <b>Настройка камеры <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
                         </a>
                         <div id="collapcescanner" class="collapse  ">
                             <form class="controls">
@@ -383,7 +383,7 @@
                                     <div class="col-12 col-sm-6">
 
                                         <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Тип коду</label>
+                                            <label class="col-sm-5 col-form-label">Тип кода</label>
                                             <div class="col-sm-7">
 
                                                 <select id="decoder_readers" name="decoder_readers" class="form-control">
@@ -403,7 +403,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Роздiльна здатнiсть</label>
+                                            <label class="col-sm-5 col-form-label">Разрешение</label>
                                             <div class="col-sm-7">
 
                                                 <select id="input-stream_constraints" name="input-stream_constraints"
@@ -475,7 +475,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Пiдсвiтка</label>
+                                            <label class="col-sm-5 col-form-label">Подсветка</label>
                                             <div class="col-sm-7">
 
                                                 <input type="checkbox" name="settings_torch"/>
@@ -487,7 +487,7 @@
                         </div>
                         <br><br>
                         Код: <span id="scancode"></span>&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-sm btn-success" onclick="mcode()">Додати</button>
+                        <button class="btn btn-sm btn-success" onclick="mcode()">Добавить</button>
                         <br>
                         <br>
 

@@ -1,6 +1,6 @@
 <html>
       <head>
-        <title> АРМ кухнi  </title>
+        <title> АРМ кухни  </title>
 
     </head>
 
@@ -8,21 +8,21 @@
         <div class="row"  >
 
             <div class="col-12 col-md-4 col-xl-3   " >
-                <h3>АРМ кухнi</h3>
+                <h3>АРМ кухни</h3>
                 
                 <div id="newordersalert" style="display:none;"  class="alert alert-success  ml-4"  >
                     <span id="neworderscnt"></span>
                 </div>   
             </div>
             <div class="col-12 col-md-4 col-xl-3   " >
-             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
+             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звуковое сообщение" class="fa fa-bell-slash text-secondary"></i>  
             </div>
             
       
              <div class="w-100">
     {{={| |}=}}             
   <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
-        <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info">Оновити</a>
+        <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info">Обновить</a>
         
         <table class="table table-striped">
     <tr v-for="item, index in itemlist">
@@ -110,7 +110,7 @@
                                 
                                 if(answer.cnt > 0){
                                    $('#newordersalert').show();
-                                   $('#neworderscnt').text('Нових замовлень ' + answer.cnt);
+                                   $('#neworderscnt').text('Новых заказов ' + answer.cnt);
                                    beep()
                                    updateItems() 
                                 }

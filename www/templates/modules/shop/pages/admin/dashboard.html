@@ -15,7 +15,7 @@
                  
             </div>
            <div class="col-12 text-center ">
-                <h4>Статистика за останнi 30 днiв</h4>
+                <h4>Статистика за последние 30 дней</h4>
 
                 
             </div>
@@ -42,9 +42,9 @@
           <div class="col-12    ">   </div> 
              <div class="col-12 col-md-4   ">
                 
-                  <h5>Топ проданих товарiв </h5>             
+                  <h5>Топ проданных товаров </h5>             
                   <table class="table table-sm">
-                    <tr> <th>Товар</th><th class="text-right">На суму</th>  </tr>
+                    <tr> <th>Товар</th><th class="text-right">На сумму</th>  </tr>
                     {{#topitems}}
                     <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
                     {{/topitems}}
@@ -53,9 +53,9 @@
       
                  <div class="col-12 col-md-4   ">
                 
-                  <h5>Топ  проданих категорiй</h5>             
+                  <h5>Топ проданных категорий</h5>             
                   <table class="table table-sm">
-                     <tr> <th>Категорiя</th><th class="text-right">На суму</th>  </tr>
+                     <tr> <th>Категория</th><th class="text-right">На сумму</th>  </tr>
                     {{#topcats}}
                     <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
                     {{/topcats}}
@@ -65,9 +65,9 @@
             </div>      
              <div class="col-12 col-md-4   ">
                 
-                  <h5>Топ переглядiв</h5>             
+                  <h5>Топ просмотров</h5>             
                   <table class="table table-sm">
-                     <tr> <th>Товар</th><th class="text-right">Кiл.</th>  </tr>
+                     <tr> <th>Товар</th><th class="text-right">Кол.</th>  </tr>
                     {{#topview}}
                     <tr> <td>{{n}}</td><td class="text-right">{{v}}</td>  </tr>                       
                     {{/topview}}
@@ -111,7 +111,7 @@ var visOptions = {
 title: {
 display: true,   
 fontColor: fontcolor,
-text: 'Вiдвiдувачi сайту  '
+text: 'Посетители сайта '
 },
 legend: {
 display: false     
@@ -158,7 +158,7 @@ var orderOptions = {
 title: {
 display: true,   
 fontColor: fontcolor,
-text: 'Замовлення  '
+text: 'Заказ '
 },
 legend: {
 display: false     
@@ -206,7 +206,7 @@ window.onload = function() {
             
           callPageMethod('updateSiteMap',null,null,(data)=> 
           {
-             toastr.success('Оновлено','',{'timeOut':'2000'})  
+             toastr.success('Обновлено','',{'timeOut':'2000'})  
           });           
       
    }

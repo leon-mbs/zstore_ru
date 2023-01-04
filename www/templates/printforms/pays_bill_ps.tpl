@@ -1,6 +1,6 @@
 <align>center</align>
 <font bold="true">a</font>
-<text>Квитанция об  оплате</text>
+<text>Квитанция об оплате</text>
 <newline ></newline>
 <font >a</font>
 <align>left</align>

@@ -4,18 +4,18 @@
     <tr>
 
         <td align="center" colspan="11">
-          <b>  Прайс від {{date}}</b><br><br>
+          <b>  Прайс от {{date}}</b><br><br>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
-        <th>Найменування</th>
+        <th>Наименование</th>
         <th>Код</th>
-        <th>Од. вим.</th>
-        <th>Категорія</th>
+        <th>Ед. изм.</th>
+        <th>Категория</th>
         <th>Бренд</th>
-        <th align="right">Кiл.</th>
+        <th align="right">Кол.</th>
         <th align="right">{{price1name}}</th>
         <th align="right">{{price2name}}</th>
         <th align="right">{{price3name}}</th>

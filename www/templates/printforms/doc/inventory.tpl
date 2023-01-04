@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b> Інвентаризація № {{document_number}} від {{date}}</b> <br>
+            <b> Инвентаризация № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
    <tr>
@@ -17,7 +17,7 @@
     {{#reserved}}
   <tr>
         <td colspan="4">
-            <small>Враховуючи  зарезервовані</small>
+            <small>Учитывая зарезервированные</small>
         </td>
 
     </tr>
@@ -25,11 +25,11 @@
 
 
     <tr style="font-weight: bolder;">
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Назва</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
 
 
-        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кіл.</th>
+        <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Кол.</th>
         <th align="right" width="50px" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Факт</th>
     </tr>
        {{#_detaillost}}
@@ -69,7 +69,7 @@
        {{#summinus}}  
    <tr>
         <td  >
-            <b> Недостача на  суму:   </b>
+            <b> Недостача на сумму:   </b>
         </td>
       <td colspan="3" align="right" style="color:red">
             <b>  {{summinus}}   </b>
@@ -80,7 +80,7 @@
    {{#sumplus}} 
    <tr>
         <td  >
-           <b>  Злишки на  суму:  </b>
+           <b>  Остатки на сумму:  </b>
         </td>    <td colspan="3" align="right">
              <b>  {{sumplus}}   </b>
         </td>

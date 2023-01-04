@@ -98,7 +98,12 @@ class Users extends \App\Pages\Base
     }
 
     public function saveOnClick($sender) {
+        if (System::getUser()->rolename != 'admins') {
 
+            $this->setError('onlyadmisaccess');
+            App::RedirectError();
+            return false;
+        }
         $emp = \App\Entity\Employee::getByLogin($this->user->userlogin);
 
         $this->user->email = $this->editpan->editform->editemail->getText();

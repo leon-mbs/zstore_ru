@@ -1,19 +1,19 @@
 <html>
       <head>
-        <title> Розрахунки з покупцями  </title>
+        <title> Расчеты с покупателями  </title>
 
     </head>
  <body>
         <div class="row">
             <div class="col-12  col-xl-10 " zippy="clist">
-                <h3>Розрахунки з покупцями </h3>
+                <h3>Расчеты с покупателями </h3>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
 
                         <label for="holdlist"> Холдинг </label>
                         <select class="form-control mr-2" zippy="holdlist">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -25,10 +25,10 @@
                 <table class="table   table-sm   ">
                     <tr>
 
-                        <th>Ім'я</th>
+                        <th>Имя</th>
                         <th>Тел.</th>
-                         <th class="text-right">Деб. борг</th>
-                        <th class="text-right">Кред. борг</th>
+                         <th class="text-right">Деб. долг</th>
+                        <th class="text-right">Кред. долг</th>
 
                         <th></th>
                         <th></th>
@@ -38,23 +38,23 @@
                     </tr>
                     <tr zippy="custlist">
 
-                        <td><a zippy="customer_name" title="Відкрити профіль"></a></td>
+                        <td><a zippy="customer_name" title="Открыть профиль"></a></td>
                         <td zippy="phone"></td>
 
                          <td zippy="amountd" class="text-right"></td>
                         <td zippy="amountc" class="text-right"></td>
-                   <td><a zippy="createpay">Створити  КО</a></td>
+                   <td><a zippy="createpay">Создать КО</a></td>
 
 
-                        <td><a zippy="showdet">Деталiзацiя</a></td>
-                        <td><a zippy="showdocs">Документи до оплати</a></td>
+                        <td><a zippy="showdet">Детализация</a></td>
+                        <td><a zippy="showdocs">Документы к оплате</a></td>
 
 
                     </tr>
                     <tr>
 
                         <td></td>
-                        <td class="text-right text-bold">Всього:</td>
+                        <td class="text-right text-bold">Всего:</td>
 
                        <td zippy="totamountd" class="text-right text-bold"></td>
                         <td zippy="totamountc" class="text-right text-bold"></td>
@@ -70,9 +70,9 @@
             </div>
 
             <div class="col-12 col-lg-8 col-xl-6 " zippy="plist">
-                <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
+                <a zippy="back"><i class="fa fa-arrow-alt-circle-left"></i> к списку</a>
                 <h3 zippy="cname"></h3>
-                <small><i class="fa fa-exclamation-circle"></i> Для  оплати  по  угодах  а  не окремих документах  використовуются  кассовi  ордери</small>
+                <small><i class="fa fa-exclamation-circle"></i> Для оплаты по договорам, а не отдельным документам используются кассовые ордера</small>
 
                 <table class="table table-sm    ">
                     <tr>
@@ -82,7 +82,7 @@
                         <th>Дата</th>
 
 
-                        <th class="text-right">Сума</th>
+                        <th class="text-right">Сумма</th>
 
                        
 
@@ -100,7 +100,7 @@
 
 
                         <td class="text-nowrap">
-                          &nbsp;  <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                          &nbsp;  <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
                             &nbsp; &nbsp;<a zippy="pay" title="Внести оплату"><i class="fa fa-credit-card"></i></a>
 
 
@@ -117,32 +117,32 @@
 
                 <div class="navbar nav">
                     <form zippy="payform" class="form-inline ">
-                        <label>До оплати</label>
-                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
+                        <label>К оплате</label>
+                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сумма..."
                                class="form-control mr-2">
-                        <label for="payment">рахунок</label>
+                        <label for="payment">счет</label>
                         <select class="form-control mr-2" zippy="payment">
 
                         </select>
                         {{#ppo}}
                         <label for="pos">POS</label>
                         <select class="form-control mr-2" zippy="pos">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не выбран</option>
 
                         </select>
                         {{/ppo}}
                         <label>дата</label>
                         <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
 
-                        <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
+                        <input zippy="pcomment" placeholder="Комментарий..." class="form-control mr-2">
 
-                        <button type="submit" class="  btn btn-info  mr-2 ">Оплатити</button>
+                        <button type="submit" class="  btn btn-info  mr-2 ">Оплатить</button>
 
 
                     </form>
 
                 </div>
-                <b><i class="fa fa-credit-card"></i> Оплати ( <span zippy="pname"></span>)</b><br>
+                <b><i class="fa fa-credit-card"></i> Оплаты ( <span zippy="pname"></span>)</b><br>
                 <table cellpadding="4">
                     <tr zippy="paylist">
                         <td zippy="pldate"></td>
@@ -161,20 +161,20 @@
             
             
         <div class="col-12 col-lg-10 col-xl-8 " zippy="dlist">
-                <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> до списку</a>
+                <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> к списку</a>
                 <h3 zippy="cnamed"></h3>
-                <small>                Прибуток - надходження від контрагента грошей або ТМЦ. 
-               Видаток - видача контрагенту грошей або ТМЦ </small>
+                <small>                Прибыль - поступление от контрагента денег или ТМЦ. 
+               Расход - выдача контрагенту денег или ТМЦ </small>
                 <table class="table table-sm ">
                      <tr>
 
                         <th  >Документ</th>
                         <th  >Номер</th>
                         <th  >Дата</th>
-                        <th  class="text-right">Прибуток</th>
-                        <th  class="text-right">Видаток</th>
-                        <th  class="text-right">Кред. борг</th>
-                        <th  class="text-right">Деб. борг</th>
+                        <th  class="text-right">Прибыль</th>
+                        <th  class="text-right">Расход</th>
+                        <th  class="text-right">Кред. долг</th>
+                        <th  class="text-right">Деб. долг</th>
 
 
 
@@ -194,7 +194,7 @@
                       <td zippy="out" class="text-right"></td>
                       <td zippy="bd" class="text-right"></td>
                       <td zippy="bc" class="text-right"></td>
-                      <td  > &nbsp; <a zippy="showdet" title="Перегляд"><i class="fa fa-eye"></i></a></td>
+                      <td  > &nbsp; <a zippy="showdet" title="Просмотр"><i class="fa fa-eye"></i></a></td>
                     
                     </tr>                    
                 </table>

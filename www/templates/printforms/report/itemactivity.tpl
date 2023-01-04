@@ -2,13 +2,13 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="8">
-            Рух по складу
+            Движение по складу
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="8">
-            Період з {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; 
+            Период с {{datefrom}} по {{dateto}}&nbsp;&nbsp;&nbsp;&nbsp; 
         </td>
     </tr>
 
@@ -17,12 +17,12 @@
         <th style="border: solid black 1px">Дата</th>
         <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Код</th>
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Наименование</th>
 
-        <th align="right" style="border: solid black 1px">Поч.</th>
+        <th align="right" style="border: solid black 1px">Нач.</th>
         <th style="border: solid black 1px">Прих.</th>
-        <th align="right" style="border: solid black 1px">Витр.</th>
-        <th align="right" style="border: solid black 1px">Кін.</th>
+        <th align="right" style="border: solid black 1px">Расх.</th>
+        <th align="right" style="border: solid black 1px">Кон.</th>
        
     </tr>
     {{#_detail}}
@@ -46,7 +46,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td align="right"><b><div>Всього</div></b></td>
+        <td align="right"><b><div>Всего</div></b></td>
 
         <td align="right"> </td>
         <td align="right"><b>{{bqin}}</b></td>
@@ -62,7 +62,7 @@
         <td></td>
         <td></td>
         <td></td>
-        <td align="right"><b>На суму</b></td>
+        <td align="right"><b>На сумму</b></td>
 
         <td align="right"><b> </b></td>
         <td align="right"><b>{{bain}}</b></td>

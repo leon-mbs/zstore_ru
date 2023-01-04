@@ -2,19 +2,19 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Фiнансовi результати
+            Финансовые результаты
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="3">
-            Перiод з {{datefrom}} по {{dateto}} <br>
+            Период с {{datefrom}} по {{dateto}} <br>
         </td>
     </tr>
     <tr>
 
         <td colspan="3">
-            <b>Прибутки</b>
+            <b>Прибыли</b>
         </td>
     </tr>
 
@@ -42,7 +42,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Всього:</td>
+        <td align="right">Всего:</td>
 
         <td align="right">{{tin}}</td>
         <td></td>
@@ -50,7 +50,7 @@
     <tr>
 
         <td colspan="3">
-            <b>Видатки</b> 
+            <b>Расходы</b> 
         </td>
     </tr>
 
@@ -77,7 +77,7 @@
     {{/_detail2}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Всього:</td>
+        <td align="right">Всего:</td>
 
         <td align="right">{{tout}}</td>
         <td></td>
@@ -92,7 +92,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <td>Фiнансовi показники</td>
+        <td>Финансовые показатели</td>
 
         <td></td>
         <td></td>
@@ -103,48 +103,48 @@
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Виручка (відпускна ціна на кількість) мінус змінні витрати (собівартість)"></i>
+               title="Выручка (отпускная цена на количество) минус переменные расходы (себестоимость)"></i>
         </td>
     </tr>
     <tr>
-        <td>Змiннi витрати :</td>
+        <td>Переменные расходы :</td>
         <td align="right"> {{tvc}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Cобівартість"></i>
+               title="Себестоимость"></i>
         </td>
     </tr>
     <tr>
-        <td>Операцiйнi витрати:</td>
+        <td>Операционные расходы:</td>
         <td align="right">{{OP}}  </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Витрати мінус змінні витрати (собівартість)"></i>
+               title="Расходы минус переменные расходы (себестоимость)"></i>
         </td>
     </tr>
     <tr>
-        <td>Чистий прибуток:</td>
+        <td>Чистая прибыль:</td>
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="проход мiнус  видатки"></i>
+               title="проход минус расходы"></i>
         </td>
     </tr>
     {{#isinv}}
     <tr>
-        <td>Інвестиції:</td>
+        <td>Инвестиции:</td>
         <td align="right"> {{inv}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="ТМЦ на складі та основні фонди на балансі"></i>
+               title="ТМЦ на складе и основные фонды на балансе"></i>
         </td>
     </tr>
     <tr>
-        <td>Вiддача  вiд iнвестицiй (ROI),%:</td>
+        <td>Отдача от инвестиций (ROI),%:</td>
         <td align="right"> {{ROI}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Проход на  iнвестицiї"></i>
+               title="Проход на инвестиции"></i>
         </td>
     </tr>
     {{/isinv}}

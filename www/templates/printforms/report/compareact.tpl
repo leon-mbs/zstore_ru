@@ -3,7 +3,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Акт звiрки  вiд {{date}}<br>
+            Акт сверки от {{date}}<br>
         </td>
     </tr>
    <tr style=" font-weight: bolder;">

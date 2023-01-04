@@ -5,11 +5,11 @@
         <div class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Експорт нових товарів</h3>
-                              <a zippy="checkconn"><i class="fa fa fa-sync"></i> Перевiрити  з'єднання</a>
+                <h3>Экспорт новых товаров</h3>
+                              <a zippy="checkconn"><i class="fa fa fa-sync"></i> Проверить соединение</a>
    <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
-                       <label for="searchcat">Категорія</label>
+                       <label for="searchcat">Категория</label>
 
                         <select class="form-control mr-sm-2" zippy="searchcat">
                             <option value="0">Не задана</option>
@@ -17,7 +17,7 @@
 
 
                         <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Завантажити">
+                               value="Загрузить">
                         <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
 
 
@@ -30,11 +30,11 @@
 
                             <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
 
-                            <th>Найменування</th>
+                            <th>Наименование</th>
                             <th>Артикул</th>
-                            <th class="text-right">Кіл.</th>
-                            <th class="text-right">Ціна</th>
-                            <th> Опис</th>
+                            <th class="text-right">Кол.</th>
+                            <th class="text-right">Цена</th>
+                            <th> Описание</th>
 
 
                         </tr>
@@ -55,7 +55,7 @@
 
 
                         &nbsp;<input onclick="$('#loader3').removeAttr('style')" type="submit"
-                                     class="  btn btn-outline-success   " value="Відправити">
+                                     class="  btn btn-outline-success   " value="Отправить">
                         <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
 
                     </div>
@@ -63,23 +63,23 @@
             </div>
             <div class="col-12 col-md-8  ">
 
-                <h3>Оновлення цін і кількостей</h3>
+                <h3>Обновление цен и количества</h3>
 
                 <div class="navbar nav">
                   
                   <form zippy="upd" class="form-inline ">
-                      <label for="updcat">Категорiя</label>
+                      <label for="updcat">Категория</label>
 
                         <select class="form-control mr-sm-2" zippy="updcat">
-                            <option value="0">Всi</option>
+                            <option value="0">Все</option>
                         </select>
                 
       
-                    <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
+                    <a zippy="updateqty" class="  btn btn-outline-success  ">Обновить количество</a>
                     <div id="loader" style="display:none" class="spinner-border spinner-border-sm"></div>
 
                     &nbsp;&nbsp;
-                    <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
+                    <a zippy="updateprice" class="  btn btn-outline-success  ">Обновить цены</a>
                     <div id="loader7" style="display:none" class="spinner-border spinner-border-sm"></div>
                    </form>
 
@@ -88,10 +88,10 @@
 
             <div class="col-12 col-md-8  ">
 
-                <h3>Завантаження товарів з магазину </h3>
+                <h3>Загрузка товаров из магазина </h3>
 
                 <div class="navbar nav">
-                    <a zippy="getitems" class="  btn btn-outline-success  ">Завантажити</a>
+                    <a zippy="getitems" class="  btn btn-outline-success  ">Загрузить</a>
                     <div id="loader6" style="display:none" class="spinner-border spinner-border-sm"></div>
 
 

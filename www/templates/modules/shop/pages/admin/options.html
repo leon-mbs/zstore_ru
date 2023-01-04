@@ -6,14 +6,14 @@
 
         <div class="row ">
             <div class="col-12    col-md-6   col-xl-4   ">
-                <h4>Налаштування</h4>
+                <h4>Настройки</h4>
                 <small><i class="fa fa-exclamation-triangle"></i>
-                Прямий перехiд на каталог [адресасайту]/shop, 
-                прямий перехiд на склад [адресасайту]/store
+                Прямой переход в каталог [адрессайта]/shop, 
+                прямой переход на склад [адрессайта]/store
                 </small>
                 <form zippy="shop" enctype="multipart/form-data">
                     <div class="form-group   ">
-                        <label  for="shopname">Назва магазину</label>
+                        <label  for="shopname">Название магазина</label>
                      
                             <input required="required" class="form-control " zippy="shopname"/>
                          
@@ -29,31 +29,31 @@
 
 
                     <div class="form-group    ">
-                        <label   for="shopdefpricetype">Тип цiни </label>
+                        <label   for="shopdefpricetype">Тип цены </label>
                       
                             <select class="form-control" zippy="shopdefpricetype">
                             </select>
                          
                     </div>
                  <div class="form-group  ">
-                        <label for="salesource">Джерело продаж</label>
+                        <label for="salesource">Источник продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>                    
                      
                     <div class="form-group   ">
-                        <label   for="shopordertype">Формувати  по  замовленню 
+                        <label   for="shopordertype">Формировать по заказу 
                             
                         </label>
                              <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" В касовому  чеку нема  доставки. В кафе не показуются  фiльтри та  вiдгуки. В доставцi тiльки адреса в мiстi, заданому в  налаштуваннях кафе "></i>
+                                   title=" В кассовом чеке нет доставки. В кафе не показываются фильтры и отзывы. В доставке только адрес в городе, заданный в настройках кафе"></i>
                           
                             <select class="form-control " zippy="shopordertype">
 
-                                <option value='0'>Звичайне замовлення</option>
-                                <option value='1'>Касовий чек</option>
-                                <option value='2'>Замовлення кафе</option> 
+                                <option value='0'>Обычный заказ</option>
+                                <option value='1'>Кассовый чек</option>
+                                <option value='2'>Заказ кафе</option> 
 
                             </select>
                             
@@ -61,12 +61,12 @@
                     </div>
                     {{#usebranch}}
                     <div class="form-group   ">
-                        <label   for="shopdefbranch">Фiлiя </label>
+                        <label   for="shopdefbranch">Филиал </label>
                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Фiлiя, з  якою створюются  документи "></i>
+                                   title="Филиал, с которого создаются документы "></i>
                        
                             <select class="form-control" zippy="shopdefbranch">
-                                <option value="0">Не вибрана</option>
+                                <option value="0">Не выбрано</option>
                             </select>
                             
                       
@@ -75,20 +75,20 @@
               
 
                     <div class="form-group   ">
-                        <label   for="email">Email для зворотнього зв'язку</label>
+                        <label   for="email">E-mail для обратной связи</label>
                   
                             <input class="form-control " zippy="email"/>
                        
                     </div>
     
                   <div class="form-group   ">
-                        <label   for="phone">Телефон  для  замовлень</label>
+                        <label   for="phone">Телефон для заказов</label>
                         
                             <input class="form-control " zippy="phone"/>
                         
                   </div>
                   <div class="form-group   ">
-                        <label   for="currencyname">Грошова одиниця</label>
+                        <label   for="currencyname">Денежная единица</label>
           
                             <input class="form-control " zippy="currencyname"/>
                       
@@ -98,27 +98,27 @@
 
                     <div class="form-check">
                         <input zippy="usefilter" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usefilter">Показувати фiльтр вiдбору </label>
+                        <label class="form-check-label" for="usefilter">Показывать фильтр отбора </label>
 
                     </div>
                     <div class="form-check">
                         <input zippy="usefeedback" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usefeedback">Показувати  вiдгуки </label>
+                        <label class="form-check-label" for="usefeedback">Показывать отзывы </label>
 
                     </div>
                
                     <div class="form-check">
                         <input zippy="uselogin" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="uselogin">Вхід в каталог тільки дозволеним покупцям </label>
+                        <label class="form-check-label" for="uselogin">Вход в каталог только разрешенным покупателям </label>
                          <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Для  доступу  в  каталог  контрагент повинен  бути залогіненим  та мати  дозвіл (чекер в довіднику контрагентів) "></i>
+                                   title="Для доступа в каталог контрагент должен быть залогиненым и иметь разрешение (чекер в справочнике контрагентов) "></i>
                         
                     </div>
                     <div class="form-check">
                         <input zippy="usemainpage" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usemainpage">Виставити каталог як головну сторінку </label>
+                        <label class="form-check-label" for="usemainpage">Выставить каталог как главную страницу </label>
                          <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" Каталог буде відкриватися при переході на головну сторінку сайту. Перехід в облікову систему за адресою /store "></i>
+                                   title="Каталог будет открываться при переходе на главную страницу сайта. Переход в учетную систему по адресу /store "></i>
                           
                         
                     </div>
@@ -126,7 +126,7 @@
          
                     <div class="form-group mt-2  ">
                         <div class="col-sm-4">
-                            <button class="btn btn-primary" type="submit">Зберегти</button>
+                            <button class="btn btn-primary" type="submit">Сохранить</button>
                        
                         </div>
                     </div>

@@ -1,18 +1,18 @@
 <html>
    <head>
-        <title> Журнал руху ТМЦ  </title>
+        <title> Журнал движения ТМЦ  </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12 col-xl-10  ">
 
-                <h3>Журнал руху ТМЦ </h3>
+                <h3>Журнал движения ТМЦ </h3>
 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
-                        <label for="from">З </label>
+                        <label for="from">С </label>
                         <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
 
 
@@ -21,10 +21,10 @@
 
                         <label for="fstore"> склад </label>
                         <select class="form-control mr-2" zippy="fstore">
-                            <option value="0">Не вибраний</option>
+                            <option value="0">Не выбран</option>
                         </select>
                         <label for="fitem"> ТМЦ </label>
-                        <input placeholder="Почніть вводити..." class="form-control mr-sm-2" zippy="fitem">
+                        <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="fitem">
 
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -46,15 +46,15 @@
                         <th>Контрагент</th>
                         {{^noshowpartion}}
 
-                        <th class="text-right">Обл. ціна</th>
+                        <th class="text-right">Уч. цена</th>
                         {{/noshowpartion}}
 
 
                         {{#usesnumber}}
-                        <th class="text-right">Серія</th>
+                        <th class="text-right">Серия</th>
                         {{/usesnumber}}
-                        <th class="text-right">Кіл</th>
-                        <th class="text-right">Ціна</th>
+                        <th class="text-right">Кол.</th>
+                        <th class="text-right">Цена</th>
 
 
                         <th></th>

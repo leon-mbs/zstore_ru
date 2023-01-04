@@ -5,9 +5,9 @@
         <div class="row " style="min-height:400px;">
             <div zippy="plist" class="col-10  col-md-8 col-xl-6">
 
-                <h4>Мої замовлення</h4>
+                <h4>Мои заказы</h4>
                 <table class="table table-sm">
-                  <tr><th>Номер</th><th>Дата</th><th class="text-right">Сума</th><th>Статус</th>
+                  <tr><th>Номер</th><th>Дата</th><th class="text-right">Сумма</th><th>Статус</th>
                    {{#usepayment}}<th> </th>           {{/usepayment}}
                   <th> </th>
                   </tr>
@@ -17,22 +17,22 @@
                   <td zippy="amount" class="text-right"></td>
                   <td zippy="status"></td>
                   
-                  {{#usepayment}}       <td  ><a zippy="topay">Оплатити</a></td>           {{/usepayment}}
-                  <td  ><a zippy="detail">Детальнiше</a></td>
+                  {{#usepayment}}       <td  ><a zippy="topay">Оплатить</a></td>           {{/usepayment}}
+                  <td  ><a zippy="detail">Детальнее</a></td>
                   </tr>
                 </table>
                                  
             </div>
             <div zippy="porder" class="col-10  col-md-8 col-xl-6">
-                 <a zippy="back">До списку</a>
+                 <a zippy="back">К списку</a>
                  <table class="table table-sm">
-                  <tr><th>Найменування</th><th class="text-right">Кіл.</th><th class="text-right">Ціна</th><th class="text-right">Сума</th><th> </th></tr>
+                  <tr><th>Наименование</th><th class="text-right">Кол.</th><th class="text-right">Цена</th><th class="text-right">Сумма</th><th> </th></tr>
                   <tr zippy="dlist">
                   <td zippy="itemname"></td>
                   <td zippy="qty" class="text-right"></td>
                   <td zippy="price" class="text-right"></td>
                   <td zippy="amount" class="text-right"></td>
-                  <td><a zippy="addcart" title="Додати до кошика"><i class="fa fa-shopping-cart"></i></a></td>
+                  <td><a zippy="addcart" title="Добавить в корзину"><i class="fa fa-shopping-cart"></i></a></td>
                   </tr>
                 </table>
                 

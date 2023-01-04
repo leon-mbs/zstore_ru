@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Табель облiку робочого часу  </title>
+        <title>  Табель учета рабочего времени  </title>
 
     </head>
     <head>
@@ -18,18 +18,18 @@
           {{={| |}=}}   
          <div class="row">
             <div class="col-12 col-lg-10" id="vapp" >
-                <h4>Табель облiку робочого часу</h4>
+                <h4>Табель учета рабочего времени</h4>
                      <div class="navbar nav">
                     <form   class="form-inline ">
 
-                        <label for="from">З</label>
+                        <label for="from">С</label>
                         <input v-model="from"  class="form-control mr-2" style="width: 120px" type="date" >
 
                         <label for="to">по</label>
                         <input v-model="to" class="form-control mr-2" style="width: 120px" type="date" >
 
 
-                        <label v-show="isadmin==true" >Спiвробiтник</label>
+                        <label v-show="isadmin==true" >Сотрудник</label>
                         <select2     v-model="empid" :options="emps"   >
 
                         </select2>
@@ -39,16 +39,16 @@
 
                     </form>
                 </div>
-                       <a v-on:click.prevent="add"  class="btn  btn-success">Додати</a>
+                       <a v-on:click.prevent="add"  class="btn  btn-success">Добавить</a>
                 
                    <ul class="nav nav-tabs">
                   
                        <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#tcal">Календар</a>
+                        <a class="nav-link active" data-toggle="tab" href="#tcal">Календарь</a>
                       </li>
                       
                        <li class="nav-item">
-                        <a class="nav-link " data-toggle="tab" href="#ttable"> Таблиця </a>
+                        <a class="nav-link " data-toggle="tab" href="#ttable"> Таблица </a>
                       </li>
                        <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#tstat">Статистика  </a>
@@ -76,8 +76,8 @@
 
                                 <td aling="center">
 
-                                    <a v-on:click.prevent="edit(tm.time_id)"   title="Редагувати"><i class="fa fa-edit"></i></a>
-                                    &nbsp; &nbsp;<a v-on:click.prevent="del(tm.time_id)"  title="Видалити"><i class="fa fa-trash"></i></a>
+                                    <a v-on:click.prevent="edit(tm.time_id)"   title="Редактировать"><i class="fa fa-edit"></i></a>
+                                    &nbsp; &nbsp;<a v-on:click.prevent="del(tm.time_id)"  title="Удалить"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         </table>
@@ -103,12 +103,12 @@
  
       <div class="modal-body">
     <form id="fval" >
-                    <h4 v-show="edited>0">Редагування</h4>
-                    <h4 v-show="edited==0">Новий запис</h4>
+                    <h4 v-show="edited>0">Редактирование</h4>
+                    <h4 v-show="edited==0">Новая запись</h4>
                     
                     <div    class="form-group">
                     
-                     <label  >Спiвробiтник</label>
+                     <label  >Сотрудник</label>
                         <select2     v-model="editempid" :options="emps"   >
 
                        </select2>
@@ -120,7 +120,7 @@
                         <input v-model="editdate" required="required" class="form-control"  type="date" />
                     </div>
                     <div class="form-group">
-                        <label for="editfrom">З</label>
+                        <label for="editfrom">С</label>
                         <input v-model="editfrom" required="required"                                  class="form-control"  type="time" />
                     </div>
                     <div class="form-group">
@@ -130,16 +130,16 @@
                     <div class="form-group">
                         <label for="edittype">Тип</label>
                         <select v-model="edittype"  class="form-control">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не выбрано</option>
                             <option v-for="t in types" :value="t.key">{{t.value}}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="editbreak">Перерва, хв</label>
+                        <label for="editbreak">Перерыв, мин</label>
                         <input   v-model="editbreak" required="required" style="width:75px;" pattern="[0-9]+" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label for="editnote">Примiтка</label>
+                        <label for="editnote">Примечание</label>
                         <input  v-model="editdesc" class="form-control" />
                     </div>
 
@@ -147,8 +147,8 @@
                 </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
-        <button v-on:click.prevent="save" type="button" class="btn btn-primary">Зберегти</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+        <button v-on:click.prevent="save" type="button" class="btn btn-primary">Сохранить</button>
       </div>
     </div>
   </div>
@@ -215,7 +215,7 @@ var calendar
                 
                onFilter:function(){
                    if(Number.isNaN( Number.parseInt(this.empid)) ) {
-                      alert('Не вибраний спiвробiтник');
+                      alert('Не выбран сотрудник');
                       return;
                   }     
                     this.loaddata() ;       
@@ -384,7 +384,7 @@ var calendar
            
 
   } ,        
-         locale: 'ua' 
+         locale: 'ru' 
        
     
       

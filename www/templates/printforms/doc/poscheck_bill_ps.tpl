@@ -45,7 +45,7 @@
  
     {{/isdisc}}
    {{#delbonus}}
- <text>Списано бонусiв: {{delbonus}}</text>
+ <text>Списано бонусов: {{delbonus}}</text>
  
     {{/delbonus}}
 

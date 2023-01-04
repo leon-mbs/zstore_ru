@@ -1,17 +1,17 @@
 <html>
    <head>
-        <title>  Особовий рахунок  </title>
+        <title>  Личный счет  </title>
 
     </head>
     <body>
         <div class="row">
                    
             <div class="col-12  col-lg-6  col-xl-5 ">
-                <h4>Звіт по заробітній платі</h4>   
+                <h4>Отчет по заработной плате</h4>   
                 <div class="navbar nav">
                     <form zippy="filterz" class="form-inline">
                                         
-                        <label for="from">З</label>
+                        <label for="from">С</label>
                         <select class="form-control  " zippy="mfrom"> </select>
                         <select class="form-control mr-sm-2" zippy="yfrom"> </select>
 
@@ -43,7 +43,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <td class="text-right">Всього:</td>
+        <td class="text-right">Всего:</td>
 
         <td class="text-right">{{memtotal}}</td>
       
@@ -51,7 +51,7 @@
      <tr >
 
         <td style="font-weight: bolder;" colspan="2">
-         <br>   Нарахування  та  утримання
+         <br>   Начисление и удержание
         </td>
     </tr>
     {{#mempst}}
@@ -70,11 +70,11 @@
                 
             </div>
              <div class="col-12  col-lg-6 col-xl-4">
-                <h4>Рух по особовому рахунку</h4>   
+                <h4>Движение по личному счету</h4>   
                    <div class="navbar nav">
                     <form zippy="filters" class="form-inline">
                                         
-                        <label for="from">З</label>
+                        <label for="from">С</label>
                         <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
 
                         <label for="to">по</label>
@@ -91,12 +91,12 @@
                    <table class="ctable">
                    <tr>
                      <th>Дата</th>
-                     <th class="text-right">Поч.</th>
+                     <th class="text-right">Нач.</th>
                      <th class="text-right">+ </th>
                      <th class="text-right">- </th>
-                     <th class="text-right">Кiн.</th>
+                     <th class="text-right">Кон.</th>
                      <th>Документ</th>
-                     <th>Коментар</th>
+                     <th>Комментарий</th>
 
                    </tr>
                    {{#mempacc}}

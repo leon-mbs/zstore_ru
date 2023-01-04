@@ -21,11 +21,11 @@
    <div class="row">
      <div class="col-md-4 col-12">
                <div class=" mb-1" style="height:30px;">
-                   <a v-on:click.prevent="onNewNode"    v-show="selectedNode != null"  class="btn btn-primary btn-sm mr-2"             ><i class="fa fa-plus-circle"></i> Новий вузол</a>
-                   <a v-on:click.prevent="onEditNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Редагувати вузол" class=" mr-2" ><i  class="fa fa-edit"></i></a>
-                   <a v-on:click.prevent="onCutNode"    v-show="selectedNode != null && selectedNode.pid > 0" title="Вирізати" class=" mr-2"><i class="fa fa-cut"></i></a>
-                   <a v-on:click.prevent="onPasteNode"  v-show="selectedNode != null && selectedNode.pid > 0 && cpn != null" title="Вставити" class=" mr-2"><i class="fa fa-paste"></i></a>
-                   <a v-on:click.prevent="onDeleteNode" v-show="selectedNode != null && selectedNode.pid > 0" title="Вилучити" class=" mr-2"><i class="fa fa-trash"></i></a>
+                   <a v-on:click.prevent="onNewNode"    v-show="selectedNode != null"  class="btn btn-primary btn-sm mr-2"><i class="fa fa-plus-circle"></i> Новый узел</a>
+                   <a v-on:click.prevent="onEditNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Редактировать узел" class=" mr-2" ><i  class="fa fa-edit"></i></a>
+                   <a v-on:click.prevent="onCutNode"    v-show="selectedNode != null && selectedNode.pid > 0" title="Вырезать" class=" mr-2"><i class="fa fa-cut"></i></a>
+                   <a v-on:click.prevent="onPasteNode"  v-show="selectedNode != null && selectedNode.pid > 0 && cpn != null" title="Вставить" class=" mr-2"><i class="fa fa-paste"></i></a>
+                   <a v-on:click.prevent="onDeleteNode" v-show="selectedNode != null && selectedNode.pid > 0" title="Изъять" class=" mr-2"><i class="fa fa-trash"></i></a>
 
                 </div>
                 <div id="tree"  ></div>
@@ -36,14 +36,14 @@
          <div class="row">
            <div class="col-md-4 col-12">
                 <div class=" mb-1" style="height:30px;">
-                            <a v-on:click.prevent="onNewTopic()" class="btn btn-primary btn-sm  mr-2"   ><i  class="fa fa-plus-circle"></i> Новий топік</a>
-                            <a v-on:click.prevent="onEditTopic()" v-show="selectedTopic != null" title="Редагувати"  class=" mr-2"><i class="fa fa-edit"></i></a>
-                            <a v-on:click.prevent="onCutTopic"   v-show="selectedTopic != null" title="Вирізати"  class=" mr-2"><i class="fa fa-cut"></i></a>
-                            <a v-on:click.prevent="onCopyTopic"  v-show="selectedTopic != null" title="Копіювати для вставки  як   копію"  class=" mr-2"><i class="fa fa-copy"></i></a>
-                            <a v-on:click.prevent="onCopyLinkTopic" v-show="selectedTopic != null" title="Копіювати для вставки  як посилання"  class=" mr-2"><i                                     class="fa fa-external-link-alt"></i></a>
-                            <a v-on:click.prevent="onPasteTopic" v-show="cpt != null || cptl != null" title="Вставити"  class=" mr-2"><i class="fa fa-paste"></i></a>
-                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null" title="Вилучити"  class=" mr-2"><i class="fa fa-trash"></i></a>
-                            <a v-bind:href="extlink" v-show="selectedTopic != null && selectedNode.ispublic==true " title="Зовнішнє посилання для перегляду топіка"  target="_blank" class=" mr-2"><i                                    class="fa      fa-link"></i></a>
+                            <a v-on:click.prevent="onNewTopic()" class="btn btn-primary btn-sm  mr-2"   ><i  class="fa fa-plus-circle"></i> Новый топик</a>
+                            <a v-on:click.prevent="onEditTopic()" v-show="selectedTopic != null" title="Редактировать"  class=" mr-2"><i class="fa fa-edit"></i></a>
+                            <a v-on:click.prevent="onCutTopic"   v-show="selectedTopic != null" title="Вырезать"  class=" mr-2"><i class="fa fa-cut"></i></a>
+                            <a v-on:click.prevent="onCopyTopic"  v-show="selectedTopic != null" title="Копировать для вставки как копию"  class=" mr-2"><i class="fa fa-copy"></i></a>
+                            <a v-on:click.prevent="onCopyLinkTopic" v-show="selectedTopic != null" title="Копировать для вставки как ссылку"  class=" mr-2"><i class="fa fa-external-link-alt"></i></a>
+                            <a v-on:click.prevent="onPasteTopic" v-show="cpt != null || cptl != null" title="Вставить"  class=" mr-2"><i class="fa fa-paste"></i></a>
+                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null" title="Изъять"  class=" mr-2"><i class="fa fa-trash"></i></a>
+                            <a v-bind:href="extlink" v-show="selectedTopic != null && selectedNode.ispublic==true " title="Внешняя ссылка для просмотра топика"  target="_blank" class=" mr-2"><i class="fa      fa-link"></i></a>
                         </div>           
                <table class="table table-sm table-hover">
                <tr v-for="t in topics"    v-bind:class="{'bg-success':issel(t.topic_id)}" >
@@ -104,19 +104,19 @@
                         <form class="form-inline"  >
 
                             <div class="form-group">
-                                <label for="skeyword">Пошук </label>
+                                <label for="skeyword">Поиск </label>
                                 <input  v-model="searchText"   class="form-control mr-2" >
                                 <div class="form-check">
                                     <input  v-model="searchTitle"  type="checkbox" class="form-check-input">
-                                    <label class="form-check-label mr-2" for="planned">тільки в заголовках</label>
+                                    <label class="form-check-label mr-2" for="planned">только в заголовках</label>
                                 </div>
                                 <select v-model="searchType"  class="form-control mr-2">
                                     <option value="1">Фраза</option>
-                                    <option value="2">Комбінація слів</option>
+                                    <option value="2">Комбинация слов</option>
                                 </select>
 
-                                <button v-on:click.prevent="onSearch"  type="button" class="btn btn-primary   mr-2"><i                                        class="fa fa-search"></i></button>                     
-                                <a v-on:click.prevent="onSearchFav" title="Знайти обрані" ><i class="fa fa-star" style="color:brown"></i></a>
+                                <button v-on:click.prevent="onSearch"  type="button" class="btn btn-primary   mr-2"><i  class="fa fa-search"></i></button>                     
+                                <a v-on:click.prevent="onSearchFav" title="Найти выбранные" ><i class="fa fa-star" style="color:brown"></i></a>
                             </div>
                         </form>
                     </div>
@@ -144,16 +144,16 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="editnodetitle">Назва вузла</label>
+                                <label for="editnodetitle">Название узла</label>
                                 <input v-model="nameNode"  id="editnodetitle" required="required"   class="form-control" type="text">
                             </div>
                             <div class="form-check">
                                 <input v-model="publicNode"  id="editnodepublic" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnodepublic">Доступний для всiх</label>
+                                <label class="form-check-label" for="editnodepublic">Доступен для всех</label>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button v-on:click.prevent="onSaveNode"  type="button" class="btn                                     btn-primary">OK                            </button>
+                            <button v-on:click.prevent="onSaveNode"  type="button" class="btn   btn-primary">OK    </button>
                         </div>
                     </form>
                 </div>
@@ -172,12 +172,12 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="editfile">Файл (до 10 Мб)</label>
+                                <label for="editfile">Файл (до 10 МБ)</label>
                                 <input id="editfile" name="editfile"  required="required" type="file"  class="form-control        ">
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button v-on:click.prevent="onSaveFile()" type="button" class="btn                                    btn-primary">OK
+                            <button v-on:click.prevent="onSaveFile()" type="button" class="btn   btn-primary">OK
                             </button>
                         </div>
                     </form>
@@ -202,27 +202,27 @@
                                 <input id="edittitle" v-model="editTitle" type="text"  class="form-control"  >
                             </div>
                             <div class="form-group">
-                                <label for="editdetail">Змiст </label>
+                                <label for="editdetail">Содержание </label>
                                 <div id="editdetail" class="form-control"  ></div>
                             </div>
                             <div class="form-group ">
-                                <label for="editacctype">Тип доступу</label>
+                                <label for="editacctype">Тип доступа</label>
                                 <select v-model="editAccType" style="width:200px"  class="form-control">
-                                     <option value="0">Приватний</option>
-                                     <option value="1">Публiчний</option>
-                                     <option value="2">Спiльне  реагування</option>
+                                     <option value="0">Частный</option>
+                                     <option value="1">Публичный</option>
+                                     <option value="2">Совместное реагирование</option>
                                 </select>
                             </div>
                               <div class="form-group">
                                 <label for="edittags">Теги</label>
                                 <input   v-model="editTags" type="text"  class="form-control"  >
-                                <small>Теги роздiляются  комою</small>
+                                <small>Теги разделяются запятой</small>
                             </div>
                        
                        
                            
                         <div class="modal-footer">
-                            <button v-on:click.prevent="onSaveTopic()"  type="button" class="btn                                     btn-primary">OK                            </button>
+                            <button v-on:click.prevent="onSaveTopic()"  type="button" class="btn  btn-primary">OK  </button>
                         </div>
                     </form> 
                 </div>
@@ -531,7 +531,7 @@
                this.cpn = null
             }   ,
             onDeleteNode:function(){
-                 if(confirm("Видалити вузол")){
+                 if(confirm("Удалить узел")){
                      this.opTree(["delete",this.selectedNode.id])                           
     
                  }         
@@ -666,7 +666,7 @@
 
             $('#editdetail').summernote({
                 height: 400,
-                lang: 'uk-UA',
+                lang: 'uk-RU',
 
                 callbacks: {
                     onEnter: function (e) {

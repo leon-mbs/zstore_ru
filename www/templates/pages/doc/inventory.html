@@ -1,36 +1,36 @@
 <html>
    <head>
-          <title> Інвентаризація</title>
+          <title> Инвентаризация</title>
     </head>
     <body>
 
 
         <form zippy="docform">
-            <h3> Інвентаризація
+            <h3> Инвентаризация
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-                   data-placement="bottom" data-content="Документ дозволяє ввести поточну кількость на складі і внести корективи
-                   в залежності від різниці в ту чи іншу сторону. Фактична кількість може  
-                   бачити адміністратор при перегляді документа"></i>
+                   data-placement="bottom" data-content="Документ позволяет ввести текущее количество на складе и внести коррективы
+                   в зависимости от разницы в ту или другую сторону. Фактичское количество может 
+                   видеть администратор при просмотре документа"></i>
             </h3>
 
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group  ">
                         <label for="store">Склад</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="store">Категорiя</label>
+                        <label for="store">Категория</label>
                         <select class="form-control" zippy="category">
-                            <option value="0">Не вибрана</option>
+                            <option value="0">Не выбрана</option>
                         </select>
-                        <a zippy="loadall">Загрузити всi ТМЦ зi складу</a>
+                        <a zippy="loadall">Загрузить все ТМЦ со склада</a>
                     </div>
 
 
@@ -42,24 +42,24 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
                     </div>
                     <div class="form-check">
                         <input zippy="autoincome" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="autoincome">Автоматично оприходувати злишки </label>
+                        <label class="form-check-label" for="autoincome">Автоматически оприходовать остатки </label>
 
                     </div>
                     <div class="form-check">
                         <input zippy="autooutcome" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="autooutcome">Автоматично списати недостачу </label>
+                        <label class="form-check-label" for="autooutcome">Автоматически списать недостачу </label>
 
                     </div>
                     <div class="form-check">
                         <input zippy="reserved" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="reserved">Врахувати зарезервовані </label>
+                        <label class="form-check-label" for="reserved">Учесть зарезервирванные </label>
 
                     </div>
                 </div>
@@ -73,25 +73,25 @@
                         
                          {{#usemobilescanner}}  
                         &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
-                                                       title="Сканувати  мобiльним пристроєм"
+                                                       title="Сканировать мобильным устройством"
                                                        style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
                       {{/usemobilescanner}}  
                     </div>
                     {{/usescanner}}
-                    &nbsp; <a zippy="addrow" class="btn  btn-info">Додати товар</a>
+                    &nbsp; <a zippy="addrow" class="btn  btn-info">Добавить товар</a>
 
                     <table class="table table-sm">
                         <tr>
-                            <th>Назва</th>
+                            <th>Название</th>
                             <th>Артикул</th>
 
                             {{#usesnumber}}
-                            <th>Серія</th>
+                            <th>Серия</th>
                             <th>Дата</th>
                             {{/usesnumber}}
                             <!--     <th width="40"  class="text-right" >Кiл. </th> -->
 
-                            <th width="40" class="text-center">Кіл.</th>
+                            <th width="40" class="text-center">Кол.</th>
 
 
                             <th width="50"></th>
@@ -123,8 +123,8 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>
@@ -135,18 +135,18 @@
 
     </form>
     <form zippy="editdetail">
-        <h4>Введення товару </h4>
+        <h4>Введение товара </h4>
         <div class="row">
             <div class="col-12 col-md-4">
 
                 <div class="form-group">
-                    <label for="edititem">Найменування</label>
-                    <input class="form-control" zippy="edititem" placeholder="Почнiть вводити  ">
+                    <label for="edititem">Наименование</label>
+                    <input class="form-control" zippy="edititem" placeholder="Начните вводить... ">
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editserial">Партія постачальника</label>
+                    <label for="editserial">Партия поставщика</label>
                     <div>
                         <input type="text" zippy="editserial" class="form-control"
                                />
@@ -154,7 +154,7 @@
                 </div>
                 {{/usesnumber}}
                 <div class="form-group">
-                    <label for="editquantity">Кількість</label>
+                    <label for="editquantity">Количество</label>
                     <div>
                         <input style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
                                required="required" pattern="[0-9,\.]+"/>
@@ -162,8 +162,8 @@
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary">
+                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
+                        type="button" zippy="cancelrow" value="Отменить" class="btn   btn-outline-secondary">
                 </div>
             </div>
         </div>
@@ -174,14 +174,14 @@
         <div class="modal-dialog modal-dialog-centered  modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Сканування</h5>
+                    <h5 class="modal-title">Сканирование</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
-                        <b>Налаштування камери <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
+                        <b>Настройка камеры <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
                     </a>
                     <div id="collapcescanner" class="collapse  ">
                         <form class="controls">
@@ -189,7 +189,7 @@
                                 <div class="col-12 col-sm-6">
 
                                     <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Тип коду</label>
+                                        <label class="col-sm-5 col-form-label">Тип кода</label>
                                         <div class="col-sm-7">
 
                                             <select id="decoder_readers" name="decoder_readers" class="form-control">
@@ -209,7 +209,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Роздiльна здатнiсть</label>
+                                        <label class="col-sm-5 col-form-label">Разрешение</label>
                                         <div class="col-sm-7">
 
                                             <select id="input-stream_constraints" name="input-stream_constraints"
@@ -281,7 +281,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Пiдсвiтка</label>
+                                        <label class="col-sm-5 col-form-label">Подсветка</label>
                                         <div class="col-sm-7">
 
                                             <input type="checkbox" name="settings_torch"/>
@@ -293,7 +293,7 @@
                     </div>
                     <br><br>
                     Код: <span id="scancode"></span>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-sm btn-success" onclick="mcode()">Додати</button>
+                    <button class="btn btn-sm btn-success" onclick="mcode()">Добавить</button>
                     <br>
                     <br>
 

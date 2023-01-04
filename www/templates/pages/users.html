@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title> Користувачі системи   </title>
+        <title> Пользователи системы   </title>
 
     </head>
 
@@ -9,14 +9,14 @@
 
 
             <div zippy="listpan" class="col-12 col-md-10 col-xl-8">
-                <h3>Користувачі системи</h3>
+                <h3>Пользователи системы</h3>
                 <div class="navbar nav">
 
                     <form zippy="filter" class="form-inline">
 
                         <label for="searchrole">Роль</label>
                         <select zippy="searchrole" class="form-control mr-sm-2">
-                            <option value="0">Не вибрана</option>
+                            <option value="0">Не выбрана</option>
                         </select>
 
 
@@ -24,17 +24,17 @@
 
                     </form>
                 </div>
-                <a zippy="addnew" class="btn btn-outline-success  ">Додати</a>
+                <a zippy="addnew" class="btn btn-outline-success  ">Добавить</a>
                 <table class="table table-bordered table-striped table-sm">
 
                     <thead align="center">
                         <tr>
-                            <th>Логін</th>
+                            <th>Логин</th>
                             <th>Роль</th>
-                            <th>Спiвробiтник</th>
-                            <th>Дата реєс.</th>
+                            <th>Сотрудник</th>
+                            <th>Дата регистр.</th>
 
-                            <th>Email</th>
+                            <th>E-mail</th>
                  {{#showactiveusers}}     <th>Ост. акт.</th>   {{/showactiveusers}}
 
 
@@ -63,28 +63,28 @@
 
 
             <div zippy="editpan" class="col-12 col-sm-10  col-md-8  col-lg-6 col-xl-4">
-                <h4> Редагування користувача</h4>
+                <h4> Редактирование пользователя</h4>
                 <form zippy="editform" role="form">
                     <div class="form-group">
                         <label for="editlogin">Логін</label>
                         <input pattern="[_a-zA-Z0-9]+" style="width:200px" class="form-control" zippy="editlogin"
                                required="required">
-                        <small>Допускаються латинські букви, цифри і підкреслення</small>
+                        <small>Допускаются латинские буквы, цифры и подчеркивания</small>
                     </div>
                     <div class="form-group">
                         <label for="editpass">Пароль</label>
                         <input style="width:200px" class="form-control" zippy="editpass">
-                        <span style="font-size:12px">Якщо не змінюється пароль існуючого користувача, залиште порожнім</span>
+                        <span style="font-size:12px">Если не изменяется пароль существующего пользователя, оставьте пустым</span>
                     </div>
                     <div class="form-group">
                         <label for="editrole">Роль</label>
                         <select class="form-control" zippy="editrole">
-                            <option value='0'>Не вказана</option>
+                            <option value='0'>Не указана</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="editemail">Email</label>
+                        <label for="editemail">E-mail</label>
                         <input style="width:200px" class="form-control" zippy="editemail">
                     </div>
 
@@ -92,7 +92,7 @@
 
 
                     <div class="form-group">
-                        <label for="acl">Налаштування доступу до філій</label>
+                        <label for="acl">Настройка доступа к филиалам</label>
                         <table class="table table-sm table-striped">
                             <tr zippy="brow">
                                 <td zippy="branch_name"></td>
@@ -106,26 +106,26 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="editonlymy">
-                            <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ лише до власних документів</label>
+                            <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ иолько к собственным документам</label>
                         </div>
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="edithidemenu">
-                            <label class="form-check-label mr-sm-2" for="edithidemenu"> Не показувати бокове меню (тiльки оперативне)</label>
+                            <label class="form-check-label mr-sm-2" for="edithidemenu"> Не показывать боковое меню (только оперативное)</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="editdisabled">
-                            <label class="form-check-label mr-sm-2 text-danger" for="editdisabled"> Деактивовано</label>
+                            <label class="form-check-label mr-sm-2 text-danger" for="editdisabled"> Деактивировано</label>
                         </div>
                   </div>
 
 
                     <div class="form-group">
 
-                        <button type="submit" class="btn btn-primary   ">Зберегти</button>
-                        &nbsp; <a zippy="cancel" class="btn btn-outline-secondary    ">Скасувати</a>
+                        <button type="submit" class="btn btn-primary   ">Сохранить</button>
+                        &nbsp; <a zippy="cancel" class="btn btn-outline-secondary    ">Отменить</a>
                     </div>
                 </form>
             </div>
@@ -134,7 +134,7 @@
         <script>
             function check_remove() {
 
-                return confirm("Видалити користувача?")
+                return confirm("Удалить пользователя?")
 
             }
 

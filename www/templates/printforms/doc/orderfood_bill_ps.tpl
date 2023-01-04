@@ -36,7 +36,7 @@
  <font bold="true">a</font>
 
 <align>right</align>
-<text>Вскго: {{total}}</text>
+<text>Всего: {{total}}</text>
 <font >a</font>
  
 
@@ -62,7 +62,7 @@
     {{/addbonus}}
     {{#allbonus}}
 
- <text>Всего бонусщв: {{allbonus}}</text>
+ <text>Всего бонусов: {{allbonus}}</text>
  
     {{/allbonus}}
     

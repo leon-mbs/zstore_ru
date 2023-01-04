@@ -1,16 +1,16 @@
 <html>
     <head>
-          <title> Видаткова накладна</title>
+          <title> Расходная накладная</title>
     </head>
     <body>
 
 
         <form zippy="docform" enctype="multipart/form-data">
-            <h3> Перемiщення ТМЦ</h3>
+            <h3> Перемещение ТМЦ</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документу</label>
+                        <label for="document_number">Номер документа</label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
@@ -18,20 +18,20 @@
                         <input class="form-control" type="text" zippy="document_date" required="required">
                     </div>
                     <div class="form-group  ">
-                        <label for="store">Зi складу</label>
+                        <label for="store">Со склада</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
                         <label for="tostore">На склад</label>
                         <select class="form-control" zippy="tostore">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
 
                     </div>
                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -49,16 +49,16 @@
 
                     </div>
                     {{/usescanner}}
-                    <a class="btn btn-info  " zippy="addrow">Додати позицію</a>
+                    <a class="btn btn-info  " zippy="addrow">Добавить позицию</a>
                     <table class="table table-sm">
                         <tr>
-                            <th>Назва</th>
-                            <th>Од.</th>
+                            <th>Название</th>
+                            <th>Ед.</th>
                             {{#usesnumber}}
-                            <th>Серія</th>
+                            <th>Серия</th>
 
                             {{/usesnumber}}
-                            <th width="40" class="text-right">Кіл.</th>
+                            <th width="40" class="text-right">Кол.</th>
 
                             <th  ></th>
                         </tr>
@@ -85,8 +85,8 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>
@@ -97,28 +97,28 @@
 
     </form>
     <form zippy="editdetail">
-        <h4>Введення товару </h4>
+        <h4>Введение товара </h4>
         <div class="row">
             <div class="col-12 col-md-4">
 
                 <div class="form-group">
-                    <label for="edititem">Найменування</label>
-                    <input class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
+                    <label for="edititem">Наименование</label>
+                    <input class="form-control" zippy="edititem" placeholder="Начните вводить... ">
 
-                    Наявність <span zippy="qtystock"></span>
+                    Наличие <span zippy="qtystock"></span>
 
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editsnumber">Партія постачальника</label>
+                    <label for="editsnumber">Партия поставщика</label>
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
 
                 </div>
                 {{/usesnumber}}
                 <div class="form-group">
-                    <label for="editquantity">Кількість</label>
+                    <label for="editquantity">Количество</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
                            required="required" pattern="[0-9,\.]+"/>
@@ -126,8 +126,8 @@
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary">
+                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
+                        type="button" zippy="cancelrow" value="Отменить" class="btn   btn-outline-secondary">
                 </div>
             </div>
         </div>

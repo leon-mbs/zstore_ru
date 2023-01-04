@@ -1,24 +1,24 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b> Перемiщення  грошей № {{document_number}} від {{date}}</b> <br>
+            <b> Перемещение денег № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
 
 
     <tr>
         <td colspan="4">
-            <b>З рахунку:</b> {{from}}
+            <b>Сщ счета:</b> {{from}}
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b>На рахунок:</b> {{to}}
+            <b>На счет:</b> {{to}}
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b>Сума:</b> {{amount}}
+            <b>Сумма:</b> {{amount}}
         </td>
     </tr>
 

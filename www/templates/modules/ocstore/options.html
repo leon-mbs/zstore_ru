@@ -4,15 +4,15 @@
 
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-                <h4>Налаштування підключення</h4>
+                <h4>Настройка подключения</h4>
                 <form zippy="cform">
                     <div class="form-group">
-                        <label for="site">Адреса сайту</label>
+                        <label for="site">Адрес сайта</label>
                         <input type="text" zippy="site" class="form-control" required="required"/>
-                         <small>Потрiбно  вводити повну адресу</small>
+                         <small>Необходимо вводить полный адрес</small>
                     </div>
                     <div class="form-group">
-                        <label for="apiname">Ім'я API</label>
+                        <label for="apiname">Имя API</label>
                         <input type="text" zippy="apiname" class="form-control" required="required"/>
                     </div>
                     <div class="form-group">
@@ -21,51 +21,51 @@
                     </div>
                     <div class="form-check">
                         <input zippy="ssl" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="ssl">Перевiрка SSL сертифiкату </label>
+                        <label class="form-check-label" for="ssl">Проверка SSL сертификата </label>
 
                     </div>
 
                 
 
                     <div class="form-group  ">
-                        <label for="salesource">Джерело продаж</label>
+                        <label for="salesource">Источник продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не вибрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>                    
                     <div class="form-group   ">
-                        <label for="defpricetype">Тип ціни </label>
+                        <label for="defpricetype">Тип цены </label>
 
                         <select class="form-control" zippy="defpricetype">
-                            <option value='0'>Не обрано</option>
+                            <option value='0'>Не выбрано</option>
 
                         </select>
-                        <small class="form-text text-muted">Ціна для оновлення в магазині </small>
+                        <small class="form-text text-muted">Цена для обновления в магазине </small>
 
                     </div>
                     <div class="form-check">
                         <input zippy="outcome" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="outcome">Тільки списання товару</label>
-                        <small class="form-text text-muted"> Замість замовлення створювати і автоматично проводити ТТН. 
-                        Використовуеться якщо замовлення обробляються на стороні IМ.</small>
+                        <label class="form-check-label" for="outcome">Только списание товара</label>
+                        <small class="form-text text-muted"> Вместо заказа создавать и автоматически проводить ТТН. 
+                        Используется если заказ обрабатывается на стороне ИМ.</small>
                         <br>
                     </div>
                     <div class="form-check">
                         <input zippy="insertcust" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="insertcust">Iмпортувати контрангентiв </label>
-                        <small class="form-text text-muted">Iмпортувати клiентiв з IМ в довiдник контрагентiв.</small>
+                        <label class="form-check-label" for="insertcust">Импортировать контрангентов </label>
+                        <small class="form-text text-muted">Импортировать клиентов с ИМ в справочник контрагентов.</small>
                         <br>
                     </div>
 
                     <div class="form-check">
                         <input zippy="setpayamount" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="setpayamount">Ставити статус  До сплати  </label>
+                        <label class="form-check-label" for="setpayamount">Ставить статус К оплате </label>
                         
                         <br>
                     </div>
                         
                     <div class="form-group">
-                        <input type="submit" value="Зберегти" zippy="save" class="btn   btn-primary mr-2"/>
+                        <input type="submit" value="Сохранить" zippy="save" class="btn   btn-primary mr-2"/>
                           <img id="loader" style="display:none" src="/assets/images/ajax-loader.gif">
 
                     </div>
