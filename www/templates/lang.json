@@ -524,7 +524,11 @@
     "thecopy": "Копия"  ,
     "createdorder": "Создан заказ номер %s", 
     "noserverorshift": "Сервер недоступен или смена закрыта", 
-    "noemail": "Не задан e-mail" 
+    "noemail": "Не задан e-mail" ,
+    "btcommands": "Список команд:\nlogin <логин> <пароль> - вход для пользователя\nlogin <телефон (%s цифр)> <пароль> - вход для контрагента\nlogout - выход" ,
+    "btinvalidtoken" : "Неверный токен", 
+    "sb_msgbot" : "Телеграм бот" ,
+    "btunotlogined" : "Вы не залогинены" 
 
     
 }

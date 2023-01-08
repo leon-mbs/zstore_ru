@@ -22,6 +22,7 @@ class Subscribe extends \ZCL\DB\Entity
     const MSG_EMAIL  = 2;
     const MSG_SMS    = 3;
     const MSG_VIBER  = 4;
+    const MSG_BOT  = 5;
     //типы  получателей
     const RSV_CUSTOMER  = 1;
     const RSV_DOCAUTHOR = 2;
@@ -87,9 +88,14 @@ class Subscribe extends \ZCL\DB\Entity
         $list[self::MSG_NOTIFY] = H::l("sb_msgnotify");
         $list[self::MSG_EMAIL] = H::l("sb_msgemail");
         $list[self::MSG_SMS] = H::l("sb_msgsms");
+        $list[self::MSG_SMS] = H::l("sb_msgsms");
        
         if($sms['smstype']==2) {
             $list[self::MSG_VIBER] =  H::l("sb_msgviber");            
+        }
+        if(strlen(\App\System::getOption("common",'tbtoken'))>0) {
+            $list[self::MSG_BOT] = H::l("sb_msgbot");
+
         }
 
 
@@ -134,6 +140,7 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $c->phone;
                     $viber = $c->viber;
                     $email = $c->email;
+                    $chat_id = $c->chat_id;
                 }
             }
             if ($sub->reciever_type == self::RSV_DOCAUTHOR) {
@@ -142,6 +149,7 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $u->phone;
                     $viber = $u->viber;
                     $email = $u->email;
+                    $chat_id = $u->chat_id;
                     $notify = $doc->user_id;
                 }
             }
@@ -151,14 +159,13 @@ class Subscribe extends \ZCL\DB\Entity
                     $phone = $u->phone;
                     $viber = $u->viber;   
                     $email = $u->email;
-                    $notify = $sub->user_id;
+                     $chat_id = $u->chat_id;
+                   $notify = $sub->user_id;
                 }
             }
             $text = $sub->getText($doc);
             if (strlen($phone) > 0 && $sub->msg_type == self::MSG_SMS) {
                 $ret =   self::sendSMS($phone, $text);
- 
-                   
             }
             if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
               $ret =   self::sendEmail($email, $text, $sub->msgsubject,$sub->attach==1 ? $doc :null);
@@ -167,15 +174,16 @@ class Subscribe extends \ZCL\DB\Entity
             if(strlen($viber)==0) $viber = $phone;
             if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
                 $ret =   self::sendViber($viber,$text) ;
-
-                
+            }
+            if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
+                $ret =   self::sendBot($chat_id,$text) ;
             }
             if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
                 self::sendNotify($notify, $text);
             }
             
             if(strlen($ret)>0) {
-                \App\Helper::logerror($ret); 
+            \App\Helper::logerror($ret); 
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::SYSTEM;
             $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
@@ -424,6 +432,11 @@ class Subscribe extends \ZCL\DB\Entity
         $n->message = $text;
 
         $n->save();
+    }
+
+    public static function sendBot($chat_id, $text) {
+        $bot = new \App\ChatBot( \App\System::getOption("common",'tbtoken')) ;
+        $bot->sendMessage($chat_id, $text)  ;
     }
 
     public static function sendSMS($phone, $text ) {

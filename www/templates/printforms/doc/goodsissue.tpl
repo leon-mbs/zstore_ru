@@ -51,7 +51,7 @@
     {{#finn}}
     <tr>
         <td></td>
-        <td valign="top">IНН</td>
+        <td valign="top">ИНН</td>
         <td colspan="5">{{finn}}</td>
     </tr>
      {{/finn}}           
@@ -161,7 +161,7 @@
    
    {{#totalstr}}
     <tr>
-        <td colspan="7">На сумму <b>{{totalstr}}<b></td>
+        <td colspan="7">На сумму <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}                    
 

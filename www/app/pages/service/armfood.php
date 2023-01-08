@@ -160,6 +160,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->payform->add(new TextInput('pfbonus'));
 
 
+
  
         $bind = new  \Zippy\Binding\PropertyBinding($this, '_pt');
         $this->docpanel->payform->add(new \Zippy\Html\Form\RadioButton('pfnal', $bind, 1));
