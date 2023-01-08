@@ -170,6 +170,26 @@ class OrderFood extends Document
 
     public function DoPayment() {
         if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
+           
+           
+               
+            //списываем бонусы
+            if ($this->headerdata['paydisc'] > 0 && $this->customer_id > 0) {
+                $customer = \App\Entity\Customer::load($this->customer_id);
+                if ($customer->getDiscount() > 0) {
+                    //процент
+                } else {
+                    $customer->bonus = $customer->bonus - ($this->headerdata['paydisc'] > 0 ? $this->headerdata['paydisc'] : 0);
+                    if ($customer->bonus < 0) {
+                        $customer->bonus = 0;
+                    }
+                    $customer->save();
+                }
+            }           
+           
+           
+           
+           
             $payed = $this->payed;
             if ($this->headerdata['exchange'] > 0 && $this->payed > $this->headerdata['exchange']) {
 
