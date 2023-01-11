@@ -28,6 +28,8 @@ class ProjectList extends \App\Pages\Base
 
     public function __construct($id = 0) {
         parent::__construct();
+        $id = intval($id);
+   
         $this->_user = System::getUser();
         
         $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->rolename == 'admins');

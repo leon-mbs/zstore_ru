@@ -26,6 +26,7 @@ class ProductView extends Base
 
     public function __construct($item_id = 0) {
         parent::__construct();
+        $item_id = intval($item_id);
 
         $this->item_id = $item_id;
         $product = Product::load($item_id);

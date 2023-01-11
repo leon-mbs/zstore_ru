@@ -13,6 +13,7 @@ $user = \App\System::getUser();
 if ($user->user_id == 0) {
     die;
 }
+$_REQUEST['id'] = intval($_REQUEST['id']);
 
 $file = \App\Helper::loadFile($_REQUEST['id']);
 if ($file == null) {
