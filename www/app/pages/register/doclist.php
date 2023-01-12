@@ -41,6 +41,8 @@ class DocList extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('DocList')) {
             return;
         }
+        $docid = intval($docid); 
+        
         $user = System::getUser() ;
         $this->_favs = explode(',',$user->favs) ;
         if(is_array($this->_favs)==false)  {
