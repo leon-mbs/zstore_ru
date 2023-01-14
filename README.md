@@ -4,7 +4,7 @@ Zippy Store
 Предназначена для автоматизации малого бизнеса с упрощенной формой учета, не использующего
 полноценный бухгалтерский учет.
    
-Русифицированная (в  процессе перевода)   версия проекта: [https://github.com/leon-mbs/zstore](https://github.com/leon-mbs/zstore)  
+Русифицированная  версия проекта: [https://github.com/leon-mbs/zstore](https://github.com/leon-mbs/zstore)  
 Домашняя страница: [https://zippy.com.ua/zstore](https://zippy.com.ua/zstore) (гугл-переводчик в  помощь)    
 Версия  не включает  специфические для Украины  модули  
 
