@@ -199,12 +199,12 @@ class Orders extends \App\Pages\Base
                     $cust->type = Customer::TYPE_BAYER;
                     $cust->phone = \App\Util::handlePhone($shoporder->telephone);
                     $cust->email = $shoporder->email;
-                    $cust->comment = "Клiєнт OpenCart";
+                    $cust->comment = "Клиент OpenCart";
                     $cust->save();
                 }
                 $neworder->customer_id = $cust->customer_id;
             } else {
-                $neworder->notes .= "Контрагент: ".$shoporder->firstname . ' ' . $shoporder->lastname;
+                $neworder->notes .= "Клиент: ".$shoporder->firstname . ' ' . $shoporder->lastname;
                 
             }
   
@@ -215,9 +215,9 @@ class Orders extends \App\Pages\Base
             if (strlen($shoporder->telephone) > 0) {
                 $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
             }
-            $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+            $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
-            $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
+            $neworder->notes .= " Коментарий:" . $shoporder->comment . ";";
             $neworder->save();
             $neworder->updateStatus(Document::STATE_NEW);
             $neworder->updateStatus(Document::STATE_INPROCESS);
