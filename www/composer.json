@@ -27,7 +27,7 @@
         "symfony/polyfill-mbstring": "1.27.0",
         "symfony/polyfill-uuid": "1.27.0",
    
-        "leon-mbs/zippy": "2.5.17",
+        "leon-mbs/zippy": "2.5.18",
 
         "ext-json": "*",
         "ext-curl": "*",       
