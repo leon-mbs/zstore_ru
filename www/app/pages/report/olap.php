@@ -124,11 +124,11 @@ class OLAP extends \App\Pages\Base
         $hor = $this->startform->sthor->getValue();
         $ver = $this->startform->stver->getValue();
         if($type==0){
-            $this->setError('Не выбран тип') ;
+            $this->setError('notypeselected') ;
             return;
         }
         if($hor==$ver){
-            $this->setError('Измерения одинаклвы') ;
+            $this->setError('ol_izmthesame') ;
             return;
         }
   
@@ -332,8 +332,8 @@ class OLAP extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
         
-        $concat=" concat(year(dv.document_date),'-',month(dv.document_date)) ";
-        
+        $concat=" concat(year(dv.document_date),'-',( case when month(dv.document_date)< 10 then concat('0',month(dv.document_date) )  else concat('',month(dv.document_date) ) end  ) )  ";
+         
         if($conn->dataProvider=='postgres') {
             $concat=" concat(DATE_PART( 'year',dv.document_date),'-',DATE_PART('month',dv.document_date)) as";      $data = pg_escape_bytea($data);
         }       
@@ -416,7 +416,7 @@ class OLAP extends \App\Pages\Base
         }
         if($type == 5 ) {   //платежи
             
-            $concat=" concat(year(pv.paydate),'-',month(pv.paydate)) ";
+            $concat=" concat(year(pv.paydate),'-',( case when month(pv.paydate)< 10 then concat('0',month(pv.paydate) )  else concat('',month(pv.paydate) ) end  ) )  ";
             
             if($conn->dataProvider=='postgres') {
                 $concat=" concat(DATE_PART( 'year',pv.paydate),'-',DATE_PART('month',pv.paydate)) as";      $data = pg_escape_bytea($data);
