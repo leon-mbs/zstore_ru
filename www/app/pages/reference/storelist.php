@@ -41,7 +41,7 @@ class StoreList extends \App\Pages\Base
         $this->storeform->add(new SubmitButton('storesave'))->onClick($this, 'storesaveOnClick');
         $this->storeform->add(new Button('storecancel'))->onClick($this, 'storecancelOnClick');
         $this->storetable->storelist->Reload();
-        $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+
    
     }
 
