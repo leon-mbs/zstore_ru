@@ -112,7 +112,7 @@ class OrderFood extends \App\Pages\Base
 
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->payment->setValue(H::fa($this->_doc->headerdata['payment']));
+            $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
 
             $this->docform->payamount->setText(H::fa($this->_doc->payamount));
@@ -388,6 +388,8 @@ class OrderFood extends \App\Pages\Base
 
    
 
+                $this->_doc->DoPayment();
+                $this->_doc->DoStore();
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
@@ -397,6 +399,8 @@ class OrderFood extends \App\Pages\Base
                     if (!$isEdited) {
                         $this->_doc->updateStatus(Document::STATE_NEW);
                     }
+                    $this->_doc->DoPayment();
+                    $this->_doc->DoStore();
 
                     $this->_doc->updateStatus(Document::STATE_EXECUTED);
                     $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
