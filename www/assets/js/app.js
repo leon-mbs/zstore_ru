@@ -108,7 +108,7 @@ new Audio('/assets/beep.mp3').play()
    } 
    
    
-  function checkForm(id){
+  function checkFormInput(id){
     var ret = 0
  
     $('#'+id+' input ').each(
