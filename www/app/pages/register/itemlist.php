@@ -38,6 +38,8 @@ class ItemList extends \App\Pages\Base
             
         }         
         $this->filter->add(new DropDownChoice('searchstore', $storelist, 0));
+        $this->filter->add(new TextInput('searchbrand'));
+        $this->filter->searchbrand->setDataList(Item::getManufacturers());
 
         $this->add(new Panel('itempanel'));
 
@@ -327,7 +329,12 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
             $where .= " and   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }
-
+        $brand = $form->searchbrand->getText();
+        if (strlen($brand) > 0) {
+           $brand = Item::qstr($brand);
+           $where = $where . " and item_id in (select item_id from items where  manufacturer = {$brand}  ) ";
+            
+        }
 
         return $where;
     }
