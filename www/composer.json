@@ -1,7 +1,7 @@
 {
     "description": "Складская система",
     "keywords": [ "php", "wms", "erp" ],
-    "homepage": "https://zippy.com.ua/",
+    "homepage": "https://github.com/leon-mbs/zstore_ru",
 
     "license": "MIT" ,
     "prefer-stable" : true,
