@@ -292,7 +292,7 @@ class Item extends \ZCL\DB\Entity
                 $partion = $this->getLastPartion($store);
             }
 
-            $price = $partion + (int)$partion / 100 * $common['defprice'];
+            $price = $partion + ( doubleval($partion) / 100) * $common['defprice'];
             //курсовая разница
             $opv = \App\System::getOptions("val");
             if (strlen($this->val) > 1 && $opv['valprice'] == 1) {

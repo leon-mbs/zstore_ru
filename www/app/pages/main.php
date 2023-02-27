@@ -213,7 +213,7 @@ class Main extends Base
 
         $pc=[];
         
-        $mlist = Util::genPastMonths(3);
+        $mlist = Util::genPastMonths(6);
 
         foreach ($mlist as $m) {
             $sql = " 

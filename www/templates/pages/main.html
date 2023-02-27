@@ -324,8 +324,8 @@
         
         
         var psoptions = {
-          title: 'Структура видаткiы за три мiсяцi' ,
-          sliceVisibilityThreshold: 0.01,         
+          title: 'Структура расходов  за шесть месяцев]' ,
+          sliceVisibilityThreshold: 0.03,         
           backgroundColor: {
             "fill":bgcolor 
           } , 
@@ -353,16 +353,16 @@
   
      
       var pcdata = new google.visualization.DataTable();
-      pcdata.addColumn('string', 'Мiсяць');
-      pcdata.addColumn('number', 'Прибутки');
-      pcdata.addColumn('number', 'Видатки');
+      pcdata.addColumn('string', 'Месяц');
+      pcdata.addColumn('number', 'Доходы');
+      pcdata.addColumn('number', 'Расходы');
 
       pcdata.addRows(
           {{{pc}}}
       );
 
       var pcoptions = {
-        title: 'Прибутки та видатки',
+        title: 'Доходы и расходы',
         legend:{
             position:"bottom"
         }  ,
@@ -401,9 +401,9 @@
           
          
         var tsdata = new google.visualization.DataTable();
-      tsdata.addColumn('string', 'Мiсяць');
-      tsdata.addColumn('number', 'Послуги');
-      tsdata.addColumn('number', 'Товари');
+      tsdata.addColumn('string', 'Месяц');
+      tsdata.addColumn('number', 'Услуги');
+      tsdata.addColumn('number', 'Товары');
 
       tsdata.addRows( 
        {{{ts}}}
@@ -412,7 +412,7 @@
         
         
         var tsoptions = {
-          title: 'Реалiзацiя',
+          title: 'Реализация',
           curveType: 'function',
           legend: { position: 'bottom' } ,
           backgroundColor: {
