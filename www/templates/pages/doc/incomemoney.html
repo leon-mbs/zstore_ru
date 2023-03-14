@@ -1,12 +1,12 @@
 <html>
     <head>
-          <title> Доходный ордер</title>
+          <title> Приходный ордер</title>
     </head>
     <body>
 
 
         <form zippy="docform">
-            <h3> Доходный ордер</h3>
+            <h3> Приходный ордер</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -39,10 +39,10 @@
                     <div class="form-group">
                         <label for="detail">Тип операции</label>
                         <select class="form-control" zippy="detail">
-                            <option value="0">Не указано</option>
+                            <option value="0">Обычная оплата</option>
                             <option value="1">Оплата от покупателя</option>
                             <option value="2">Возврат от поставщика</option>
-                            <option value="3">Прибыль от сотрудника</option>
+                            <option value="3">Приход от сотрудника</option>
                         </select>
                     </div>
 
@@ -62,14 +62,7 @@
                             <option value="0">Не выбрано</option>
                         </select>
                     </div>
-                  <div class="form-group">
-                        <label   for="begval">Внести начальный остаток</label>
-                        <select class="form-control select2" zippy="begval">
-                            <option value="0">Не вносить</option>
-                            <option value="1">Не использовать проводку по кассе</option>
-                            <option value="2">Только проводка по кассе</option>
-                        </select>
-                    </div>
+ 
 
                     <div class="form-group  ">
                         <label for="notes">Примечание </label>
