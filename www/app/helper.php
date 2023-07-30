@@ -592,7 +592,7 @@ class Helper
         if (strlen($qty) == 0) {
             return '';
         }
-        if( is_numeric($qty) && $qty<0.0005) {
+        if( is_numeric($qty) && abs($qty)<0.0005) {
             $qty  =0;
         }
         $qty = str_replace(',', '.', $qty);
@@ -606,33 +606,7 @@ class Helper
         }
     }
 
-    /**
-     * форматирование  сумм  c  одной   цифрой  после  зарятой
-     * например  для  сккидок
-     * @param mixed $am
-     * @return mixed
-     */
-    public static function fa1($am) {
-        if (strlen($am) == 0) {
-            return '';
-        }  
-        if( is_numeric($am) && $am<0.005) {
-            $am  =0;
-        }
-  
-        $am = str_replace(',', '.', $am);
-
-        $am = preg_replace("/[^0-9\.\-]/", "", $am);
-        $am = trim($am);
-
  
-        $am  = doubleval($am)  ;
-        return @number_format($am, 1, '.', '');
-
-
-
-    }
-
     /**
      * форматирование  сумм    с копейками
      *
@@ -643,7 +617,7 @@ class Helper
         if (strlen($am) == 0) {
             return '';
         }  
-        if( is_numeric($am) && $am<0.005) {
+        if( is_numeric($am) && abs($am)<0.005) {
             $am  =0;
         }
         $am = str_replace(',', '.', $am);
