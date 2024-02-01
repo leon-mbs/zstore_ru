@@ -1,7 +1,7 @@
 <html>
     <head>
         
-             <title> Довідник контрагентів</title>
+             <title> Справочник  контрагентов</title>
  
     </head>
 
@@ -9,40 +9,40 @@
         <div class="row">
             <div class="col-12   col-xl-10  ">
                 <div zippy="customertable">
-                    <h2>Довідник контрагентів </h2>
+                    <h2>Справочник  контрагентов </h2>
                     <div class="navbar nav  ">
                         <form zippy="leadf" class="form-inline ">
-                            <input   zippy="chleads" type="checkbox"> <b>Режим роботи з лідами </b>
+                            <input   zippy="chleads" type="checkbox"> <b>Режим работы с лидами </b>
                         </form>
                     </div>
                     <div class="navbar nav  ">
                         <form zippy="filter" class="form-inline ">
 
-                            <label for="searchkey">Пошук</label>
+                            <label for="searchkey">Поиск</label>
                             <input class="form-control mr-sm-2" type="text" zippy="searchkey">
                             {{^leadmode}}
                             <label for="searchtype">Тип</label>
                             <select zippy="searchtype" class="form-control mr-sm-2">
-                                <option value="0">Всі активні</option>
-                                <option value="1">Покупці</option>
-                                <option value="2">Постачальники</option>
+                                <option value="0">Вск активные</option>
+                                <option value="1">Покупатели</option>
+                                <option value="2">Поставщики</option>
                                 <option value="5">Холдинги</option>
-                                <option value="10">Деактивовані</option>
+                                <option value="10">Деактивированы</option>
                             </select>
 
-                            <label for="searchholding">дочірній для</label>
+                            <label for="searchholding">дочерний для</label>
                             <select zippy="searchholding" class="form-control mr-sm-2">
-                                <option value="0">Не вказано</option>
+                                <option value="0">Не указано</option>
                             </select>
                             {{/leadmode}}
                             {{#leadmode}} 
-                            <label for="searchleadsource">джерело</label>
+                            <label for="searchleadsource">источник</label>
                             <select zippy="searchleadsource" class="form-control mr-2">
-                                <option value="0">Не вказано</option>
+                                <option value="0">Не указано</option>
                             </select>    
-                            <label for="searchleadstatus">стан</label>
+                            <label for="searchleadstatus">состояние</label>
                             <select zippy="searchleadstatus" class="form-control mr-2">
-                                <option value="0">Не вказано</option>
+                                <option value="0">Не указано</option>
                             </select>    
                             {{/leadmode}} 
                             <input class="btn btn-outline-success   " type="submit" value="ОК"  >
@@ -50,8 +50,8 @@
                         </form>
                         {{#leadmode}}  
 
-                        <a class="btn btn-outline-success"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Джерело лідів</i> </a>
-                        &nbsp; <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Стан лідів</i> </a>
+                        <a class="btn btn-outline-success"   zippy="leadsourcesedit"  ><i class="fa fa-cog"> Источники лидов</i> </a>
+                        &nbsp; <a class="btn btn-outline-success    " zippy="leadstatusesedit"  ><i class="fa fa-cog"> Состояние лидов</i> </a>
                         {{/leadmode}}            
                     </div>
                     {{#leadmode}}  
@@ -66,20 +66,20 @@
 
                     </div>
                     {{/leadmode}}  
-                    <a zippy="addnew" class="btn btn-primary">Додати нового</a>
+                    <a zippy="addnew" class="btn btn-primary">Добавить нового</a>
 
                     <form zippy="listform">
                         <table class="table table-hover   table-sm mt-2">
                             <tr>
                                 <th onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                    style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"><i
+                                    style="width:30px;cursor:pointer" title="снять/выставить "><i
                                         class="fa fa-check-double"></i></th>
 
-                                <th ><a zippy="sortname">Ім'я</a> </th>
+                                <th ><a zippy="sortname">Имя</a> </th>
                                 <th >Тел.</th>
                                 <th >E-Mail</th>
                                 {{^leadmode}}        <th  ><a zippy="sortdoc">Док.</a> </th>    {{/leadmode}}
-                                {{#leadmode}}     <th><a zippy="sortleadstatus">стан ліда</a> </th>     {{/leadmode}} 
+                                {{#leadmode}}     <th><a zippy="sortleadstatus">состояние лида</a> </th>     {{/leadmode}} 
                                 <th> </th>
                                 <th> </th>
                                 <th> </th>
@@ -105,19 +105,19 @@
                                                      
                                 <td><i zippy="customercomment" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
 
-                                <td><i zippy="hasmsg" class="fa fa-comments" title="Коментарі"></i></td>
+                                <td><i zippy="hasmsg" class="fa fa-comments" title="Коментарии"></i></td>
                                 <td><i zippy="hasfiles" class="fa fa-paperclip" title="Прикріплені файли  "></i></td>
                                 <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Заплановані події"></i></td>
 
                                 <td style="white-space:  nowrap"> &nbsp;&nbsp;
-                                    <a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
-                                    &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="Редагувати додаткові дані"><i
+                                    <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                                    &nbsp;&nbsp;&nbsp;<a zippy="contentlist" title="Редактировать доа. данные"><i
                                             class="fa fa-eye"></i></a>
 
                                 </td>
 
                             </tr>
-                            <tr><td><a class="text-danger" zippy="deleteall" title="Видалити (деактивувати)"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
+                            <tr><td><a class="text-danger" zippy="deleteall" title="Удалить (деактивувати)"><i class="fa fa-trash"></i></a></td><td colspan="9"></td></tr>
 
                         </table>
                         <div zippy="pag"></div>
@@ -130,15 +130,15 @@
 
 
         <form class="row" zippy="customerdetail" method="post">
-            <h4>&nbsp; Редагувати  </h4>
+            <h4>&nbsp; Редактировать  </h4>
             <div class="w-100"></div>
             <div class="col-12 col-md-4 ">
 
                 <div class="form-group">
-                    <label for="editcustomername">Назва</label>
+                    <label for="editcustomername">Названик</label>
                     <input required="required" class="form-control" zippy="editcustomername"/>
                     {{#leadmode}}  
-                    <small>Можна використати контакт як тимчасове ім'я</small>
+                    <small>Можно использовать контакт как дополнительное имя</small>
                     {{/leadmode}}  
                 </div>
 
@@ -159,15 +159,15 @@
 
                 {{#leadmode}} 
                 <div class="form-group">
-                    <label for="editleadsource">Джерело ліда</label>
+                    <label for="editleadsource">Источник лида</label>
                     <select class="form-control" zippy="editleadsource">
-                        <option value="0">Не вказано</option>
+                        <option value="0">Не указано</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="editleadstatus">Стан ліда</label>
+                    <label for="editleadstatus">Состояние лида</label>
                     <select class="form-control" zippy="editleadstatus">
-                        <option value="0">Не вказано</option>
+                        <option value="0">Не указано</option>
                     </select>
                 </div>
                 {{/leadmode}} 
@@ -176,43 +176,43 @@
                 <div class="form-group">
                     <label for="edittype">Тип</label>
                     <select zippy="edittype" class="form-control">
-                        <option value="0">Не вказано</option>
+                        <option value="0">Не указано</option>
                     </select>
                 </div>
                 <div class="form-check">
                     <input zippy="editisholding" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editisholding">Холдинг</label>
-                    <small>Компанія, що об'єднує дочірні компанії. Використовується для консолідованих звітів</small>
+                    <small>Компания  обьединяющя другие  компании</small>
                 </div>
                 <div class="form-group">
-                    <label for="editholding">Дочірня для холдинга</label>
+                    <label for="editholding">Дочерний для холдинга</label>
                     <select zippy="editholding" class="form-control">
-                        <option value="0">Не обрано</option>
+                        <option value="0">Не выбрано</option>
                     </select>
                 </div>
                 {{#shop}}        
                 <div class="form-group">
-                    <label for="editpassword">Пароль логiна для каталогу</label>
+                    <label for="editpassword">Пароль логина для каталога</label>
                     <input class="form-control" zippy="editpassword"  type="password"/>
-                    <small>Залиште порожнiм, якщо пароль не змiнюється</small>
+                    <small>Оставить пустым  если не меняется</small>
                 </div>
                  <div class="form-group">
-                    <label for="editconfirm">Пiдтвердити пароль</label>
+                    <label for="editconfirm">Подтвердить  пароль</label>
                     <input class="form-control" zippy="editconfirm" type="password"/>
                 </div>
            
                <div class="form-check">
                     <input zippy="editallowedshop" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editallowedshop" for="editallowedshop" data-label="editallowedshop">Дозвiл на перегляд онлайн каталогу</label>
+                    <label class="form-check-label" for="editallowedshop" for="editallowedshop" data-label="editallowedshop">Разрешить просмотр онлайн каталога</label>
                 </div>        
                 {{/shop}}        
                 <div class="form-check">
                     <input zippy="editnosubs" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editnosubs">Не враховувати в пiдписках</label>
+                    <label class="form-check-label" for="editnosubs">Не учитывать в  подписках</label>
                 </div>
                 <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Більше не використовується</label>
+                    <label class="form-check-label" for="editdisabled">Больше  не  используется</label>
                 </div>        
                 {{/leadmode}} 
 
@@ -221,38 +221,38 @@
             <div class="col-12 col-md-4 ">
                 {{^leadmode}}  
                 <div class="form-group">
-                    <label for="editcity">Країна</label>
+                    <label for="editcity">Страна</label>
                     <input class="form-control" zippy="editcity"/>
                 </div>
                 <div class="form-group">
-                    <label for="editcountry">Місто</label>
+                    <label for="editcountry">Город</label>
                     <input class="form-control" zippy="editcountry"/>
                 </div>
                 <div class="form-group">
-                    <label for="editaddress">Повна адреса</label>
+                    <label for="editaddress">Полный адрес</label>
                     <input class="form-control" zippy="editaddress"/>
                 </div>
 
                 <div class="form-group">
-                    <label for="editedrpou">ЄДРПОУ</label>
+                    <label for="editedrpou">ОКПО</label>
                     <input value="0" class="form-control"   zippy="editedrpou">
                 </div>
 
                 <div class="form-check">
                     <input zippy="editjurid" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editjurid">Юр. особа</label>
+                    <label class="form-check-label" for="editjurid">Юр. лицо</label>
                 </div>
                 
            <div class="form-group  ">
                         <label for="editpricetype">Тип ціни</label>
                         <select class="form-control" zippy="editpricetype">
-                         <option value="none">Не обрано</option>
+                         <option value="none">Не выбрано</option>
                         </select>
                     </div>         
                 
                 {{/leadmode}} 
                 <div class="form-group">
-                    <label for="editcomment">Примітка</label>
+                    <label for="editcomment">Примечание</label>
                     <textarea style="height:100px" class="form-control" zippy="editcomment"></textarea>
                 </div>
             </div>    
@@ -260,8 +260,8 @@
             <div class="w-100"></div>
             <div class="col-12 col-md-4 ">
                 <div class="form-group">
-                    <button zippy="save" type="submit" class="btn btn-primary ">Зберегти</button> &nbsp;&nbsp;
-                    <button zippy="cancel" type="button" class="btn btn-outline-secondary">Відмінити</button>
+                    <button zippy="save" type="submit" class="btn btn-primary ">Сохранить</button> &nbsp;&nbsp;
+                    <button zippy="cancel" type="button" class="btn btn-outline-secondary">Отменить</button>
 
                 </div>
             </div>
@@ -271,8 +271,8 @@
         <a name="contentviewlink"></a>
         <div class="row mt-2" zippy="contentview">
             <div class="col-12 pb-4">
-                <a zippy="back"><i class="fa fa-arrow-circle-left"></i> До переліку</a>
-                <h4 zippy=concname></h4>
+                <a zippy="back"><i class="fa fa-arrow-circle-left"></i> К списку</a>
+                <h4 zippy="concname"></h4>
 
                 <table>
                     <tr><td colspan="2">
@@ -288,9 +288,9 @@
                 {{#leadmode}} 
 
                 <form zippy="conlstform" class="form-inline ">
-                    <label for="conleadstatus"> Стан</label> 
+                    <label for="conleadstatus"> Состояние</label> 
                     <select zippy="conleadstatus" class="form-control mr-4"></select>
-                    &nbsp;&nbsp; <a zippy="convert"> <i class="fa fa-gavel"></i> Конвертувати в контрагента </a>
+                    &nbsp;&nbsp; <a zippy="convert"> <i class="fa fa-gavel"></i> Конвртировать в контрагента </a>
                 </form>
 
 
@@ -303,7 +303,7 @@
                 <div class="card">
                     <div class="card-body">
 
-                        <h5> Розклад подій </h5>
+                        <h5> Расписание  событий </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_eventlist">
                                 <td><span zippy="eventdate"></span><br>
@@ -320,7 +320,7 @@
 
                         <form zippy="addeventform">
                             <div class="form-group">
-                                <label for="addeventdate">Дата, час</label>
+                                <label for="addeventdate">Дата, время</label>
 
                                 <div class="input-group">
                                     <input   class="form-control"   zippy="addeventdate" >
@@ -330,26 +330,26 @@
 
                             </div>
                             <div class="form-group">
-                                <label for="addeventtitle">Заголовок, тип події</label>
+                                <label for="addeventtitle">Название, тип события</label>
                                 <input required="required" class="form-control" zippy="addeventtitle">
                             </div>
                             <div class="form-group">
-                                <label for="addeventdesc">Коментар</label>
+                                <label for="addeventdesc">Коментарий</label>
                                 <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="addeventnotify">Нагадати повідомленням за</label>
+                                <label for="addeventnotify">Напомнить уведомлением за</label>
                                 <select class="form-control" zippy="addeventnotify">
-                                    <option value="0">Не нагадувати</option>
-                                    <option value="1">1 годину</option>
-                                    <option value="2">2 години</option>
-                                    <option value="4">4 години</option>
-                                    <option value="8">8 годин</option>
-                                    <option value="16">16 годин</option>
-                                    <option value="24">24 години</option>
+                                    <option value="0">Не напоминать</option>
+                                    <option value="1">1 час</option>
+                                    <option value="2">2 часа</option>
+                                    <option value="4">4 часа</option>
+                                    <option value="8">8 часов</option>
+                                    <option value="16">16 часов</option>
+                                    <option value="24">24 часа</option>
                              </select>
                             </div>
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
                         </form>
                     </div>
                 </div>
@@ -357,7 +357,7 @@
             <div class="col-4 col-xl-3 ">
                 <div class="card">
                     <div class="card-body">
-                        <h5> Коментар </h5>
+                        <h5> Коментарий </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_msglist">
                                 <td>
@@ -371,11 +371,11 @@
                         <hr>
                         <form zippy="addmsgform">
                             <div class="form-group">
-                                <label for="addmsg">Коментар</label>
+                                <label for="addmsg">Коментарий</label>
                                 <textarea required="required" class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
                             </div>
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
                         </form>
                     </div>
                 </div>
@@ -383,7 +383,7 @@
             <div class="col-4 col-xl-3 ">
                 <div class="card">
                     <div class="card-body">
-                        <h5> Прикріплені файли </h5>
+                        <h5>  Прикрепленные файлы </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_files">
                                 <td><a zippy="filename" target="_blank"></a></td>
@@ -393,18 +393,18 @@
                         <hr>
                         <form zippy="addfileform" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="addfile">Вибрати файл</label>
+                                <label for="addfile">Выбрать файл</label>
                                 <input type="file" class="form-control" required="required" zippy="addfile">
 
                             </div>
 
                             <div class="form-group">
-                                <label for="adddescfile">Опис </label>
+                                <label for="adddescfile">Описание </label>
                                 <input class="form-control" zippy="adddescfile">
                             </div>
 
 
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
 
                         </form>
                     </div>
@@ -413,7 +413,7 @@
             <div class="col-4 col-xl-3 ">
                 <div class="card">
                     <div class="card-body">
-                        <h5> Договори </h5>
+                        <h5> Договора </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_contr">
                                 <td><a title="Перейти" zippy="contract"></a></td>
@@ -426,7 +426,7 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <h5> Бонуси </h5>
+                        <h5> Бонусы </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_bonus">
                                 <td zippy="b_date"></td>
@@ -434,7 +434,7 @@
                                 <td zippy="b_bonus" class="text-right"></td>
 
                             </tr>
-                            <tr><td></td> <td class="text-right"><b>Всього:</b></td> <td class="text-right"><b zippy="b_total"></b></td>  </tr>
+                            <tr><td></td> <td class="text-right"><b>Всего:</b></td> <td class="text-right"><b zippy="b_total"></b></td>  </tr>
                         </table>
 
                     </div>
@@ -446,9 +446,9 @@
         <form zippy="leadsourcesform">
             <div class="row">
                 <div class="col-12  col-md-6 col-xl-4">
-                    <h5>Редагування джерел лідів</h5>
-                    <small>Джерела лідів, наприклад, 'інстаграм', 'дзвінок'...</small>  <br>
-                    <a  zippy="addnewsource">Додати</a>
+                    <h5>Редактирование источников  лидов</h5>
+                    <small>Источник лида, например, 'инстаграм', 'звонок'...</small>  <br>
+                    <a  zippy="addnewsource">Добавить</a>
 
                     <table class="table table-sm">
                         <tr zippy="leadsourceslist">
@@ -456,7 +456,7 @@
                             <td><a zippy="delsource"> <i class="fa fa-trash"></i></a></td>
                     </table>
                     <input zippy="leadsourcesave"  type="submit"  value="Зберегти" class="btn  btn-info">
-                    <a  zippy="leadsourcecancel" class="btn btn-outline-primary ">Скасувати</a>
+                    <a  zippy="leadsourcecancel" class="btn btn-outline-primary ">Отменить</a>
                 </div>
             </div>
         </form>
@@ -464,9 +464,9 @@
         <form zippy="leadstatusesform">
             <div class="row">
                 <div class="col-12  col-md-6 col-xl-4">
-                    <h5>Редагуванняя станів лідів</h5>
-                    <small>Стан ліда, наприклад, 'очікує', 'перемовини'...</small>  <br>
-                    <a  zippy="addnewstatus">Додати</a>
+                    <h5>Редактировать состоянник лида</h5>
+                    <small>Состояние  лида, например, 'ожидает', 'переговоры'...</small>  <br>
+                    <a  zippy="addnewstatus">Добавить</a>
 
                     <table class="table table-sm">
                         <tr zippy="leadstatuseslist">
@@ -474,7 +474,7 @@
                             <td><a zippy="delstatus"> <i class="fa fa-trash"></i></a></td>
                     </table>
                     <input zippy="leadstatussave"  type="submit"  value="Зберегти" class="btn  btn-info">
-                    <a  zippy="leadstatuscancel" class="btn btn-outline-primary ">Скасувати</a>
+                    <a  zippy="leadstatuscancel" class="btn btn-outline-primary ">Отменить</a>
                 </div>
             </div>
         </form>
