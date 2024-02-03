@@ -266,10 +266,10 @@ class POSCheck extends Document
         }
         foreach ($this->unpackDetails('services') as $ser) {
 
-            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), 0);
+            $sc = new Entry($this->document_id, 0 - ($ser->price * $k * $ser->quantity), $ser->quantity);
             $sc->setService($ser->service_id);
             // $sc->setExtCode(0 - ($ser->price * $k)); //Для АВС
-            $sc->setOutPrice(0 - $item->price * $k);
+            $sc->setOutPrice(0 - $ser->price * $k);
     
             $sc->save();
         }
