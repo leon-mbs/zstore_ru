@@ -49,7 +49,7 @@ class Options extends \App\Pages\Base
             "1" => H::l('opt_lastprice'),
             "2" => H::l('opt_partion')
         );
-        $this->common->add(new DropDownChoice('partiontype', $pt, "1"));
+
 
         $this->common->add(new CheckBox('autoarticle'));
         $this->common->add(new CheckBox('usesnumber'));
@@ -94,7 +94,7 @@ class Options extends \App\Pages\Base
         $this->common->qtydigits->setValue($common['qtydigits']);
         $this->common->amdigits->setValue($common['amdigits']);
         $this->common->dateformat->setValue($common['dateformat']);
-        $this->common->partiontype->setValue($common['partiontype']);
+
         
         $this->common->phonel->setValue($common['phonel']);
 
@@ -286,7 +286,7 @@ class Options extends \App\Pages\Base
         $common['qtydigits'] = $this->common->qtydigits->getValue();
         $common['amdigits'] = $this->common->amdigits->getValue();
         $common['dateformat'] = $this->common->dateformat->getValue();
-        $common['partiontype'] = $this->common->partiontype->getValue();
+
         
         $common['phonel'] = $this->common->phonel->getValue();
 

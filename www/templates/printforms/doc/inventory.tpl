@@ -66,27 +66,7 @@
     </tr>
     {{/_detail}}
  
-       {{#summinus}}  
-   <tr>
-        <td  >
-            <b> Недостача на сумму:   </b>
-        </td>
-      <td colspan="3" align="right" style="color:red">
-            <b>  {{summinus}}   </b>
-        </td>
-
-    </tr>  
-     {{/summinus}}      
-   {{#sumplus}} 
-   <tr>
-        <td  >
-           <b>  Остатки на сумму:  </b>
-        </td>    <td colspan="3" align="right">
-             <b>  {{sumplus}}   </b>
-        </td>
-
-    </tr>
-       {{/sumplus}} 
+ 
      
     
 </table>

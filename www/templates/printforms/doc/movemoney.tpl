@@ -8,7 +8,7 @@
 
     <tr>
         <td colspan="4">
-            <b>Сщ счета:</b> {{from}}
+            <b>Со счета:</b> {{from}}
         </td>
     </tr>
     <tr>

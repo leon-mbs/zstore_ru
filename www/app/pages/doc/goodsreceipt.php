@@ -916,7 +916,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item = Item::load($item_id);
 
         if($price==null){
-          $price = $item->getLastPartion($this->docform->store->getValue()   , null, false);
+          $price = $item->getLastPartion($this->docform->store->getValue()   , "", true);
             
         }
      
@@ -942,6 +942,8 @@ class GoodsReceipt extends \App\Pages\Base
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
         $item = Item::load($id);
+        $price = $item->getLastPartion($this->docform->store->getValue()   , "", true);
+         $this->editdetail->editprice->setText(H::fa($price));
 
         $this->editdetail->editsellprice->setText($item->price1);
   

@@ -83,8 +83,6 @@ class Inventory extends Document
         $detailover = array();
         $detail = array();
         
-        $sumplus = 0;
-        $summinus = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
             $name = $item->itemname;
             $q = H::fqty($item->quantity);
@@ -101,7 +99,7 @@ class Inventory extends Document
                 );
             }
             if (round($item->qfact) < round($q)) {
-                $summinus += round(($q - $item->qfact) * $item->getLastPartion($this->headerdata['store']) );
+
                 $detaillost[] = array("no"        => $i++,
                                       "item_name" => $name,
                                       "qfact"     => $item->qfact,
@@ -110,7 +108,7 @@ class Inventory extends Document
                 );
             }
             if (round($item->qfact) > round($q)) {
-                $sumplus += round(($item->qfact - $q) * $item->getLastPartion($this->headerdata['store']) );
+
   
                 $detailover[] = array("no"        => $i++,
                                       "item_name" => $name,
@@ -129,8 +127,6 @@ class Inventory extends Document
             "notes"           => nl2br($this->notes),
             "reserved"           => $this->headerdata["reserved"]==1,
             "store"           => $this->headerdata["storename"],
-            "summinus"           => $summinus > 0 ? $summinus : false,
-            "sumplus"           => $sumplus > 0 ? $sumplus : false ,
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/inventory.tpl');

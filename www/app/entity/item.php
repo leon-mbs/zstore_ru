@@ -235,7 +235,7 @@ class Item extends \ZCL\DB\Entity
             if (is_numeric($ret) ) {
                 if ($partion == 0) {
                     //ищем последнюю закупочную  цену 
-                    $partion = $this->getLastPartion($store);
+                    $partion = $this->getLastPartion($store,"",true);
                 }
                 $price = $partion + (int)$partion / 100 * $ret;
                 //курсовая разница
@@ -378,11 +378,11 @@ class Item extends \ZCL\DB\Entity
 
 
     //последняя  партия true по  приходу  false по расходу
-    public function getLastPartion($store = 0, $snumber = "", $gi = true) {
+    public function getLastPartion($store = 0, $snumber = "", $in = true) {
         $conn = \ZDB\DB::getConnect();
-        $q = $gi == true ? "e.quantity >0" : "e.quantity <0";
+        $q = $in == true ? "e.quantity >0" : "e.quantity <0";
 
-        $sql = "  select coalesce(partion,0)  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
+        $sql = "  select coalesce(partion,0) as p from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
             $sql = $sql . " and st.store_id=" . $store;
@@ -390,15 +390,45 @@ class Item extends \ZCL\DB\Entity
         if (strlen($snumber) > 0) {
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
-        $limit =" limit 0,1";
-        if($conn->dataProvider=="postgres") {
-            $limit =" limit 1";
-        }
-        $sql = $sql . " order  by  e.document_id desc  ".$limit;
+  
+        $sql = $sql . " order  by  e.entry_id desc  " ;
 
-        return doubleval($conn->GetOne($sql));
+        foreach($conn->Execute($sql) as $r) {
+           return doubleval($r['p']);            
+        }
+        
+        return 0;
     }
 
+    
+   //средняя  учетная  цена
+    public function getPartion($store = 0, $snumber = "") {
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "  select coalesce(sum(partion*qty),0) as p,coalesce(sum(qty),0) as q from  store_stock st  where     st.item_id = {$this->item_id}   ";
+
+        if ($store > 0) {
+            $sql = $sql . " and st.store_id=" . $store;
+        }
+        if (strlen($snumber) > 0) {
+            $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
+        }
+     
+        $price=0;
+
+        $r=$conn->GetRow($sql) ;
+        
+        if($r['q'] <> 0) {
+          $price  =  abs($r['p']/$r['q']); 
+        }
+        
+        $price = number_format($price, 2, '.', '') ;
+        
+        return doubleval($price);
+    }
+    
+    
+    
     public static function getPriceTypeList() {
 
         $common = \App\System::getOptions("common");
