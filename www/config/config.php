@@ -10,15 +10,7 @@ $_config['db']['host'] = 'localhost'  ;
 $_config['db']['name'] = 'zstoreru'  ;
 $_config['db']['user'] = 'root'  ;
 $_config['db']['pass'] = 'root'  ;
-
-/*
-//пример  для  PosgreSQl
-$_config['db']['host'] = 'localhost'  ;
-$_config['db']['name'] = 'test1'  ;
-$_config['db']['user'] = 'postgres'  ;
-$_config['db']['pass'] = 'root'  ; 
-$_config['db']['driver'] = 'postgres'  ; 
-*/
+ 
 
 
 $_config['smtp']['usesmtp'] = false ; //если false использктся sendmail. Заполняется  только  поле user, с ящика  которого отсылает sendmail
