@@ -40,17 +40,23 @@ class UserLogin extends \Zippy\Html\WebPage
         //проверка  новой версии        
         $this->_tvars['isnewversion'] = false;
 
-        $v = @file_get_contents("https://zippy.com.ua/version_ru.json?t=" . time());
-        $v = @json_decode($v, true);
-        if (strlen($v['version']) > 0) {
+        
+        $phpv =   phpversion()  ;
+        $nocache= "?t=" . time()."&s=". $_SERVER['IP'] .'&phpv='.$phpv. '_'. System::CURR_VERSION.'_ru' ;
+        $v = @file_get_contents("https://ru.zippy.com.ua/checkver.php".$nocache);
+        $data = @json_decode($v, true);
+        
+      //  $v = @file_get_contents("https://ru.zippy.com.ua/version.json?t=" . time());
+     //   $v = @json_decode($v, true);
+        if (strlen($data['version']) > 0) {
             $c = (int)str_replace(".", "", str_replace("v", "",  \App\System::CURR_VERSION));
-            $n = (int)str_replace(".", "", str_replace("v", "", $v['version']));
+            $n = (int)str_replace(".", "", str_replace("v", "", $data['version']));
 
             if ($n > $c) {
                 $this->_tvars['isnewversion'] = true;
             }
 
-            $this->_tvars['newversion'] = $v['version'];
+            $this->_tvars['newversion'] = $data['version'];
         }
 
         $this->_tvars['appname'] = $common['shopname'];
