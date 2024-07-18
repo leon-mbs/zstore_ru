@@ -42,7 +42,7 @@ class UserLogin extends \Zippy\Html\WebPage
 
         
         $phpv =   phpversion()  ;
-        $nocache= "?t=" . time()."&s=". $_SERVER['IP'] .'&phpv='.$phpv. '_'. System::CURR_VERSION.'_ru' ;
+        $nocache= "?t=" . time()."&s=". $_SERVER['REMOTE_ADDR'] .'&phpv='.$phpv. '_'. System::CURR_VERSION.'_ru' ;
         $v = @file_get_contents("https://ru.zippy.com.ua/checkver.php".$nocache);
         $data = @json_decode($v, true);
         
