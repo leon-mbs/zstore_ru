@@ -53,7 +53,12 @@ $h2->setFormatter($formatter);
 $logger->pushHandler($h1);
 $logger->pushHandler($h2);
 $logger->pushProcessor(new \Monolog\Processor\IntrospectionProcessor());
-@mkdir(_ROOT . "logs");
+if(!file_exists(_ROOT . "logs")) {
+    mkdir(_ROOT . "logs");
+}
+if(!file_exists(_ROOT . "upload")) {
+    mkdir(_ROOT . "upload");
+}
 
 
  

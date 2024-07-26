@@ -226,27 +226,18 @@ class Helper
 
 
 
-        if ($modules['wc'] == 1) {
+        if ($modules['woocomerce'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10009, 'meta_name' => "/WC/Orders", 'meta_type' => 6, 'description' => self::l('modwcorders')));
             }
         }
-        if ($modules['wc'] == 1) {
+        if ($modules['woocomerce'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'wc') !== false) {
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10010, 'meta_name' => "/WC/Items", 'meta_type' => 6, 'description' => self::l('modwcitems')));
             }
         }
   
-        if ($modules['promua'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
-                $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10015, 'meta_name' => "/PU/Orders", 'meta_type' => 6, 'description' => self::l('modpuorders')));
-            }
-        }
-        if ($modules['promua'] == 1) {
-            if ($role->rolename == 'admins' || strpos($role->modules, 'promua') !== false) {
-               // $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10016, 'meta_name' => "/PU/Items", 'meta_type' => 6, 'description' => self::l('modpuitems')));
-            }
-        }
+   
 
         if ($modules['issue'] == 1) {
             if ($role->rolename == 'admins' || strpos($role->modules, 'issue') !== false) {
@@ -773,11 +764,8 @@ class Helper
 
         $labels = System::getCache('labels');
         if ($labels == null) {
-            $lang = $_config['common']['lang'];
             $filename = _ROOT . 'templates/lang.json';
-            if ($lang == 'ua') {
-                $filename = _ROOT . 'templates_ua/lang.json';
-            }
+       
             $file = @file_get_contents($filename);
 
             if (strlen($file) == 0) {
