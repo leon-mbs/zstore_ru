@@ -204,13 +204,13 @@ class CustomerList extends \App\Pages\Base
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
 
         $row->setAttribute('style', $item->status == 1 ? 'color: #aaa' : null);
-        if ($item->customer_id == $this->_customer->customer_id) {
+        if ($item->customer_id == $this->_customer->customer_id ??9) {
             $row->setAttribute('class', 'table-success');
         }
         
       
             $title="";
-            if(intval( $this->_bonuses[$item->customer_id]  ) > 0) {
+            if(intval( $this->_bonuses[$item->customer_id] ??0 ) > 0) {
                 $title= Helper::l("actionbonustitile",$this->_bonuses[$item->customer_id]);                
             }
             $d = $item->getDiscount();
