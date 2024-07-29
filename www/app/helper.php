@@ -1102,5 +1102,15 @@ class Helper
       
         return $htmls;               
     }
-    
+
+
+    //"соль" для  шифрования
+    public static function getSalt() {
+        $salt= self::getVal('salt');
+        if(strlen($salt ?? '')==0) {
+            $salt = ''. rand(1000, 999999) ;
+            self::setVal('salt', $salt);
+        }
+        return $salt;
+    }    
 }
