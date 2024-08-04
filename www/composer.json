@@ -1,5 +1,5 @@
 {
-    "description": "Складская система",
+    "description": "Складська система",
     "keywords": [ "php", "wms", "erp" ],
     "homepage": "https://github.com/leon-mbs/zstore_ru",
 
@@ -7,7 +7,7 @@
     "prefer-stable" : true,
   
     "require": {
-        "php": ">=8.0.0",
+        "php": ">8.0.0",
          
         "phpmailer/phpmailer": "^6.5",
         "monolog/monolog": "1.26.1",
