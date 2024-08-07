@@ -77,7 +77,7 @@ class PayActivity extends \App\Pages\Base
           COALESCE(SUM(sc2.amount), 0)  
          FROM paylist_view sc2
            
-              WHERE 
+              WHERE  sc2.paytype <=1000  and  
               sc2.mf_id =  {$mf_id}
         
               AND sc2.paydate  < t.dt   
@@ -93,7 +93,7 @@ class PayActivity extends \App\Pages\Base
           SUM(CASE WHEN amount < 0 THEN 0 - amount ELSE 0 END) AS obout 
            
         FROM paylist_view sc
-             WHERE   
+             WHERE    sc.paytype <=1000  and
                 sc.mf_id = {$mf_id}  {$doc} 
               AND DATE(sc.paydate) >= " . $conn->DBDate($from) . "
               AND DATE(sc.paydate) <= " . $conn->DBDate($to) . "
@@ -101,6 +101,7 @@ class PayActivity extends \App\Pages\Base
                        DATE(sc.paydate)  ) t
               ORDER BY t.dt  
         ";
+
 
         $rs = $conn->Execute($sql);
 
