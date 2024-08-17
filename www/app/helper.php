@@ -75,7 +75,7 @@ class Helper
     }
 
     public static function generateMenu($meta_type) {
-
+        $dir = '';
         $conn = \ZDB\DB::getConnect();
         $rows = $conn->Execute("select *  from metadata where meta_type= {$meta_type} and disabled <> 1 order  by  description ");
         $menu = array();

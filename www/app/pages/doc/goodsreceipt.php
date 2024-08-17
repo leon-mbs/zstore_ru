@@ -324,7 +324,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
 
         foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0 ) {
+            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code || $_item->item_code == $code ) {
                 $this->_itemlist[$ri]->quantity += 1;
                 $this->docform->detail->Reload();
                 $this->calcTotal();

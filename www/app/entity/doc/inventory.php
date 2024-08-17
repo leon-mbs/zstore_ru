@@ -61,7 +61,7 @@ class Inventory extends Document
                     //записываем  в потери
                     $io = new \App\Entity\IOState();
                     $io->document_id = $this->document_id;
-                    $io->amount = 0 - $qty * $stock->partion;
+                    $io->amount = 0 - $item->quantity * $st->partion;
                     $io->iotype = \App\Entity\IOState::TYPE_LOST;
 
                     $io->save();
