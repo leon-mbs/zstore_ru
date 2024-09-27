@@ -221,10 +221,10 @@ class Options extends \App\Pages\Base
         $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS"), 0))->onChange($this, 'onSMSType');
         $sms = System::getOptions("sms");
 
-        $this->sms->smssemytoken->setText($sms['smssemytoken']);
-        $this->sms->smssemydevid->setText($sms['smssemydevid']);
+        $this->sms->smssemytoken->setText($sms['smssemytoken'] ?? '');
+        $this->sms->smssemydevid->setText($sms['smssemydevid'] ?? '');
 
-        $this->sms->smstype->setValue($sms['smstype']);
+        $this->sms->smstype->setValue($sms['smstype'] ?? '');
 
         $this->onSMSType($this->sms->smstype);
 
@@ -243,7 +243,7 @@ class Options extends \App\Pages\Base
         //телеграм бот
         
         $this->add(new Form('tbform'))->onSubmit($this,"onBot");
-        $this->tbform->add(new TextInput('tbtoken', $common['tbtoken']));
+        $this->tbform->add(new TextInput('tbtoken', $common['tbtoken'] ?? ''));
        
         
         
