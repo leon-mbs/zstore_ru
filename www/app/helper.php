@@ -444,7 +444,7 @@ class Helper
      * @param mixed $id
      */
     public static function getMetaType($id) {
-        if (is_array(self::$meta[$id]) == false) {
+        if (is_array(self::$meta[$id]  ?? '') == false) {
             $conn = DB::getConnect();
             $sql = "select * from   metadata where meta_id = " . $id;
             self::$meta[$id] = $conn->GetRow($sql);

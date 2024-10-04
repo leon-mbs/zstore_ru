@@ -10,107 +10,58 @@
     <body>
         {{#winfo}}
 
-        <div class="row  " style="justify-content: space-between">
-             <div class="col-auto ">
-                <div class="info-box">
-                    <span class="info-box-icon bg-info elevation-1"><i class="fa fa-file-invoice "></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Заказов</span>
-                        <span class="info-box-number">
-                            {{biorders}}
-
-                        </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
+          <div class="row  "  >
+            <div class="col-6 col-sm-4 col-lg-2 ">
+               <div class="small-box bg-info">
+                  <div class="inner">
+                    <h4>{{biorders}}</h4>
+                    <p>Заказов</p>
+                  </div>
+             </div>
+            </div>
+           <div class="col-6 col-sm-4 col-lg-2  ">
+               <div class="small-box bg-info">
+                  <div class="inner">
+                    <h4>{{biitemscnt}}</h4>
+                    <p>ТМЦ   (на сумму)</p>
+                  </div>
+             </div>
+            </div>
+        <div class="col-6 col-sm-4 col-lg-2  ">
+               <div class="small-box bg-info">
+                  <div class="inner">
+                    <h4>{{binal}}</h4>
+                    <p>Наличные</p>
+                  </div>
+             </div>
+            </div>
+           <div class="col-6 col-sm-4 col-lg-2  ">
+               <div class="small-box bg-info">
+                  <div class="inner">
+                    <h4>{{bibeznal}}</h4>
+                    <p>Безналичные</p>
+                  </div>
+             </div>
+            </div>
+           <div class="col-6 col-sm-4 col-lg-2  ">
+               <div class="small-box bg-info">
+                  <div class="inner">
+                    <h4>{{bicredit}}</h4>
+                    <p>Кред. долг</p>
+                  </div>
+             </div>
             </div>
 
-            <div class="col-auto  ">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success elevation-1"><i class="fa  fa-pallet"></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Товаров на складе</span>
-                        <span class="info-box-number">
-                            На сумму  {{biitemscnt}}
-
-
-                        </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
+         <div class="col-6 col-sm-4 col-lg-2  ">
+               <div class="small-box bg-info">
+                  <div class="inner">
+                    <h4>{{bidebet}}</h4>
+                    <p>Деб. долг</p>
+                  </div>
+             </div>
             </div>
 
-          <div class="col-auto ">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-money-bill "></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Наличные</span>
-                        <span class="info-box-number">
-                            На сумму  {{binal}}
-
-
-                        </span>
-                    </div>
-
-                </div>
-                <!-- /.info-box -->
-            </div>
-             <div class="col-auto ">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-credit-card "></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Безнал</span>
-                        <span class="info-box-number">
-                            На сумму  {{bibeznal}}
-
-
-                        </span>
-                    </div>
-
-                </div>
-                <!-- /.info-box -->
-            </div>
-          
-            
-            
-            <div class="col-auto   ">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-out-alt"></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Кред. долг</span>
-                        <span class="info-box-number">
-                            На сумму  {{bicredit}}
-
-
-                        </span>
-                    </div>
-
-                </div>
-                <!-- /.info-box -->
-            </div>
-            <div class="col-auto  ">
-                <div class="info-box">
-                    <span class="info-box-icon bg-success elevation-1"><i class="fa fa-sign-in-alt "></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Деб. долг</span>
-                        <span class="info-box-number">
-                            На сумму  {{bidebet}}
-
-
-                        </span>
-                    </div>
-
-                </div>
-                <!-- /.info-box -->
-            </div>
+      
 
         </div>
         {{/winfo}}

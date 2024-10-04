@@ -1,15 +1,14 @@
 <?php
+
 require_once 'init.php';
+$_REQUEST['id'] = intval($_REQUEST['id']);
 
 if (isset($_REQUEST['id']) > 0) {
     $user = \App\System::getUser();
     if ($user->user_id == 0) {
         die;
     }
-    $_REQUEST['id'] = intval($_REQUEST['id']);
-    
     $image = \App\Entity\Image::load($_REQUEST['id']);
- 
     if ($image instanceof \App\Entity\Image) {
 
         header("Content-Type: " . $image->mime);

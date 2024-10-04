@@ -1,19 +1,14 @@
 <?php
+
 require_once 'init.php';
 
- 
- 
- 
-if (!is_numeric($_REQUEST['id'])) {
-    die;
-}
+$_REQUEST['id'] = intval($_REQUEST['id']);
 
 
 $user = \App\System::getUser();
 if ($user->user_id == 0) {
     die;
 }
-$_REQUEST['id'] = intval($_REQUEST['id']);
 
 $file = \App\Helper::loadFile($_REQUEST['id']);
 if ($file == null) {
@@ -43,4 +38,3 @@ if ($size > 0) {
     echo $file['filedata'];
 }
 die;
-        
