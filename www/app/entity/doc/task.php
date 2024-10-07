@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class Task extends Document
 {
-
     protected function init() {
         parent::init();
         // $this->tasktype = 0;//0 - услуги,1- производство
@@ -31,12 +30,19 @@ class Task extends Document
             if ($ser->hours == "") {
                 $ser->hours = 0;
             }
+
+            if (strlen( $ser->quantity ??'' )==0 ) {
+                $ser->quantity = 1;
+            }
+
+            
             $detail[] = array("no"           => $i++,
                               "service_name" => $ser->service_name,
                               "desc"         => $ser->desc,
                               "quantity"     => H::fqty($ser->quantity),
-                              "cost"         => H::fa($ser->cost * $ser->quantity),
-                              "hours"        => $ser->hours * $ser->quantity
+                              "cost"         => H::fa(doubleval($ser->cost) * doubleval($ser->quantity) ),
+                              "category"     => $ser->category,
+                              "hours"        => doubleval($ser->hours) *doubleval( $ser->quantity)
             );
         }
 
@@ -65,6 +71,7 @@ class Task extends Document
             $detailprod[] = array("no"       => $i++,
                                   "itemname" => $item->itemname,
                                   "desc"     => $item->desc,
+                                  "item_code"     => $item->item_code,
                                   "quantity" => H::fqty($item->quantity));
         }
 
@@ -112,7 +119,7 @@ class Task extends Document
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['ProdReceipt'] = self::getDesc('ProdReceipt');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
-        $list['POSCheck'] = self::getDesc('POSCheck');
+    //    $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
     }

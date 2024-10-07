@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class Invoice extends \App\Entity\Doc\Document
 {
-
     public function generateReport() {
 
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
@@ -35,7 +34,7 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
-        $totalstr =  \App\Util::money2str_ru($this->payamount);
+        $totalstr =  \App\Util::money2str_ua($this->payamount);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -52,17 +51,19 @@ class Invoice extends \App\Entity\Doc\Document
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "phone"           => $this->headerdata["phone"],
                         "customer_print"  => $this->headerdata["customer_print"],
-                        "bank"            => @$mf->bank,
-                        "bankacc"         => @$mf->bankacc,
+                        "bank"            => $mf->bank ?? "",
+                        "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
+                        "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
                         "email"           => $this->headerdata["email"],
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
-                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
-                        "paydisc"         => H::fa($this->headerdata["paydisc"])
+                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
+
         );
         if (strlen($this->headerdata["customer_print"]) > 0) {
             $header['customer_name'] = $this->headerdata["customer_print"];
@@ -98,7 +99,6 @@ class Invoice extends \App\Entity\Doc\Document
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-
         $report = new \App\Report('doc/invoice.tpl');
 
         $html = $report->generate($header);
@@ -118,20 +118,22 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
- 
+        $this->DoBalans() ;
+
         return true;
     }
 
     protected function getNumberTemplate() {
-        return 'РФ-000000';
+        return 'РО-000000';
     }
 
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-      //  $list['Invoice'] = self::getDesc('Invoice');
+        //  $list['Invoice'] = self::getDesc('Invoice');
         $list['TTN'] = self::getDesc('TTN');
         $list['ServiceAct'] = self::getDesc('ServiceAct');
+   //     $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
     }
@@ -154,11 +156,34 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     protected function getEmailSubject() {
-        return H::l('emailinvsub', $this->document_number);
+        return  "Рахунок до оплати номер ".$this->document_number ;
     }
 
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_MAIL);
     }
 
+    /**
+    * @override
+    */
+    public function DoBalans() {
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+
+         if(($this->customer_id??0) == 0) {
+            return;
+         }
+               
+       //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+             
+    }
 }

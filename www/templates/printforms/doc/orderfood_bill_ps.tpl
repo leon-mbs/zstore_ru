@@ -1,12 +1,30 @@
 <font bold="true">a</font>
+    {{#ischeck}}
 <text>Чек {{document_number}}</text>
+    {{/ischeck}}
+    {{^ischeck}}
+<text>Рахунок {{document_number}}</text>
+    {{/ischeck}}
+    
 <font >a</font>
-<text>от {{date}}</text>
+<text>вiд {{date}}</text>
 <align>left</align>
- 
+
+    {{#fiscalnumber}}
+<text>Фiскальний чек</text>
+<text>ФН чека {{fiscalnumber}}</text>
+    {{/fiscalnumber}}
+   {{#fiscalnumberpos}}
+<text>ФН РРО {{fiscalnumberpos}}</text>   
+    {{/fiscalnumberpos}}
 
 <text>{{firm_name}}</text>   
-<text>ІНН {{inn}}</text>   
+{{#inn}}  
+<text>ІПН {{inn}}</text>   
+{{/inn}}  
+{{#tin}}  
+<text>ЄДРПОУ {{tin}}</text>   
+{{/tin}}  
 <text>{{shopname}}</text>   
   {{#shopname}}
 <text>{{shopname}}</text>   
@@ -14,11 +32,11 @@
 <text>{{address}}</text>    
  
     {{#customer_name}}
-<text>Покупатель: {{customer_name}}</text>    
+<text>Покупець: {{customer_name}}</text>    
 
     {{/customer_name}}
-<text>Терминал: {{pos_name}}</text>    
-<text>Кассир: {{username}}</text>    
+<text>Термінал: {{pos_name}}</text>    
+<text>Касир: {{username}}</text>    
 
  
 
@@ -36,45 +54,63 @@
  <font bold="true">a</font>
 
 <align>right</align>
-<text>Всего: {{total}}</text>
+<text>Всього: {{total}}</text>
 <font >a</font>
  
 
     {{^prepaid}}
     {{#isdisc}}
-<text>Скидка: {{paydisc}}</text>
+<text>Знижка: {{totaldisc}}</text>
  
     {{/isdisc}}
-   {{#delbonus}}
- <text>Списано бонусов: {{delbonus}}</text>
+   {{#bonus}}
+ <text>Списано бонусiв: {{bonus}}</text>
  
-    {{/delbonus}}
+    {{/bonus}}
 
- <text>К оплате: {{payamount}}</text>
+ <text>До сплати: {{payamount}}</text>
+ 
+    {{#ischeck}} 
+ 
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
- <text>Сдача: {{exchange}}</text>
+ <text>Решта: {{exchange}}</text>
  {{/exchange}} 
+ 
+    {{/ischeck}} 
+     
     {{/prepaid}}
     {{#addbonus}}
- <text>Насчитано бонусов: {{addbonus}}</text>
+ <text>Нараховано бонусiв: {{addbonus}}</text>
  
     {{/addbonus}}
     {{#allbonus}}
 
- <text>Всего бонусов: {{allbonus}}</text>
+ <text>Всього бонусiв: {{allbonus}}</text>
  
     {{/allbonus}}
     
- 
+
 <font bold="true">a</font>
 <align>center</align>
 <newline ></newline>
-<text>  {{checkslogan}}</text>    
+
+{{#checkslogan}}
+<text>  {{checkslogan}}</text>
+{{/checkslogan}}
+
+{{#promo}}
+<text>  {{promo}}</text>  
+{{/promo}}  
+
+    {{#ischeck}} 
+
 {{#docqrcodeurl}}
 <font >a</font>
 <newline ></newline>
 <qrcode type="code128"> {{docqrcodeurl}}</qrcode>
 {{/docqrcodeurl}}
+
+    {{/ischeck}} 
 <newline ></newline>
  

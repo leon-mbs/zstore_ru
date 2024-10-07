@@ -1,18 +1,18 @@
 <html>
      <head>
-        <title>  Журнал платежей </title>
+        <title>  Журнал платежів </title>
 
     </head>
   <body>
         <div class="row">
             <div class="col-12  ">
 
-                <h3>Журнал платежей </h3>
+                <h3>Журнал платежів </h3>
 
 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
-                         <label for="from">С </label>
+                         <label for="from">З </label>
                         <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
 
 
@@ -21,17 +21,17 @@
 
             
 
-                        <label for="fmfund"> счет </label>
+                        <label for="fmfund"> рахунок </label>
                         <select class="form-control mr-2" zippy="fmfund">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
                         </select>
-                        <label for="fuser"> создал </label>
+                        <label for="fuser"> створив </label>
                         <select class="form-control mr-2" zippy="fuser">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
                         <label for="fcustomer"> контрагент </label>
-                        <input placeholder="Начните вводить..." type="text" class="form-control  mr-2 " zippy="fcustomer">
+                        <input placeholder="Почніть вводити..." type="text" class="form-control  mr-2 " zippy="fcustomer">
 
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -45,27 +45,27 @@
             <div class="col-12 col-xl-10">
 
 
-                <br><a zippy="csv">Экспорт в Excel</a>
-                <br><small>Отмена оплаты выполняется проведением оплаты со знаком минус </small>
+                <br><a zippy="csv">Експорт у Excel</a>
+                <br><small>Скасування оплати виконується проведенням оплати зi знаком мiнус </small>
 
                 <table class="table   table-sm   ">
                     <tr>
 
 
                         <th>Дата</th>
-                        <th>Создал</th>
-                        <th>Счет</th>
-                        <th class="text-right">Прибыль</th>
-                        <th class="text-right">Расход</th>
+                        <th>Створив</th>
+                        <th>Рахунок</th>
+                        <th class="text-right">Прибуток</th>
+                        <th class="text-right">Видаток</th>
                         <th>Номер</th>
-                        <th>Дата док.</th>
+                        <th>Дата. док.</th>
                         
 
                         <th>Контрагент</th>
 
 
 
-                        <th>Примечание</th>
+                        <th>Примітка</th>
                         <th></th>
 
 
@@ -86,9 +86,9 @@
                         <td zippy="notes"></td>
 
                         <td class="text-nowrap">
-                            <a zippy="print" title="Печатать квитанцию об оплате"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
-                            <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
-                            &nbsp;&nbsp; <a href="javascript:void(0);" zippy="del" title="Отмена оплаты"><i class="fa fa-trash"></i></a>
+                            <a zippy="print" title="Друкувати квитанцiю про оплату"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
+                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            &nbsp;&nbsp; <a href="javascript:void(0);" zippy="del" title="Скасування оплати"><i class="fa fa-trash"></i></a>
 
 
                         </td>
@@ -100,9 +100,9 @@
 
                 <div zippy="pag"></div>
                  <table class="ctable" >
-                   <tr><td>Прибыль </td><td zippy="totp" class="text-right text-bold"></td></tr>
-                   <tr><td>Расход </td><td zippy="totm" class="text-right text-bold"></td></tr>
-                   <tr><td class="text-bold">Вместе </td><td zippy="tottot" class="text-right text-bold"></td></tr>
+                   <tr><td>Прибуток </td><td zippy="totp" class="text-right text-bold"></td></tr>
+                   <tr><td>Видаток </td><td zippy="totm" class="text-right text-bold"></td></tr>
+                   <tr><td class="text-bold">Разом </td><td zippy="tottot" class="text-right text-bold"></td></tr>
                  
                  </table>
                 <div class="row" id="dankor">
@@ -125,14 +125,14 @@
                         <form zippy="fnotes">
 
                             <div class="form-group">
-                                <label for="notes">Причина отмены</label>
+                                <label for="notes">Підстава скасування</label>
                                 <input type="hidden" zippy="pl_id"/>
                                 <input required="required" class="form-control" zippy="notes"/>
                             </div>
                             <div class="form-group">
 
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
-                                <input zippy="save" type="submit" value="Исполнить" class="btn btn-primary  ">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+                                <input zippy="save" type="submit" value="Виконати" class="btn btn-primary  ">
                             </div>
                         </form>
                     </div>
@@ -152,7 +152,7 @@
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#paysprint').printThis();$('#pform').modal('hide')"
-                                                      class="btn btn-success btn-sm">Печать</a></td>
+                                                      class="btn btn-success btn-sm">Друк</a></td>
                             <tr>
                         </table>
                     </div>

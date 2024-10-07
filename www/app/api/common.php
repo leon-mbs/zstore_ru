@@ -2,10 +2,8 @@
 
 namespace App\API;
 
-class common extends  JsonRPC
+class common extends JsonRPC
 {
-
-
     //получение  токена
     public function token($args) {
 
@@ -24,16 +22,17 @@ class common extends  JsonRPC
                 "exp"     => time() + $exp * 60
             );
 
-     
+            //            $jwt = \Firebase\JWT\JWT::encode($payload, $key);
             $jwt = \Firebase\JWT\JWT::encode($payload, $key, 'HS256');
-          
+
         } else {
-            throw new \Exception(\App\Helper::l('invalidlogin'), -1000);
+            throw new \Exception("Невірний логін", -1000);
         }
 
         return $jwt;
     }
 
+    //проверка  API. Авторизация  не  требуется
     public function checkapi() {
         return "OK";
     }
@@ -59,7 +58,7 @@ class common extends  JsonRPC
         $list = array();
         foreach ($common['salesources'] as $s) {
             $list[$s->id] = $s->name;
-        };
+        }
 
         return $list;
     }

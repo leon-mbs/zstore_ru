@@ -2,17 +2,16 @@
 
 namespace App\API;
 
-use \App\Entity\Customer;
-use \App\Helper as H;
+use App\Entity\Customer;
+use App\Helper as H;
 
-class customers extends  JsonRPC
+class customers extends JsonRPC
 {
-
     //список  контрагентов
     public function list() {
         $list = array();
 
-        foreach (Customer::find('', 'customer_name') as $cust) {
+        foreach (Customer::findYield('', 'customer_name') as $cust) {
 
             $c = array(
                 'customer_id'   => $cust->customer_id,
@@ -25,7 +24,7 @@ class customers extends  JsonRPC
                 'address'       => $cust->address,
                 'description'   => base64_encode($cust->comment)
             );
-
+           
             $list[] = $c;
         }
 
@@ -33,6 +32,7 @@ class customers extends  JsonRPC
     }
 
     public function save($args) {
+        $cust = null;
         if ($args['customer_id'] > 0) {
             $cust = Customer::load($args['customer_id'] > 0);
         }
@@ -48,7 +48,7 @@ class customers extends  JsonRPC
         $cust->comment = base64_encode($args['description']);
 
         if (strlen($cust->customer_name) == 0) {
-            throw new \Exception(H::l("entername"));
+            throw new \Exception("Не задано назву контрагента");
         }
 
         $cust->save();

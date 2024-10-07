@@ -21,7 +21,6 @@ use Zippy\Html\Link\ClickLink;
  */
 class StockList extends \App\Pages\Base
 {
-
     private $_doc    = null;
     private $_ptlist = null;
 
@@ -32,7 +31,7 @@ class StockList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('StockList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -52,7 +51,7 @@ class StockList extends \App\Pages\Base
     public function filterOnSubmit($sender) {
 
         if ($this->filter->fitem->getKey() == 0) {
-            $this->setError('noselitem');
+            $this->setError('Не обрано товар');
             return;
         }
         $this->docview->setVisible(false);
@@ -64,14 +63,8 @@ class StockList extends \App\Pages\Base
 
         $row->add(new Label('date', H::fd($doc->document_date)));
 
-        $row->add(new Label('partion', H::fa($doc->partion)));
+        //        $row->add(new Label('partion', H::fa($doc->partion)));
         $row->add(new Label('qty', H::fqty($doc->quantity)));
-        $price = $doc->quantity >= 0 ? H::fa($doc->outprice) : '';
-        if ($doc->meta_name == 'ReturnIssue') {
-            $price = H::fa((0 - $doc->outprice));
-        }
-
-        $row->add(new Label('price', $price));
 
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('snumber', $doc->snumber));
@@ -111,7 +104,6 @@ class StockList extends \App\Pages\Base
  */
 class StockListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -153,13 +145,11 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
         $sql .= " join store_stock s on s.stock_id = e.stock_id ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
         if ($count > 0) {
-           
+
             $limit =" limit {$start},{$count}";
-            if($conn->dataProvider=="postgres") {
-                $limit =" limit {$count} offset {$start}";
-            }
-                  
-           
+        
+
+
             $sql .= $limit;
         }
 

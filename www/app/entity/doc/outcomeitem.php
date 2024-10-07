@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class OutcomeItem extends Document
 {
-
     public function Execute() {
 
 
@@ -24,7 +23,7 @@ class OutcomeItem extends Document
 
             $listst = Stock::pickup($this->headerdata['store'], $item);
             if (count($listst) == 0) {
-                \App\System::setErrorMsg(H::l('noenaughtovar', $item->itemname));
+                \App\System::setErrorMsg("Недостатньо товару"  . $item->itemname);
                 return false;
             }
             foreach ($listst as $st) {
@@ -35,7 +34,7 @@ class OutcomeItem extends Document
                 if ($this->headerdata['mtype'] > 0) {
                     $io = new \App\Entity\IOState();
                     $io->document_id = $this->document_id;
-                    $io->amount = 0 - $qty * $stock->partion;
+                    $io->amount = 0 - $st->quantity * $st->partion;
                     $io->iotype = $this->headerdata['mtype'];
 
                     $io->save();
@@ -53,10 +52,10 @@ class OutcomeItem extends Document
         $i = 1;
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $name = $item->itemname;
-
+           
             $detail[] = array("no"        => $i++,
-                              "item_name" => $name,
+                              "item_name" => $item->itemname,
+                              "item_code" => $item->item_code,
                               "snumber"   => $item->snumber,
                               "msr"       => $item->msr,
                               "quantity"  => H::fqty($item->quantity));

@@ -9,12 +9,11 @@ use App\Entity\Store;
 use App\Helper as H;
 
 /**
- * Класс-сущность  документ перекомплектация ТМЦ
+ * Класс-сущность  документ перекомплектация (расфасовка) ТМЦ
  *
  */
 class TransItem extends Document
 {
-
     public function Execute() {
 
 
@@ -27,7 +26,7 @@ class TransItem extends Document
         $sc->save();
         if ($this->headerdata['toitem'] > 0) {
             $ti = Item::load($this->headerdata['toitem']);
-            $price = round(($this->amount) / $this->headerdata["toquantity"]);
+            $price = H::fqty($this->amount / $this->headerdata["toquantity"]);
             $stockto = Stock::getStock($this->headerdata['tostore'], $ti->item_id, $price, "", "", true);
             $sc = new Entry($this->document_id, $this->headerdata["toquantity"] * $price, $this->headerdata["toquantity"]);
             $sc->setStock($stockto->stock_id);
@@ -75,7 +74,7 @@ class TransItem extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ПК-000000';
+        return 'ПФ-000000';
     }
 
 }

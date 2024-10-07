@@ -18,8 +18,7 @@ use App\Helper as H;
 
 class StoreList extends \App\Pages\Base
 {
-
-    public  $_store = null;
+    public $_store = null;
     private $_blist;
 
     public function __construct() {
@@ -41,8 +40,6 @@ class StoreList extends \App\Pages\Base
         $this->storeform->add(new SubmitButton('storesave'))->onClick($this, 'storesaveOnClick');
         $this->storeform->add(new Button('storecancel'))->onClick($this, 'storecancelOnClick');
         $this->storetable->storelist->Reload();
-
-   
     }
 
     public function storelistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -55,7 +52,7 @@ class StoreList extends \App\Pages\Base
 
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "  store_id in ({$cstr})  and  ";
         }
@@ -66,7 +63,8 @@ class StoreList extends \App\Pages\Base
         $row->add(new ClickLink('storeedit'))->onClick($this, 'storeeditOnClick');
         $row->add(new ClickLink('storedelete'))->onClick($this, 'storedeleteOnClick');
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
-          
+
+
     }
 
     public function storeeditOnClick($sender) {
@@ -77,7 +75,6 @@ class StoreList extends \App\Pages\Base
         $this->storeform->storeeditdesc->setText($this->_store->description);
         $this->storeform->editbranch->setValue($this->_store->branch_id);
         $this->storeform->editdisabled->setChecked($this->_store->disabled);
-    
     }
 
     public function storedeleteOnClick($sender) {
@@ -98,7 +95,7 @@ class StoreList extends \App\Pages\Base
         $this->storetable->setVisible(false);
         $this->storeform->setVisible(true);
         $this->storeform->clean();
- 
+
         $b = \App\System::getBranch();
         $this->storeform->editbranch->setValue($b > 0 ? $b : 0);
 
@@ -113,16 +110,16 @@ class StoreList extends \App\Pages\Base
         $this->_store->storename = $this->storeform->storeeditname->getText();
         $this->_store->description = $this->storeform->storeeditdesc->getText();
         if ($this->_store->storename == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $this->_store->branch_id = $this->storeform->editbranch->getValue();
         if ($this->_tvars['usebranch'] == true && $this->_store->branch_id == 0) {
-            $this->setError('selbranch');
+            $this->setError('Виберіть філію');
 
             return;
         }
-        $this->_store->disabled = $this->storeform->editdisabled->isChecked() ? 1: 0;
+        $this->_store->disabled = $this->storeform->editdisabled->isChecked() ? 1 : 0;
 
         $this->_store->save();
         $this->storeform->setVisible(false);

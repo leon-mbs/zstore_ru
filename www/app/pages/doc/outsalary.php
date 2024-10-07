@@ -20,17 +20,19 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\SubmitLink;
-use \Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Binding\PropertyBinding as Bind;
 
 /**
  * Страница   выплата  зарплаты
  */
 class OutSalary extends \App\Pages\Base
 {
-
     private $_doc;
-    public  $_list = array();
+    public $_list = array();
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 
@@ -59,7 +61,7 @@ class OutSalary extends \App\Pages\Base
         $this->listform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->listform->add(new SubmitButton('todoc'))->onClick($this, 'todocOnClick');
 
-        $this->_list = Employee::find('disabled<>1', 'emp_name');
+       // $this->_list = Employee::find('disabled<>1', 'emp_name');
 
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
@@ -70,7 +72,9 @@ class OutSalary extends \App\Pages\Base
             $this->docform->year->setValue($this->_doc->headerdata['year']);
             $this->docform->month->setValue($this->_doc->headerdata['month']);
             $this->docform->advance->setChecked($this->_doc->headerdata['advance']);
-
+            $this->docform->year->setAttribute('disabled','disabled');
+            $this->docform->month->setAttribute('disabled','disabled');
+            $this->docform->advance->setAttribute('disabled','disabled');
             $this->docform->notes->setText($this->_doc->notes);
             $this->listform->total->setText(H::fa($this->_doc->amount));
             $this->_list = $this->_doc->unpackDetails('detaildata');
@@ -82,7 +86,7 @@ class OutSalary extends \App\Pages\Base
 
         $this->listform->add(new DataView('elist', new ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_list')), $this, 'employeelistOnRow'));
 
-        $this->Reload();
+     //   $this->Reload();
 
 
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
@@ -123,7 +127,7 @@ class OutSalary extends \App\Pages\Base
             }
         }
         if ($this->_doc->amount == 0) {
-            $this->setError("noentersum");
+            $this->setError("Не введено суму");
             return;
         }
         if ($this->checkForm() == false) {
@@ -156,7 +160,7 @@ class OutSalary extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -169,14 +173,14 @@ class OutSalary extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введіть номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
 
@@ -193,22 +197,28 @@ class OutSalary extends \App\Pages\Base
     public function tolistOnClick($sender) {
         $this->listform->setVisible(true);
         $this->docform->setVisible(false);
-
+        
         if ($this->_doc->document_id == 0) {
+            $this->_list =[];
 
             if ($this->docform->advance->isChecked()) {
+                $this->_list = Employee::find('disabled<>1', 'emp_name');
+                
                 foreach ($this->_list as $emp) {
                     $emp->amount = $emp->advance;
                 }
             } else {
+                $y = $this->docform->year->getValue();
+                $m = $this->docform->month->getValue();
 
 
-                $rows = EmpAcc::getBalance();
+                $rows = EmpAcc::getForPay($y,$m);
                 foreach ($rows as $row) {
-                   if($this->_list[$row['emp_id']] instanceof  Employee) {
-                      $this->_list[$row['emp_id']]->amount = H::fa($row['am']);    
-                   }
-                   
+                    $emp= Employee::load($row['emp_id']) ;
+                    $emp->amount = H::fa($row['am']);
+                    $this->_list[$row['emp_id']] = $emp;
+
+
                 }
 
             }
@@ -244,7 +254,7 @@ class OutSalary extends \App\Pages\Base
     public function delOnClick($sender) {
         $_list = array();
         foreach ($this->_list as $id => $e) {
-            if ($e->_ch == TRUE) {
+            if ($e->_ch == true) {
                 continue;
             }
             $_list[$id] = $e;
@@ -262,8 +272,10 @@ class OutSalary extends \App\Pages\Base
             if ($this->docform->advance->isChecked()) {
                 $this->_list[$id]->amount = $this->_list[$id]->advance;
             } else {
+                $y = $this->docform->year->getValue();
+                $m = $this->docform->month->getValue();
 
-                $rows = EmpAcc::getBalance();
+                $rows = EmpAcc::getForPay($y,$m);
                 foreach ($rows as $row) {
                     if ($id == $row['emp_id']) {
                         $this->_list[$row['emp_id']]->amount = H::fa($row['am']);

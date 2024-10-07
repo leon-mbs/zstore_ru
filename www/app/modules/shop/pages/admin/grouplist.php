@@ -23,17 +23,16 @@ use Zippy\Html\Panel;
 
 class GroupList extends \App\Pages\Base
 {
-
     private $group      = null;
-    public  $_grouplist = array();
-    public  $attrlist   = array();
+    public $_grouplist = array();
+    public $attrlist   = array();
     private $mm;
 
     public function __construct() {
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');
+            System::setErrorMsg("Немає права доступу до сторінки");
             App::RedirectError();
             return;
         }
@@ -42,7 +41,7 @@ class GroupList extends \App\Pages\Base
 
         $this->_grouplist = Category::findFullData($clist);
 
-        usort($this->_grouplist, function($a, $b) {
+        usort($this->_grouplist, function ($a, $b) {
             return $a->full_name > $b->full_name;
         });
 
@@ -116,6 +115,7 @@ class GroupList extends \App\Pages\Base
     public function OnAddAttribute($sender) {
         $form = $this->attrpanel->attreditform;
         $form->setVisible(true);
+        $form->tt->setVisible(true);
         $form->attrtype->setVisible(true);
         $form->attrvaluespanel->setVisible(false);
         $form->attrvaluespanel->attrvalues->setValue('');
@@ -140,16 +140,16 @@ class GroupList extends \App\Pages\Base
             $this->attrpanel->attreditform->attrvaluespanel->setVisible(true);
         }
         if ($type == 1) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattryn"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Є/Немає` вказує на наявність або відсутність характеристики (наприклад, FM-тюнер).");
         }
         if ($type == 2) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrnum"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Число` - числовий параметр (наприклад, ємність акумулятора). Перелік для фільтра відбору формується на основі діапазона значень атрибута, заданих для товарів.");
         }
         if ($type == 3) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrlist"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Перелік` передбачений для переліку, з якого можна вибрати тільки одне значення (наприклад, колір). Задається переліком через кому");
         }
         if ($type == 4) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrset"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Набір` передбачений для переліку, з якого можна вибрати кілька значень (наприклад, діапазони прийому сигнала). Задається переліком через кому. ");
         }
         if ($type == 5) {
             $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовый параметр (например тип процессора). Значени не  используется в фильтре. ");
@@ -167,6 +167,7 @@ class GroupList extends \App\Pages\Base
         $form->attrvaluespanel->attrvalues->setValue($item->valueslist);
 
         $form->attrtype->setVisible(false);
+        $form->tt->setVisible(false);
         $form->attrvaluespanel->setVisible(false);
         $form->meashurepanel->setVisible(false);
         $form->attrtypename->setVisible(true);
@@ -181,6 +182,7 @@ class GroupList extends \App\Pages\Base
         if ($item->attributetype == 3 || $item->attributetype == 4) {
             $form->attrvaluespanel->setVisible(true);
         }
+
     }
 
     public function OnSaveAttribute($sender) {
@@ -197,7 +199,7 @@ class GroupList extends \App\Pages\Base
         $attr->attributename = $form->attrname->getText();
 
         if (strlen($attr->attributename) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
 
             return;
         }
@@ -206,7 +208,20 @@ class GroupList extends \App\Pages\Base
         }
         if ($attr->attributetype == 3 || $attr->attributetype == 4) {
             $attr->valueslist = $form->attrvaluespanel->attrvalues->getText();
-            $attr->valueslist = preg_replace('/\s+/', "", $attr->valueslist);
+
+            $r = array();
+
+            foreach(explode(',', trim($attr->valueslist)) as $l) {
+                $l = trim($l) ;
+                $l = trim($l) ;
+                if(strlen($l) > 0) {
+                    $r[] = $l ;
+                }
+
+            }
+
+
+            $attr->valueslist = implode(",", $r);
         }
 
         $attr->Save();

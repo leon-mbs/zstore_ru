@@ -7,12 +7,11 @@ use App\Entity\Stock;
 use App\Helper as H;
 
 /**
- * Класс-сущность  Инвентаризация    склада    
+ * Класс-сущность  Инвентаризация    склада
  *
  */
 class Inventory extends Document
 {
-
     public function Execute() {
 
         $conn = \ZDB\DB::getConnect();
@@ -21,7 +20,7 @@ class Inventory extends Document
             if ($item->quantity == $item->qfact) {
                 continue;
             }
-
+            $qty=1;
             //оприходуем
             if ($item->quantity < $item->qfact && $this->headerdata['autoincome'] == 1) {
                 $qty = $item->qfact - $item->quantity;
@@ -51,17 +50,21 @@ class Inventory extends Document
 
             //списываем  со склада
             if ($item->quantity > $item->qfact && $this->headerdata['autooutcome'] == 1) {
-                $item->quantity = $item->quantity - $item->qfact;
+                $qty = $item->quantity - $item->qfact;
+      
+                $q= $item->quantity;
+                $item->quantity = $qty;
                 $listst = Stock::pickup($this->headerdata['store'], $item);
+                $item->quantity = $q;                
                 foreach ($listst as $st) {
-                    $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
+                    $sc = new Entry($this->document_id, 0 - $qty * $st->partion, 0 - $st->quantity);
                     $sc->setStock($st->stock_id);
                     $sc->save();
 
                     //записываем  в потери
                     $io = new \App\Entity\IOState();
                     $io->document_id = $this->document_id;
-                    $io->amount = 0 - $item->quantity * $st->partion;
+                    $io->amount = 0 - $qty * $st->partion;
                     $io->iotype = \App\Entity\IOState::TYPE_LOST;
 
                     $io->save();
@@ -75,6 +78,7 @@ class Inventory extends Document
     }
 
     public function generateReport() {
+        $conn = \ZDB\DB::getConnect();
 
         $user = \App\System::getUser();
 
@@ -82,39 +86,43 @@ class Inventory extends Document
         $detaillost = array();
         $detailover = array();
         $detail = array();
-        
+
+        $sumplus = 0;
+        $summinus = 0;
         foreach ($this->unpackDetails('detaildata') as $item) {
+            
+            $sql="select coalesce(abs(sum(quantity*partion)),0)   from entrylist_view where  document_id={$this->document_id} and item_id= {$item->item_id}" ;
+            
+            $b= $conn->GetOne($sql);
+            
             $name = $item->itemname;
             $q = H::fqty($item->quantity);
-            if ($user->rolename != 'admins') {
-                $q = '-';
-            }
-
             if (round($item->qfact) == round($q)) {
                 $detail[] = array("no"        => $i++,
                                   "item_name" => $name,
                                   "qfact"     => $item->qfact,
                                   "snumber"   => $item->snumber,
-                                  "quantity"  => $q
+                                  "quantity"  => $user->rolename != 'admins' ? '-' :$q
                 );
             }
             if (round($item->qfact) < round($q)) {
-
+               
+                $summinus += $b;
                 $detaillost[] = array("no"        => $i++,
                                       "item_name" => $name,
                                       "qfact"     => $item->qfact,
                                       "snumber"   => $item->snumber,
-                                      "quantity"  => $q
+                                      "quantity"  => $user->rolename != 'admins' ? '-' :$q
                 );
             }
             if (round($item->qfact) > round($q)) {
+                $sumplus += $b;
 
-  
                 $detailover[] = array("no"        => $i++,
                                       "item_name" => $name,
                                       "qfact"     => $item->qfact,
                                       "snumber"   => $item->snumber,
-                                      "quantity"  => $q
+                                      "quantity"  => $user->rolename != 'admins' ? '-' :$q
                 );
             }
         }
@@ -127,6 +135,8 @@ class Inventory extends Document
             "notes"           => nl2br($this->notes),
             "reserved"           => $this->headerdata["reserved"]==1,
             "store"           => $this->headerdata["storename"],
+            "summinus"           => $summinus > 0 ? H::fa($summinus) : false,
+            "sumplus"           => $sumplus > 0 ? H::fa($sumplus) : false ,
             "document_number" => $this->document_number
         );
         $report = new \App\Report('doc/inventory.tpl');

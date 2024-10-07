@@ -24,12 +24,12 @@ use Zippy\Html\Link\SubmitLink;
 
 class ItemList extends \App\Pages\Base
 {
-
     private $_item;
-    private $_copy     = false;
+    private $_copy     = 0;
     private $_pitem_id = 0;
-    public  $_itemset  = array();
-    public  $_serviceset  = array();
+    public $_itemset  = array();
+    public $_serviceset  = array();
+    public $_tag = '' ; 
 
     public function __construct($add = false) {
         parent::__construct();
@@ -45,7 +45,7 @@ class ItemList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchkey'));
         $catlist = array();
-        $catlist[-1] = H::l("withoutcat");
+        $catlist[-1] = "Без категорії";
         foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
         }
@@ -60,7 +60,7 @@ class ItemList extends \App\Pages\Base
 
         $this->itemtable->listform->add(new DataView('itemlist', new ItemDataSource($this), $this, 'itemlistOnRow'));
         $this->itemtable->listform->itemlist->setPageSize(H::getPG());
-        $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
+        $this->itemtable->listform->add(new \Zippy\Html\DataList\Pager('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->itemlist->setSelectedClass('table-success');
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
         $this->itemtable->listform->add(new SubmitLink('printall'))->onClick($this, 'OnPrintAll', true);
@@ -69,7 +69,9 @@ class ItemList extends \App\Pages\Base
 
 
         $this->itemtable->listform->add(new DropDownChoice('allcat', $catlist, 0))->onChange($this, 'onAllCat');
+        $this->itemtable->add(new \Zippy\Html\Link\LinkList("taglist"))->onClick($this, 'OnTagList');        
 
+        
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new TextInput('editname'));
         $this->itemdetail->add(new TextInput('editshortname'));
@@ -79,6 +81,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editprice4'));
         $this->itemdetail->add(new TextInput('editprice5'));
         $this->itemdetail->add(new TextInput('editmanufacturer'));
+        $this->itemdetail->add(new TextInput('editcountry'));
         $this->itemdetail->add(new TextInput('editurl'));
         $common = System::getOptions('common');
         if (strlen($common['price1']) > 0) {
@@ -122,7 +125,9 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editlost'));
 
         $this->itemdetail->add(new TextInput('editcell'));
+        $this->itemdetail->add(new TextInput('edituktz'));
         $this->itemdetail->add(new TextInput('editmsr'));
+        $this->itemdetail->add(new TextInput('editnotes'));
 
         $this->itemdetail->add(new DropDownChoice('editcat', Category::findArray("cat_name", "cat_id not in (select coalesce(parent_id,0) from item_cat  )", "cat_name"), 0));
         $this->itemdetail->add(new TextInput('editcode'));
@@ -137,20 +142,31 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new \Zippy\Html\Form\File('editaddfile'));
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes()));
+        $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
 
-        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
+
+        $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        $this->itemdetail->add(new \ZCL\BT\Tags("edittags"));
 
+        
         $this->add(new Panel('setpanel'))->setVisible(false);
+        
+        
         $this->setpanel->add(new DataView('setlist', new ArrayDataSource($this, '_itemset'), $this, 'itemsetlistOnRow'));
-        $this->setpanel->add(new Form('setform'))->onSubmit($this, 'OnAddSet');
+        $this->setpanel->add(new Form('setform')) ;
         $this->setpanel->setform->add(new AutocompleteTextInput('editsname'))->onText($this, 'OnAutoSet');
         $this->setpanel->setform->add(new TextInput('editsqty', 1));
-       
+        $this->setpanel->setform->add(new SubmitButton('setformbtn'))->onClick($this, 'OnAddSet');
+
         $this->setpanel->add(new DataView('ssetlist', new ArrayDataSource($this, '_serviceset'), $this, 'itemsetslistOnRow'));
-        $this->setpanel->add(new Form('setsform'))->onSubmit($this, 'OnAddSSet');
-        $this->setpanel->setsform->add(new DropDownChoice('editssname',\App\Entity\Service::findArray("service_name", "disabled<>1", "service_name")));
+        $this->setpanel->add(new Form('setsform')) ;
+        $this->setpanel->setsform->add(new DropDownChoice('editssname', \App\Entity\Service::findArray("service_name", "disabled<>1", "service_name")))->onChange($this,'onService',true);
         $this->setpanel->setsform->add(new TextInput('editscost'));
+        $this->setpanel->setsform->add(new SubmitButton('setsformbtn'))->onClick($this, 'OnAddSSet');
+
+        $this->setpanel->add(new Form('cardform'))->onSubmit($this, 'OnCardSet');
+        $this->setpanel->cardform->add(new TextArea('editscard'));
 
         $this->setpanel->add(new Label('stitle'));
         $this->setpanel->add(new Label('stotal'));
@@ -163,7 +179,7 @@ class ItemList extends \App\Pages\Base
         $this->_tvars['hp5'] = strlen($common['price5']) > 0 ? $common['price5'] : false;
 
         if ($add == false) {
-            $this->itemtable->listform->itemlist->Reload();
+           $this->Reload() ;
         } else {
             $this->addOnClick(null);
         }
@@ -173,9 +189,9 @@ class ItemList extends \App\Pages\Base
         $item = $row->getDataItem();
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
-         
-        $row->add(new ClickLink('itemname',$this, 'editOnClick'))->setValue($item->itemname);
-        
+
+        $row->add(new ClickLink('itemname', $this, 'editOnClick'))->setValue($item->itemname);
+
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('cat_name', $item->cat_name));
@@ -187,38 +203,39 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('price4', $item->price4));
         $row->add(new Label('price5', $item->price5));
 
-        $row->add(new Label('hasnotes'))->setVisible(strlen($item->description) > 0);
-        $row->hasnotes->setAttribute('title', htmlspecialchars_decode($item->description));
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
 
+        $row->add(new Label('onstore'))->setVisible($item->qty > 0);
         $row->add(new Label('cell', $item->cell));
         $row->add(new Label('inseria'))->setVisible($item->useserial);
+        $row->add(new Label('inprice'))->setVisible($item->noprice!=1);
         $row->add(new Label('hasaction'))->setVisible($item->hasAction());
-        if($item->hasAction() ) {
+        if($item->hasAction()) {
             $title="";
             if(doubleval($item->actionprice) > 0) {
-                 $title= H::l("actionpricetitile",H::fa($item->actionprice));                
+                $title= "Акційна ціна " . H::fa($item->actionprice);
             }
             if(doubleval($item->actiondisc) > 0) {
-                 $title= H::l("actiondisctitile",H::fa($item->actiondisc));                
+                $title= "Акційна знижка ". H::fa($item->actiondisc) ."%";
             }
-            $row->hasaction->setAttribute('title',$title)  ;          
+            $row->hasaction->setAttribute('title', $title)  ;
         }
+        $row->add(new ClickLink('shownotes'))->onClick($this, 'shownotesOnClick',true);
+        $row->shownotes->setVisible(strlen($item->description ?? '') > 0);
+        
+        
         $row->add(new ClickLink('copy'))->onClick($this, 'copyOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('set'))->onClick($this, 'setOnClick');
-        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD);
+        $row->set->setVisible($item->item_type == Item::TYPE_PROD || $item->item_type == Item::TYPE_HALFPROD || $item->item_type == Item::TYPE_MAT );
 
-        $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick',true);
-        $row->printqr->setVisible(strlen($item->url) > 0);
+        $row->add(new ClickLink('printqr'))->onClick($this, 'printQrOnClick', true);
+        $row->printqr->setVisible(strlen($item->url ?? '') > 0);
 
-        
+
         $row->add(new \Zippy\Html\Link\BookmarkableLink('imagelistitem'))->setValue("/loadimage.php?t=t&id={$item->image_id}");
-        if(strlen($item->thumb)>0) {
-           $row->imagelistitem->setValue($item->thumb);    
-        }
-        
+     
         $row->imagelistitem->setAttribute('href', "/loadimage.php?id={$item->image_id}");
         $row->imagelistitem->setAttribute('data-gallery', $item->image_id);
         if ($item->image_id == 0) {
@@ -232,17 +249,20 @@ class ItemList extends \App\Pages\Base
 
     public function copyOnClick($sender) {
         $this->editOnClick($sender);
-        $this->_copy = true;
+        $this->_copy = $this->_item->item_id;
         $this->_item->item_id = 0;
-        $this->itemdetail->editcode->setText('');
+        $this->_item->extdata = "";
+        $this->itemdetail->editname->setText($this->_item->itemname.'_copy');
+
+        $this->itemdetail->editcode->setText(Item::getNextArticle());
         $this->itemdetail->editbarcode->setText('');
-        if (System::getOption("common", "autoarticle") == 1) {
-            $this->itemdetail->editcode->setText(Item::getNextArticle());
-        }
+        $this->itemdetail->editcode->setText(Item::getNextArticle());
+ 
+
     }
 
     public function editOnClick($sender) {
-        $this->_copy = false;
+        $this->_copy = 0;
         $item = $sender->owner->getDataItem();
         $this->_item = Item::load($item->item_id);
 
@@ -259,6 +279,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcat->setValue($this->_item->cat_id);
 
         $this->itemdetail->editmanufacturer->setText($this->_item->manufacturer);
+        $this->itemdetail->editcountry->setText($this->_item->country);
         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
 
 
@@ -266,16 +287,19 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editcode->setText($this->_item->item_code);
         $this->itemdetail->editbarcode->setText($this->_item->bar_code);
         $this->itemdetail->editmsr->setText($this->_item->msr);
+        $this->itemdetail->editnotes->setText($this->_item->notes);
         $this->itemdetail->editmaxsize->setText($this->_item->maxsize);
         $this->itemdetail->editvolume->setText($this->_item->volume);
         $this->itemdetail->editlost->setText($this->_item->lost);
         $this->itemdetail->editcustomsize->setText($this->_item->customsize);
         $this->itemdetail->editwarranty->setText($this->_item->warranty);
         $this->itemdetail->edittype->setValue($this->_item->item_type);
+        $this->itemdetail->editprintqty->setValue($this->_item->printqty);
 
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
         $this->itemdetail->editcell->setText($this->_item->cell);
+        $this->itemdetail->edituktz->setText($this->_item->uktz);
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fqty($this->_item->zarp));
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
@@ -298,16 +322,24 @@ class ItemList extends \App\Pages\Base
         $this->itemtable->listform->itemlist->Reload(false);
 
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
-
+        if (strlen($this->_item->item_code)==0  ) {
+            $this->itemdetail->editcode->setText(Item::getNextArticle());
+        }
+        
+        $this->itemdetail->edittags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_ITEM,(int)$this->_item->item_id));
+        $this->itemdetail->edittags->setSuggestions(\App\Entity\Tag::getSuggestions(\App\Entity\Tag::TYPE_ITEM));
+         
+        
     }
 
     public function addOnClick($sender) {
-        $this->_copy = false;
+        $this->_copy = 0;
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
         $this->itemdetail->clean();
         $this->itemdetail->editmsr->setText('шт');
+        $this->itemdetail->editnotes->setText('');
         $this->itemdetail->editimage->setVisible(false);
         $this->itemdetail->editdelimage->setVisible(false);
         $this->itemdetail->editnoprice->setChecked(false);
@@ -316,9 +348,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editautoincome->setChecked(false);
         $this->_item = new Item();
 
-        if (System::getOption("common", "autoarticle") == 1) {
-            $this->itemdetail->editcode->setText(Item::getNextArticle());
-        }
+        $this->itemdetail->editcode->setText(Item::getNextArticle());
         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
 
     }
@@ -329,21 +359,46 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnFilter($sender) {
-        $this->itemtable->listform->itemlist->Reload();
-    }
+        $this->_tag ='';  
+        $this->Reload()  ;
+     }
 
-    public function OnSubmit($sender) {
+    public function Reload($f=true) {
+          $this->itemtable->listform->itemlist->Reload($f);
+        
+       
+          $this->itemtable->taglist->Clear();
+          $tags = \App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_ITEM ) ;
+          foreach ($tags as $tag) {
+             $this->itemtable->taglist->addClickLink($tag, '#'.$tag);
+          }           
+          
+          
+    }    
+    
+    public function save($sender) {
         if (false == \App\ACL::checkEditRef('ItemList')) {
             return;
         }
 
         $this->_item->itemname = $this->itemdetail->editname->getText();
         $this->_item->itemname = trim($this->_item->itemname);
-        
+
         if (strlen($this->_item->itemname) == 0) {
-            $this->setError('entername');
+            $this->setError('Не введено назву');
             return;
         }
+
+        $itemcode =trim($this->itemdetail->editcode->getText());
+        //проверка  на использование
+        if (strlen($this->_item->item_code) > 0 &&  $itemcode !== $this->_item->item_code ) {
+            $code = Item::qstr($this->_item->item_code);
+            $cnt =  \App\Entity\Entry::findCnt("item_id = {$this->_item->item_id}  ");
+            if ($cnt > 0) {
+                $this->setError('Не можна міняти  артикул вже використовуваного  ТМЦ');
+                return;
+            }
+        }        
         
         $this->_item->shortname = $this->itemdetail->editshortname->getText();
         $this->_item->cat_id = $this->itemdetail->editcat->getValue();
@@ -353,12 +408,14 @@ class ItemList extends \App\Pages\Base
         $this->_item->price4 = $this->itemdetail->editprice4->getText();
         $this->_item->price5 = $this->itemdetail->editprice5->getText();
 
-        $this->_item->item_code = trim($this->itemdetail->editcode->getText());
+        $this->_item->item_code = $itemcode;
         $this->_item->manufacturer = trim($this->itemdetail->editmanufacturer->getText());
+        $this->_item->country = trim($this->itemdetail->editcountry->getText());
 
         $this->_item->bar_code = trim($this->itemdetail->editbarcode->getText());
         $this->_item->url = trim($this->itemdetail->editurl->getText());
         $this->_item->msr = $this->itemdetail->editmsr->getText();
+        $this->_item->notes = $this->itemdetail->editnotes->getText();
         $this->_item->weight = $this->itemdetail->editweight->getText();
         $this->_item->maxsize = $this->itemdetail->editmaxsize->getText();
         $this->_item->volume = $this->itemdetail->editvolume->getText();
@@ -366,8 +423,10 @@ class ItemList extends \App\Pages\Base
         $this->_item->customsize = $this->itemdetail->editcustomsize->getText();
         $this->_item->warranty = $this->itemdetail->editwarranty->getText();
         $this->_item->item_type = $this->itemdetail->edittype->getValue();
+        $this->_item->printqty = $this->itemdetail->editprintqty->getValue();
 
         $this->_item->cell = $this->itemdetail->editcell->getText();
+        $this->_item->uktz = $this->itemdetail->edituktz->getText();
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->zarp = $this->itemdetail->editzarp->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
@@ -380,38 +439,41 @@ class ItemList extends \App\Pages\Base
         $this->_item->autoincome = $this->itemdetail->editautoincome->isChecked() ? 1 : 0;
 
         //проверка  уникальности артикула
-        if (strlen($this->_item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
-            $code = Item::qstr($this->_item->item_code);
-            $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and item_code={$code} ");
-            if ($cnt > 0) {
- 
-                    $this->setError('itemcode_exists');
-                    return;
-                
-            }
+        if ($this->_item->checkUniqueArticle()==false) {
+            $this->setError('Такий артикул вже існує');
+            return;
         }
-    
-    
-        if (strlen($this->_item->item_code) == 0 && System::getOption("common", "autoarticle") == 1) {
-                    $this->_item->item_code = Item::getNextArticle();
-                    $this->itemdetail->editcode->setText($this->_item->item_code);
 
-                     
-         }    
-    
+
+        if (strlen($this->_item->item_code) == 0  ) {
+            $this->_item->item_code = Item::getNextArticle();
+//            $this->itemdetail->editcode->setText($this->_item->item_code);
+        }
+   
+        $digits = intval( preg_replace('/[^0-9]/', '', $this->_item->item_code) );
+        if($digits > 100000000) {
+            
+          if (\App\System::getOption("common", "autoarticle") == 1) {
+             $this->setWarn('Надто велике  число в  артикулі');
+          }  else {
+             $this->setError('Надто велике  число в  артикулі');
+             return;
+          }             
+            
+        }
         //проверка  уникальности штрих кода
         if (strlen($this->_item->bar_code) > 0) {
             $code = Item::qstr($this->_item->bar_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and bar_code={$code} ");
             if ($cnt > 0) {
-                $this->setWarn('barcode_exists');
+                $this->setWarn('Такий штрих код вже існує"');
             }
         }
         $printer = System::getOptions('printer');
 
         if (intval($printer['pmaxname']) > 0 && mb_strlen($this->_item->shortname) > intval($printer['pmaxname'])) {
 
-            $this->setWarn('tolongshortname', $printer['pmaxname']);
+            $this->setWarn("Коротка назва має бути не більше {$printer['pmaxname']} символів");
 
         }
 
@@ -420,7 +482,7 @@ class ItemList extends \App\Pages\Base
         $code = Item::qstr($this->_item->item_code);
         $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
-            $this->setError('itemnamecode_exists');
+            $this->setError('ТМЦ з такою назвою і артикулом вже існує');
             return;
         }
 
@@ -433,7 +495,7 @@ class ItemList extends \App\Pages\Base
             $this->_item->thumb = "";
         }
 
-        if ($this->_item->image_id > 0 && $this->_copy == true) {
+        if ($this->_item->image_id > 0 && $this->_copy >0) {
             $image = \App\Entity\Image::load($this->_item->image_id);
             $image->image_id = 0;
             $image->save();
@@ -445,18 +507,20 @@ class ItemList extends \App\Pages\Base
 
         $file = $this->itemdetail->editaddfile->getFile();
         if (strlen($file["tmp_name"]) > 0) {
-            $imagedata = getimagesize($file["tmp_name"]);
+            
+            if (filesize($file["tmp_name"])  > pow(2,20)) {
 
-            if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('invalidformatimage');
+                    $this->setError('Розмір файлу більше 1M');
+                    return;
+            }
+           
+            $imagedata = getimagesize($file["tmp_name"]);
+ 
+            if (preg_match('/(png|jpeg)$/', $imagedata['mime']) == 0) {
+                $this->setError('Невірний формат зображення');
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-
-             //   $this->setError('toobigimage');
-            //    return;
-            }
 
             $image = new \App\Entity\Image();
             $image->content = file_get_contents($file['tmp_name']);
@@ -473,28 +537,57 @@ class ItemList extends \App\Pages\Base
 
 
                 $image->content = $thumb->getImageAsString();
-                $thumb->resize(256, 256);
+                $thumb->resize(512, 512);
                 $image->thumb = $thumb->getImageAsString();
-                $thumb->resize(64, 64);
-                
+                $thumb->resize(128, 128);
+
                 $this->_item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
             }
-            $conn =   \ZDB\DB::getConnect();
-            if($conn->dataProvider=='postgres') {
-              $image->thumb = pg_escape_bytea($image->thumb);
-              $image->content = pg_escape_bytea($image->content);
-                
-            }
+        
+        
 
             $image->save();
             $this->_item->image_id = $image->image_id;
             $this->_item->save();
 
-            $this->filter->searchbrand->setDataList(Item::getManufacturers());
-        
+
         }
 
-        $this->itemtable->listform->itemlist->Reload(false);
+        $this->filter->searchbrand->setDataList(Item::getManufacturers());
+
+        $tags = $this->itemdetail->edittags->getTags() ;
+        \App\Entity\Tag::updateTags($tags,\App\Entity\Tag::TYPE_ITEM,(int)$this->_item->item_id) ;
+        
+        
+        if($this->_copy > 0) {  //комплекты
+            $itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_copy, "itemname");
+            $serviceset = ItemSet::find("service_id > 0  and pitem_id=" . $this->_copy, "service_name");
+
+            foreach($itemset as $s) {
+                $set = new ItemSet();
+                $set->pitem_id = $this->_item->item_id;
+                $set->item_id = $s->item_id;
+                $set->qty = $s->qty;
+                $set->save();
+            }
+
+            foreach($serviceset as $s) {
+                $set = new ItemSet();
+                $set->pitem_id = $this->_item->item_id;
+                $set->service_id = $s->service_id;
+                $set->cost = $s->cost;
+
+                $set->save();
+            }
+
+        }
+
+        if($this->_item->disabled == 1) {
+            $conn = \ZDB\DB::getConnect();
+            $conn->Execute("delete from  item_set where item_id=".$this->_item->item_id) ;
+        }
+
+        $this->Reload(false);
 
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
@@ -517,38 +610,76 @@ class ItemList extends \App\Pages\Base
         $this->setpanel->stitle->setText($item->itemname);
 
         $this->setupdate() ;
+
+        $this->setpanel->cardform->editscard->setText($item->techcard)  ;
+
+        $this->_tvars['complin']  = $item->item_type== Item::TYPE_PROD  || $item->item_type== Item::TYPE_HALFPROD;
+        $this->_tvars['complout']  = $item->item_type== Item::TYPE_MAT  || $item->item_type== Item::TYPE_HALFPROD ;
+        $this->_tvars['conploutlist']  = [];
+        
+        $conn = \ZDB\db::getConnect()  ;
+        
+        $sql="SELECT s.qty,i.item_code,i.itemname  FROM 
+            items i JOIN item_set s ON i.item_id=s.pitem_id 
+            WHERE s.item_id = ".$item->item_id ;
+
+        foreach($conn->Execute($sql) as $ii){
+           $this->_tvars['conploutlist'][]=array(
+              "iname"=>$ii['itemname'],
+              "iqty"=> H::fqty( $ii['qty'] ),
+              "icode"=>$ii['item_code']
+           );     
+        }
+   
+      foreach(\App\Entity\Service::find("") as $s){
+           if(is_array($s->itemset)) {
+               foreach($s->itemset as $is) {
+                   if($is->item_id==$item->item_id) {
+                       $this->_tvars['conploutlist'][]=array(
+                          "iname"=>$s->service_name,
+                          "iqty"=>$is->qty,
+                          "icode"=>""
+                       );     
+                       
+                   }
+                   
+               }
+           }
+        } 
+        
+        
     }
 
-    private function setupdate(){
+    private function setupdate() {
         $this->_itemset = ItemSet::find("item_id > 0  and pitem_id=" . $this->_pitem_id, "itemname");
         $this->_serviceset = ItemSet::find("service_id > 0  and pitem_id=" . $this->_pitem_id, "service_name");
 
         $this->setpanel->setlist->Reload();
         $this->setpanel->ssetlist->Reload();
-        
+
         $total = 0;
         foreach($this->_itemset as $i) {
-             $item = Item::load($i->item_id);
-             if($item != null){
-                $total += doubleval($i->qty  * $item->getLastPartion() );   
-             }
+            $item = Item::load($i->item_id);
+            if($item != null) {
+                $total += doubleval($i->qty  * $item->getPartion());
+            }
 
         }
         foreach($this->_serviceset as $s) {
-             $total  += doubleval($s->cost);
+            $total  += doubleval($s->cost);
         }
-    
+
         $this->setpanel->stotal->setText(H::fa($total));
-          
+
     }
-    
+
     public function itemsetlistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('sname', $item->itemname));
         $row->add(new Label('scode', $item->item_code));
         $row->add(new Label('sqty', H::fqty($item->qty)));
-     //   $it= Item::load($item->item_id) ;
-      //  $row->add(new Label('sprice', H::fa($it->getProdprice())));
+        //   $it= Item::load($item->item_id) ;
+        //  $row->add(new Label('sprice', H::fa($it->getProdprice())));
         $row->add(new ClickLink('sdel'))->onClick($this, 'ondelset');
     }
 
@@ -564,13 +695,14 @@ class ItemList extends \App\Pages\Base
     }
 
     public function OnAddSet($sender) {
-        $id = $sender->editsname->getKey();
+        $form=  $this->setpanel->setform;
+        $id = $form->editsname->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано ТМЦ");
             return;
         }
 
-        $qty = $sender->editsqty->getText();
+        $qty = $form->editsqty->getText();
 
         $set = new ItemSet();
         $set->pitem_id = $this->_pitem_id;
@@ -579,7 +711,7 @@ class ItemList extends \App\Pages\Base
 
         $set->save();
         $this->setupdate() ;
-        $sender->clean();
+        $form->clean();
     }
 
     public function ondelset($sender) {
@@ -589,23 +721,23 @@ class ItemList extends \App\Pages\Base
 
         $this->setupdate() ;
     }
- 
-    
+
     public function itemsetslistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $item = $row->getDataItem();
         $row->add(new Label('ssname', $item->service_name));
         $row->add(new Label('sscost', H::fa($item->cost)));
         $row->add(new ClickLink('ssdel'))->onClick($this, 'ondelset');
     }
-    
+
     public function OnAddSSet($sender) {
-        $id = $sender->editssname->getValue();
+        $form= $this->setpanel->setsform;
+        $id = $form->editssname->getValue();
         if ($id == 0) {
-            $this->setError("noselservice");
+            $this->setError("Не обрано послугу або роботу");
             return;
         }
 
-        $cost = $sender->editscost->getText();
+        $cost = $form->editscost->getText();
 
         $set = new ItemSet();
         $set->pitem_id = $this->_pitem_id;
@@ -614,74 +746,54 @@ class ItemList extends \App\Pages\Base
 
         $set->save();
 
- 
+
         $this->setupdate() ;
-        $sender->clean();
+        $form->clean();
     }
 
- 
-   
-    
+    public function OnCardSet($sender) {
+
+        $item = Item::load($this->_pitem_id);
+        $item->techcard = $sender->editscard->getText();
+        $item->save() ;
+
+
+    }
+
     public function printQrOnClick($sender) {
-      
+
         $printer = \App\System::getOptions('printer') ;
         $user = \App\System::getUser() ;
-        
+
         $item = $sender->getOwner()->getDataItem();
 
-        if(intval($user->prtype ) == 0){
-            $dataUri = \App\Util::generateQR($item->url,100,5)  ;
+        if(intval($user->prtypelabel) == 0) {
+            $dataUri = \App\Util::generateQR($item->url, 100, 5)  ;
             $html = "<img src=\"{$dataUri}\"  />";
             $this->addAjaxResponse("  $('#tag').html('{$html}') ; $('#pform').modal()");
-            return;            
+            return;
         }
-        /*
-        $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
-        $printer = new \Mike42\Escpos\Printer($connector);       
-      
-        $printer->setJustification( \Mike42\Escpos\Printer::JUSTIFY_CENTER)  ;
-        $printer->qrCode($item->url)  ;
-      
-     
-
-      //  $printer->text("тест\n");
-        
-
-
-      //   $connector->write("\x1b\x45\x01");
-        
-      
-       // $printer->barcode("{sB0123456",\Mike42\Escpos\Printer::BARCODE_CODE128) ;
        
-        
-        $cc = $connector->getData()  ;
-        $connector->finalize() ;      
-      
-        $buf = [];
-        foreach(str_split($cc) as $c) {
-            $buf[] = ord($c) ;   
-        }    
-        */
-        try{
-     
+        try {
+
             $pr = new \App\Printer() ;
             $pr->align(\App\Printer::JUSTIFY_CENTER) ;
 
             $pr->QR($item->url);
-          
-              
+
+
             $buf = $pr->getBuffer() ;
             $b = json_encode($buf) ;
-            $this->addAjaxResponse(" sendPS('{$b}') ");  
-            
-        }catch(\Exception $e){
-           $message = $e->getMessage()  ;
-           $message = str_replace(";","`",$message)  ;
-           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
-                    
+            $this->addAjaxResponse(" sendPSlabel('{$b}') ");
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
         }
-        
-  
+
+
     }
 
     /*
@@ -713,8 +825,8 @@ class ItemList extends \App\Pages\Base
             $header['name'] = str_replace("'","`", $header['name'])  ;
             $header['name'] = str_replace("\"'","`", $header['name'])  ;
         }
-       
-        
+
+
         $header['action'] = $item->actionprice > 0;
         $header['actionprice'] = $item->actionprice;
         $header['isap'] = false;
@@ -753,12 +865,12 @@ class ItemList extends \App\Pages\Base
         $html = $report->generate($header);
 
 
-        
+
     }
 
     */
     public function OnPrintAll($sender) {
-     
+        $buf=[];
         $items = array();
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
@@ -767,41 +879,61 @@ class ItemList extends \App\Pages\Base
             }
         }
         if (count($items) == 0) {
-            return;
-        }
-        if(intval(\App\System::getUser()->prtype ) == 0){
-  
-            $htmls = H::printItems($items);
-            
-            if( \App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $htmls;
-
-               $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
-            }
-            else {
-               $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
-             
-            }
+           $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+          
             return;
         }
         
-     try{
+        $user = \App\System::getUser() ;
           
-        $xml = H::printItemsEP($items);
-        $buf = \App\Printer::xml2comm($xml);
-        $b = json_encode($buf) ;                   
-          
-        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPS('{$b}') ");      
-      }catch(\Exception $e){
-           $message = $e->getMessage()  ;
-           $message = str_replace(";","`",$message)  ;
-           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
-                   
+        if(intval($user->prtypelabel) == 0) {
+
+            $htmls = H::printItems($items);
+
+            if(\App\System::getUser()->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $htmls;
+
+                $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            } else {
+                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+
+            }
+            return;
         }
- 
+
+        try {
+
+            $ret = H::printItemsEP($items);
+            if(intval($user->prtypelabel) == 1) {
+                if(strlen($ret)==0) {
+                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::xml2comm($ret);
+        
+            }            
+            if(intval($user->prtypelabel) == 2) {
+                if(count($ret)==0) {
+                   $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
+                   return; 
+                }
+                $buf = \App\Printer::arr2comm($ret);
+        
+            }            
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $message = str_replace("'", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }
+
     }
 
-    public function onAllCat($sender) {                                                               
+    public function onAllCat($sender) {
         $cat_id = $sender->getValue();
         if ($cat_id == 0) {
             return;
@@ -825,7 +957,7 @@ class ItemList extends \App\Pages\Base
             $conn->Execute("update items set  cat_id={$cat_id} where  item_id={$item->item_id}");
         }
 
-        $this->itemtable->listform->itemlist->Reload();
+        $this->Reload();
         $sender->setValue(0);
     }
 
@@ -848,35 +980,89 @@ class ItemList extends \App\Pages\Base
         $conn = \ZDB\DB::getConnect();
         $d = 0;
         $u = 0;
+        $onstore=[] ;
         foreach ($items as $it) {
+
+            $cnt = $it->getQuantity();
+            if($cnt != 0) {
+                $onstore[]=$it->itemname;
+                continue;
+            }
+
             $sql = "  select count(*)  from  store_stock where   item_id = {$it->item_id}  ";
             $cnt = $conn->GetOne($sql);
             if ($cnt > 0) {
                 $u++;
-                //$conn->Execute("update items  set  disabled=1 where   item_id={$id}");
+
                 $it->disabled=1;
                 $it->save();
             } else {
                 $d++;
                 Item::delete($it->item_id) ;
-                //$conn->Execute("delete from items  where   item_id={$id}");
+
 
             }
+
+
+            $conn->Execute("delete from  item_set where item_id=".$it->item_id) ;
         }
 
 
-        $this->setSuccess("delitems", $d, $u);
+        $this->setSuccess("Видалено {$d}, деактивовано {$u}");
 
-        $this->itemtable->listform->itemlist->Reload();
+        if(count($onstore)>0) {
+            $w = "Товари ";
+            $w .=  implode(",", $onstore)  ;
+
+            $w .= " ще є на складі";
+            $w = str_replace("'", "`", $w) ;
+            $w = str_replace("\"", "`", $w) ;
+            $this->setWarn($w);
+
+
+        }
+
+        $this->Reload();
+
 
     }
 
+    public function  shownotesOnClick($sender){
+        $item = $sender->getOwner()->getDataItem();
+        $desc = str_replace("'","`",$item->description);
+        $desc = str_replace("\"","`",$desc);
+      //  $desc = nl2br ($desc);        
+        $desc = str_replace ("\n","",$desc);
+        $desc = str_replace ("\r","",$desc);
+        
+        $this->updateAjax([],"$('#idesc').modal('show'); $('#idesccontent').html('{$desc}'); ")  ;
+        
+    }
+    
+    public function onService($sender) {
+       $price=''; 
+       $ser =  \App\Entity\Service::load($sender->getValue());
+       if($ser != null) {
+           $price = $ser->price;
+       }
+       $this->setpanel->setsform->editscost->setText($price);
+        
+    }
+    
+    public function OnTagList($sender) {
+        $this->_tag  = $sender->getSelectedValue();
 
+        $this->itemtable->setVisible(true);
+        $this->itemdetail->setVisible(false);
+       
+        $this->itemtable->listform->itemlist->Reload();
+         
+    }
+    
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -889,7 +1075,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         $where = "1=1";
         $text = trim($form->searchkey->getText());
         $brand = trim($form->searchbrand->getText());
-        $type = trim($form->searchtype->getValue());
+        $type = trim(''.$form->searchtype->getValue());
         $cat = $form->searchcat->getValue();
 
 
@@ -897,13 +1083,13 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
             if ($cat == -1) {
                 $where = $where . " and cat_id=0";
             } else {
-                
-                
+
+
                 $c = Category::load($cat) ;
                 $ch = $c->getChildren();
                 $ch[]=$cat;
-                                
-                $cats = implode(",",$ch)  ;              
+
+                $cats = implode(",", $ch)  ;
                 $where = $where . " and cat_id in ({$cats}) " ;
             }
         }
@@ -920,10 +1106,14 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
         if($type < 10) {
             $where = $where . " and disabled <> 1";
             if($type >0) {
-                $where = $where . " and item_type = {$type}";                
+                $where = $where . " and item_type = {$type}";
             }
         }
-            
+        if(strlen($this->page->_tag)>0) {
+                
+               $tag   = Item::qstr($this->page->_tag) ;
+               $where = "disabled <> 1 and item_id in (select item_id from taglist where  tag_type=3 and tag_name={$tag} )"; 
+        }
 
         if (strlen($text) > 0) {
             if ($p == false) {
@@ -944,14 +1134,26 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $sortfield = "itemname asc";
         $sort = $this->page->filter->searchsort->getValue();
-        
-        if($sort==1)  $sortfield = "item_code asc";
-        if($sort==2)  $sortfield = "item_type asc";
-        if($sort==3)  $sortfield = "item_id desc";
-        
+
+        if($sort==1) {
+            $sortfield = "item_code asc";
+        }
+        if($sort==2) {
+            $sortfield = "item_type asc";
+        }
+        if($sort==3) {
+            $sortfield = "item_id desc";
+        }
+
         $l = Item::find($this->getWhere(true), $sortfield, $count, $start);
-        $f = Item::find($this->getWhere(), $sortfield, $count, $start);
-        foreach ($f as $k => $v) {
+        
+        $fst="";
+        $br=   \App\System::getBranch()  ;
+        if($br >0){
+           $fst = " store_stock.store_id in(select store_id from stores where  stores.branch_id = {$br}  )  and "; 
+        }
+           
+        foreach (Item::findYield($this->getWhere(), $sortfield, $count, $start,"*,(select coalesce(sum(qty),0) from store_stock where {$fst} items_view.item_id = store_stock.item_id) as qty") as $k => $v) {
             $l[$k] = $v;
         }
         return $l;

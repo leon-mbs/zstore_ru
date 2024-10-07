@@ -17,13 +17,13 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\BookmarkableLink;
+use App\Application as App;
 
 /**
  * журнал платежей
  */
 class PayList extends \App\Pages\Base
 {
-
     private $_doc = null;
 
 
@@ -35,7 +35,7 @@ class PayList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('PayList')) {
-            return;
+            App::RedirectHome() ;
         }
 
 
@@ -44,7 +44,7 @@ class PayList extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
         $this->filter->add(new Date('from', time()));
         $this->filter->add(new Date('to', time()));
-  
+
         $this->filter->add(new AutocompleteTextInput('fcustomer'))->onText($this, 'OnAutoCustomer');
 
         $doclist = $this->add(new DataView('doclist', new PayListDataSource($this), $this, 'doclistOnRow'));
@@ -60,7 +60,7 @@ class PayList extends \App\Pages\Base
         $this->add(new Label('totm'));
         $this->add(new Label('tottot'));
 
-     //   $this->doclist->Reload();
+        //   $this->doclist->Reload();
         $this->add(new ClickLink('csv', $this, 'oncsv'));
 
         $this->filterOnSubmit(null);
@@ -73,19 +73,23 @@ class PayList extends \App\Pages\Base
 
         $totp = 0;
         $totm = 0;
-        foreach($this->doclist->getDataSource()->getItems() as $doc){
-            if( doubleval($doc->amount) >0 )   $totp += $doc->amount;
-            if( doubleval($doc->amount) <0 )   $totm += (0 - $doc->amount);
-        }        
-        
-        
-        
+        foreach($this->doclist->getDataSource()->getItems() as $doc) {
+            if(doubleval($doc->amount) >0) {
+                $totp += $doc->amount;
+            }
+            if(doubleval($doc->amount) <0) {
+                $totm += (0 - $doc->amount);
+            }
+        }
+
+
+
         $this->totp->setText(H::fa($totp)) ;
         $this->totm->setText(H::fa($totm)) ;
         $this->tottot->setText(H::fa($totp - $totm)) ;
-        
-        
-        
+
+
+
     }
 
     public function OnAutoCustomer($sender) {
@@ -114,8 +118,8 @@ class PayList extends \App\Pages\Base
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
 
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
-        
-        
+
+
     }
 
     //просмотр
@@ -139,25 +143,55 @@ class PayList extends \App\Pages\Base
 
         $pl = Pay::load($id);
 
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+
+        if($da>$pl->paydate) {
+            $this->setError("Не можна відміняти оплату раніше  " .date('Y-m-d', $da));
+            return;
+        }
+
         $doc = Document::load($pl->document_id);
-        Pay::cancelPayment($id, $sender->notes->getText());
 
         $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
 
-        $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where document_id=" . $pl->document_id;
-        $payed = $conn->GetOne($sql);
+        try {
 
-        $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
+            Pay::cancelPayment($id, $sender->notes->getText());
+
+
+            $sql = "select coalesce(abs(sum(amount)),0) from paylist_view where document_id=" . $pl->document_id;
+            $payed = $conn->GetOne($sql);
+
+            $conn->Execute("update documents set payed={$payed} where   document_id =" . $pl->document_id);
+       
+            $doc = \App\Entity\Doc\Document::load($pl->document_id)->cast();
+            $doc->DoBalans();
+      
+            $conn->CommitTrans();
+
+
+        } catch(\Throwable $ee) {
+            global $logger;
+            $conn->RollbackTrans();
+
+            $this->setError($ee->getMessage());
+
+            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
+            return;
+        }
+
 
         $this->doclist->Reload(true);
 
         $user = \App\System::getUser();
 
 
-        \App\Entity\Notify::toSystemLog(H::l('deletedpay', $user->username, $doc->document_number, $sender->notes->getText())) ;
-        
+        \App\Entity\Notify::toSystemLog("Користувач {$user->username} видалив платіж з документа {$doc->document_number}. Підстава: " . $sender->notes->getText()) ;
+
         $sender->notes->setText('');
-        $this->setSuccess('payment_canceled');
+        $this->setSuccess('Платіж скасовано');
         $this->resetURL();
     }
 
@@ -208,8 +242,8 @@ class PayList extends \App\Pages\Base
             $all += abs($p->amount);
         }
         $header['pall'] = H::fa($all);
-        if(intval(\App\System::getUser()->prtype ) == 0){
-      
+        if(intval(\App\System::getUser()->prtype) == 0) {
+
             $report = new \App\Report('pays_bill.tpl');
 
             $html = $report->generate($header);
@@ -218,22 +252,22 @@ class PayList extends \App\Pages\Base
             return;
         }
 
-      try{
-        $report = new \App\Report('pays_bill_ps.tpl');
+        try {
+            $report = new \App\Report('pays_bill_ps.tpl');
 
-        $xml = $report->generate($header);         
-        $buf = \App\Printer::xml2comm($xml);
-        $b = json_encode($buf) ;                   
-          
-        $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPS('{$b}') ");      
-      }catch(\Exception $e){
-           $message = $e->getMessage()  ;
-           $message = str_replace(";","`",$message)  ;
-           $this->addAjaxResponse(" toastr.error( '{$message}' )         ");  
-                   
-        }       
-        
-        
+            $xml = $report->generate($header);
+            $buf = \App\Printer::xml2comm($xml);
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPS('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }
+
+
     }
 
 }
@@ -243,7 +277,6 @@ class PayList extends \App\Pages\Base
  */
 class PayListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -256,10 +289,10 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $conn = \ZDB\DB::getConnect();
 
         //$where = "   d.customer_id in(select  customer_id from  customers  where  status=0)";
-        $where = " date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(paydate) <= " . $conn->DBDate($this->page->filter->to->getDate());
-        
-//        $where = " paydate>=  ". $conn->DBDate(strtotime("-400 day") );
-    
+        $where = "p.paytype<>1001 and  date(paydate) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(paydate) <= " . $conn->DBDate($this->page->filter->to->getDate());
+
+        //        $where = " paydate>=  ". $conn->DBDate(strtotime("-400 day") );
+
         $author = $this->page->filter->fuser->getValue();
 
         $cust = $this->page->filter->fcustomer->getKey();
@@ -305,11 +338,9 @@ class PayListDataSource implements \Zippy\Interfaces\DataSource
         $sql = "select  p.*,d.customer_name,d.meta_id,d.document_date  from documents_view  d join paylist_view p on d.document_id = p.document_id where " . $this->getWhere() . " order  by  pl_id desc   ";
         if ($count > 0) {
             $limit =" limit {$start},{$count}";
-            if($conn->dataProvider=="postgres") {
-                $limit =" limit {$count} offset {$start}";
-            }
-                  
-           
+        
+
+
             $sql .= $limit;
         }
 

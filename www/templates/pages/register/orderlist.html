@@ -1,14 +1,15 @@
 <html>
      <head>
-        <title> Журнал заказов  </title>
+        <title> Журнал замовлень  </title>
 
     </head>
   <body>
         <div class="row">
-            <div class="col-12 col-xl-10">
+            <div class="col-12 ">
 
-                <h3>Журнал заказов </h3>
-
+                <h3>Журнал замовлень </h3>
+            </div>
+             <div zippy="listpanel" class="col-12 col-xl-11">
 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
@@ -23,12 +24,12 @@
                         <select class="form-control mr-2" zippy="status">
                         </select>
 
-                        <label for="salesource">Источник продаж</label>
+                        <label for="salesource">Джерело продаж</label>
                         <select class="form-control mr-2" zippy="salesource">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
-                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
+                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
 
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -36,20 +37,21 @@
 
                     </form>
                 </div>
-                <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Новый заказ</a>
+                <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Нове замовлення</a>
 
 
-                <br><a zippy="csv">Экспорт в Excel</a>
+                <br><a zippy="csv">Експорт у Excel</a>
 
                 <table class="table   table-sm   ">
                     <tr>
 
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th>Заказчик</th>
-                        <th class="text-right">Сумма</th>
+                        <th>Замовник</th>
+                        <th class="text-right">Сума</th>
                         <th>Статус</th>
-                        <th>Ответственный</th>
+                        <th>Вiдповiдальний</th>
+
 
 
                         <th></th>
@@ -61,25 +63,25 @@
                     </tr>
                     <tr zippy="doclist">
 
-                        <td class="text-nowrap" zippy="number"></td>
+                        <td class="text-nowrap" ><a zippy="number"></a></td>
                         <td class="text-nowrap" zippy="date"></td>
-                        <td zippy="customer" class="text-nowrap"></td>
+                        <td  class="text-nowrap"><a href="return false; void(0)" zippy="customer"></a></td>
                         <td zippy="amount" class="text-right"></td>
 
 
                         <td class="text-nowrap" zippy="state"></td>
                         <td   zippy="emp"></td>
-                        <td zippy="onotes"></td>
+                        <td ><small zippy="onotes"></small></td>
                         <td>
-                            <a zippy="pay" title="Оплата"><i class="fa fa-credit-card"></i></a>
+                            <i  zippy="isreserved" title="Зарезервованi товари" class="fa fa-archive"></i>
                         </td>
-                        <td>
-                            <i  zippy="isreserved" title="Зарезервированные товары" class="fa fa-archive"></i>
+                         <td>
+                           <i style="cursor:pointer" zippy="cchat" title="Чат с  замовником" ></i>  
                         </td>
 
                         <td class="text-nowrap">
-                            <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
-                             &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
+                            &nbsp; &nbsp;<a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                             &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
 
                         </td>
 
@@ -90,7 +92,7 @@
 
                 <div zippy="pag">
                 </div>
-                <a id="dankor"></a>
+             
             </div>
 
         </div>
@@ -99,27 +101,27 @@
             <div class="col-12 col-xl-10">
                 <div class="navbar nav">
                     <form zippy="payform" class="form-inline ">
-                        <label>К оплате</label>
-                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сумма..."
+                        <label>До сплати</label>
+                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
                                class="form-control mr-2">
-                        <label for="payment">счет</label>
+                        <label for="payment">рахунок</label>
                         <select class="form-control mr-2" zippy="payment">
 
                         </select>
-                        {{#ppo}}
+                        {{#fiscal}}
                         <label for="pos">POS</label>
                         <select class="form-control mr-2" zippy="pos">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
 
                         </select>
-                        {{/ppo}}
+                        {{/fiscal}}
                         <label>дата</label>
                         <input zippy="pdate" style="width:100px;" class="form-control mr-2 ">
 
-                        <input zippy="pcomment" placeholder="Комментарий..." class="form-control mr-2">
+                        <input zippy="pcomment" placeholder="Коментар..." class="form-control mr-2">
 
-                        <button type="submit" class="  btn btn-info  mr-2 ">Оплатить</button>
-                        <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрыть ордер</span>
+                        <button type="submit" class="  btn btn-info  mr-2 ">Сплатити</button>
+                        <input zippy="closeorder" type="checkbox" class="form-control "> <span data-label="closeorder">Закрити ордер</span>
 
 
                     </form>
@@ -129,10 +131,11 @@
         </div>
 
 
+
         <div class="row" zippy="statuspan">
             <div class="col-12   col-xl-10">
                 <details>
-                  <summary>Наличие товаров на складе и/или у поставщика</summary>
+                  <summary>Наявнiсть товарiв на складi та/або у постачальника</summary>
                   
                  
            
@@ -140,9 +143,16 @@
                      <tr>
                      <th>Товар</th>
                      <th>Артикул</th>
-                     <th class="text-right">Заказано</th>
-                     <th>На складе</th>
-                     <th>У поставщиков</th>
+                     <th class="text-right">Замовлено</th>
+                     <th>На складi</th>
+                     <th>У постачальникiв</th>
+                      {{#isciprod}}
+                  
+                     <th>Гот. до вир.</th>
+                     {{/isciprod}}
+                    
+                  
+                     <th> </th>
                      </tr>
                      {{#citems}}
                      <tr>
@@ -150,7 +160,7 @@
                         <td>{{itemcode}}</td>
                         <td class="text-right">{{itemqty}}</td>
                         <td>     
-                          <table class="ctable">
+                          <table style="font-size:smaller"  class="ctable">
                               {{#citemsstore}}
                               <tr>
                                  <td>{{itstore}}</td>
@@ -160,7 +170,7 @@
                           </table>
                         </td>
                         <td>
-                          <table class="ctable"> 
+                          <table style="font-size:smaller"  class="ctable"> 
                               {{#citemscust}}
                               <tr>
                                  <td>{{itcust}}</td>
@@ -168,70 +178,110 @@
                                  <td class="text-right">{{itcustprice}}</td>
                                  <td class="text-right">{{itcustqty}}</td>
                                  <td >{{itcustupdated}}</td>
-                                 <td >{{itcustcomment}}</td>
+                              
                               </tr>
                              {{/citemscust}} 
                           </table>
                         </td>
+                      {{#isciprod}}
+                        
+                       <td>
+                          <table    class="ctable"> 
+                              {{#ciprod}}
+                              <tr>
+                                 <td style="width:100px;" class="text-right">{{prqty}}</td>
+                              </tr>
+                             {{/ciprod}} 
+                          </table>
+                        </td>
+                      {{/isciprod}}
+                        
+                        <td> <a href="javascript:void(0)" onclick="{{toco}}" > В закупку</a>  </td>                        
                      </tr>
                      {{/citems}} 
                   </table>
                 </details>
+                  {{#issitems}} 
+                  </div>
+                  <div class="col-12 col-md-10  col-xl-8">
+          
+                  
+                <details>
+                  <summary> Товари в  закупцi</summary>
+               <table class="table table-sm">
+                     <tr>
+                     <th>Заявка</th>
+                     <th>Постачальник</th>
+                     <th >Поставка</th>
+                     </tr>
+                       {{#sitems}} 
+                     <tr>
+                     <td> {{dnum}}</td>
+                     <td>{{dc}} </td>
+                     <td  >{{dd}} </td>
+                     <tr> 
+                      {{/sitems}} 
+                       </table> 
+                </details>
+                 {{/issitems}} 
             </div>
-             <div class="col-12 col-xl-10">      
+             <div class="col-12 col-xl-10 mt-2">      
                 <div class="navbar nav">
-                    <form zippy="statusform" class="form-inline ">
-
-                        <button zippy="binp" class="btn btn-success  mr-2"> На обработку</button>
-                        <button zippy="brd" class="btn btn-success  mr-2"> Готов к отправке</button>
-                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 ">                     Выполнено                </button>
-                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатить</a>
-
-                        <button zippy="bttn" class="btn btn-info  mr-4"></i> Создать ТТН</button>
-                        <button zippy="bpos" class="btn btn-info  mr-2"> Чек                </button>
-                        <button zippy="bgi" class="btn btn-info  mr-2">  Расходная накладная                </button>
-                        <button zippy="bco" class="btn btn-info  mr-2">  Закупка               </button>
-                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Создать наряд</button>
-                        <button zippy="bref" class="btn btn-danger  mr-4"><i class="fas fa-thumbs-down"></i> Анулирован               </button>
-                          
-                         
-                         
-                            
+                    <form zippy="statusform" class="form-inline row">
+                       <div class="col-12 mb-2">      
+                        <button zippy="binp" class="btn btn-success  mr-2"><i class="fa fa-cog"></i> На обробку</button>
+                        
+                        <button zippy="bscan" class="btn btn-primary  mr-2"><i class="fa fa-gifts"></i> Зiбрати</button>
+                   
+                        <button zippy="brd" class="btn btn-success  mr-2"><i class="fa fa-truck"></i> Готовий до вiдправки</button>
+                        <button zippy="bclose" type="submit" class="  btn btn-success  mr-2 "><i class="fa fa-stamp"></i>  Закрити                </button>
+                        <a zippy="btopay" class="  btn btn-success  mr-4 "><i class="fa fa-credit-card"></i>Сплатити</a>
+                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Анулювати                </button>
+                       </div>
+                       <div class="col-12"> 
+                        <span>Створити </span> 
+                        <button zippy="bttn" class="btn btn-info  mr-2">  ТТН</button>
+                        <button zippy="bpos" class="btn btn-info  mr-2">  {{^fiscal}} Чек   {{/fiscal}}     {{#fiscal}}  Фіскальний чек    {{/fiscal}}                 </button>
+                        <button zippy="bgi" class="btn btn-info  mr-2">  Видаткову накладну                </button>
+                        <button zippy="bco" class="btn btn-info  mr-2">  Заявку постачальнику               </button>
+                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">  Наряд</button>
+                        <button zippy="bcopy" class="btn btn-info  mr-4"><i class="fa fa-copy"></i> Копію</button>
+                       </div>     
                             
                     </form> 
-                       {{#isadmins}}
+                    
                       <table>  <tr><td>  
-                     <form zippy="moveform" class="form-inline mt-1">
-                        <label class="mr-2">Перевести на: </label>
-                          {{#usebranch}}
-
-                                <label for="brmove">филиал </label>
-                                <select zippy="brmove" class="form-control mr-2 ">
-                                    <option value="0">Не указан</option>
-                                </select>
-                          
-                               {{/usebranch}}
-                          
-                                <label for="usmove">пользователь </label>
-                                <select class="form-control mr-2" zippy="usmove" class="form-control mr-2 ">
-
-                                </select>
-                                <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
-                   
-                     </form>
-                       {{/isadmins}} 
-                       
-                     </td><td>  
-                       
+              
+                     
                      <form zippy="resform" class="form-inline mt-1">
-                        <label data-label="bres";>Резервировать товары </label>
+                        <label data-label="bres">Резервувати товари </label>
                         <select class="form-control mr-2"  zippy="store"></select>
                          
                         <button zippy="bres" class="btn btn-info  ">OK                 </button>
-                        <button zippy="bunres" class="btn btn-info "> Снять с резерва                </button>
+                        <button zippy="bunres" class="btn btn-info "> Зняти з резерву                </button>
 
 
-                    </form>
+                    </form>       
+                     </td><td>  
+                    <form zippy="moveform" class="form-inline mt-1 ml-4">
+                        <label class="mr-2">Перевести на: </label>
+                       {{#usebranch}}
+
+                        <label for="brmove">фiлiя </label>
+                        <select zippy="brmove" class="form-control mr-2 ">
+                            <option value="0">Не вказано</option>
+                        </select>
+                  
+                       {{/usebranch}}
+                  
+                        <label for="usmove">користувач </label>
+                        <select class="form-control mr-2" zippy="usmove"  >
+
+                        </select>
+                        <button zippy="bmove" type="submit" class="btn btn-info  mr-4 ">OK                 </button>
+                   
+                     </form>                
+                
                    </td></tr></table>
                 </div>
 
@@ -240,19 +290,252 @@
 
             </div>
         </div>
-       
+        
+        
+       <div zippy="editpanel" class="row">
+            <div class="col-12 col-md-8 col-xl-6">
+                 <h5>Замовлення <span zippy="editdn"></span></h5>
+                 <form zippy="editform"  >
+                     {{#usescanner}}
+                    <div class="navbar nav justify-content-start">
+                        Штрих код &nbsp;<input autofocus="on"   style="width:150px;" autocomplete="off"  type="text" zippy="editbarcode"  onkeydown="onBarCode()">
+                        &nbsp;   &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
+                
+                    
+                      
+                    </div>
+                    {{/usescanner}}        
+                   <table class="table table-sm">
+                   <tr><th>
+<i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                    class="fa fa-check-double "></i>                   
+                   </th><th colspan="4"></th></tr>
+                   <tr  zippy="edititemlist">
+                      <td style="width:20px"><input zippy="checkscan" class="seldel mt-1" type="checkbox"><td>
+                      <td zippy="editlistname"><td>
+                      <td zippy="editlistcode"><td>
+                      <td zippy="editlistbarcode"><td>
+                      <td class="text-right" zippy="editlistqty"><td>
+                   </tr> 
+                 </table>         
+                 <div class="form-group">
+                    <button zippy="editcancel" type="submit" class="  btn btn-secondary  mr-2 ">Скасувати</button>                 
+                    <button zippy="editsave" type="submit" class="  btn btn-info  mr-2 ">Зберегти</button>                 
+                    <button zippy="editready" type="submit" class="  btn btn-success  mr-4 ">Зiбрано</button>                 
 
-     
-        {{#askclose}}
+                    <i style="cursor:pointer" title="Вiдправити запитання" zippy="editchat" class="fa fa-comments"></i>
 
+ 
+                 </div>
+
+
+               </form>
+      
+            </div>
+        </div>        
+        
+        
+         {{={| |}=}}   
+          <div class="row">
+            <div class="col-12" id="vapp">
+            
+               <div id="modalcchat" class="modal fade  " tabindex="-1" role="dialog" >
+                    <div class="modal-dialog modal-dialog-centered   ">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Чат  з замовником</h5>
+                                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                            
+                             <details  >
+                                <summary>Перелiк товарiв</summary>
+                                <table class="ctable" style="font-size:smaller">
+                                    <tr v-for="item in cchatitemlist">
+                                        <td>{{item.itemname}} <td>
+                                        <td>{{item.item_code}} <td>
+                                        <td align="right">{{item.quantity}} <td>
+                                        <td align="right">{{item.price}} <td>
+                                        <td  >  <td>
+                                    </tr>
+                                </table>
+                                </details> 
+                                <div class=" direct-chat direct-chat-primary mb-4">
+                                  <div class="row">
+                                  <div v-for="msg in msglist" class="col-12">
+                                      <div v-show="msg.isseller ==false" class="row">
+                                         <div class="col-6"><b>Замовник</b></div>
+                                         <div class="col-4 text-right"><small>{{msg.msgdate}}</small></div>
+                                         <div class="col-2"> </div>
+                                       </div>
+                                       <div v-show="msg.isseller ==false" class="row">
+                                         <div class="col-10  bg-light     ">{{msg.message}}</div>
+                                         <div class="col-2"> </div>
+                                       </div>                  
+                                    
+                                 
+                                        <div v-show="msg.isseller ==true" class="row">
+                                            <div class="col-2"> </div>
+                                            <div class="col-4 text-left"><small>{{msg.msgdate}}</small></div>
+                                            
+                                            <div class="col-6 text-right"><b>Продавець</b></div>
+                                        </div>
+                                        
+                                        <div v-show="msg.isseller ==true" class="row">
+                                            <div class="col-2"> </div>
+                                            <div class="col-10    ">{{msg.message}}</div>
+                                            
+                                       </div>                            
+                                       
+                                          <div  v-show="msg.isseller ==true" class="row">
+                                            <div class="col-12 text-right">  
+                                              <small>   
+                                             <i v-show="msg.checked==true"   class="fa fa-check-double "></i>
+                                             <i v-show="msg.checked==false"   class="fa fa-check "></i>
+                                               </small>
+                                            </div>
+                                            
+                                          </div>                                        
+                                    </div>    
+                                  
+                                    
+                                                            
+                                 </div>                            
+                                <form>
+                                  <div class="form-group">
+                                         <label for="msgtext">Повiдомлення</label> 
+                                        <textarea  v-model="message"      class="form-control"></textarea>
+                                         
+                                           
+                                      </div>
+                                  <div class="input-group">
+                                    
+                                      <button v-show="showntnsend" v-on:click.prevent="send()"   class="btn btn-primary">Вiдправити</button>
+                                    
+                                  </div>
+                                <small>Вiдправка уточнень по  смс  </small>  
+                                </form>
+                           
+                            
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            
+         </div> 
+       </div>
+  {|={{ }}=|}  
         <script>
+        
+     function onBarCode(ele) {
+
+            if (event.key === 'Enter' || event.keyCode == 13) {
+                // alert($('#barcode').val());
+                $('#addcode').click()
+            }
+        }        
+        
+        
+          {{#askclose}}
+
             function check_bclose() {
-                return confirm("Заказ не оплачен или не исполнен. Закрыть?")
+                return confirm("Замовлення не оплачено або не виконано. Закрити?")
 
             }
+          {{/askclose}} 
+        
+     
+    
+          var vapp = new Vue({
+              el: '#vapp',
+           
+              data() {
+                  return  {
+                     doc_id:0 ,
+                     message:'' ,
+                     showntnsend:true ,
+                     cchatitemlist:[] ,
+                     msglist:[] 
+                     
+                   }   
+              }  ,
+              methods:   {
+               
+                 send:function( ){
+                     if(this.message=='') return;
+                     this.showntnsend = false;
+                     callPM('sendMessage',[this.doc_id ],this.message,(data)=> 
+                      {
+                         this.showntnsend = true;
+                         if(checkPMAnswer(data) ){
+                              this.message = ""
+                              callPM('getCChatMessages',[this.doc_id],null,(data)=> 
+                              {
+                                  this.msglist = data.msglist        
+                              })         
+                         }     
+                       
+                      })                 
+                 },
+                 CChatInit:function(doc_id ){
+
+                      this.doc_id  = doc_id;
+                      
+                      callPM('getCChatMessages',[this.doc_id],null,(data)=> 
+                      {
+                               
+                          this.msglist = data.msglist  
+
+       
+                      })                       
+                      
+                       callPM('getCChatItems',[this.doc_id],null,(data)=> 
+                       {
+                          this.cchatitemlist = data.itemlist  
+                       })                   
+                    
+                 }    
+                 
+                 
+                            
+             }     
+       
+        })             
+          
+     
+                   
+          function opencchat(doc_id ) {
+             $('#modalcchat').modal('show')
+           
+             
+             vapp.CChatInit(doc_id   )  
+               
+               
+            }
+       
+     
+         
         </script>
 
-        {{/askclose}}
 
+
+    
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

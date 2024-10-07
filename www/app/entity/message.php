@@ -11,20 +11,21 @@ namespace App\Entity;
  */
 class Message extends \ZCL\DB\Entity
 {
-
-    const TYPE_DOC      = 1;
-    const TYPE_CUST     = 2;
-    const TYPE_EQ       = 3;
-    const TYPE_NOTE     = 4;
-    const TYPE_ISSUE    = 5;
-    const TYPE_PROJECT  = 6;
-    const TYPE_CONTRACT = 7;
-    const TYPE_NOTIFY   = 8;
+    public const TYPE_DOC      = 1;
+    public const TYPE_CUST     = 2;
+    public const TYPE_CHAT     = 3;
+    public const TYPE_NOTE     = 4;
+    public const TYPE_ISSUE    = 5;
+    public const TYPE_PROJECT  = 6;
+    public const TYPE_CONTRACT = 7;
+    public const TYPE_CUSTCHAT = 8;
+    public const TYPE_EMP = 9;
 
 
     protected function init() {
         $this->user_id = 0;
         $this->item_id = 0;
+        $this->created = time();
     }
 
     protected function afterLoad() {

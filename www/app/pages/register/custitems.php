@@ -23,25 +23,27 @@ use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Link\SubmitLink;
 
+/**
+* Журнал товары   у поставщика
+*/
 class CustItems extends \App\Pages\Base
 {
-
     private $_item;
- 
+
 
     public function __construct($add = false) {
         parent::__construct();
-        if (false == \App\ACL::checkShowRef('CustItems')) {
+        if (false == \App\ACL::checkShowReg('CustItems')) {
             return;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
- 
+
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
-      
-        $this->filter->add(new DropDownChoice('searchcust', Customer::findArray("customer_name","status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )","customer_name"), 0));
-      
+
+        $this->filter->add(new DropDownChoice('searchcust', Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
+
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new ClickLink('addnew'))->onClick($this, 'addOnClick');
         $this->itemtable->add(new ClickLink('imports'))->onClick($this, 'onImport');
@@ -53,25 +55,25 @@ class CustItems extends \App\Pages\Base
         $this->itemtable->listform->itemlist->setPageSize(H::getPG());
         $this->itemtable->listform->add(new \Zippy\Html\DataList\Paginator('pag', $this->itemtable->listform->itemlist));
         $this->itemtable->listform->add(new SubmitLink('deleteall'))->onClick($this, 'OnDelAll');
-   
-        
+
+
         $this->add(new Form('itemdetail'))->setVisible(false);
         $this->itemdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutoItem');
         $this->itemdetail->add(new TextInput('editprice'));
         $this->itemdetail->add(new TextInput('editqty'));
         $this->itemdetail->add(new TextInput('editcustcode'));
         $this->itemdetail->add(new TextArea('editdescription'));
-        $this->itemdetail->add(new DropDownChoice('editcust', Customer::findArray("customer_name","status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )","customer_name"), 0));
-  
+        $this->itemdetail->add(new DropDownChoice('editcust', Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
+
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
-        
-        $this->add(new Form('importform'))->setVisible(false);        
+
+        $this->add(new Form('importform'))->setVisible(false);
         $this->importform->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
         $this->importform->onSubmit($this, 'onLoad');
-        
-        
+
+
         $this->importform->add(new \Zippy\Html\Form\File("filename"));
         $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G');
         $this->importform->add(new DropDownChoice("colcustcode", $cols));
@@ -80,9 +82,15 @@ class CustItems extends \App\Pages\Base
         $this->importform->add(new DropDownChoice("colprice", $cols));
         $this->importform->add(new DropDownChoice("colcomment", $cols));
         $this->importform->add(new CheckBox("passfirst"));
-        $this->importform->add(new DropDownChoice("icust", Customer::findArray("customer_name","status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )","customer_name"), 0));
-       
-  
+        $this->importform->add(new DropDownChoice("icust", Customer::findArray("customer_name", "status=0 and  (detail like '%<type>2</type>%'  or detail like '%<type>0</type>%' )", "customer_name"), 0));
+
+        
+        $this->add(new Form('options'))->onSubmit($this, 'OnOption');
+        $this->options->add(new CheckBox("optupdate"))->setChecked(H::getKeyValBool('CI_optupdate'));
+        $this->options->add(new TextInput('optclean',H::getKeyVal('CI_optclean')));
+                                            
+                                   
+        $this->itemtable->listform->itemlist->Reload();
     }
 
     public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -93,19 +101,19 @@ class CustItems extends \App\Pages\Base
         $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('cust_code', $item->cust_code));
         $row->add(new Label('customer_name', $item->customer_name));
-        $row->add(new Label('qty', $item->quantity));
+        $row->add(new Label('qty', $item->quantity == 0 ? '-- ' : $item->quantity ));
 
         $row->add(new Label('price', $item->price));
- 
-        $row->add(new Label('updatedon',H::fd($item->updatedon) ));
+
+        $row->add(new Label('updatedon', H::fd($item->updatedon)));
         $row->add(new Label('comment', $item->comment));
- 
+
         $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
     }
 
- 
+
     public function editOnClick($sender) {
         $this->_copy = false;
         $item = $sender->owner->getDataItem();
@@ -121,7 +129,7 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->editcustcode->setText($this->_item->cust_code);
         $this->itemdetail->editcust->setValue($this->_item->customer_id);
         $this->itemdetail->editdescription->setText($this->_item->comment);
-  
+
     }
 
     public function addOnClick($sender) {
@@ -130,10 +138,10 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
         $this->itemdetail->clean();
- 
+
         $this->_item = new CustItem();
 
-    
+
     }
 
     public function cancelOnClick($sender) {
@@ -158,21 +166,21 @@ class CustItems extends \App\Pages\Base
         $this->_item->cust_code = $this->itemdetail->editcustcode->getText();
         $this->_item->comment = $this->itemdetail->editdescription->getText();
         $this->_item->updatedon = time();
-    
-        
-        if ( $this->_item->item_id == 0) {
-            $this->setError('noselitem');
+
+
+        if ($this->_item->item_id == 0) {
+            $this->setError('Не обрано товар');
             return;
         }
-        if ( $this->_item->customer_id == 0) {
-            $this->setError('noselsender');
+        if ($this->_item->customer_id == 0) {
+            $this->setError('Не обрано постачальника');
             return;
         }
-  
- 
+
+
 
         $this->_item->save();
-      
+
 
         $this->itemtable->listform->itemlist->Reload(false);
 
@@ -180,10 +188,10 @@ class CustItems extends \App\Pages\Base
         $this->itemdetail->setVisible(false);
     }
 
- 
- 
+
+
     public function OnDelAll($sender) {
-    
+
         $ids = array();
         foreach ($this->itemtable->listform->itemlist->getDataRows() as $row) {
             $item = $row->getDataItem();
@@ -196,15 +204,15 @@ class CustItems extends \App\Pages\Base
         }
 
         $conn = \ZDB\DB::getConnect();
-       
-        foreach ($ids as $id) {
-      
-           $conn->Execute("delete from custitems  where   custitem_id={$id}");
 
-         
+        foreach ($ids as $id) {
+
+            $conn->Execute("delete from custitems  where   custitem_id={$id}");
+
+
         }
 
- 
+
         $this->itemtable->listform->itemlist->Reload();
 
     }
@@ -212,57 +220,57 @@ class CustItems extends \App\Pages\Base
     public function OnAutoItem($sender) {
         $text = trim($sender->getText());
         $stext = Item::qstr('%' . $text . '%');
-        $text = Item::qstr( $text );
+        $text = Item::qstr($text);
 
-        return Item::findArray("itemname"," (itemname like {$stext} or item_code = {$text}    ) ");
+        return Item::findArray("itemname", " (itemname like {$stext} or item_code = {$text}    ) ");
     }
-    
-    
-    
+
+
+
     public function onImport($sender) {
         $this->itemtable->setVisible(false);
         $this->itemdetail->setVisible(false);
         $this->importform->setVisible(true);
         $this->importform->clean();
     }
-    
+
     public function onLoad($sender) {
-      $cust = $sender->icust->getValue();
-      $passfirst = $sender->passfirst->isChecked();
-      $colcustcode = $sender->colcustcode->getValue();
-      $colitemcode = $sender->colitemcode->getValue();
-      $colprice = $sender->colprice->getValue();
-      $colqty = $sender->colqty->getValue();
-      $colcomment = $sender->colcomment->getValue();
-      if ($colcustcode === '0') {
-            $this->setError('noselcolcustcode');
+        $cust = $sender->icust->getValue();
+        $passfirst = $sender->passfirst->isChecked();
+        $colcustcode = $sender->colcustcode->getValue();
+        $colitemcode = $sender->colitemcode->getValue();
+        $colprice = $sender->colprice->getValue();
+        $colqty = $sender->colqty->getValue();
+        $colcomment = $sender->colcomment->getValue();
+        if ($colcustcode === '0') {
+            $this->setError('Не вказано колонку з кодом постачальника');
             return;
-      }
-      if ($colitemcode === '0') {
-            $this->setError('noselcolitemcode');
+        }
+        if ($colitemcode === '0') {
+            $this->setError('Не вказано колонку з артикулом');
             return;
-      }
-      if ($colprice === '0') {
-            $this->setError('noselcolprice');
+        }
+        if ($colprice === '0') {
+            $this->setError('Не вказано колонку з ціною');
             return;
-      }
-      if ( $cust == 0) {
-            $this->setError('noselsender');
+        }
+        if ($cust == 0) {
+            $this->setError('Не обрано постачальника');
             return;
-      }
-    
-      $file = $sender->filename->getFile();
-      if (strlen($file['tmp_name']) == 0) {
+        }
 
-            $this->setError('noselfile');
-            return;
-      }
+        $file = $sender->filename->getFile();
+        if (strlen($file['tmp_name']) == 0) {
 
- 
-        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']); 
+            $this->setError('Не обрано файл');
+            return;
+        }
+
+
+        $oSpreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file['tmp_name']);
 
         $data = array();
- 
+
         $oCells = $oSpreadsheet->getActiveSheet()->getCellCollection();
 
         for ($iRow = ($passfirst ? 2 : 1); $iRow <= $oCells->getHighestRow(); $iRow++) {
@@ -275,64 +283,79 @@ class CustItems extends \App\Pages\Base
                 }
             }
             $data[$iRow] = $row;
-  
+
         }
 
         unset($oSpreadsheet);
         $cnt=0;
         foreach ($data as $row) {
             $price = doubleval(str_replace(',', '.', trim($row[$colprice])))   ;
-            if($price==0) continue;
+            if($price==0) {
+                continue;
+            }
             $qty = doubleval(str_replace(',', '.', trim($row[$colqty])))   ;
-            if($qty==0) $qty=null;
+            if($qty==0) {
+                $qty=null;
+            }
             $comment =  trim($row[$colcomment])   ;
             $itemcode =  trim($row[$colitemcode])   ;
             $custcode =  trim($row[$colcustcode])   ;
 
-            if(strlen($custcode)==0) continue;
-            
-            
+            if(strlen($custcode)==0) {
+                continue;
+            }
+
+
             $item = CustItem::getFirst("customer_id={$cust} and cust_code=".CustItem::qstr($custcode))   ;
-            
-            if($item == null){
-              if(strlen($itemcode)==0) continue;
-              $it = Item::getFirst('item_code='. Item::qstr($itemcode)) ; 
-              if($it==null) continue;
-                
-              $item = new CustItem();
-              $item->customer_id = $cust;
-              $item->cust_code = $custcode;
-              $item->item_id = $it->item_id;
+
+            if($item == null) {
+                if(strlen($itemcode)==0) {
+                    continue;
+                }
+                $it = Item::getFirst('item_code='. Item::qstr($itemcode)) ;
+                if($it==null) {
+                    continue;
+                }
+
+                $item = new CustItem();
+                $item->customer_id = $cust;
+                $item->cust_code = $custcode;
+                $item->item_id = $it->item_id;
             }
             $item->price = $price;
             $item->quantity = $qty;
             $item->comment =$comment;
             $item->updatedon = time();
-    
-           
+
+
             $item->save();
             $cnt++;
-            
+
         }
-        $this->setSuccess("imported_items", $cnt);
+        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
         $this->itemtable->listform->itemlist->Reload();
-  
+
         $this->itemtable->setVisible(true);
         $this->itemdetail->setVisible(false);
         $this->importform->setVisible(false);
-   
-     
-   }
+
+
+    }
+
+    public function OnOption($sender) {
+       H::setKeyVal('CI_optupdate',$sender->optupdate->isChecked()) ;
+       H::setKeyVal('CI_optclean',$sender->optclean->getText()) ;
+    }
     
     public function oncsv($sender) {
-        $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1 );
+        $list = $this->itemtable->listform->itemlist->getDataSource()->getItems(-1, -1);
         $header = array();
         $data = array();
 
         $i = 0;
         foreach ($list as $item) {
             $i++;
-           
+
             $data['A' . $i] = $item->itemname;
             $data['B' . $i] = $item->item_code;
             $data['C' . $i] = $item->cust_code;
@@ -344,14 +367,13 @@ class CustItems extends \App\Pages\Base
 
         H::exportExcel($data, $header, 'custitems.xlsx');
     }
-   
-    
+
+
 
 }
 
 class CustItemDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -365,28 +387,28 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
         $key = $form->searchkey->getText();
         $cat = $form->searchcat->getValue();
         $cust = $form->searchcust->getValue();
-       
+
         if ($cat != 0) {
-  
+
             $where = $where . " and cat_id=" . $cat;
-            
+
         }
         if ($cust != 0) {
-  
+
             $where = $where . " and customer_id=" . $cust;
-      
+
         }
 
         if (strlen($key) > 0) {
-       
-                $skey = CustItem::qstr('%' . $key . '%');
-                $key = CustItem::qstr($key);
-                $where = $where  = "   (itemname like {$skey} or item_code = {$key}  or cust_code = {$key} )  ";
-            
-        }   
 
-    
- 
+            $skey = CustItem::qstr('%' . $key . '%');
+            $key = CustItem::qstr($key);
+            $where = $where  = "   (itemname like {$skey} or item_code = {$key}  or cust_code = {$key} )  ";
+
+        }
+
+
+
         return $where;
     }
 
@@ -396,9 +418,9 @@ class CustItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
         $sortfield = "itemname asc";
-     
+
         $l = CustItem::find($this->getWhere(), $sortfield, $count, $start);
-   
+
         return $l;
     }
 

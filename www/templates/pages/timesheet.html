@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Табель учета рабочего времени  </title>
+        <title>  Табель облiку робочого часу  </title>
 
     </head>
     <head>
@@ -18,18 +18,18 @@
           {{={| |}=}}   
          <div class="row">
             <div class="col-12 col-lg-10" id="vapp" >
-                <h4>Табель учета рабочего времени</h4>
+                <h4>Табель облiку робочого часу</h4>
                      <div class="navbar nav">
                     <form   class="form-inline ">
 
-                        <label for="from">С</label>
+                        <label for="from">З</label>
                         <input v-model="from"  class="form-control mr-2" style="width: 120px" type="date" >
 
-                        <label for="to">по</label>
+                        <label for="to">По</label>
                         <input v-model="to" class="form-control mr-2" style="width: 120px" type="date" >
 
 
-                        <label v-show="isadmin==true" >Сотрудник</label>
+                        <label v-show="isadmin==true" >Спiвробiтник</label>
                         <select2     v-model="empid" :options="emps"   >
 
                         </select2>
@@ -39,16 +39,16 @@
 
                     </form>
                 </div>
-                       <a v-on:click.prevent="add"  class="btn  btn-success">Добавить</a>
+                       <a v-on:click.prevent="add"  class="btn  btn-success">Додати</a>
                 
                    <ul class="nav nav-tabs">
                   
                        <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#tcal">Календарь</a>
+                        <a class="nav-link active" data-toggle="tab" href="#tcal">Календар</a>
                       </li>
                       
                        <li class="nav-item">
-                        <a class="nav-link " data-toggle="tab" href="#ttable"> Таблица </a>
+                        <a class="nav-link " data-toggle="tab" href="#ttable"> Таблиця </a>
                       </li>
                        <li class="nav-item">
                         <a class="nav-link" data-toggle="tab" href="#tstat">Статистика  </a>
@@ -76,18 +76,20 @@
 
                                 <td aling="center">
 
-                                    <a v-on:click.prevent="edit(tm.time_id)"   title="Редактировать"><i class="fa fa-edit"></i></a>
-                                    &nbsp; &nbsp;<a v-on:click.prevent="del(tm.time_id)"  title="Удалить"><i class="fa fa-trash"></i></a>
+                                    <a v-on:click.prevent="edit(tm.time_id)"   title="Редагувати"><i class="fa fa-edit"></i></a>
+                                    &nbsp; &nbsp;<a v-on:click.prevent="del(tm.time_id)"  title="Видалити"><i class="fa fa-trash"></i></a>
                                 </td>
                             </tr>
                         </table>
                  
                     </div>
                    <div class="tab-pane    "  id="tstat" > 
-                      <table class="table table-sm" style="width:30%">
+                      <table class="table table-sm" style="width:40%">
+                            <tr><th></th><th  class="text-right">Години</th><th class="text-right">Днi</th></tr>
                             <tr v-for="st in stat" >
                                 <td  >  {{st.name}}</td>   
-                                <td align="right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.days}} </span></td>
 
                             </tr>
                         </table>
@@ -103,12 +105,12 @@
  
       <div class="modal-body">
     <form id="fval" >
-                    <h4 v-show="edited>0">Редактирование</h4>
-                    <h4 v-show="edited==0">Новая запись</h4>
+                    <h4 v-show="edited>0">Редагування</h4>
+                    <h4 v-show="edited==0">Новий запис</h4>
                     
                     <div    class="form-group">
                     
-                     <label  >Сотрудник</label>
+                     <label  >Спiвробiтник</label>
                         <select2     v-model="editempid" :options="emps"   >
 
                        </select2>
@@ -119,27 +121,26 @@
                         <label for="editdate">Дата</label>
                         <input v-model="editdate" required="required" class="form-control"  type="date" />
                     </div>
-                    <div class="form-group">
-                        <label for="editfrom">С</label>
-                        <input v-model="editfrom" required="required"                                  class="form-control"  type="time" />
-                    </div>
-                    <div class="form-group">
-                        <label for="editto">По</label>
-                        <input  v-model="editto" required="required" type="time"                                class="form-control" />
+                    <div class="form-group row">
+                         
+                       <div class="col-auto pt-1"> <label for="editfrom">З</label> </div>
+                       <div class="col-auto"> <input v-model="editfrom" required="required"  class="form-control"  type="time" /></div>
+                       <div class="col-auto pt-1"> <label for="editto">По</label></div>
+                       <div class="col-auto"> <input  v-model="editto" required="required" type="time" class="form-control" /></div>
                     </div>
                     <div class="form-group">
                         <label for="edittype">Тип</label>
                         <select v-model="edittype"  class="form-control">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                             <option v-for="t in types" :value="t.key">{{t.value}}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="editbreak">Перерыв, мин</label>
+                        <label for="editbreak">Перерва, хв.</label>
                         <input   v-model="editbreak" required="required" style="width:75px;" pattern="[0-9]+" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label for="editnote">Примечание</label>
+                        <label for="editnote">Примiтка</label>
                         <input  v-model="editdesc" class="form-control" />
                     </div>
 
@@ -147,8 +148,8 @@
                 </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
-        <button v-on:click.prevent="save" type="button" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+        <button v-on:click.prevent="save" type="button" class="btn btn-primary">Зберегти</button>
       </div>
     </div>
   </div>
@@ -172,6 +173,9 @@ var calendar
                   from:"",
                   to:"",
                   today:"",
+                  start:"",
+                  end:"",
+                  break:0,
                
                   stat:[] ,
                   times:[] ,
@@ -204,6 +208,9 @@ var calendar
                        this.to = tmp.to; 
                        this.from = tmp.from; 
                        this.today = tmp.today; 
+                       this.start = tmp.start; 
+                       this.end = tmp.end; 
+                       this.break = tmp.break; 
                  
                        this.loaddata() ;       
                       
@@ -215,7 +222,7 @@ var calendar
                 
                onFilter:function(){
                    if(Number.isNaN( Number.parseInt(this.empid)) ) {
-                      alert('Не выбран сотрудник');
+                      alert('Спiвробiтника не обрано');
                       return;
                   }     
                     this.loaddata() ;       
@@ -257,10 +264,10 @@ var calendar
                 
                   this.edited = 0;
                   this.edittype = 1;
-                  this.editbreak = 60;
                   this.editdate = this.today;
-                  this.editfrom = "09:00";
-                  this.editto = "18:00";
+                  this.editfrom = this.start;
+                  this.editto = this.end;
+                  this.editbreak = this.break;
                   $('#editmodal').modal('show')   
 
                } ,    
@@ -384,7 +391,7 @@ var calendar
            
 
   } ,        
-         locale: 'ru' 
+         locale: 'ua' 
        
     
       

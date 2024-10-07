@@ -1,7 +1,7 @@
 <html>
 
     <head>
-    <title> Учет времени по задачам  </title>
+    <title> Облiк часу  по  задачах  </title>
 
     </head>
 
@@ -13,26 +13,26 @@
  
 
 
-                <h3>Учет времени по задачам</h3>
+                <h3>Облiк часу  по  задачах</h3>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
-                        <label for="from">С </label>
+                        <label for="from">З </label>
                         <input v-model="from" type="date" class="form-control mr-sm-2  "  style="width:110px">
 
 
                         <label for="to"> по </label>
                         <input v-model="to" type="date" class="form-control mr-sm-2 " style="width:110px" >
-                        <label   for="searchemp">исполнитель </label>
+                        <label   for="searchemp">виконавець </label>
                         <select v-model="user_id" class="form-control  mr-2  " >
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                             <option v-for="u in users" :value="u.key">{{u.value}}</option>
                          
                             
                         </select> 
                         <label for="searchproject"> проект </label>
                         <select v-model="project_id" class="form-control mr-2" zippy="searchproject">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                             <option v-for="p in projects" :value="p.key">{{p.value}}</option>
                         </select>
                         <input   v-on:click.prevent="onFilter" type="button" class="  btn btn-success  " value="ОК">
@@ -45,7 +45,7 @@
                    <ul class="nav nav-tabs">
                   
                        <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#ttable">Учет времени</a>
+                        <a class="nav-link active" data-toggle="tab" href="#ttable">Облiк часу</a>
                       </li>
                       
                        <li class="nav-item">
@@ -57,19 +57,19 @@
                     <div class="tab-pane  show active "  id="ttable"> 
                       <div class="col-12 col-md-8 col-xl-10">       
                
-                       <a v-on:click.prevent="add"  class="btn btn-info mt-2 mb-3">Добавить</a>
+                       <a v-on:click.prevent="add"  class="btn btn-info mt-2 mb-3">Додати</a>
 
           <table class="table   table-sm table-hover">
                                 <tr>
 
                                     <th>Дата</th>
-                                    <th>Время</th>
+                                    <th>Час</th>
 
-                                    <th>Исполнитель</th>
-                                    <th>Задание</th>
+                                    <th>Виконавець</th>
+                                    <th>Завдання</th>
 
                                     <th>Проект</th>
-                                    <th>Комментарий</th>
+                                    <th>Коментар</th>
 
                                     <th ></th>
 
@@ -88,7 +88,7 @@
                                     <td>
 
                                         
-                                        <a  v-on:click.prevent="del(t.id)"  title="Удалить"><i class="fa fa-trash"></i></a>
+                                        <a  v-on:click.prevent="del(t.id)"  title="Видалити"><i class="fa fa-trash"></i></a>
 
                                     </td>
 
@@ -110,7 +110,7 @@
                             <td style="width:100px;"  class="text-right">{{s.amount}}</td>
                         </tr>
                         <tr>
-                            <td  colspan="2" class="text-right text-bold">Всего:</td>
+                            <td  colspan="2" class="text-right text-bold">Всього:</td>
                             <td  class="text-right  text-bold">{{total}}</td>
                         </tr>
                     </table>
@@ -125,15 +125,15 @@
     <div class="modal-content">
  
       <div class="modal-body">
-    <form  >
-                    <h4 v-show="edited>0">Редактирование</h4>
-                    <h4 v-show="edited==0">Новая запись</h4>    
+
+                    <h4 v-show="edited>0">Редагування</h4>
+                    <h4 v-show="edited==0">Новий запис</h4>    
                 <form zippy="editform">
                     <div class="form-group  "  v-show="isadmin">
-                        <label   for="edituser">исполнитель </label>
+                        <label   for="edituser">виконавець </label>
                         <select v-model="edituser" class="form-control    " >
 
-                                <option value="0">Не выбран</option>
+                                <option value="0">Не обрано</option>
                         <option v-for="u in editusers" :value="u.key">{{u.value}}</option>
                          
                             
@@ -142,15 +142,15 @@
                     <div class="form-group  ">
                         <label for="editproject">Проект</label>
                         <select   v-model="editproject" class="form-control  "  >
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                              <option v-for="p in editprojects" :value="p.key">{{p.value}}</option>
                                              
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="editissue">Задание</label>
+                        <label for="editissue">Завдання</label>
                         <select v-model="editissue" class="form-control   "  >
-                                   <option value="0">Не выбрано</option>
+                                   <option value="0">Не обрано</option>
                       <option v-for="i in editissues" :value="i.key">{{i.value}}</option>
                       
                         </select>
@@ -160,11 +160,11 @@
                          <input v-model="editdate" type="date"  class="form-control" >
                     </div>
                     <div class="form-group  ">
-                        <label for="edittime">Часов</label>
+                        <label for="edittime">Годин</label>
                         <input v-model="edittime" required="required" pattern="[0-9,\.]+" style="width:100px;" zippy="ehours" class="form-control qtyprice">
                     </div>
                     <div class="form-group  ">
-                        <label for="editnotes">Комментарий</label>
+                        <label for="editnotes">Коментар</label>
                         <input v-model="editnotes" class="form-control">
                     </div>
              
@@ -172,8 +172,8 @@
                 </form>
                  </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
-                <button v-on:click.prevent="save" type="button" class="btn btn-primary">Сохранить</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
+                <button v-on:click.prevent="save" type="button" class="btn btn-primary">Зберегти</button>
               </div>
             </div>
           </div>

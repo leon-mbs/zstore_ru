@@ -1,12 +1,12 @@
 <align>center</align>
 <font bold="true">a</font>
 <text>
-   {{#isfinished}}  Акт выполненных работ {{/isfinished}} 
-          {{^isfinished}}  Квитанция к {{/isfinished}} 
+   {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
+          {{^isfinished}}  Квитанція до {{/isfinished}} 
          {{document_number}}
 </text>
 <font >a</font>
-<text>от {{date}}</text>
+<text>вiд {{date}}</text>
 <align>left</align>
 <text> {{firmname}}</text>
     {{#shopname}}
@@ -17,12 +17,12 @@
 <text> {{customer_name}}</text>    
 
     {{#isdevice}}
-<text>Принято от клиента:</text>       
+<text>Прийнято від клієнта:</text>       
 <text>{{device}}</text>       
-<text>С/Н {{serial}}</text>       
+<text>с/н {{serial}}</text>       
     {{/isdevice}}
     {{#iswork}}
-<text>Работы:</text>       
+<text>Роботи:</text>       
     {{#slist}}
 
 <row>
@@ -34,7 +34,7 @@
    {{/iswork}}  
   
     {{#isitems}}
-<text>Комплектующие:</text>       
+<text>Комплектуючі:</text>       
  
     {{#ilist}}
  
@@ -48,13 +48,13 @@
    
     {{#istotal}}
 <align>right</align>
-<text>Всего: {{total}}</text>
+<text>Всього: {{total}}</text>
     {{/istotal}}
 
 
     {{#ispay}}
 <align>left</align> 
-<text>Оплаты:</text>  
+<text>Оплати:</text>  
  
     {{#plist}}
     
@@ -70,8 +70,8 @@
    
 <text>{{gar}}</text>      
  <newline ></newline>   
- <text>Исполнитель ________</text>  
+ <text>Виконавець ________</text>  
  <newline ></newline>  
- <text>Клиент ________</text>  
+ <text>Клієнт ________</text>  
  <newline ></newline>  
  

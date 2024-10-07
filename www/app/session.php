@@ -8,9 +8,9 @@ namespace App;
  */
 class Session
 {
-
     private $values = array();
-    public  $filter = array();
+    public $filter = array();
+    public $start = 0;
 
     public function __construct() {
 
@@ -21,7 +21,7 @@ class Session
     }
 
     public function __get($name) {
-        return $this->values[$name] ??'';
+        return  $this->values[$name]  ?? null;
     }
 
     /**
@@ -38,6 +38,17 @@ class Session
     public function clean() {
         $this->values = array();
         $this->filter = array();
+        $this->start = 0;
+    }
+    //длительность сеанса  в секундах
+    public function duration() {
+        if(intval($this->start) > 0) {
+            return  time() - $this->start;
+        } else {
+            $this->start  = time();
+            return  0;
+        }
+
     }
 
 }

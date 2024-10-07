@@ -11,7 +11,6 @@ use App\Helper as H;
  */
 class ProdIssue extends Document
 {
-
     public function generateReport() {
 
 
@@ -33,6 +32,7 @@ class ProdIssue extends Document
                                   "tovar_name" => $name,
                                   "tovar_code" => $item->item_code,
                                   "msr"        => $item->msr,
+                                  "cell"       => $item->cell,
                                   "quantity"   => H::fqty($item->quantity)
                 );
             }
@@ -80,6 +80,7 @@ class ProdIssue extends Document
     public function getRelationBased() {
         $list = array();
         $list['ProdIssue'] = self::getDesc('ProdIssue');
+        $list['ProdReturn'] = self::getDesc('ProdReturn');
 
         return $list;
     }

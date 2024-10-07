@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class Helper
 {
-
     public static function getClient() {
 
         $modules = \App\System::getOptions("modules");
@@ -70,7 +69,7 @@ class Helper
         }
 
 
-        System::setSuccessMsg(H::l('connected'));
+        System::setSuccessMsg("Успішне з`єднання");
 
 
     }

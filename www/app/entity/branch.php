@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Branch extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->branch_id = 0;
         $this->disabled = 0;
@@ -48,24 +47,24 @@ class Branch extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  documents where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "На  филиал есть  ссылки  в  документах";
+            return "На філію є посилання у документах";
         }
 
         $sql = "  select count(*)  from  stores where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Филиал используется в складах";
+            return "Філія використовується у складах";
         }
 
         $sql = "  select count(*)  from  mfund where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Филиал используется в денежных счетах";
+            return "Філія використовується у грошових рахунках";
         }
         $sql = "  select count(*)  from  employees where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Филиал используется в сотрудниках";
+            return "Філія використовується у співробітниках";
         }
 
         return "";

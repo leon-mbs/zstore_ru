@@ -1,54 +1,59 @@
 <html>
     <head>
-           <title> Оборудование и основные средства </title>
+           <title> Обладнання та основнi засоби </title>
    </head>
 
     <body>
         <div class="row">
 
             <div class="col-12 col-md-10 col-xl-8" zippy="itemtable">
-                <h3>Оборудование и основные средства </h3>
+                <h3>Обладнання та основнi засоби </h3>
                 <div class="navbar nav  ">
                     <form zippy="filter" class="form-inline">
 
-                        <label for="searchkey">Поиск</label>
+                        <label for="searchkey">Пошук</label>
                         <input class="form-control mr-sm-2" type="text" zippy="searchkey">
-                        <label for="searchemp">мат. ответственный</label>
+                        <label for="searchemp">мат. відповідальний</label>
 
                         <select class="form-control mr-sm-2  " zippy="searchemp">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
                         </select>
                         <div class="form-check">
 
-                            <input title="Показать неактуальные" class="form-check-input" type="checkbox" zippy="showdis">
-                            <label class="form-check-label mr-sm-3" for="showdis">Все</label>
+                            <input title="Показати неактуальні" class="form-check-input" type="checkbox" zippy="showdis">
+                            <label class="form-check-label mr-sm-3" for="showdis">Всi</label>
                         </div>
 
                         <input class="btn btn-outline-success  " type="submit" value="ОК">
 
                     </form>
                 </div>
-                <a zippy="addnew" class="btn btn-primary  ">Добавить</a>
+                <a zippy="addnew" class="btn btn-primary  ">Додати</a>
                 <table class="table table-bordered  table-sm  ">
                     <tr>
-                        <th>Наименование</th>
-
-                        <th>Инв. номер</th>
+                        <th>Найменування</th>
+                        {{#usebranch}}
+                        <th>Філія</th>
+                        {{/usebranch}}
+                        <th>Інв. номер</th>
                         <th>Сер. номер</th>
 
 
-                        <th style="width:100px"></th>
+                        <th   ></th>
                     </tr>
                     <tr zippy="eqlist">
                         <td zippy="eq_name"></td>
-
+                        {{#usebranch}}
+                        <td zippy="branch"></td>
+                        {{/usebranch}}
+                     
                         <td zippy="code"></td>
                         <td zippy="serial"></td>
 
                         <td aling="center">
-                            <a zippy="use" title="Использование"><i class="fa fa-eye"></i></a>
-                            &nbsp;<a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                            &nbsp;<a zippy="delete" title="Изъять"><i class="fa fa-trash"></i></a>
+                            <a zippy="use" title="Використання"><i class="fa fa-eye"></i></a>
+                        &nbsp;     &nbsp;<a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
+                         &nbsp;    &nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 </table>
@@ -57,70 +62,87 @@
 
           
 
-            <div zippy="usetable" class="col-12 col-md-8 col-xl-6">
+            <div zippy="usetable" class="col-12 col-md-10 col-xl-8">
 
 
-                <a zippy="back"><i class="fa fa-arrow-circle-left"></i> К списку</a>
+                <a zippy="back"><i class="fa fa-arrow-circle-left"></i> До переліку</a>
                 <h3 zippy="usename"></h3>
-
-                <table class="table table-bordered  table-sm  ">
-                    <tr>
-                        <th>Наряд</th>
-
-                        <th>Участок</th>
-
-
+                
+               
+                <table class="ctable  "> <tr><td>
+                <table class="ctable  ">
+                   {{#use1}}
+                    <tr >
+                        <td>{{usedate}}</td>
+                        <td>{{usedn}}</td>
+                        <td>{{useplace}}</td>
                     </tr>
-                    <tr zippy="uselist">
-
-
-                        <td zippy="usetask"></td>
-                        <td zippy="useplace"></td>
-
-                    </tr>
+                     {{/use1}} 
                 </table>
+               
+                 </td><td>
+                
+                <table class="ctable  ">
+                   {{#use2}}
+                    <tr >
+                        <td>{{usedate}}</td>
+                        <td>{{usedn}}</td>
+                        <td>{{usetitle}}</td>
+                    </tr>
+                   {{/use2}} 
+                </table>
+                </td></tr></table>
 
-            </div>
+                
+         
 
         </div>
  
             <form zippy="itemdetail" >
-             <h4>Редактирование </h4>
+             <h4>Редагування </h4>
                <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                 <div class="form-group  ">
-                    <label   for="editname">Наименование</label>
+                    <label   for="editname">Найменування</label>
                    
-                        <input required="required" class="form-control" zippy="editname"/>
+                    <input  autofocus="on"   required="required" class="form-control" zippy="editname"/>
                     
                 </div>
               
                     <div class="form-check">
                         <input zippy="editeq" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editeq">Оборудование</label>
+                        <label class="form-check-label" for="editeq">Обладнання</label>
                     </div>
+               {{#usebranch}}
+                <div class="form-group">
+                    <label for="editbranch">Філія</label>
+                    <select class="form-control" zippy="editbranch">
+                        <option value="0">Не обрано</option>
+                    </select>
+                </div>
+                {{/usebranch}}
                
                 <div class="form-group  ">
-                    <label   for="editemp">Мат. ответственный</label>
+                    <label   for="editemp">Мат. відповідальний</label>
                     
                         <select class="form-control  " zippy="editemp">
-                            <option value="0">Не задано</option>
+                            <option value="0">Не вказано</option>
                         </select>
                     
                 </div>
                  <div class="form-group  ">
-                    <label   for="editpa">Произв. участок</label>
+                    <label   for="editpa">Вир. дiльниця</label>
                     
                         <select class="form-control  " zippy="editpa">
-                            <option value="0">Не задано</option>
+                            <option value="0">Не вказано</option>
                         </select>
-                   <small class="form-text text-muted">Если постоянно установлено на конкретном производственном участке</small>
+                   <small class="form-text text-muted">Якщо постiйно встановлено на певнiй виробничiй дiлянцi</small>
                     
                 </div>
    
 
                 <div class="form-group  ">
-                    <label   for="editdescription">Описание</label>
+                    <label   for="editdescription">Опис</label>
                     
                         <textarea class="form-control" zippy="editdescription"></textarea>
                   
@@ -130,38 +152,39 @@
                   
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Не используется</label>
+                        <label class="form-check-label" for="editdisabled">Не використовується</label>
                     </div>
              
                 <div class="form-group">
-                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-secondary  "></td>
+                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2 ">
+                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                    
                 </div>
                </div> 
                  <div class="col-12 col-md-3 col-xl-2">
                  <div class="form-group  ">
-                    <label   for="editcode">Инвентарный номер</label>
+                    <label   for="editcode">Інвентарний номер</label>
                   
                         <input class="form-control" zippy="editcode"/>
                    
                 </div>
                 <div class="form-group  ">
-                    <label   for="editserial">Серийный номер</label>
+                    <label   for="editserial">Серійний номер</label>
                    
                         <input class="form-control" zippy="editserial"/>
                      
                 </div>
                 <div class="form-group  ">
-                    <label   for="editenterdate">Введено в эксплуатацию</label>
+                    <label   for="editenterdate">Уведено в експлуатацiю</label>
                     
                         <input class="form-control" zippy="editenterdate"/>
                    
                 </div>
                 <div class="form-group  ">
-                    <label   for="editbalance">Балансовая стоимость</label>
+                    <label   for="editbalance">Балансова вартiсть</label>
                    
                         <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editbalance"/>
-                        <small class="form-text text-muted">Закупочная цена минус амортизация</small>
+                        <small class="form-text text-muted">Закупівельна ціна мінус амортизація</small>
                  
                
                 </div>
@@ -171,7 +194,7 @@
   
              <script>               
          function check_delete() {
-                return confirm("Удалить?")
+                return confirm("Видалити?")
             }
         </script>     
 

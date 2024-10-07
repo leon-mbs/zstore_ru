@@ -29,11 +29,10 @@ use Zippy\Html\Link\BookmarkableLink;
  */
 class ProdStageList extends \App\Pages\Base
 {
-
     private $_stage = null;
-    public  $_emps  = array();
-    public  $_dates = array();
-    public  $_docs  = array();
+    public $_emps  = array();
+    public $_dates = array();
+    public $_docs  = array();
 
 
     /**
@@ -43,7 +42,7 @@ class ProdStageList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('ProdStageList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Panel("listpan"));
@@ -79,6 +78,7 @@ class ProdStageList extends \App\Pages\Base
         $this->statuspan->add(new ClickLink("backs", $this, "backOnClick"));
         $this->statuspan->add(new ClickLink("btntoprod", $this, "toprodOnClick"));
         $this->statuspan->add(new ClickLink("btnfromprod", $this, "fromprodOnClick"));
+        $this->statuspan->add(new ClickLink("btnservice", $this, "btnserviceOnClick"));
         $this->statuspan->add(new ClickLink("btnclose", $this, "closeOnClick"));
         $this->statuspan->add(new ClickLink("btnstop", $this, "stopOnClick"));
         $this->statuspan->add(new ClickLink("btnstart", $this, "startOnClick"));
@@ -101,7 +101,7 @@ class ProdStageList extends \App\Pages\Base
 
         $this->add(new Panel("calendarpan"))->setVisible(false);
         $this->calendarpan->add(new ClickLink("backcal", $this, "backOnClick"));
-        $this->calendarpan->add(new \ZCL\Calendar\Calendar('calendar', 'ua'))->setEvent($this, 'OnCal');
+
         $this->calendarpan->add(new Form('calfilter'));
         $this->calendarpan->calfilter->add(new SubmitButton('filterok'))->onClick($this, "onCalFilter");
         $this->calendarpan->calfilter->add(new DropDownChoice('calfilterpa', \App\Entity\ProdArea::findArray('pa_name', '', 'pa_name'), 0));
@@ -110,6 +110,9 @@ class ProdStageList extends \App\Pages\Base
         $this->calendarpan->calfilter->add(new DropDownChoice('calfilteremp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"), 0));
 
         $stlist->Reload();
+
+        $this->_tvars['gtp'] = false;
+        $this->_tvars['gtf'] = false;
 
 
     }
@@ -127,8 +130,12 @@ class ProdStageList extends \App\Pages\Base
         $row->add(new Label('snumber', $st->snumber));
         $row->add(new Label('sstate', ProdStage::getStateName($st->state)));
 
-        $row->add(new Label('startdate', H::fd($st->startdate)));
-        $row->add(new Label('enddate', H::fd($st->enddate)));
+        $row->add(new Label('startdateplan', H::fd($st->startdateplan)));
+        $row->add(new Label('enddateplan', H::fd($st->enddateplan)));
+        $row->add(new Label('hoursplan', H::fa($st->hoursplan)));
+        $row->add(new Label('startdatefact', H::fd($st->startdate)));
+        $row->add(new Label('enddatefact', H::fd($st->enddate)));
+        $row->add(new Label('hoursfact', H::fa($st->hours)));
         $row->add(new Label('hasnotes'))->setVisible(strlen($st->notes) > 0);
         $row->hasnotes->setAttribute('title', $st->notes);
 
@@ -202,7 +209,7 @@ class ProdStageList extends \App\Pages\Base
                 $ktu += doubleval($emp->ktu);
             }
             if ($ktu != 1) {
-                $this->setError("ktu1");
+                $this->setError("Сумарний КТУ повинен бути 1");
                 return;
             }
 
@@ -224,7 +231,7 @@ class ProdStageList extends \App\Pages\Base
         $this->calpan->planhours->setText($this->_stage->hours);
 
         $this->onCalUpdate();
-
+        $this->calpan->calform->clean() ;
     }
 
     public function onAddCal($sender) {
@@ -235,7 +242,7 @@ class ProdStageList extends \App\Pages\Base
         $from = $sender->addcalfrom->getDateTime($d);
         $to = $sender->addcalto->getDateTime($d);
         if ($from >= $to) {
-            $this->setError('ts_invalidinterval');
+            $this->setError('Невірний інтервал');
             return;
         }
 
@@ -247,7 +254,7 @@ class ProdStageList extends \App\Pages\Base
         $cnt = $conn->GetOne($sql);
 
         if ($cnt > 0) {
-            $this->setError('stpp_intersect_this');
+            $this->setError("Інтервал перетинається з існуючим для цього етапу");
             return;
         }
 
@@ -255,7 +262,7 @@ class ProdStageList extends \App\Pages\Base
         $cnt = $conn->GetOne($sql);
 
         if ($cnt > 0) {
-            $this->setWarn('stpp_intersect_other');
+            $this->setWarn("Інтервал перетинається з наявним на цій ділянці для іншого етапу");
         }
 
         $ag = new ProdStageAgenda();
@@ -359,54 +366,46 @@ class ProdStageList extends \App\Pages\Base
         }
 
 
-        $items = ProdStageAgenda::find($where);
+        $items = ProdStage::find($where);
+        $p =  "[";
+        $f =  "[";
 
-        foreach ($items as $item) {
 
-            $col = "#00ff00";
-            if($item->state==ProdStage::STATE_FINISHED) {
-              $col = "#ACACAC";  
+
+
+        foreach($items as $st) {
+            $sp= $st->startdateplan;
+            $ep= $st->enddateplan;
+            $sf= $st->startdate;
+            $ef= $st->enddate;
+            if($sp >0  && $ep >0) {
+                $p .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y", $sp) .", ". (date("m", $sp) -1).", ". date("d", $sp) ."), new Date(". date("Y", $ep) .", ". (date("m", $ep) -1).", ". date("d", $ep) ."), null,  100,  null],";
             }
-            if($item->state==ProdStage::STATE_STOPPED) {
-              $col = "#FFC0C0";   
+            if($sf >0  && $ef >0) {
+
+                $f .= " ['{$st->st_id}', '{$st->stagename}',    new Date(". date("Y", $sf) .", ". (date("m", $sf) -1).", ". date("d", $sf) ."), new Date(". date("Y", $ef) .", ". (date("m", $ef) -1).", ". date("d", $ef) ."), null,  100,  null],";
             }
-            
-            $tasks[] = new \ZCL\Calendar\CEvent($item->sta_id, $item->stagename, $item->startdate, $item->enddate, $col);
         }
 
-        $this->calendarpan->calendar->setData($tasks);
+
+
+        $p .=  "]";
+        $f .=  "]";
+
+
+        if($p=="[]") {
+            $p = false;
+        }
+        if($f=="[]") {
+            $f = false;
+        }
+        $this->_tvars['gtp'] = $p;
+        $this->_tvars['gtf'] = $f;
+
+
 
     }
 
-    public function OnCal($sender, $action) {
-
-        if ($action['action'] == 'move') {
-            $task = ProdStageAgenda::load($action['id']);
-
-            if ($action['years'] <> 0) {
-                $task->startdate = strtotime($action['years'] . ' years', $task->startdate);
-                $task->enddate = strtotime($action['years'] . ' years', $task->enddate);
-            }
-            if ($action['months'] <> 0) {
-                $task->startdate = strtotime($action['months'] . ' months', $task->startdate);
-                $task->enddate = strtotime($action['months'] . ' months', $task->enddate);
-            }
-            if ($action['days'] <> 0) {
-                $task->startdate = strtotime($action['days'] . ' days', $task->startdate);
-                $task->enddate = strtotime($action['days'] . ' days', $task->enddate);
-            }
-            if ($action['ms'] <> 0) {
-                $task->startdate = $task->startdate + $action['ms'];
-                $task->enddate = $task->enddate + $action['ms'];
-            }
-
-            $task->save();
-
-            $this->updateCal();
-
-        }
-
-    }
 
 
     public function toprodOnClick($sender) {
@@ -424,6 +423,14 @@ class ProdStageList extends \App\Pages\Base
             $this->_stage->save();
         }
         Application::Redirect("\\App\\Pages\\Doc\\ProdReceipt", 0, 0, $this->_stage->st_id);
+
+    }
+  public function btnserviceOnClick($sender) {
+        if ($this->_stage->state == ProdStage::STATE_NEW) {
+            $this->_stage->state = ProdStage::STATE_INPROCESS;
+            $this->_stage->save();
+        }
+        Application::Redirect("\\App\\Pages\\Doc\\IncomeService", 0, 0, $this->_stage->st_id);
 
     }
 
@@ -525,6 +532,9 @@ class ProdStageList extends \App\Pages\Base
 
         $this->listpan->stlist->Reload();
 
+        $this->_tvars['gtp'] = false;
+        $this->_tvars['gtf'] = false;
+
     }
 
 
@@ -535,7 +545,6 @@ class ProdStageList extends \App\Pages\Base
  */
 class ProcStageDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

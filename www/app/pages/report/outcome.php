@@ -16,7 +16,6 @@ use Zippy\Html\Panel;
  */
 class Outcome extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('Outcome')) {
@@ -31,8 +30,8 @@ class Outcome extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN','OrderFood')  {$br}  )", 'username'), 0));
-        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false,false), 0))->setVisible(false);
+        $this->filter->add(new DropDownChoice('emp', \App\Entity\User::findArray('username', "disabled <> 1 and user_id in (select user_id from documents_view  where  meta_name  in('GoodsIssue','ServiceAct','Task','Order','POSCheck','TTN','OrderFood')  {$br}  )", 'username'), 0));
+        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false, false), 0))->setVisible(false);
         $this->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0))->setVisible(false);
 
         $hlist = \App\Entity\Customer::getHoldList();
@@ -40,21 +39,21 @@ class Outcome extends \App\Pages\Base
 
 
         $types = array();
-        $types[1] = H::l('repbyitems');
-        $types[6] = H::l('repbybyersitem');
-        $types[2] = H::l('repbybyers');
-        $types[3] = H::l('repbydates');
-        $types[4] = H::l('repbyservices');
-        $types[7] = H::l('repbybyersservices');
-        $types[5] = H::l('repbycat');
+        $types[1] = "За товарами";
+        $types[6] = "Товари за покупцями";
+        $types[2] = "За покупцями";
+        $types[3] = "За датами";
+        $types[4] = "Послуги, роботи";
+        $types[7] = "Послуги за покупцями";
+        $types[5] = "За категоріями";
 
         if (count($hlist) > 0) {
-            $types[8] = H::l('repbyhold');
+            $types[8] = "За холдінгами";
         }
-        $types[9] = H::l('repbybyfirm');
-        $types[10] = H::l('repbybystore');
-        $types[11] = H::l('repbysalesource');
-        $types[12] = H::l('repbybrand');
+        $types[9] = "За компаніями";
+        $types[10] = "За складами";
+        $types[11] = "За джерелами";
+        $types[12] = "За брендами" ;
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
 
@@ -64,10 +63,10 @@ class Outcome extends \App\Pages\Base
         $this->filter->add(new \Zippy\Html\Form\TextInput('brand'));
         $this->filter->brand->setDataList(Item::getManufacturers());
         $this->filter->brand->setVisible(false);
-        
+
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -103,7 +102,7 @@ class Outcome extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
-  
+
         $this->detail->setVisible(true);
     }
 
@@ -123,7 +122,8 @@ class Outcome extends \App\Pages\Base
 
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
-
+        $disc=0;
+        $brand="";
         $u = "";
 
         if ($user > 0) {
@@ -159,13 +159,13 @@ class Outcome extends \App\Pages\Base
         $sql = '';
         if ($type == 1 || $type == 6 || strlen($cat) > 0) {    //по товарам
             $sql = "
-          select i.itemname,i.item_code,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+          select i.itemname,i.item_code,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items_view i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -1 or e.tag = -4 )   {$cat}   {$cust}  
-               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood' )
+               and d.meta_name in ('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood','ServiceAct' )
                {$br}  {$u}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
@@ -174,9 +174,9 @@ class Outcome extends \App\Pages\Base
         ";
         }
         if ($type == 2) {  //по покупателям
-            $empty = H::l("emptycust");
+            $empty = "Фіз. особа";
             $sql = "
-          select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id,  sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+          select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id, count(d.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
           from entrylist_view  e
 
         left  join customers  c on c.customer_id = e.customer_id
@@ -191,13 +191,13 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 3) {   //по датам
             $sql = "
-          select e.document_date as dt  ,  sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+          select e.document_date as dt  , count(e.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
                where e.item_id >0  and (e.tag = 0 or e.tag = -1  or e.tag = -4) 
-              and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust')           
+              and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck','ReturnIssue','TTN','OrderCust','OrderFood')           
                {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
          group by  e.document_date
@@ -207,7 +207,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 4 || $type == 7) {    //по сервисам
             $sql = "
-         select s.service_name as itemname, sum(e.quantity) as qty, sum(0-e.outprice*e.quantity) as summa    ,0 as navar
+         select s.service_name as itemname,count(d.document_id) as docs, sum(0-e.quantity) as qty, sum(0-e.outprice*e.quantity) as summa    ,0 as navar
               from entrylist_view  e
 
               join services s on e.service_id = s.service_id
@@ -222,7 +222,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 5 && strlen($cat) == 0) {    //по категориях
             $sql = "
-            select  i.cat_name as itemname,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select  i.cat_name as itemname,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items_view i on e.item_id = i.item_id
@@ -240,7 +240,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 8) {  //по холдингам
             $sql = '';
-            $rs = array();
+         // $rs = array();
 
             $hlist = \App\Entity\Customer::getHoldList();
             foreach ($hlist as $id => $name) {
@@ -253,7 +253,7 @@ class Outcome extends \App\Pages\Base
 
 
                 $sqlc = "
-                  select    coalesce(sum(0-e.quantity*e.partion) ,0) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+                  select count(d.document_id) as docs,   coalesce(sum(0-e.quantity*e.partion) ,0) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
                   from entrylist_view  e
 
                
@@ -276,7 +276,7 @@ class Outcome extends \App\Pages\Base
 
         if ($type == 9) {    //по компаниям
             $sql = "
-            select  d.firm_name as itemname,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select  d.firm_name as itemname,count(d.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
              
@@ -292,7 +292,7 @@ class Outcome extends \App\Pages\Base
         }
         if ($type == 10) {    //по складах
             $sql = "
-            select  sr.storename as itemname,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select  sr.storename as itemname,count(d.document_id) as docs,sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
                 
@@ -311,9 +311,11 @@ class Outcome extends \App\Pages\Base
         }
 
         if ($type == 11) {    //по источникам
-            if(strlen($salesource)==0)  $salesource="0";
+            if(strlen($salesource)==0) {
+                $salesource="0";
+            }
             $sql = "
-            select i.itemname,  sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select i.itemname,count(e.document_id) as docs,  sum(0-e.quantity) as qty, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
                  join items i on e.item_id = i.item_id                                          
@@ -330,16 +332,16 @@ class Outcome extends \App\Pages\Base
         ";
         }
 
-        if ($type == 12  ) {    //по брендам
-             
-            $man="''";
+        if ($type == 12) {    //по брендам
+
+            $man="'___###___'";
             $brand = trim($this->filter->brand->getText());
             if(strlen($brand)>0) {
-               $man = $conn->qstr($brand) ;
+                $man = $conn->qstr($brand) ;
             }
-            
+
             $sql = "
-            select  i.itemname,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+            select  i.itemname,count(e.document_id) as docs,sum(0-e.quantity) as qty, sum(0- e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
               from entrylist_view  e
 
               join items_view i on e.item_id = i.item_id
@@ -359,41 +361,53 @@ class Outcome extends \App\Pages\Base
 
 
         $totsum = 0;
+        $totsumself = 0;
         $totnavar = 0;
+        $totnavarproc = 0;
 
         if (strlen($sql) > 0) {
             $rs = $conn->Execute($sql);
+            foreach ($rs as $row) {
+
+                // $summa = $row['summa'];
+                //  if ($row['navar'] != 0) {
+                //      $row['summa'] += $row['navar'];
+                //  }
+                if ($type == 3 && $row['summa']==0) {
+                    continue;                    
+                }
+
+                $det = array(
+                    "code"      => $row['item_code'],
+                    "name"      => $row['itemname'],
+                    "dt"        => \App\Helper::fd(strtotime($row['dt'] ?? '')),
+                    "qty"       => H::fqty($row['qty']),
+                    "navar"     => H::fa($row['navar']),
+                    "navarsign" => $row['navar'] > 0,
+                    "navarproc" => ($row['summa']  > 0 && $row['navar'] >0 ) ? number_format(100*$row['navar']/($row['summa'] + $row['navar'] ), 1, '.', '') : "",
+                    "summa"     => H::fa($row['summa'] + $row['navar']),
+                    "docs"     => intval($row['docs'])
+                );
+
+                
+                $detail[] = $det;
+                
+                $totnavar += $row['navar'];
+                $totsumself += $row['summa'];
+                $totsum += ($row['summa'] + $row['navar']);
+            }
         }
-
-
-        foreach ($rs as $row) {
-
-            // $summa = $row['summa'];
-            //  if ($row['navar'] != 0) {
-            //      $row['summa'] += $row['navar'];
-            //  }
-
-
-            $detail[] = array(
-                "code"      => $row['item_code'],
-                "name"      => $row['itemname'],
-                "dt"        => \App\Helper::fd(strtotime($row['dt'])),
-                "qty"       => H::fqty($row['qty']),
-                "navar"     => H::fa($row['navar']),
-                "navarsign" => $row['navar'] > 0,
-                "summa"     => H::fa($row['summa'] + $row['navar'])
-            );
-
-            $totnavar += $row['navar'];
-            $totsum += ($row['summa'] + $row['navar']);
+        if( $totsumself > 0) {
+           $totnavarproc = 100*$totnavar/($totsumself + $totnavar);
         }
-
+        
         $header = array('datefrom' => \App\Helper::fd($from),
                         "_detail"  => $detail,
                         "brand"  => $brand,
                         'dateto'   => \App\Helper::fd($to)
         );
 
+        $header['totnavarproc'] = $totnavarproc > 0 ?  number_format($totnavarproc, 1, '.', '') : "";
         $header['totsumma'] = H::fa($totsum);
         $header['totnavar'] = H::fa($totnavar);
         $header['disc'] = H::fa($disc);
@@ -449,5 +463,3 @@ class Outcome extends \App\Pages\Base
     }
 
 }
-
-

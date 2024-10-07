@@ -11,13 +11,12 @@ namespace App\Entity;
  */
 class Customer extends \ZCL\DB\Entity
 {
+    public const STATUS_ACTUAL   = 0;  //актуальный
+    public const STATUS_DISABLED = 1; //не используется
+    public const STATUS_LEAD     = 2; //лид
 
-    const STATUS_ACTUAL   = 0;  //актуальный
-    const STATUS_DISABLED = 1; //не используется
-    const STATUS_LEAD     = 2; //лид
-   
-    const TYPE_BAYER      = 1; //покупатель
-    const TYPE_SELLER     = 2; //поставщик
+    public const TYPE_BAYER      = 1; //покупатель
+    public const TYPE_SELLER     = 2; //поставщик
 
     protected function init() {
         $this->customer_id = 0;
@@ -29,11 +28,23 @@ class Customer extends \ZCL\DB\Entity
 
     protected function beforeSave() {
         parent::beforeSave();
+   
+        if ($this->customer_id == 0) { //новый
+            $this->createdon = time();
+            $this->user_id = \App\System::getUser()->user_id;
+        }
+        $this->customer_name = str_replace("'","`",$this->customer_name) ;
+        $this->customer_name = str_replace("\"","`",$this->customer_name) ;
+  
         //упаковываем  данные в detail
         $this->detail = "<detail><code>{$this->code}</code>";
-        if ( doubleval( $this->discount) > 0) {
+        if (doubleval($this->discount) > 0) {
             $this->detail .= "<discount>{$this->discount}</discount>";
         }
+        if (doubleval($this->pbonus) > 0) {
+            $this->detail .= "<pbonus>{$this->pbonus}</pbonus>";
+        }
+
 
 
         $this->detail .= "<type>{$this->type}</type>";
@@ -55,17 +66,24 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<firstname><![CDATA[{$this->firstname}]]></firstname>";
         $this->detail .= "<lastname><![CDATA[{$this->lastname}]]></lastname>";
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
+        $this->detail .= "<addressdel><![CDATA[{$this->addressdel}]]></addressdel>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->detail .= "</detail>";
 
+  
+        
         return true;
     }
 
     protected function afterLoad() {
         //распаковываем  данные из detail
+        if(strlen($this->detail)==0) {
+            return;
+        }
         $xml = simplexml_load_string($this->detail);
 
         $this->discount = doubleval($xml->discount[0]);
+        $this->pbonus = doubleval($xml->pbonus[0]);
 
         $this->type = (int)($xml->type[0]);
         $this->jurid = (int)($xml->jurid[0]);
@@ -80,6 +98,7 @@ class Customer extends \ZCL\DB\Entity
         $this->holding = (int)($xml->holding[0]);
         $this->holding_name = (string)($xml->holding_name[0]);
         $this->address = (string)($xml->address[0]);
+        $this->addressdel = (string)($xml->addressdel[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
         $this->edrpou = (string)($xml->edrpou[0]);
@@ -87,11 +106,17 @@ class Customer extends \ZCL\DB\Entity
         $this->lastname = (string)($xml->lastname[0]);
         $this->chat_id = (string)($xml->chat_id[0]);
 
-        $this->createdon = strtotime($this->createdon);
-
+        $this->createdon = strtotime($this->createdon ?? '');
+        
         parent::afterLoad();
     }
 
+    public function afterSave($update) {
+        if($update==false) {
+            \App\Entity\Subscribe::onNewCustomer($this->customer_id) ;
+        }       
+    }
+ 
     public function beforeDelete() {
 
         $conn = \ZDB\DB::getConnect();
@@ -99,7 +124,7 @@ class Customer extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return  \App\Helper::l("custisuseddoc");   
+            return  "Контрагент використовується в документах";
         }
         return "";
     }
@@ -112,7 +137,8 @@ class Customer extends \ZCL\DB\Entity
         $conn->Execute("delete from messages where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
         $conn->Execute("delete from files where item_type=" . \App\Entity\Message::TYPE_CUST . " and item_id=" . $this->customer_id);
         $conn->Execute("delete from filesdata where   file_id not in (select file_id from files)");
- 
+        \App\Entity\Tag::updateTags([],   \App\Entity\Tag::TYPE_CUSTOMER,$this->customer_id) ;
+
     }
 
     public static function getByPhone($phone) {
@@ -120,7 +146,7 @@ class Customer extends \ZCL\DB\Entity
             return null;
         }
         $conn = \ZDB\DB::getConnect();
-        return Customer::getFirst(' phone = ' . $conn->qstr($phone) .' or   phone = ' . $conn->qstr('38'.$phone) );
+        return Customer::getFirst(' phone = ' . $conn->qstr($phone) .' or   phone = ' . $conn->qstr('38'.$phone));
     }
 
     public static function getByEmail($email) {
@@ -213,27 +239,27 @@ class Customer extends \ZCL\DB\Entity
 
     /**
     * начисленные бонусы
-    * 
+    *
     */
     public function getBonus() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(bonus),0) as bonus from paylist where  document_id in (select  document_id  from  documents where  customer_id={$this->customer_id})";
+        $sql = "select coalesce(sum(amount),0) as bonus from custacc where  customer_id={$this->customer_id} and optype=1";
 
-        return $conn->GetOne($sql);
+        return intval($conn->GetOne($sql) );
 
     }
     /**
     *  список  бонусов по  контрагентам
-    *     
+    *
     */
     public static function getBonusAll() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select coalesce(sum(bonus),0) as bonusall, d.customer_id from paylist p join documents d ON  p.document_id = d.document_id group by  d.customer_id ";
+        $sql = "select coalesce(sum(amount),0) as bonusall, customer_id from custacc where optype=1  group by  customer_id ";
         $ret = array();
-        foreach($conn->Execute($sql) as $row ){
-           if( doubleval($row['bonusall']) <>0 )  {
-               $ret[$row['customer_id']] = $row['bonusall'] ;                              
-           }
+        foreach($conn->Execute($sql) as $row) {
+            if(doubleval($row['bonusall']) <>0) {
+                $ret[$row['customer_id']] = intval($row['bonusall'] );
+            }
 
         }
         return $ret;
@@ -241,78 +267,55 @@ class Customer extends \ZCL\DB\Entity
     }
     /**
     * история бонусов
-    * 
+    *
     */
-    public   function getBonuses() {
+    public function getBonuses() {
         $conn = \ZDB\DB::getConnect();
-        $sql = "select bonus, paydate,d.document_number  from paylist p join documents d ON  p.document_id = d.document_id where d.customer_id={$this->customer_id} and coalesce(p.bonus,0) <> 0 order  by  pl_id ";
+        $sql = "select p.amount, p.createdon,p.document_number  from custacc_view p  where p.optype=1 and p.customer_id={$this->customer_id} and coalesce(p.amount,0) <> 0 order  by  ca_id ";
         $ret = array();
-        foreach($conn->Execute($sql) as $row ){
-           
-           $b = new \App\DataItem() ;
-           $b->paydate = strtotime($row['paydate'] ) ;
-           $b->document_number = $row['document_number']  ;
-           $b->bonus = $row['bonus']  ;
-                         
-           $ret[]=$b;            
+        foreach($conn->Execute($sql) as $row) {
+
+            $b = new \App\DataItem() ;
+            $b->paydate = strtotime($row['createdon']) ;
+            $b->document_number = $row['document_number']  ;
+            $b->bonus = intval( $row['amount'] ) ;
+
+            $ret[]=$b;
         }
         return $ret;
 
     }
-    
+
     public function getDolg() {
-    
+
         $dolg = 0;
         $conn = \ZDB\DB::getConnect();
 
-     //   if($this->type == self::TYPE_SELLER)   {
-            $sql = "SELECT   COALESCE( SUM( a.s_passive),0) as  pas, coalesce(SUM( a.s_active ),0) AS act
-                FROM cust_acc_view a  WHERE  a.s_active <> a.s_passive  and  a.customer_id = ". $this->customer_id ;
+        $sql="select sum(amount) from custacc where optype in (2,3) and  customer_id= ".$this->customer_id; 
 
-            $row=$conn->GetRow($sql)  ;
-        
-            $dolg = $row['pas']  - $row['act'] ;
-            
-     //   }
-     //   if($this->type == self::TYPE_BAYER)   {
-            $sql = "SELECT   COALESCE( SUM( a.b_passive),0) as  pas, coalesce(SUM( a.b_active ),0) AS act
-                FROM cust_acc_view a  WHERE  a.b_active <> a.b_passive  and  a.customer_id = ". $this->customer_id ;
-
-            $row=$conn->GetRow($sql)  ;
-        
-            $dolg += $row['pas']  - $row['act'] ;
-            
-     //   }
- 
- 
- 
-        return $dolg;
+        return \App\Helper::fa($conn->GetOne($sql));
 
     }
+
     
-    public  function getDiscount(){
+
+
+    public function getDiscount() {
         $d = $this->discount;
         if($d > 0) {
             return  $d;
         }
         $d = 0;
         $disc = \App\System::getOptions("discount");
-    
-        $amount = 0;
 
-  //COALESCE(SUM((CASE WHEN (`d`.`meta_name` IN ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct')) THEN `d`.`payed` WHEN ((`d`.`meta_name` = 'IncomeMoney') AND
-  //    (`d`.`content` LIKE '%<detail>1</detail>%')) THEN `d`.`payed` WHEN (`d`.`meta_name` = 'ReturnIssue') THEN 0 - `d`.`payed` ELSE 0 END)), 0) AS `b_active`,  
-      
-        $conn = \ZDB\DB::getConnect() ;
-        $sql= "select sum(amount) from paylist where document_id in (select document_id from documents_view where customer_id = {$this->customer_id} 
-               and meta_name in ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct','ReturnIssue')   ) " ;
-        $amount = doubleval( $conn->GetOne($sql));
-        
+
+        $amount = $this->sumAll();
+
         if ($disc["discsumma1"] > 0 && $disc["disc1"] > 0 && $disc["discsumma1"] < $amount) {
             $d = $disc["disc1"];
         }
         if ($disc["discsumma2"] > 0 && $disc["disc2"] > 0 && $disc["discsumma2"] < $amount) {
-            $d = $disc["disc3"];
+            $d = $disc["disc2"];
         }
         if ($disc["discsumma3"] > 0 && $disc["disc3"] > 0 && $disc["discsumma3"] < $amount) {
             $d = $disc["disc3"];
@@ -320,14 +323,60 @@ class Customer extends \ZCL\DB\Entity
         if ($disc["discsumma4"] > 0 && $disc["disc4"] > 0 && $disc["discsumma4"] < $amount) {
             $d = $disc["disc4"];
         }
-         
-        
-        
+
+
+
         return $d ;
     }
+
+
+    /**
+    * сумма  всех  покупок
+    *
+    */
+    public function sumAll() {
+        $conn = \ZDB\DB::getConnect() ;
+        $sql= "select sum(amount) from paylist where document_id in (select document_id from documents_view where customer_id = {$this->customer_id} 
+               and meta_name in ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct','ReturnIssue')   ) " ;
+        return  doubleval($conn->GetOne($sql));
+
+    }
+    /**
+    * список  ксли  холдинг
+    * 
+    */
+    public function getChillden() {
+        
+        if($this->isholding !=1){
+           return  [];
+        }
+        
+        
+        $conn = \ZDB\DB::getConnect() ;
+        $sql= "select customer_id from customers  where status=0 and detail like '%<holding>{$this->customer_id}</holding>%' ";
+        return  $conn->GetCol($sql);
+
+    }
     
-    
-    public   function getID() {
+    public function getID() {
         return $this->customer_id;
-    }    
+    }
+
+    /**
+    * сообшения  с  чата
+    *
+    */
+    public function chatMessages() {
+        $conn = \ZDB\DB::getConnect() ;
+
+
+
+        $sql= "select sum(amount) from paylist where document_id in (select document_id from documents_view where customer_id = {$this->customer_id} 
+               and meta_name in ('GoodsIssue', 'Order', 'PosCheck', 'OrderFood', 'Invoice', 'ServiceAct','ReturnIssue')   ) " ;
+        return  doubleval($conn->GetOne($sql));
+
+    }
+
+
+
 }

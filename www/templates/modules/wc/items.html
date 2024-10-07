@@ -5,20 +5,20 @@
         <div class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Экспорт новых товаров</h3>
-                              <a zippy="checkconn"><i class="fa fa fa-sync"></i> Проверить соединение</a>
+                <h3>Експорт нових товарів</h3>
+                              <a zippy="checkconn"><i class="fa fa fa-sync"></i> Перевiрити  з'єднання</a>
    <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
-                       <label for="searchcat">Категория</label>
+                       <label for="searchcat">Категорія</label>
 
                         <select class="form-control mr-sm-2" zippy="searchcat">
-                            <option value="0">Не задана</option>
+                            <option value="0">Не задано</option>
                         </select>
 
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Загрузить">
-                        <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
+                        <input onclick=" document.getElementById('dialogwait').showModal() " type="submit" class=" mr-2 btn btn-outline-success  "
+                               value="Завантажити">
+
 
 
                     </form>
@@ -30,11 +30,11 @@
 
                             <th style="width:30px"><input type="checkbox" id="chall" onchange="chclick()"></th>
 
-                            <th>Наименование</th>
+                            <th>Найменування</th>
                             <th>Артикул</th>
-                            <th class="text-right">Кол.</th>
-                            <th class="text-right">Цена</th>
-                            <th> Описание</th>
+                            <th class="text-right">Кіл.</th>
+                            <th class="text-right">Ціна</th>
+                            <th> Опис</th>
 
 
                         </tr>
@@ -54,33 +54,33 @@
                     <div class="ml-2 form-group row  ">
 
 
-                        &nbsp;<input onclick="$('#loader3').removeAttr('style')" type="submit"
-                                     class="  btn btn-outline-success   " value="Отправить">
-                        <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
+                        &nbsp;<input onclick="document.getElementById('dialogwait').showModal() " type="submit"
+                                     class="  btn btn-outline-success   " value="Відправити">
+
 
                     </div>
                 </form>
             </div>
             <div class="col-12 col-md-8  ">
 
-                <h3>Обновление цен и количества</h3>
+                <h3>Оновлення цін і кількості</h3>
 
                 <div class="navbar nav">
                   
                   <form zippy="upd" class="form-inline ">
-                      <label for="updcat">Категория</label>
+                      <label for="updcat">Категорiя</label>
 
                         <select class="form-control mr-sm-2" zippy="updcat">
-                            <option value="0">Все</option>
+                            <option value="0">Всi</option>
                         </select>
                 
       
-                    <a zippy="updateqty" class="  btn btn-outline-success  ">Обновить количество</a>
-                    <div id="loader" style="display:none" class="spinner-border spinner-border-sm"></div>
+                    <a zippy="updateqty" class="  btn btn-outline-success  ">Оновити кількість</a>
+
 
                     &nbsp;&nbsp;
-                    <a zippy="updateprice" class="  btn btn-outline-success  ">Обновить цены</a>
-                    <div id="loader7" style="display:none" class="spinner-border spinner-border-sm"></div>
+                    <a zippy="updateprice" class="  btn btn-outline-success  ">Оновити ціни</a>
+
                    </form>
 
                 </div>
@@ -88,11 +88,11 @@
 
             <div class="col-12 col-md-8  ">
 
-                <h3>Загрузка товаров из магазина </h3>
+                <h3>Завантаження товарів з магазину </h3>
 
                 <div class="navbar nav">
-                    <a zippy="getitems" class="  btn btn-outline-success  ">Загрузить</a>
-                    <div id="loader6" style="display:none" class="spinner-border spinner-border-sm"></div>
+                    <a zippy="getitems" class="  btn btn-outline-success  ">Завантажити</a>
+
 
 
                 </div>
@@ -102,17 +102,18 @@
 
             function check_updateqty() {
 
-                $('#loader3').removeAttr('style');
+            document.getElementById('dialogwait').showModal() 
             }
 
             function check_updateprice() {
 
-                $('#loader7').removeAttr('style');
+              document.getElementById('dialogwait').showModal() 
             }
 
             function check_getitems() {
 
-                $('#loader6').removeAttr('style');
+ document.getElementById('dialogwait').showModal() 
+                
             }
 
             function chclick() {

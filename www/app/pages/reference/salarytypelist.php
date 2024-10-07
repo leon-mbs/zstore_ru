@@ -21,7 +21,6 @@ use App\System;
 //начисления  удержания
 class SalaryTypeList extends \App\Pages\Base
 {
-
     private $_st;
 
     public function __construct() {
@@ -48,7 +47,8 @@ class SalaryTypeList extends \App\Pages\Base
         $opt = System::getOptions("salary");
 
         $this->add(new Form('calcform'));
-        $this->calcform->add(new TextArea('algo', $opt['calc']));
+        $this->calcform->add(new TextArea('calc', $opt['calc']));
+        $this->calcform->add(new TextArea('calcbase', $opt['calcbase']));
         $this->calcform->add(new SubmitLink('savecalc'))->onClick($this, "onSaveCalc", true);
 
 
@@ -56,6 +56,8 @@ class SalaryTypeList extends \App\Pages\Base
         $this->optform->add(new DropDownChoice('optbaseincom', SalType::getList(), $opt['codebaseincom']));
         $this->optform->add(new DropDownChoice('optadvance', SalType::getList(), $opt['codeadvance']));
         $this->optform->add(new DropDownChoice('optresult', SalType::getList(), $opt['coderesult']));
+        $this->optform->add(new DropDownChoice('optfine', SalType::getList(), $opt['codefine']));
+        $this->optform->add(new DropDownChoice('optbonus', SalType::getList(), $opt['codebonus']));
         $this->optform->add(new SubmitLink('saveopt'))->onClick($this, "onSaveOpt", true);
 
 
@@ -118,12 +120,12 @@ class SalaryTypeList extends \App\Pages\Base
 
         $code = intval($this->_st->salcode);
         if ($code < 100 || $code > 999) {
-            $this->setError('invalidcode');
+            $this->setError('Невірний код');
             return;
         }
         $c = SalType::getFirst("salcode=" . $this->_st->salcode);
         if ($c != null && $isnew) {
-            $this->setError('codeexists');
+            $this->setError('Код вже існує');
             return;
 
         }
@@ -137,6 +139,7 @@ class SalaryTypeList extends \App\Pages\Base
         $sl = SalType::getList();
         $codebaseincom = $this->optform->optbaseincom->getValue();
         $codeadvance = $this->optform->optadvance->getValue();
+        $coderesult = $this->optform->optresult->getValue();
 
         $this->optform->optbaseincom->setOptionList($sl);
         $this->optform->optresult->setOptionList($sl);
@@ -159,21 +162,24 @@ class SalaryTypeList extends \App\Pages\Base
         $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
         $opt['coderesult'] = $this->optform->optresult->getValue();
         $opt['codeadvance'] = $this->optform->optadvance->getValue();
+        $opt['codefine'] = $this->optform->optfine->getValue();
+        $opt['codebonus'] = $this->optform->optbonus->getValue();
 
         System::setOptions('salary', $opt);
 
-        $this->addAjaxResponse("toastr.success('" . H::l("saved") . "')");
-        
+        $this->addAjaxResponse("toastr.success('Збережено')");
+
     }
 
     public function onSaveCalc($sender) {
         $opt = System::getOptions("salary");
-        $opt['calc'] = $this->calcform->algo->getText();
+        $opt['calc'] = $this->calcform->calc->getText();
+        $opt['calcbase'] = $this->calcform->calcbase->getText();
         System::setOptions('salary', $opt);
 
 
-        $this->addAjaxResponse("toastr.success('" . H::l("saved") . "')");
-       
+        $this->addAjaxResponse("toastr.success('Збережено')");
+
     }
 
 }

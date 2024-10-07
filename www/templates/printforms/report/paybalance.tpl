@@ -1,20 +1,20 @@
-<table border="0" class="ctable" cellpadding="2" cellspacing="0">
-
+<table  class="ctable"  >
+ 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Финансовые результаты
+            Прибутки та видатки
         </td>
     </tr>
+    <tr>
     <tr>
 
         <td align="center" colspan="3">
-            Период с {{datefrom}} по {{dateto}} <br>
+            Перiод з {{datefrom}} по {{dateto}} <br>
         </td>
     </tr>
-    <tr>
 
         <td colspan="3">
-            <b>Прибыли</b>
+            <b>Прибутки</b>
         </td>
     </tr>
 
@@ -42,7 +42,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Всего:</td>
+        <td align="right">Всього:</td>
 
         <td align="right">{{tin}}</td>
         <td></td>
@@ -50,7 +50,7 @@
     <tr>
 
         <td colspan="3">
-            <b>Расходы</b> 
+            <b>Видатки</b> 
         </td>
     </tr>
 
@@ -62,7 +62,7 @@
 
         <td align="right">{{out}}</td>
         <td></td>
-    </tr>
+    </tr>            
     {{#docdet}}
     
     <tr>
@@ -77,7 +77,7 @@
     {{/_detail2}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Всего:</td>
+        <td align="right">Всього:</td>
 
         <td align="right">{{tout}}</td>
         <td></td>
@@ -90,9 +90,29 @@
         <td></td>
     </tr>
 
-    <tr style="font-weight: bolder;">
+   {{#is3}}    
+    
+    </tr>
+        <td colspan="3"> <br>
+            <b>Деталiзацiя по ТМЦ </b>
+        </td>       
+    </tr>    
+    
+     {{#_detail3}}
+    <tr>
 
-        <td>Финансовые показатели</td>
+        <td>{{type}}</td>
+
+        <td align="right">{{out}}</td>
+        <td></td>
+    </tr>
+     {{/_detail3}}
+   {{/is3}}  
+   
+  {{#isfin}}  
+  <tr style="font-weight: bolder;">
+
+        <td> <br>Фiнансовi показники</td>
 
         <td></td>
         <td></td>
@@ -103,51 +123,52 @@
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Выручка (отпускная цена на количество) минус переменные расходы (себестоимость)"></i>
+               title="Виручка (відпускна ціна на кількість) мінус змінні витрати (собівартість)"></i>
         </td>
     </tr>
     <tr>
-        <td>Переменные расходы :</td>
+        <td>Змiннi витрати :</td>
         <td align="right"> {{tvc}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Себестоимость"></i>
+               title="Cобівартість"></i>
         </td>
     </tr>
     <tr>
-        <td>Операционные расходы:</td>
+        <td>Операцiйнi витрати:</td>
         <td align="right">{{OP}}  </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Расходы минус переменные расходы (себестоимость)"></i>
+               title="Витрати мінус змінні витрати (собівартість)"></i>
         </td>
     </tr>
     <tr>
-        <td>Чистая прибыль:</td>
+        <td>Чистий прибуток:</td>
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="проход минус расходы"></i>
+               title="проход мiнус видатки"></i>
         </td>
     </tr>
-    {{#isinv}}
+   {{#isinv}}   
     <tr>
-        <td>Инвестиции:</td>
+        <td>Інвестиції:</td>
         <td align="right"> {{inv}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="ТМЦ на складе и основные фонды на балансе"></i>
+               title="ТМЦ на складі та основні фонди на балансі"></i>
         </td>
     </tr>
     <tr>
-        <td>Отдача от инвестиций (ROI),%:</td>
+        <td>Вiддача вiд iнвестицiй (ROI),%:</td>
         <td align="right"> {{ROI}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Проход на инвестиции"></i>
+               title="Проход на iнвестицiї"></i>
         </td>
     </tr>
-    {{/isinv}}
+    {{/isinv}}     
+    {{/isfin}}     
 </table>
 
 

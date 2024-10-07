@@ -2,33 +2,32 @@
 
 namespace App\Pages;
 
-use \Zippy\Html\DataList\DataView;
-use \App\Entity\User;
-use \App\Entity\UserRole;
-use \App\System;
-use \App\Helper as H;
-use \App\Application as App;
-use \Zippy\Html\Form\CheckBox;
-use \Zippy\Html\Form\DropDownChoice;
-use \Zippy\Html\Form\Form;
-use \Zippy\Html\Form\Button;
-use \Zippy\Html\Form\TextArea;
-use \Zippy\Html\Form\TextInput;
-use \Zippy\Html\Label;
-use \Zippy\Html\Link\ClickLink;
-use \Zippy\Html\Panel;
-use \Zippy\Binding\PropertyBinding as Bind;
+use Zippy\Html\DataList\DataView;
+use App\Entity\User;
+use App\Entity\UserRole;
+use App\System;
+use App\Helper as H;
+use App\Application as App;
+use Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\Form;
+use Zippy\Html\Form\Button;
+use Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextInput;
+use Zippy\Html\Label;
+use Zippy\Html\Link\ClickLink;
+use Zippy\Html\Panel;
+use Zippy\Binding\PropertyBinding as Bind;
 
 class Roles extends \App\Pages\Base
 {
-
     public $role = null;
 
     public function __construct() {
         parent::__construct();
 
         if (System::getUser()->userlogin != 'admin') {
-            $this->setError('onlyadminaccess');
+            $this->setError("До сторінки має доступ тільки користувач admin");
             App::RedirectError();
             return false;
         }
@@ -48,6 +47,7 @@ class Roles extends \App\Pages\Base
 
 
         $this->editpan->editform->add(new CheckBox('editnoshowpartion'));
+        $this->editpan->editform->add(new CheckBox('editcanevent'));
         $this->editpan->editform->add(new CheckBox('editshowotherstores'));
 
         //виджеты
@@ -64,11 +64,14 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editwoocomerce'));
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
-        
         $this->editpan->editform->add(new CheckBox('editppo'));
         $this->editpan->editform->add(new CheckBox('editnp'));
         $this->editpan->editform->add(new CheckBox('editpu'));
         $this->editpan->editform->add(new CheckBox('editpl'));
+        $this->editpan->editform->add(new CheckBox('editcb'));
+        $this->editpan->editform->add(new CheckBox('editvk'));
+        $this->editpan->editform->add(new CheckBox('edithr'));
+        $this->editpan->editform->add(new CheckBox('editvdoc'));
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -140,6 +143,7 @@ class Roles extends \App\Pages\Base
 
 
         $this->editpan->editform->editnoshowpartion->setChecked($this->role->noshowpartion);
+        $this->editpan->editform->editcanevent->setChecked($this->role->canevent);
         $this->editpan->editform->editshowotherstores->setChecked($this->role->showotherstores);
 
 
@@ -187,8 +191,17 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'promua') !== false) {
             $this->editpan->editform->editpu->setChecked(true);
         }
-        if (strpos($this->role->modules, 'paperless') !== false) {
-            $this->editpan->editform->editpl->setChecked(true);
+        if (strpos($this->role->modules, 'checkbox') !== false) {
+            $this->editpan->editform->editcb->setChecked(true);
+        }
+        if (strpos($this->role->modules, 'vkassa') !== false) {
+            $this->editpan->editform->editvk->setChecked(true);
+        }
+        if (strpos($this->role->modules, 'horoshop') !== false) {
+            $this->editpan->editform->edithr->setChecked(true);
+        }
+        if (strpos($this->role->modules, 'vdoc') !== false) {
+            $this->editpan->editform->editvdoc->setChecked(true);
         }
     }
 
@@ -228,6 +241,7 @@ class Roles extends \App\Pages\Base
 
     public function saveaclOnClick($sender) {
 
+        $this->role->canevent = $this->editpan->editform->editcanevent->isChecked() ? 1 : 0;
         $this->role->noshowpartion = $this->editpan->editform->editnoshowpartion->isChecked() ? 1 : 0;
         $this->role->showotherstores = $this->editpan->editform->editshowotherstores->isChecked() ? 1 : 0;
 
@@ -315,8 +329,17 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editpu->isChecked()) {
             $modules = $modules . ',promua';
         }
-        if ($this->editpan->editform->editpl->isChecked()) {
-            $modules = $modules . ',paperless';
+        if ($this->editpan->editform->editcb->isChecked()) {
+            $modules = $modules . ',checkbox';
+        }
+        if ($this->editpan->editform->editvk->isChecked()) {
+            $modules = $modules . ',vkassa';
+        }
+        if ($this->editpan->editform->edithr->isChecked()) {
+            $modules = $modules . ',horoshop';
+        }
+        if ($this->editpan->editform->editvdoc->isChecked()) {
+            $modules = $modules . ',vdoc';
         }
 
         $this->role->modules = trim($modules, ',');
@@ -367,22 +390,23 @@ class Roles extends \App\Pages\Base
     }
 
     public function metarowOnRow($row) {
+        $title ='';
         $item = $row->getDataItem();
         switch($item->meta_type) {
             case 1:
-                $title = H::l('md_doc');
+                $title = 'Документ';
                 break;
             case 2:
-                $title = H::l('md_rep');
+                $title = 'Звіт';
                 break;
             case 3:
-                $title = H::l('md_reg');
+                $title = 'Журнал';
                 break;
             case 4:
-                $title = H::l('md_ref');
+                $title = 'Довідник';
                 break;
             case 5:
-                $title = H::l('md_ser');
+                $title = 'Сервісна сторінка';
                 break;
         }
         $item->editacc = false;
@@ -391,27 +415,27 @@ class Roles extends \App\Pages\Base
         $item->stateacc = false;
         $item->cancelacc = false;
         $item->deleteacc = false;
-        $earr = explode(',', $this->role->acledit ?? '');
+        $earr = @explode(',', $this->role->acledit);
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
         }
-        $sarr = explode(',', $this->role->aclstate ?? '');
+        $sarr = @explode(',', $this->role->aclstate);
         if (is_array($sarr)) {
             $item->stateacc = in_array($item->meta_id, $sarr);
         }
-        $varr = explode(',', $this->role->aclview ?? '');
+        $varr = @explode(',', $this->role->aclview);
         if (is_array($varr)) {
             $item->viewacc = in_array($item->meta_id, $varr);
         }
-        $xarr = explode(',', $this->role->aclexe ?? '');
+        $xarr = @explode(',', $this->role->aclexe);
         if (is_array($xarr)) {
             $item->exeacc = in_array($item->meta_id, $xarr);
         }
-        $carr = explode(',', $this->role->aclcancel ?? '');
+        $carr = @explode(',', $this->role->aclcancel);
         if (is_array($carr)) {
             $item->cancelacc = in_array($item->meta_id, $carr);
         }
-        $darr = explode(',', $this->role->acldelete ?? '');
+        $darr = @explode(',', $this->role->acldelete);
         if (is_array($carr)) {
             $item->deleteacc = in_array($item->meta_id, $darr);
         }
@@ -428,25 +452,26 @@ class Roles extends \App\Pages\Base
     }
 
     public function menurowOnRow($row) {
+        $title = "";
         $item = $row->getDataItem();
         switch($item->meta_type) {
             case 1:
-                $title = H::l('md_doc');
+                $title = 'Документ';
                 break;
             case 2:
-                $title = H::l('md_rep');
+                $title = 'Звіт';
                 break;
             case 3:
-                $title = H::l('md_reg');
+                $title = 'Журнал';
                 break;
             case 4:
-                $title = H::l('md_ref');
+                $title = 'Довідник';
                 break;
             case 5:
-                $title = H::l('md_ser');
+                $title = 'Сервісна сторінка';
                 break;
             case 6:
-                $title = H::l('md_mod');
+                $title = "Сторінка модуля";
                 break;
         }
         $smartmenu = @explode(',', $this->role->smartmenu);
@@ -466,7 +491,6 @@ class Roles extends \App\Pages\Base
 
 class RoleDataSource implements \Zippy\Interfaces\DataSource
 {
-
     //private $model, $db;
 
     public function getItemCount() {

@@ -8,8 +8,8 @@
         </style>
         <div class="row">
             <div class="col-12">
-                <h3>Значения атрибутов товаров  </h3>
-                <small>Показываются категории, которые имеют товары</small>
+                <h3>Значення  атрибутiв товарiв  </h3>
+                <small>Показуються  категорiї, якi мають товари</small>
 
             </div>
 
@@ -35,21 +35,21 @@
                
 
                                 <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
-                                &nbsp;<a title="Очистить форму поиска" zippy="sclear"><i class="fa fa-eraser"></i></a>
+                                &nbsp;<a title="Очистити  форму  пошуку" zippy="sclear"><i class="fa fa-eraser"></i></a>
 
                             </form>
                         </div>
 
-                        <a zippy="addnew" class="btn btn-info">Добавить новый</a>
+                        <a zippy="addnew" class="btn btn-info">Додати новий</a>
 
                         <table class="table table-sm">
                             <tr>
                                 <th style="width:75px;"></th>
-                                <th>Название</th>
+                                <th>Назва</th>
                                 <th  >Код</th>
 
-                                <th class="text-right">Цена</th>
-                                <th class="text-right">Кол.</th>
+                                <th class="text-right">Цiна</th>
+                                <th class="text-right">Кiл.</th>
 
 
 
@@ -57,7 +57,7 @@
                             <tr zippy="plist">
                                 <td><img style="width:75px;" zippy="lphoto">
                                 </td>
-                                <td><a zippy="lname" title="Редактировать"></a>
+                                <td><a zippy="lname" title="Редагувати"></a>
 
 
                                 </td>
@@ -67,7 +67,7 @@
 
                                 <td class="text-right"><span zippy="lprice"></span></td>
                                 <td class="text-right"><span zippy="lcnt"></span></td>
-                                <td>&nbsp;<a zippy="imedit" title="Редактировать фото"><i class="fa fa-images"></i></a></td>
+                                <td>&nbsp;<a zippy="imedit" title="Редагувати фото"><i class="fa fa-images"></i></a></td>
 
                             </tr>
                         </table>
@@ -77,22 +77,22 @@
 
 
                         <form zippy="editform">
-                            <h4>Редактирование</h4>
+                            <h4>Редагування</h4>
 
                             <div class="form-group   ">
-                                <label   for="esef">ЧПУ ссылка</label>
+                                <label   for="esef">ЧПУ посилання</label>
 
                                 <input pattern="[0-9a-z_]+" zippy="esef" type="text" class="form-control">
-                                <small>Например, telefon_nokia_304</small>
+                                <small>Наприклад, telefon_nokia_304</small>
 
                             </div>
                       
 
                             <div class="form-group  ">
-                                <label   for="edescdet">Описание </label>
+                                <label   for="edescdet">Опис  </label>
 
                                 <textarea style="height:200px" zippy="edescdet" class="form-control"></textarea>
-                                <small>По умолчанию используется описание из справочника</small>
+                                <small>За замовчуванням використовується  опис із довiдника</small>
 
                             </div>
 
@@ -111,29 +111,29 @@
 
                             <div class="form-group">
 
-                                <a zippy="bcancel" class="btn btn-outline-secondary   ">Отменить</a>
-                                &nbsp;<input type="submit" class="btn btn-outline-success   " value="Сохранить">
+                                <a zippy="bcancel" class="btn btn-outline-secondary   ">Скасувати</a>
+                                &nbsp;<input type="submit" class="btn btn-outline-success   " value="Зберегти">
 
                             </div>
                         </form>
                     </div>
 
                     <div zippy="editimagepanel" class="col-12     col-xl-10 ">
-                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> К списку товаров</a>
-                        <h4>Список дополнительных изображений</h4>
+                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> До переліку товарiв</a>
+                        <h4>Перелік додаткових зображень</h4>
 
                         <form class="form-inline" zippy="addimageform" enctype="multipart/form-data">
                             <input  accept="image/png,image/jpeg" zippy="photo" type="file" class="form-control mr-2">
 
-                            <input type="submit" class="btn btn-success   " value="Добавить">
-                            <small>Изображение должно быть приблизительно квадратным</small>
+                            <input type="submit" class="btn btn-success   " value="Додати">
+                            <small>Зображення має  бути  приблизно  квадратним та з розміром  файлу  не більше 1M</small>
                         </form>
 
                         <div class="w-100">
 
                             <div zippy="imagelist" style="float:left;">
                                 <img zippy="imgitem" style="height: 128px;"/>
-                                <br><a zippy="idel">Удалить</a>
+                                <br><a zippy="idel">Видалити</a>
 
 
 
@@ -149,15 +149,10 @@
 
                 $('#edescdet').summernote({
                     height: 400,
-                    lang: 'uk-RU',
+                    lang: 'uk-UA',
 
                     callbacks: {
-                        onEnter: function (e) {
-                            if (e.keyCode === key.code.ENTER) {
-                                e.shiftKey = true;
-                                context.triggerEvent('enter', e);
-                            }
-                        },
+                 
                         onPaste: function (e) {
 
                             var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');

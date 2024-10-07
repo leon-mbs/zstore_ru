@@ -1,13 +1,13 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
     <tr style="font-weight: bolder;">
         <td colspan="6" align="center">
-            Наряд № {{document_number}} от {{document_date}}
+            Наряд № {{document_number}} вiд {{document_date}}
         </td>
     </tr>
     {{#pareaname}}
     <tr>
         <td colspan="6">
-            Произв. участок: {{pareaname}}
+            Вироб. ділянка: {{pareaname}}
         </td>
 
     </tr>
@@ -16,7 +16,7 @@
     {{#baseddoc}}
     <tr>
         <td colspan="6">
-            Заказ: {{baseddoc}}
+            Замовлення: {{baseddoc}}
         </td>
 
     </tr>
@@ -25,7 +25,7 @@
     {{#cust}}
     <tr>
         <td colspan="6">
-            Заказчик: {{cust}}
+            Замовник: {{cust}}
         </td>
 
     </tr>
@@ -33,15 +33,16 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Работы</th>
+        <th colspan="6" style="text-align: left;">Роботи</th>
 
     </tr>
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
-        <th style="border: 1px solid black;">Наименование</th>
-        <th style="border: 1px solid black;" width="50" align="right">Кол.</th>
-        <th style="border: 1px solid black;" width="50" align="right">Сумма</th>
-        <th style="border: 1px solid black;" width="50" align="right">Часов</th>
+        <th style="border: 1px solid black;">Найменування</th>
+        <th style="border: 1px solid black;">Категорiя</th>
+        <th style="border: 1px solid black;" width="50" align="right">Кiл</th>
+        <th style="border: 1px solid black;" width="50" align="right">Сума</th>
+        <th style="border: 1px solid black;" width="50" align="right">Годин</th>
         <th style="border: 1px solid black;"   > </th>
 
 
@@ -50,6 +51,7 @@
     <tr>
         <td>{{no}}</td>
         <td>{{service_name}}</td>
+        <td>{{category}}</td>
         <td align="right">{{quantity}}</td>
         <td align="right">{{cost}}</td>
         <td align="right">{{hours}}</td>
@@ -61,13 +63,14 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Готовая продукция</th>
+        <th colspan="6" style="text-align: left;">Готова продукцiя</th>
 
     </tr>
     <tr style="font-weight: bolder;">
         <th width="20" style="border: 1px solid black;">№</th>
-        <th style="border: 1px solid black;">Наименование</th>
-        <th style="border: 1px solid black;" width="50" align="right">Кол.</th>
+        <th style="border: 1px solid black;">Найменування</th>
+        <th style="border: 1px solid black;">Код</th>
+        <th style="border: 1px solid black;" width="50" align="right">Кiл.</th>
         <th style="border: 1px solid black;" width="50" align="right"> </th>
         <th style="border: 1px solid black;" width="50" align="right"> </th>
         <th style="border: 1px solid black;"    > </th>
@@ -78,6 +81,7 @@
     <tr>
         <td>{{no}}</td>
         <td>{{itemname}}</td>
+        <td>{{item_code}}</td>
         <td align="right">{{quantity}}</td>
         <td align="right"> </td>
         <td align="right"> </td>
@@ -89,7 +93,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Исполнители</th>
+        <th colspan="6" style="text-align: left;">Виконавці</th>
 
     </tr>
     {{#_detail3}}
@@ -107,7 +111,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th colspan="6" style="text-align: left;">Оборудование</th>
+        <th colspan="6" style="text-align: left;">Устаткування</th>
 
     </tr>
     {{#_detail2}}

@@ -5,25 +5,25 @@
         <div class="row">
             <div class="col-12 col-xl-10    ">
 
-                <h3>Импорт заказов</h3>
-                  <a zippy="checkconn"><i class="fa fa fa-sync"></i> Проверить соединение</a>
+                <h3>Імпорт замовлень</h3>
+                  <a zippy="checkconn"><i class="fa fa fa-sync"></i> Перевiрити  з'єднання</a>
   
 
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline ">
 
 
-                        <label for="status">Статус в магазине </label>
+                        <label for="status">Статус в магазині </label>
 
                         <select class="form-control mr-2" zippy="status">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Загрузить">
-                        <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
+                               value="Завантажити">
 
+                      
                     </form>
                 </div>
 
@@ -35,9 +35,9 @@
                         <th>Номер</th>
                         <th>Дата</th>
 
-                        <th>Клиент</th>
-                        <th class="text-right">Сумма</th>
-                        <th> Комментарий</th>
+                        <th>Клієнт</th>
+                        <th class="text-right">Сума</th>
+                        <th> Коментар</th>
 
 
                     </tr>
@@ -56,24 +56,24 @@
 
                 </table>
                 <div class="navbar nav">
-                    <a zippy="importbtn" class="  btn btn-outline-success  ">Импортировать</a>
+                    <a zippy="importbtn" class="  btn btn-outline-success  ">Імпортувати</a>
                     <form zippy="filter2" class="form-inline ">
 
 
                         <label for="store" data-label="store">склад</label>
 
                         <select class="form-control mr-2" zippy="store">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
-                        <label for="kassa" data-label="kassa">касса </label>
+                        <label for="kassa" data-label="kassa">каса </label>
 
                         <select class="form-control mr-2" zippy="kassa">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
 
                         <input type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Списать">
+                               value="Списати">
 
 
                     </form>
@@ -82,9 +82,9 @@
             </div>
             <div class="col-12 col-xl-10       ">
 
-                <h3>Экспорт статусов в магазин</h3>
+                <h3>Експорт статусів в магазин</h3>
                 <div class="navbar nav">
-                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Обновить</a>
+                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Оновити</a>
 
                 </div>
                 <form zippy="updateform">
@@ -95,8 +95,8 @@
                             <th>OC Номер</th>
                             <th>Дата</th>
 
-                            <th>Клиент</th>
-                            <th class="text-right">Сумма</th>
+                            <th>Клієнт</th>
+                            <th class="text-right">Сума</th>
                             <th>Статус</th>
 
 
@@ -118,16 +118,16 @@
 
 
                     <div class="ml-2 form-group row  ">
-                        <label for="estatus">Статус в магазине </label>
+                        <label for="estatus">Статус в магазині </label>
 
                         <select class="  mr-2" zippy="estatus">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не обрано</option>
                         </select>
               
 
-                        <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
-                               value="Отправить">
-                        <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="  btn btn-outline-success  "
+                               value="Відправити">
+
                     </div>
                 </form>
 

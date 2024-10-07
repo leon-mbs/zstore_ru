@@ -11,15 +11,15 @@ use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use Zippy\Html\Form\Date;
 use App\Entity\SalType;
+
 /**
  *  Лицевой счет
  */
 class EmpAcc extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
-     
+
 
         $this->add(new Form('filterz'))->onSubmit($this, 'OnSubmitZ');
 
@@ -32,19 +32,19 @@ class EmpAcc extends \App\Pages\Base
 
         $d = new \App\DateTime() ;
         $d = $d->startOfMonth()->subMonth(1) ;
-          
+
         $this->filters->add(new Date('from', $d->getTimestamp()));
         $this->filters->add(new Date('to', time()));
-   }
+    }
 
     public function OnSubmitZ($sender) {
 
         $dt = new \App\DateTime();
-        $from = $dt->addMonth(-1)->startOfMonth()->getTimestamp();
-        $from = date(\DateTime::ISO8601, $from);
+        $from = $dt->subMonth(1)->startOfMonth()->getTimestamp();
+        $from = date(\DateTimeInterface::ISO8601, $from);
 
 
-        $to = date(\DateTime::ISO8601, time());
+        $to = date(\DateTimeInterface::ISO8601, time());
 
         $emp_id = \App\System::getUser()->employee_id ;
 
@@ -54,56 +54,51 @@ class EmpAcc extends \App\Pages\Base
         $yto = $this->filterz->yto->getValue();
         $mto = $this->filterz->mto->getValue();
         $mtoname = $this->filterz->mto->getValueName();
+ 
 
-        $dt = new \App\DateTime(strtotime($yfrom . '-' . $mfrom . '-01'));
-        $from = $dt->startOfMonth()->getTimestamp();
-
-        $dt = new \App\DateTime(strtotime($yto . '-' . $mto . '-01'));
-        $to = $dt->endOfMonth()->getTimestamp();
-
-
-        $conn = \Zdb\DB::getConnect();
-
-         $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
-
+        $conn = \ZDB\DB::getConnect();
+   
         $detail = array();
 
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
-        $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
-
-        foreach ($doclist as $doc) {
+        $to = strtotime($yto . '-' . $mto . '-01');
+        $to = strtotime('+ 1 month',$to) -1;
+        
+        $total = 0;
+        foreach (\App\Entity\Doc\Document::findYield("meta_name = 'OutSalary' and state >= 5 ") as $doc) {
 
             $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
 
-            $d1 = \App\Helper::fdt($from);
-            $d2 = \App\Helper::fdt($to);
-            $d3 = \App\Helper::fdt($date);
-
+//            $d1 = \App\Helper::fdt($from);
+//            $d2 = \App\Helper::fdt($to);
+//            $d3 = \App\Helper::fdt($date);
+          
+      
             if ($date < $from || $date > $to) {
                 continue;
             }
-        $total = 0;
+
             foreach ($doc->unpackDetails('detaildata') as $emp) {
 
                 if ($emp->employee_id == $emp_id && $emp->amount > 0) {
                     $d = $doc->headerdata['year'] . $doc->headerdata['month'];
-                    
+
                     if (!is_array($detail[$d])) {
-                         $detail[$d]    = array("d"=>$doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'],'v'=>0)  ;                   
+                        $detail[$d]    = array("d"=>$doc->headerdata['monthname'] . ' ' . $doc->headerdata['year'],'v'=>0)  ;
                     }
-                
+
                     $detail[$d]['v'] = H::fa($detail[$d]['v'] + $emp->amount);
 
-                    
+
                     $total += $emp->amount;
-                }  
+                }
             }
         }
 
-     
+
 
         //типы начислний
-       $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
+        
 
         $stlist = SalType::find("disabled<>1", "salcode");
 
@@ -112,11 +107,11 @@ class EmpAcc extends \App\Pages\Base
             $stam[$st->salcode] = 0;
         }
 
-        foreach ($doclist as $doc) {
+        foreach (\App\Entity\Doc\Document::findYield("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to)) as $doc) {
 
 
             foreach ($doc->unpackDetails('detaildata') as $emp) {
-                if (    $emp_id != $emp->employee_id) {
+                if ($emp_id != $emp->employee_id) {
                     continue;
                 }
 
@@ -139,41 +134,44 @@ class EmpAcc extends \App\Pages\Base
                               'name' => $st->salname, 'am' => H::fa($stam[$st->salcode])
             );
         }
-        
-        
 
-       $this->_tvars['memsal']  = array_values($detail);
-       $this->_tvars['mempst']  =  $detail2;
-       $this->_tvars['memtotal']  = H::fa( $total);
- 
 
-      
+
+        $this->_tvars['memsal']  = array_values($detail);
+        $this->_tvars['mempst']  =  $detail2;
+        $this->_tvars['memtotal']  = H::fa($total);
+
+
+
     }
- 
+
     public function OnSubmitS($sender) {
 
-      
+
         $emp_id = \App\System::getUser()->employee_id ;
         $from =  $this->filters->from->getDate();
         $to =  $this->filters->to->getDate();
-        
-        $conn = \Zdb\DB::getConnect();
 
-        $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
+        $conn = \ZDB\DB::getConnect();
+
+        $sql = "select coalesce(sum(amount),0) from empacc where    emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
 
         $b = $conn->GetOne($sql);
 
 
-        $sql =    $sql = "select * from empacc_view where optype < 100 and  emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
+        $sql =    $sql = "select * from empacc_view where    emp_id = {$emp_id} and createdon <= " . $conn->DBDate($to) . " and createdon >= " . $conn->DBDate($from) ." order  by  ea_id ";
         $rc = $conn->Execute($sql);
 
-        $detail = array();
+        $en=\App\Entity\EmpAcc::getNames();
 
+        $detail = array();
+        
         foreach ($rc as $row) {
-            $in =   doubleval($row['amount']) > 0 ? $row['amount']  :0;
-            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount']  :0;
+            $in =   doubleval($row['amount']) > 0 ? $row['amount'] : 0;
+            $out =   doubleval($row['amount']) < 0 ? 0-$row['amount'] : 0;
             $detail[] = array(
                 'notes'    => $row['notes'],
+                'opname'    => $en[$row['optype']],
                 'dt'    => H::fd(strtotime($row['createdon'])),
                 'doc'   => $row['document_number'],
                 'begin' => H::fa($b),
@@ -183,11 +181,11 @@ class EmpAcc extends \App\Pages\Base
             );
 
 
-            $b = $b + $in - $out;
-        }    
-        
+            $b = H::fa($b + $in - $out);
+        }
+
         $this->_tvars['mempacc']  =  $detail;
-           
+
     }
 
 }

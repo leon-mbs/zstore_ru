@@ -2,12 +2,11 @@
 
 namespace App\API;
 
-use \App\Entity\Item;
-use \App\Helper as H;
+use App\Entity\Item;
+use App\Helper as H;
 
-class items extends  JsonRPC
+class items extends JsonRPC
 {
-
     // список категорий  ТМЦ
     public function catlist() {
 
@@ -71,10 +70,11 @@ class items extends  JsonRPC
             $w .= " and bar_code=" . Item::qstr($args['bar_code']);
         }
 
-        foreach (Item::find($w, 'itemname') as $item) {
+        foreach (Item::findYield($w, 'itemname') as $item) {
             $plist = array();
 
             $it = array(
+               
                 'item_code'    => $item->item_code,
                 'bar_code'     => $item->bar_code,
                 'itemname'     => $item->itemname,
@@ -86,10 +86,10 @@ class items extends  JsonRPC
                 'cat_id'       => $item->cat_id
             );
 
-            $it = array_merge($it, $item->getData());
+           // $it = array_merge($it, $item->getData());
 
-            unset($it['detail']);
-            unset($it['disabled']);
+           // unset($it['detail']);
+           // unset($it['disabled']);
 
 
             if (strlen($item->price1) > 0) {
@@ -107,16 +107,16 @@ class items extends  JsonRPC
             if (strlen($item->price5) > 0) {
                 $it['price5'] = $item->price5;
             }
-
+         
             $list[] = $it;
         }
 
 
-        return $list;
+         return $list;
     }
 
     //  количества на  складе
-    public function getqty() {
+    public function getqty($args) {
         $list = array();
         $conn = \ZDB\DB::getConnect();
 
@@ -139,7 +139,7 @@ class items extends  JsonRPC
     // запись  ТМЦ.
     public function save($args) {
         if (strlen($args['item_code']) == 0) {
-            throw new \Exception(H::l("apientercode"));
+            throw new \Exception("Не задано артикул");
         }
 
         $code = Item::qstr($args['item_code']);
@@ -175,9 +175,49 @@ class items extends  JsonRPC
         }
 
         if (strlen($item->itemname) == 0) {
-            throw new \Exception(H::l("apientername"));
+            throw new \Exception("Не вказано назву");
+        }
+        if (strlen( $args['imageurl'] ) > 0) {
+
+                $file = file_get_contents($args['imageurl']) ;
+                if(strlen($file)>0) {
+                    $tmp = tempnam(sys_get_temp_dir(), "import") ;
+                    file_put_contents($tmp, $file) ;
+
+                    $imagedata = getimagesize($tmp);
+                    if (is_array($imagedata)) {
+                 
+                        $image = new \App\Entity\Image();
+                        $image->content = file_get_contents($tmp);
+                        $image->mime = $imagedata['mime'];
+
+                        if ($imagedata[0] != $imagedata[1]) {
+                            $thumb = new \App\Thumb($tmp);
+                            if ($imagedata[0] > $imagedata[1]) {
+                                $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+                            }
+                            if ($imagedata[0] < $imagedata[1]) {
+                                $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+                            }
+
+
+                            $image->content = $thumb->getImageAsString();
+                            $thumb->resize(512, 512);
+                            $image->thumb = $thumb->getImageAsString();
+                            $thumb->resize(128, 128);
+
+                            $item->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());
+                        }
+                  
+                        $image->save();
+                        $item->image_id = $image->image_id;
+                    
+                    }
+                }
+            
         }
 
+        
         $item->save();
         return array('item_code' => $item->item_code);
     }

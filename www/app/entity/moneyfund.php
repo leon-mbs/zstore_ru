@@ -10,13 +10,11 @@ namespace App\Entity;
  */
 class MoneyFund extends \ZCL\DB\Entity
 {
-
-
     protected function init() {
         $this->mf_id = 0;
         $this->branch_id = 0;
         $this->disabled = 0;
-   }
+    }
 
     protected function beforeSave() {
         parent::beforeSave();
@@ -25,6 +23,9 @@ class MoneyFund extends \ZCL\DB\Entity
         $this->detail .= "<beznal>{$this->beznal}</beznal>";
         $this->detail .= "<btran>{$this->btran}</btran>";
         $this->detail .= "<btranin>{$this->btranin}</btranin>";
+        $this->detail .= "<com>{$this->com}</com>";
+        $this->detail .= "<back>{$this->back}</back>";
+
         $this->detail .= "<bank><![CDATA[{$this->bank}]]></bank>";
         $this->detail .= "<bankacc><![CDATA[{$this->bankacc}]]></bankacc>";
 
@@ -41,8 +42,11 @@ class MoneyFund extends \ZCL\DB\Entity
 
         $xml = simplexml_load_string($this->detail);
         $this->beznal = intval($xml->beznal[0]);
+        $this->back = intval($xml->back[0]);
         $this->btran = floatval($xml->btran[0]);
         $this->btranin = floatval($xml->btranin[0]);
+        $this->com = floatval($xml->com[0]);
+
         $this->bank = (string)($xml->bank[0]);
         $this->bankacc = (string)($xml->bankacc[0]);
 
@@ -55,7 +59,7 @@ class MoneyFund extends \ZCL\DB\Entity
 
         $cnt = $conn->GetOne("select count(*) from paylist_view where mf_id = {$this->mf_id} ");
         if ($cnt > 0) {
-            return \App\Helper::l("nodelmf");
+            return "Не можна видаляти рахунок з оплатами";
         }
         return "";
     }

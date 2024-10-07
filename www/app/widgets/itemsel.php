@@ -15,20 +15,21 @@ use Zippy\Html\DataList\DataTable;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Image;
+
 /**
  * Виджет для подбора  товаров
  */
 class ItemSel extends \Zippy\Html\PageFragment
 {
-
     private $_page;
     private $_event;
     private $_pricetype;
     private $_store = 0;
-    public  $_list  = array();
-    public  $_catlist  = array();
-    public  $_prodlist = array();
+    public $_list  = array();
+    public $_catlist  = array();
+    public $_prodlist = array();
 
 
     /**
@@ -45,32 +46,34 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->_event = $event;
 
         $this->add(new Panel('witempan'))->setVisible(false) ;
-        
+
         $this->witempan->add(new Form('wisfilter'))->onSubmit($this, 'ReloadData');
 
+        $this->witempan->wisfilter->add(new CheckBox('wissearchonstore'));
         $this->witempan->wisfilter->add(new TextInput('wissearchkey'));
-        $this->witempan->wisfilter->add(new DropDownChoice('wissearchcat', Category::getList(false,false), 0));
+        $this->witempan->wisfilter->add(new DropDownChoice('wissearchcat', Category::getList(false, false), 0));
         $this->witempan->wisfilter->add(new TextInput('wissearchmanufacturer'));
+        $this->witempan->wisfilter->wissearchmanufacturer->setDataList(Item::getManufacturers());
 
         $ds = new ArrayDataSource($this, '_list');
 
         $table = $this->witempan->add(new DataTable('witemselt', $ds, true, true));
         $table->setPageSize(H::getPG());
-        $table->AddColumn(new Column('itemname', H::l('name'), true, true, true));
-        $table->AddColumn(new Column('item_code', H::l('code'), true, true, false));
-        $table->AddColumn(new Column('bar_code', H::l('barcode'), true, true, false));
-        $table->AddColumn(new Column('manufacturer', H::l('brand'), true, true, false));
+        $table->AddColumn(new Column('itemname', "Назва", true, true, true));
+        $table->AddColumn(new Column('item_code', "Артикул", true, true, false));
+        $table->AddColumn(new Column('bar_code', "Штрих-код", true, true, false));
+        $table->AddColumn(new Column('manufacturer', "Бренд", true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');
-        
-        
-        
+
+
+
         $this->add(new Panel('wcatpan'))->setVisible(false);
         $this->wcatpan->add(new DataView('wcatlist', new ArrayDataSource($this, '_catlist'), $this, 'onCatRow'));
 
         $this->add(new Panel('wprodpan'))->setVisible(false);
         $this->wprodpan->add(new DataView('wprodlist', new ArrayDataSource($this, '_prodlist'), $this, 'onProdRow'));
-         
+
     }
 
     /**
@@ -92,21 +95,21 @@ class ItemSel extends \Zippy\Html\PageFragment
      *
      */
     public function Reload($cat = false) {
-        
-        if($cat==true){
-            $this->witempan->setvisible(false);            
+
+        if($cat==true) {
+            $this->witempan->setvisible(false);
             $this->wcatpan->setvisible(true);
             $this->wprodpan->setvisible(true);
-            
+
             $this->_catlist = Category::find(" coalesce(parent_id,0)=0  ");
             $this->wcatpan->wcatlist->Reload();
-           
-        }   else {
+
+        } else {
             $this->wcatpan->setvisible(false);
             $this->wprodpan->setvisible(false);
-          $this->witempan->setvisible(true);
-          $this->witempan->wisfilter->clean();
-          $this->ReloadData($this->witempan->wisfilter);
+            $this->witempan->setvisible(true);
+            $this->witempan->wisfilter->clean();
+            $this->ReloadData($this->witempan->wisfilter);
         }
     }
 
@@ -118,6 +121,17 @@ class ItemSel extends \Zippy\Html\PageFragment
     public function ReloadData($sender) {
 
         $where = "disabled <> 1";
+              
+        if($this->witempan->wisfilter->wissearchonstore->isChecked()) {
+            $where = "   disabled <> 1 and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id ) <>0 ";
+        }
+
+        $br = \App\ACL::getBranchConstraint();
+        if (strlen($br) > 0) {
+           $where .= " and  item_id in (select item_id from store_stock where  store_id in (select store_id from stores where {$br} ))  "; 
+        }
+
+
         $text = trim($this->witempan->wisfilter->wissearchkey->getText());
         $man = trim($this->witempan->wisfilter->wissearchmanufacturer->getText());
         $cat = $this->witempan->wisfilter->wissearchcat->getValue();
@@ -137,11 +151,11 @@ class ItemSel extends \Zippy\Html\PageFragment
             $where = $where . " and  manufacturer like {$man}      ";
         }
 
-
-        $list = Item::find($where);
+        //$where)   ;
+        
 
         $this->_list = array();
-        foreach ($list as $item) {
+        foreach (Item::findYield($where) as $item) {
 
             if (strlen($this->_pricetype) > 0) {
                 $item->price = $item->getPrice($this->_pricetype, $this->_store);
@@ -152,7 +166,7 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $this->witempan->witemselt->Reload();
     }
-      //категории
+    //категории
     public function onCatRow($row) {
         $cat = $row->getDataItem();
         $row->add(new Panel('catbtn'))->onClick($this, 'onCatBtnClick');
@@ -180,7 +194,7 @@ class ItemSel extends \Zippy\Html\PageFragment
             $this->_catlist = $catlist;
             $this->wcatpan->wcatlist->Reload();
         } else {
-            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4 )  and cat_id=' . $cat->cat_id);
+            $this->_prodlist = Item::find('disabled<>1  and  item_type in (1,4,5 )  and cat_id=' . $cat->cat_id);
             $this->wcatpan->setVisible(false);
             $this->wprodpan->setVisible(true);
             $this->wprodpan->wprodlist->Reload();
@@ -191,12 +205,12 @@ class ItemSel extends \Zippy\Html\PageFragment
     // выбран  товар
     public function onProdBtnClick($sender) {
         $item = $sender->getOwner()->getDataItem();
-      //  $this->docpanel->editdetail->edittovar->setKey($item->item_id);
-      //  $this->docpanel->editdetail->edittovar->setText($item->itemname);
-     //   $this->OnChangeItem($this->docpanel->editdetail->edittovar);
+        //  $this->docpanel->editdetail->edittovar->setKey($item->item_id);
+        //  $this->docpanel->editdetail->edittovar->setText($item->itemname);
+        //   $this->OnChangeItem($this->docpanel->editdetail->edittovar);
 
         $this->_page->{$this->_event}($item->item_id, $item->itemname);
- 
+
         $this->_catlist = Category::find(" coalesce(parent_id,0)=0  ");
         $this->wcatpan->wcatlist->Reload();
 

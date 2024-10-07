@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Firm extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->firm_id = 0;
     }
@@ -27,17 +26,10 @@ class Firm extends \ZCL\DB\Entity
         $this->logo = (string)($xml->logo[0]);
         $this->stamp = (string)($xml->stamp[0]);
         $this->sign = (string)($xml->sign[0]);
-         $this->tin = (string)($xml->tin[0]);
-        $this->ppoowner = (string)($xml->ppoowner[0]);
-        $this->ppokey = (string)($xml->ppokey[0]);
-        $this->ppocert = (string)($xml->ppocert[0]);
-        $this->ppopassword = (string)($xml->ppopassword[0]);
-        $this->ppohost = (string)($xml->ppohost[0]);
-        $this->ppoport = (int)($xml->ppoport[0]);
-        $this->ppousessl = (string)($xml->ppousessl[0]);
-        $this->pposigntype = (int)($xml->pposigntype[0]);
-        $this->ppoisjks = (int)($xml->ppoisjks[0]);
-        $this->ppokeyid = (string)($xml->ppokeyid[0]);
+        $this->tin = (string)($xml->tin[0]);
+        $this->iban = (string)($xml->iban[0]);
+        $this->payname = (string)($xml->payname[0]);
+        $this->vdoc = (string)($xml->vdoc[0]);
 
         parent::afterLoad();
     }
@@ -50,18 +42,11 @@ class Firm extends \ZCL\DB\Entity
         $this->details .= "<logo><![CDATA[{$this->logo}]]></logo>";
         $this->details .= "<stamp><![CDATA[{$this->stamp}]]></stamp>";
         $this->details .= "<sign><![CDATA[{$this->sign}]]></sign>";
-        $this->details .= "<ppoowner><![CDATA[{$this->ppoowner}]]></ppoowner>";
-        $this->details .= "<ppocert><![CDATA[{$this->ppocert}]]></ppocert>";
-        $this->details .= "<ppokey><![CDATA[{$this->ppokey}]]></ppokey>";
-        $this->details .= "<ppopassword>{$this->ppopassword}</ppopassword>";
-        $this->details .= "<ppohost>{$this->ppohost}</ppohost>";
-        $this->details .= "<ppoport>{$this->ppoport}</ppoport>";
-        $this->details .= "<ppousessl>{$this->ppousessl}</ppousessl>";
-        $this->details .= "<pposigntype>{$this->pposigntype}</pposigntype>";
-        $this->details .= "<ppokeyid>{$this->ppokeyid}</ppokeyid>";
-        $this->details .= "<ppoisjks>{$this->ppoisjks}</ppoisjks>";
         $this->details .= "<inn>{$this->inn}</inn>";
+        $this->details .= "<iban>{$this->iban}</iban>";
+        $this->details .= "<vdoc>{$this->vdoc}</vdoc>";
 
+        $this->details .= "<payname><![CDATA[{$this->payname}]]></payname>";
         $this->details .= "<phone>{$this->phone}</phone>";
         $this->details .= "<tin>{$this->tin}</tin>";
         $this->details .= "</details>";
@@ -74,9 +59,9 @@ class Firm extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = " select count(*) from contracts where firm_id = {$this->firm_id} ";
         $cntc = $conn->GetOne($sql);
-        $sql = " select count(*) from documents where content like '%<firm_id>{$this->firm_id}</firm_id>%'   ";
+        $sql = " select count(*) from documents where firm_id = {$this->firm_id}  ";
         $cntd = $conn->GetOne($sql);
-        return ($cntc > 0 || $cntd > 0) ? \App\Helper::l('nodelfirm') : "";
+        return ($cntc > 0 || $cntd > 0) ? 'Не можна видаляти компанію, яка використовується' : "";
     }
 
     public static function getList() {

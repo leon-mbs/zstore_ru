@@ -22,7 +22,6 @@ use Zippy\Html\Panel;
  */
 class SalaryList extends \App\Pages\Base
 {
-
     private $_doc = null;
 
     /**
@@ -33,7 +32,7 @@ class SalaryList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('SalaryList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -85,7 +84,7 @@ class SalaryList extends \App\Pages\Base
         if ($doc->document_id == @$this->_doc->document_id) {
             $row->setAttribute('class', 'table-success');
         }
-         
+
     }
 
 
@@ -144,7 +143,6 @@ class SalaryList extends \App\Pages\Base
  */
 class SalListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

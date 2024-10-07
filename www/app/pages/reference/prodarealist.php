@@ -15,7 +15,6 @@ use Zippy\Html\Panel;
 //Производственные  участки
 class ProdAreaList extends \App\Pages\Base
 {
-
     private $_pa;
 
     public function __construct() {
@@ -79,7 +78,7 @@ class ProdAreaList extends \App\Pages\Base
 
         $this->_pa->pa_name = $this->padetail->editpa_name->getText();
         if ($this->_pa->pa_name == '') {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
 

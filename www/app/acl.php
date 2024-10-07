@@ -2,15 +2,15 @@
 
 namespace App;
 
-use App\Application as App;
-use App\Helper as H;
+use \App\Application as App;
+use \App\Helper as H;
+use \App\Entity\User;
 
 /**
  * Класс  для  управления доступом к метаобьектам
  */
 class ACL
 {
-
     private static $_metas     = array();
     private static $_metasdesc = array();
 
@@ -44,13 +44,13 @@ class ACL
         }
 
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccessviewreport', self::$_metasdesc[$rep]));
+            System::setErrorMsg("Немає права перегляду звіту ". self::$_metasdesc[$rep]);
             App::RedirectError();
         }
         return false;
     }
 
-    //проверка  на  доступ  к  справочнику 
+    //проверка  на  доступ  к  справочнику
     public static function checkShowRef($ref) {
         if (System::getUser()->rolename == 'admins') {
             return true;
@@ -65,7 +65,7 @@ class ACL
             return true;
         }
 
-        System::setErrorMsg(H::l('aclnoaccessviewref', self::$_metasdesc[$ref]));
+        System::setErrorMsg("Немає права доступу до довідника ". self::$_metasdesc[$ref]);
 
         App::RedirectError();
         return false;
@@ -86,7 +86,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccesseditref', self::$_metasdesc[$ref]));
+            System::setErrorMsg("Немає права доступу до довідника ". self::$_metasdesc[$ref]);
         }
         return false;
     }
@@ -106,12 +106,12 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccessdelref', self::$_metasdesc[$ref]));
+            System::setErrorMsg("Немає права видалення із довідника " . self::$_metasdesc[$ref]);
         }
         return false;
     }
 
-    //проверка  на  доступ  к  журналу 
+    //проверка  на  доступ  к  журналу
     public static function checkShowReg($reg, $showerror = true) {
         if (System::getUser()->rolename == 'admins') {
             return true;
@@ -127,15 +127,18 @@ class ACL
         }
 
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccessviewreg', self::$_metasdesc[$reg]));
+            System::setErrorMsg("Немає права перегляду журналу  " . self::$_metasdesc[$reg]);
             App::RedirectError();
         }
         return false;
     }
 
     //проверка  на  доступ  к просмотру документа
-    public static function checkShowDoc($doc, $inreg = false, $showerror = true) {
+    public static function checkShowDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -145,7 +148,9 @@ class ACL
         if ($user->onlymy == 1 && $doc->document_id > 0) {
 
             if ($user->user_id != $doc->user_id) {
-                System::setErrorMsg(H::l('aclnoaccessviewdoc', self::$_metasdesc[$doc->meta_name]));
+                if ($showerror == true) {
+                    System::setErrorMsg("Немає права перегляду документа  " . self::$_metasdesc[$doc->meta_name]);
+                }
                 if ($inreg == false) {
                     App::RedirectError();
                 }
@@ -162,7 +167,7 @@ class ACL
 
 
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccessviewdoc', self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg("Немає права перегляду документа ".  self::$_metasdesc[$doc->meta_name]);
 
             if ($inreg == false) {
                 App::RedirectError();
@@ -172,19 +177,23 @@ class ACL
     }
 
     //проверка  на  доступ  к   редактированию документа
-    public static function checkEditDoc($doc, $inreg = false, $showerror = true) {
+    public static function checkEditDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
+  
 
         self::load();
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-
-                System::setErrorMsg(H::l('aclnoaccesseditdoc', self::$_metasdesc[$doc->meta_name]));
-
+                if ($showerror == true) {
+                    System::setErrorMsg("Немає права редагування документа " . self::$_metasdesc[$doc->meta_name]);
+                }
                 if ($inreg == false) {
                     App::RedirectError();
                 }
@@ -201,7 +210,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg(H::l('aclnoaccesseditdoc', self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg("Немає права редагування документа  ". self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -211,8 +220,11 @@ class ACL
     }
 
     //проверка  на  доступ  к   удалению документа
-    public static function checkDelDoc($doc, $inreg = false, $showerror = true) {
+    public static function checkDelDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -221,9 +233,9 @@ class ACL
 
         if ($user->onlymy == 1 && $doc->document_id > 0) {
             if ($user->user_id != $doc->user_id) {
-
-                System::setErrorMsg(H::l('aclnoaccessdeldoc', self::$_metasdesc[$doc->meta_name]));
-
+                if ($showerror == true) {
+                    System::setErrorMsg("Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
+                }
                 if ($inreg == false) {
                     App::RedirectError();
                 }
@@ -240,7 +252,7 @@ class ACL
 
         if ($showerror == true) {
 
-            System::setErrorMsg(H::l('aclnoaccessdeldoc', self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg("Немає права видалення документа " . self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -256,8 +268,11 @@ class ACL
      * @param mixed $inreg в жернале - если нет перебрасывать на  домашнюю страницу
      * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
      */
-    public static function checkExeDoc($doc, $inreg = false, $showerror = true) {
+    public static function checkExeDoc($doc, $inreg = false, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -270,7 +285,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccessexedoc', self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg("Немає права проведення документа " . self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -285,8 +300,11 @@ class ACL
      * @param mixed $doc документ
      * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
      */
-    public static function checkChangeStateDoc($doc, $inreg = true, $showerror = true) {
+    public static function checkChangeStateDoc($doc, $inreg = true, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -299,7 +317,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccessstatedoc', self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg("Немає права зміни статусу документа " . self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -314,8 +332,11 @@ class ACL
      * @param mixed $doc документ
      * @param mixed $showerror показывать  сообщение  об ошибке иначе просто  вернуть  false
      */
-    public static function checkCancelDoc($doc, $inreg = true, $showerror = true) {
+    public static function checkCancelDoc($doc, $inreg = true, $showerror = true,$user_id=0) {
         $user = System::getUser();
+        if($user_id >0) {
+            $user = User::load($user_id);
+        }
         if ($user->rolename == 'admins') {
             return true;
         }
@@ -328,7 +349,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccesscanceldoc', self::$_metasdesc[$doc->meta_name]));
+            System::setErrorMsg("Немає права відміни документа ". self::$_metasdesc[$doc->meta_name]);
             if ($inreg == false) {
                 App::RedirectError();
             }
@@ -352,7 +373,7 @@ class ACL
             return true;
         }
         if ($showerror == true) {
-            System::setErrorMsg(H::l('aclnoaccessviewser', self::$_metasdesc[$ser]));
+            System::setErrorMsg("Немає права доступу до сторінки " . self::$_metasdesc[$ser]);
 
             App::RedirectError();
         }
@@ -403,10 +424,10 @@ class ACL
         if ($id > 0) {
             return $id;
         }
-        \App\System::setErrorMsg(\App\Helper::l('selectbranch'));
+        \App\System::setErrorMsg('Для створення документа потрібно вибрати конкретну філію');
         \App\Application::Redirect("\\App\\Pages\\Main");
     }
- 
+
     public static function getCurrentBranch() {
         $options = \App\System::getOptions('common');
         if ($options['usebranch'] != 1) {
@@ -418,7 +439,7 @@ class ACL
         }
         return 0;
     }
- 
+
 
     /**
      * Возвращает  список складов для подстановки  в запрос по текущим  филиалам
@@ -526,7 +547,7 @@ class ACL
     }
 
     /**
-     * Возвращает  список филиалов для подстановки  в запрос  в  виде  списка  цифр
+     * Возвращает  список филиалов для подстановки  в запрос  в  виде  списка  цифр  например в  нативные  sql запросы
      *
      */
     public static function getBranchIDsConstraint() {

@@ -6,13 +6,15 @@ use App\Entity\User;
 
 /**
  * Класс  содержащи  методы  работы   с  наиболее  важными
- * системмными  данными
+ * системными  данными
  */
 class System
 {
-    const CURR_VERSION= "6.6.3";
+    public const CURR_VERSION = "6.11.6";
+    public const PREV_VERSION = "6.11.5";
+    public const REQUIRED_DB  = "6.11.0";
 
-    private static $_options = array();   //  для кеширования  
+    private static $_options = array();   //  для кеширования
     private static $_cache   = array();   //  для кеширования
 
     /**
@@ -39,13 +41,13 @@ class System
 
     public static function getBranch() {
 
-        return Session::getSession()->branch_id;
+        return intval(Session::getSession()->branch_id);
     }
 
     public static function setBranch(int $branch_id) {
         Session::getSession()->branch_id = $branch_id;
     }
-  
+
     public static function getCustomer() {
 
         return (int)Session::getSession()->customer_id;
@@ -70,7 +72,7 @@ class System
      * @param mixed $group
      * @param mixed $isserialise
      */
-    public static function getOptions($group,$isserialise=true) {
+    public static function getOptions($group, $isserialise=true) {
 
         if (isset(self::$_options[$group])) {
             return self::$_options[$group];
@@ -79,16 +81,19 @@ class System
 
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
         if (strlen($rs) > 0) {
-            if(!$isserialise) return $rs;  //неупакопано
-            
-            $d =    @unserialize(@base64_decode($rs) );
-            if(!is_array($d) ) {
-               $d =  @unserialize( $rs );; //для  совместивости   
+            if(!$isserialise) {
+                self::$_options[$group] = $rs;
+                return $rs;
+            }  //неупакопано
+
+            $d =    @unserialize(@base64_decode($rs));
+            if(!is_array($d)) {
+                $d =  @unserialize($rs); //для  совместивости
             }
             self::$_options[$group] = $d;
         }
-         
-        return self::$_options[$group] ?? ''  ;
+
+        return self::$_options[$group] ?? [];
     }
 
     /**
@@ -113,12 +118,25 @@ class System
     public static function setOptions($group, $options) {
         self::$_options[$group] = $options;
         $options = serialize($options);
-        $options = base64_encode($options) ;    
+        $options = base64_encode($options) ;
         $conn = \ZDB\DB::getConnect();
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
     }
+    /**
+    * установить отьедный параметр
+    *
+    * @param mixed $group
+    * @param mixed $option
+    * @param mixed $value
+    */
+    public static function setOption($group, $option, $value) {
 
+        $options = self::getOptions($group);
+        $options[$option]  = $value;
+
+        self::setOptions($group, $options) ;
+    }
     public static function setCache($key, $data) {
         self::$_cache[$key] = $data;
     }
@@ -139,18 +157,19 @@ class System
         return Session::getSession()->smsg;
     }
 
-  
-    public static function setErrorMsg($msg,$toppage=false) {
-       if($toppage) 
-          Session::getSession()->emsgtp = $msg;
-       else 
-          Session::getSession()->emsg = $msg;   
+
+    public static function setErrorMsg($msg, $toppage=false) {
+        if($toppage) {
+            Session::getSession()->emsgtp = $msg;
+        } else {
+            Session::getSession()->emsg = $msg;
+        }
     }
 
-    public static function getErrorMsg( ) {
+    public static function getErrorMsg() {
         return Session::getSession()->emsg;
     }
-    public static function getErrorMsgTopPage( ) {
+    public static function getErrorMsgTopPage() {
         return Session::getSession()->emsgtp;
     }
 
@@ -162,15 +181,36 @@ class System
         return Session::getSession()->wmsg;
     }
 
-    public static function setInfoMsg($msg ) {
-        Session::getSession()->imsg = $msg;
+    public static function setInfoMsg($msg, $toppage=false) {
+
+        if($toppage) {
+            Session::getSession()->imsgtp = $msg;
+        } else {
+            Session::getSession()->imsg = $msg;
+        }
+    }
+    public static function getInfoMsgTopPage() {
+        return Session::getSession()->imsgtp;
     }
 
+   
     public static function getInfoMsg() {
         return Session::getSession()->imsg;
     }
     public static function clean() {
         self::$_cache = [] ;
-        self::$_cache = [] ;
+
     }
+
+
+    public static function useCron() {
+        return  \App\Helper::getKeyVal('cron') ?? false;
+    }
+    public static function useEmail() {
+        $o=  self::getOption('common', 'noemail') ?? false;
+        return !$o;
+
+    }
+
+
 }

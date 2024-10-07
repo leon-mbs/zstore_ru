@@ -6,6 +6,7 @@ use App\Entity\Category;
 use App\Entity\Item;
 use App\Entity\Stock;
 use App\Entity\Store;
+use App\Entity\Entry;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
@@ -15,28 +16,55 @@ use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use App\Application as App;
 
+/**
+* Товари на складі
+*/
 class ItemList extends \App\Pages\Base
 {
-
-    public  $_item;
-    private $_total;
+    public $_item;
+   
 
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('ItemList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
-        $this->filter->add(new DropDownChoice('searchcat', Category::getList(), 0));
+
+        $catlist = array();
+        $catlist[-1] = "Без категорії";
+        foreach (Category::getList() as $k => $v) {
+            $catlist[$k] = $v;
+        }
+
+        $this->filter->add(new DropDownChoice('searchcat', $catlist, 0));
+
+
+        $prices = [];
+        if($this->_tvars["noshowpartion"] == false) {
+            $prices['price'] = "Закупівельна ціна";
+        }
+
+        foreach(Item::getPriceTypeList() as $k=>$v) {
+            $prices[$k] = $v ;
+        }
+
+        $keys=array_keys($prices);
+        $p=array_shift($keys);
+
+        $this->filter->add(new DropDownChoice('searchprice', $prices, $p));
         $storelist = Store::getList() ;
-        
+
         if(\App\System::getUser()->showotherstores) {
             $storelist = Store::getListAll() ;
-            
-        }         
+
+        }
+        $this->filter->add(new DropDownChoice('searchtype', [], 0));
+        $this->filter->add(new DropDownChoice('searchqty', [], 0));
         $this->filter->add(new DropDownChoice('searchstore', $storelist, 0));
         $this->filter->add(new TextInput('searchbrand'));
         $this->filter->searchbrand->setDataList(Item::getManufacturers());
@@ -49,6 +77,7 @@ class ItemList extends \App\Pages\Base
         $this->itempanel->add(new \Zippy\Html\DataList\Paginator('pag', $this->itempanel->itemlist));
 
         $this->itempanel->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->itempanel->add(new ClickLink('printqty', $this, 'onprint', true));
         $this->itempanel->add(new Label('totamount'));
 
         $this->add(new Panel('detailpanel'))->setVisible(false);
@@ -56,45 +85,53 @@ class ItemList extends \App\Pages\Base
         $this->detailpanel->add(new Label('itemdetname'));
 
         $this->detailpanel->add(new DataView('stocklist', new DetailDataSource($this), $this, 'detailistOnRow'));
-
+        $this->detailpanel->add(new Form('iformbay'))->onSubmit($this,'OnToPay');
+        $this->detailpanel->iformbay->add(new TextInput('iformbayqty'));
+ 
         $this->OnFilter(null);
 
-        $options = \App\System::getOptions('common');
-
-        $this->_tvars['hp1'] = strlen($options['price1']) > 0 ? $options['price1'] : false;
-        $this->_tvars['hp2'] = strlen($options['price2']) > 0 ? $options['price2'] : false;
-        $this->_tvars['hp3'] = strlen($options['price3']) > 0 ? $options['price3'] : false;
-        $this->_tvars['hp4'] = strlen($options['price4']) > 0 ? $options['price4'] : false;
-        $this->_tvars['hp5'] = strlen($options['price5']) > 0 ? $options['price5'] : false;
-
+         
 
     }
 
-    public function itemlistOnRow(\Zippy\Html\DataList\DataRow $row) {
+    public function itemlistOnRow(  $row) {
         $item = $row->getDataItem();
         $store = $this->filter->searchstore->getValue();
+        $row->add(new ClickLink('itemname',$this, 'showOnClick'))->setValue($item->itemname);
+   
 
-        $row->add(new Label('itemname', $item->itemname));
         $row->add(new Label('code', $item->item_code));
         $row->add(new Label('brand', $item->manufacturer));
         $row->add(new Label('msr', $item->msr));
 
         $qty = $item->getQuantity($store);
         $row->add(new Label('iqty', H::fqty($qty)));
-        $row->add(new Label('minqty', H::fqty($item->minqty)));
-        $am = $item->getAmount($store);
+      //  $row->add(new Label('minqty', H::fqty($item->minqty)));
+      
+        $inprice="";
+        if($this->_tvars['noshowpartion'] != true) {
+          $inprice = $item->getPartion($store);  
+        }
+        $row->add(new Label('inprice', H::fa($inprice)));
+        $pt = $this->filter->searchprice->getValue();
+        if($pt=='price') {
+            $am = H::fa( $inprice)* H::fqty( $item->getQuantity($store));
+            
+            $pr = ''; 
+           
+        } else {
+            $pr= H::fa( $item->getPrice($pt, $store) );
+            
+            $am = $qty * $pr;
+        }
+
+
+        $row->add(new Label('iprodprice',$pr ));
         $row->add(new Label('iamount', H::fa(abs($am))));
 
         $row->add(new Label('cat_name', $item->cat_name));
 
-        $plist = array();
-
-        $row->add(new Label('iprice1', H::fa($item->getPrice('price1', $store))));
-        $row->add(new Label('iprice2', H::fa($item->getPrice('price2', $store))));
-        $row->add(new Label('iprice3', H::fa($item->getPrice('price3', $store))));
-        $row->add(new Label('iprice4', H::fa($item->getPrice('price4', $store))));
-        $row->add(new Label('iprice5', H::fa($item->getPrice('price5', $store))));
-
+ 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         if ($qty < 0) {
             $row->setAttribute('class', 'text-danger');
@@ -108,12 +145,18 @@ class ItemList extends \App\Pages\Base
         if ($item->image_id == 0) {
             $row->imagelistitem->setVisible(false);
         }
-
+        
+        $store = $this->filter->searchstore->getValue();
+           
 
     }
 
     public function OnFilter($sender) {
-        $this->_total = 0;
+   
+         $pt = $this->filter->searchprice->getValue();
+         $this->_tvars['nohowprodprice'] = $pt == 'price';  
+         
+
         $this->itempanel->itemlist->Reload();
 
         $am = $this->getTotalAmount();
@@ -122,33 +165,45 @@ class ItemList extends \App\Pages\Base
 
     public function getTotalAmount() {
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
-        if (strlen($cstr) > 0) {
-            $cstr = "    store_id in ({$cstr})  and   ";
-        }
-
-        $conn = \ZDB\DB::getConnect();
-        $sql = "select  coalesce(sum(qty*partion),0) from store_stock_view where {$cstr} qty <>0 and item_id in (select item_id from items where disabled<>1 ) ";
-
-
-        $cat = $this->filter->searchcat->getValue();
         $store = $this->filter->searchstore->getValue();
-        if ($store > 0) {
-            $sql = $sql . " and  store_id={$store}  ";
+        $pt = $this->filter->searchprice->getValue();
+
+        $src = new ItemDataSource($this) ;
+        $sqty = $this->filter->searchqty->getValue();
+ 
+        $items = $src->getItems(-1, -1) ;
+        $total = 0;
+        foreach($items as $item) {
+            $qty = $item->getQuantity($store); 
+            
+            if($pt=='price') {
+                $am = $item->getAmount($store);
+                if( $sqty==0 && $qty >0) {
+                   $total += $am;
+                }
+                if( $sqty==1 && $qty <0) {
+                   $total += $am ;
+                }
+                if( $sqty==2 ) {
+                   $total += $am ;
+                }
+            } else {
+                $am= $qty * $item->getPrice($pt, $store);
+                if( $sqty==0 && $qty >0) {
+                   $total += $am;
+                }
+                if( $sqty==1 && $qty <0) {
+                   $total += $am ;
+                }
+                if( $sqty==2 ) {
+                   $total += $am ;
+                }
+            }
+
         }
 
 
-        $text = trim($this->filter->searchkey->getText());
-        if (strlen($text) > 0) {
-
-            $text = Stock::qstr('%' . $text . '%');
-            $sql = $sql . "  and (itemname like {$text} or item_code like {$text}    )  ";
-            $cat = 0;
-        }
-        if ($cat > 0) {
-            $sql = $sql . " and cat_id=" . $cat;
-        }
-        return $conn->GetOne($sql);
+        return $total;
     }
 
     public function detailistOnRow($row) {
@@ -157,7 +212,7 @@ class ItemList extends \App\Pages\Base
         $row->add(new Label('snumber', $stock->snumber));
         $row->add(new Label('sdate', ''));
 
-        if (strlen($stock->snumber) > 0 && strlen($stock->sdate) > 0) {
+        if (strlen($stock->snumber ?? '') > 0 && strlen($stock->sdate ?? '') > 0) {
             $row->sdate->setText(H::fd($stock->sdate));
         }
         $row->add(new Label('partion', H::fa($stock->partion)));
@@ -165,39 +220,18 @@ class ItemList extends \App\Pages\Base
 
         $row->add(new Label('qty', H::fqty($stock->qty)));
         $row->add(new Label('amount', H::fa($stock->qty * $stock->partion)));
-        $row->add(new Label('rate', ''));
-        $item = Item::load($stock->item_id);
-        if ($this->_tvars["useval"] && $item->rate > 0) {
-            $row->rate->setText($item->rate . H::getValName($item->val));
-        }
+
         if ($stock->qty < 0) {
             $row->setAttribute('class', 'text-danger');
         }
-
-        $plist = array();
-        if ($item->price1 > 0) {
-            $plist[] = $item->getPrice('price1', 0, $stock->partion);
-        }
-        if ($item->price2 > 0) {
-            $plist[] = $item->getPrice('price2', 0, $stock->partion);
-        }
-        if ($item->price3 > 0) {
-            $plist[] = $item->getPrice('price3', 0, $stock->partion);
-        }
-        if ($item->price4 > 0) {
-            $plist[] = $item->getPrice('price4', 0, $stock->partion);
-        }
-        if ($item->price5 > 0) {
-            $plist[] = $item->getPrice('price5', 0, $stock->partion);
+        if ($stock->qty == 0) {
+            $row->setAttribute('class', 'text-warn');
         }
 
-        $row->add(new Label('price', implode(',', $plist)));
+     
         $row->add(new \Zippy\Html\Link\RedirectLink("createmove", "\\App\\Pages\\Doc\\MovePart", array(0, $stock->stock_id)))->setVisible($stock->qty < 0);
 
-        if (\App\System::getUser()->noshowpartion  ) {
-          //  $row->partion->setText('');
-          //   $row->amount->setText('');
-        }
+
     }
 
     public function backOnClick($sender) {
@@ -208,31 +242,131 @@ class ItemList extends \App\Pages\Base
 
     public function showOnClick($sender) {
         $this->_item = $sender->getOwner()->getDataItem();
+        $options = \App\System::getOptions('common');
+        
+        $item = Item::load($this->_item->item_id);
         $this->itempanel->setVisible(false);
         $this->detailpanel->setVisible(true);
         $this->detailpanel->itemdetname->setText($this->_item->itemname);
         $this->detailpanel->stocklist->Reload();
+        
+        $store = $this->filter->searchstore->getValue();
+        
+        $this->_tvars['i_plist'] =[];
 
-        $rows = $this->detailpanel->stocklist->getDataRows();
-        $st = array();
-        foreach ($rows as $row) {
-            $stock = $row->getDataItem();
-            $name = $stock->itemname;
-            if (strlen($stock->snumber) > 0) {
-                $name = $name . " ({$stock->snumber})";
-            }
-            $name = $name . ', ' . H::fa($stock->partion);
-            $st[$stock->stock_id] = $name;
+ 
+        if ($this->_item->price1 > 0) {
+            $p = $this->_item->getPrice('price1', $store);
+
+            $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price1'] ,'i_price'=>$p); 
         }
+        if ($this->_item->price2 > 0) {
+            $p = $this->_item->getPrice('price2', $store);
+            $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price2'],'i_price'=>$p); 
+        }
+        if ($this->_item->price3 > 0) {
+            $p = $this->_item->getPrice('price3', $store);
+            $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price3'],'i_price'=>$p); 
+        }
+        if ($this->_item->price4 > 0) {
+            $p = $this->_item->getPrice('price4', $store);
+            $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price4'],'i_price'=>$p); 
+        }
+        if ($this->_item->price5 > 0) {
+            $p = $this->_item->getPrice('price5', $store);
+            $this->_tvars['i_plist'][]=array('i_pricename'=>$options['price5'],'i_price'=>$p); 
+        }
+      
+  
+        $this->_tvars["i_lastsell"] ="";             
+        $this->_tvars["i_lastbay"] ="";             
+        $st="";
+        if($store >0) {
+            $st = " and stock_id in (select stock_id from store_stock  where  store_id={$store}) " ;
+        }
+    
+     
+        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st}  and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood','ServiceAct')  ) ","entry_id desc")  ;
+        if($e != null)  {
+           $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
+           $this->_tvars["i_lastsell"] =  $d->document_number .' вiд '. H::fd($d->document_date) .'.'  ; 
+           $this->_tvars["i_lastsell"] .= (' Продано  '. H::fqty(0-$e->quantity) .' по '. H::fa($e->outprice)  ) ; 
+        }
+
+        $this->detailpanel->iformbay->setVisible(false);
+
+        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity > 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsReceipt')  ) ","entry_id desc")  ;
+        if($e != null)  {
+           $d = \App\Entity\Doc\Document::load($e->document_id)  ;    
+           $this->_tvars["i_lastbay"] =  $d->document_number .' вiд '. H::fd($d->document_date) .'.'  ; 
+           $this->_tvars["i_lastbay"] .= (' Закуплено  '. H::fqty($e->quantity) .' по '. H::fa($e->partion)  ) ; 
+           
+           $this->detailpanel->iformbay->setVisible(true);
+           $this->detailpanel->iformbay->iformbayqty->setText($e->quantity);
+           
+           
+        }
+        $this->_tvars["i_rate"] ='';
+        if ($this->_tvars["useval"] && $item->rate > 0) {
+           $this->_tvars["i_rate"]  = $item->rate . $item->val;
+        }     
+        
+        
+        
+        $this->_tvars["i_avgout"] ='';
+        $e = \App\Entity\Entry::getFirst("item_id={$this->_item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ","entry_id asc")  ;
+        if($e != null) {
+
+
+            $d1 = new \DateTime( date('Y-m-d', $e->document_date ));
+            $d2 = new \DateTime( date('Y-m-d',time() ));
+
+            $interval = date_diff($d1,$d2);
+
+            if($interval->days >30)  {
+                $conn=\ZDB\db::getConnect()  ;
+                $sql="select sum(0-quantity) from entrylist_view where item_id={$item->item_id} and quantity < 0 {$st} and document_id in (select document_id from documents_view where  meta_name in ('GoodsIssue','TTN','POSCheck','OrderFood')  ) ";
+                $sell =   $conn->GetOne($sql)  ;
+                $sell =  number_format($sell/$interval->days*30, 1, '.', '');
+                $this->_tvars["i_avgout"] = "Середня продажа  {$sell} в мiс.";
+                
+                
+            }  
+            
+  
+            
+            
+        }
+        
+        
+        
     }
 
+    public function OnToPay($sender){
+       $qty=$sender->iformbayqty->getText() ;
+       if($qty >0) {
+           
+          $r = $this->addItemToCO([$this->_item->item_id,$qty]);
+          if($r==""){
+             $sender->iformbayqty->setText('') ;                 
+             $this->setSuccess('Додано') ;
+          } else {
+              $this->setError($r) ;
+          }
+       }
+       
+       
+       
+    }
+    
     public function oncsv($sender) {
         $store = $this->filter->searchstore->getValue();
         $list = $this->itempanel->itemlist->getDataSource()->getItems(-1, -1, 'itemname');
 
         $common = System::getOptions('common') ;
-        
-        
+        $pt = $this->filter->searchprice->getValue();
+
+
         $header = array();
         $data = array();
 
@@ -241,100 +375,224 @@ class ItemList extends \App\Pages\Base
         $header['C1'] = "Штрих-код";
         $header['D1'] = "Од.";
         $header['E1'] = "Категорiя";
-        $header['F1'] = "Кiл.";
-        
-        if(strlen($common['price1'])) $header['G1'] = $common['price1'];
-        if(strlen($common['price2'])) $header['H1'] = $common['price2'];
-        if(strlen($common['price3'])) $header['I1'] = $common['price3'];
-        if(strlen($common['price4'])) $header['J1'] = $common['price4'];
-        if(strlen($common['price5'])) $header['K1'] = $common['price5'];
-        
-        
+        $header['F1'] = "Бренд";
+        $header['G1'] = "Комірка";
+        $header['H1'] = "Кiл.";
+        $header['I1'] = "Обл. цiна";
+        if($this->_tvars["noshowpartion"] == true) {
+            $header['I1'] ='';
+        }
+
+        if(strlen($common['price1'])) {
+            $header['J1'] = $common['price1'];
+        }
+        if(strlen($common['price2'])) {
+            $header['K1'] = $common['price2'];
+        }
+        if(strlen($common['price3'])) {
+            $header['L1'] = $common['price3'];
+        }
+        if(strlen($common['price4'])) {
+            $header['M1'] = $common['price4'];
+        }
+        if(strlen($common['price5'])) {
+            $header['N1'] = $common['price5'];
+        }
+
+        $header['O1'] = "На суму";
+        $header['P1'] = "Опис";
+
         $i = 1;
         foreach ($list as $item) {
+            
+            $itemor = Item::load($item->item_id) ;
+            
             $i++;
             $data['A' . $i] = $item->itemname;
             $data['B' . $i] = $item->item_code;
             $data['C' . $i] = $item->bar_code;
             $data['D' . $i] = $item->msr;
             $data['E' . $i] = $item->cat_name;
+            $data['F' . $i] = $item->manufacturer;
+            $data['G' . $i] = $itemor->cell;
             $qty = $item->getQuantity($store);
-            $data['F' . $i] = H::fqty($qty);
+            $pr = $item->getPartion($store);
             
-             
+            
+            $data['H' . $i] = H::fqty($qty);
+            $data['I' . $i] = H::fa($pr);
+            if($this->_tvars["noshowpartion"] == true) {
+                $data['I' . $i] ='';
+            }
+
+
             if ($item->price1 > 0) {
-                $data['G' . $i] = $item->getPrice('price1', $store);
+                $data['J' . $i] = $item->getPrice('price1', $store);
             }
             if ($item->price2 > 0) {
-                $data['H' . $i] = $item->getPrice('price2', $store);
+                $data['K' . $i] = $item->getPrice('price2', $store);
             }
             if ($item->price3 > 0) {
-                $data['I' . $i] = $item->getPrice('price3', $store);
+                $data['L' . $i] = $item->getPrice('price3', $store);
             }
             if ($item->price4 > 0) {
-                $data['J' . $i] = $item->getPrice('price4', $store);
-            }               
-            if ($item->price5 > 0) {
-                $data['K' . $i] = $item->getPrice('price5', $store);
+                $data['M' . $i] = $item->getPrice('price4', $store);
             }
-        
-        
+            if ($item->price5 > 0) {
+                $data['N' . $i] = $item->getPrice('price5', $store);
+            }
+
+            if($pt=='price') {
+                $am = $qty * $pr;
+            } else {
+                $am = $qty * $item->getPrice($pt, $store) ;
+            }
+            $data['O' . $i] = H::fa(abs($am));
+            $data['P' . $i] = $itemor->description;
+
         }
-        
+
 
         H::exportExcel($data, $header, 'itemlist.xlsx');
+    }
+
+    public function onprint($sender) {
+        $store = $this->filter->searchstore->getValue();
+
+        $items = array();
+        $onpage = (new ItemDataSource($this))->getItems(-1, -1, "itemname") ;
+        foreach ($onpage as $it) {
+
+            $qty = intval($it->getQuantity($store));
+            if($qty >0) {
+                $it->quantity = $qty;
+                $items[] = $it;
+            }
+
+
+        }
+        if (count($items) == 0) {
+            return;
+        }
+        if(intval(\App\System::getUser()->prtypelabel) == 0) {
+
+            $htmls = H::printItems($items);
+
+            if(\App\System::getUser()->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $htmls;
+
+                $this->addAjaxResponse("   $('.seldel').prop('checked',null); window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            } else {
+                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ;$('.seldel').prop('checked',null); $('#pform').modal()");
+
+            }
+            return;
+        }
+
+        try {
+
+            $xml = H::printItemsEP($items);
+            $buf = \App\Printer::xml2comm($xml);
+            $b = json_encode($buf) ;
+
+            $this->addAjaxResponse("$('.seldel').prop('checked',null); sendPSlabel('{$b}') ");
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }
+
     }
 
 }
 
 class ItemDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
         $this->page = $page;
     }
 
-    private function getWhere() {
+    private function getWhere($p=false) {
         $conn = $conn = \ZDB\DB::getConnect();
 
         $form = $this->page->filter;
-        $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $sqty = $form->searchqty->getValue();
+        $where = "   disabled <> 1 ";
+   
+
+
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = "    store_id in ({$cstr})  and   ";
+            $cstr = "    store_id in ({$cstr})      ";
         }
         if(\App\System::getUser()->showotherstores) {
-            $cstr =""; ;
-            
-        }   
+            $cstr ="";
+
+        }
+        if(strlen(trim($cstr))==0) {
+            $cstr = "1=1 ";
+        }
+        
         $cat = $form->searchcat->getValue();
         $store = $form->searchstore->getValue();
 
-        if ($cat > 0) {
-            $where = $where . " and cat_id=" . $cat;
+        if ($cat != 0) {
+            if ($cat == -1) {
+                $where = $where . " and cat_id=0";
+            } else {
+
+
+                $c = Category::load($cat) ;
+                $ch = $c->getChildren();
+                $ch[]=$cat;
+
+                $cats = implode(",", $ch)  ;
+                $where = $where . " and cat_id in ({$cats}) " ;
+            }
         }
+        $str="";
         if ($store > 0) {
-            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}  qty <> 0 and store_id={$store}) ";
+            $where = $where . " and item_id in (select item_id from store_stock where {$cstr}   and store_id={$store}) ";
+            $str .= " and store_id={$store}";
         } else {
-            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  qty <> 0) ";
+            $where = $where . " and item_id in (select item_id from store_stock where  {$cstr}  ) ";
         }
+        
+        if($sqty==0) {
+           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id {$str} ) >0 ";
+        }
+        if($sqty==1) {
+           $where .= "  and  ( select coalesce(sum(st1.qty),0 ) from store_stock st1 where st1.item_id= items_view.item_id {$str}) <0 ";
+        }
+        $stype = $form->searchtype->getValue();
+        if ($stype > 0) {
+            $where = $where . " and   item_type={$stype}  ";
+        }     
+        
         $text = trim($form->searchkey->getText());
         if (strlen($text) > 0) {
 
-            $text = Stock::qstr('%' . $text . '%');
+            if ($p == false) {
+                $text = Item::qstr('%' . $text . '%');
+                $where = $where . " and (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  or description like {$text} )  ";
+            } else {
+                $text = Item::qstr($text);
+                $where = $where . " and (itemname = {$text} or item_code = {$text}  or bar_code = {$text} or item_id in (select item_id from store_stock where snumber like {$text} ) )  ";
+            }
 
-          //  $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
 
-            $where .= " and   (itemname like {$text} or item_code like {$text}  or bar_code like {$text}  )  ";
         }
         $brand = $form->searchbrand->getText();
+
         if (strlen($brand) > 0) {
-           $brand = Item::qstr($brand);
-           $where = $where . " and item_id in (select item_id from items where  manufacturer = {$brand}  ) ";
-            
+            $brand = Item::qstr($brand);
+            $where = $where . " and item_id in (select item_id from items where  manufacturer = {$brand}  ) ";
+
         }
+
 
         return $where;
     }
@@ -345,8 +603,13 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
 
+        $l = Item::find($this->getWhere(), "itemname asc", $count, $start);
+        
+        foreach (Item::findYield($this->getWhere(true), "itemname asc", $count, $start) as $k => $v) {
+            $l[$k] = $v;
+        }
+        return $l;
 
-        return Item::find($this->getWhere(), "itemname asc", $count, $start);
     }
 
     public function getItem($id) {
@@ -357,7 +620,6 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
 class DetailDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -369,12 +631,22 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
 
         $form = $this->page->filter;
         $where = "item_id = {$this->page->_item->item_id} and   qty <> 0   ";
+        
+        
+        $cstr = \App\ACL::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "  and  store_id in ({$cstr})      ";
+        }
+        if(\App\System::getUser()->showotherstores) {
+            $cstr ="";
+
+        }          
+        $where = $where . $cstr ;
         $store = $form->searchstore->getValue();
         if ($store > 0) {
             $where = $where . " and   store_id={$store}  ";
         }
-
-
+          
         return $where;
     }
 
@@ -383,7 +655,7 @@ class DetailDataSource implements \Zippy\Interfaces\DataSource
     }
 
     public function getItems($start, $count, $sortfield = null, $asc = null) {
-        return Stock::find($this->getWhere(), "", $count, $start);
+        return Stock::find($this->getWhere(), "stock_id", $count, $start);
     }
 
     public function getItem($id) {

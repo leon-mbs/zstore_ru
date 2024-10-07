@@ -15,7 +15,6 @@ use Zippy\Html\Panel;
  */
 class ABC extends \App\Pages\Base
 {
-
     private $typelist = array();
     private $br       = '';
 
@@ -26,11 +25,11 @@ class ABC extends \App\Pages\Base
             return;
         }
 
-        $this->typelist[1] = H::l('abc1');
-        $this->typelist[2] = H::l('abc2');
-        $this->typelist[3] = H::l('abc3');
-        $this->typelist[4] = H::l('abc4');
-        $this->typelist[5] = H::l('abc5');
+        $this->typelist[1] = "Товари, Маржа";
+        $this->typelist[2] = "Постачальники, об`єм поставок";
+        $this->typelist[3] = "Покупці, об`єм продаж";
+        $this->typelist[4] = "Послуги, виторг";
+        $this->typelist[5] = "Покупці, Маржа";
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
@@ -39,7 +38,7 @@ class ABC extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('type', $this->typelist, 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
 
         $brids = \App\ACL::getBranchIDsConstraint();
@@ -53,7 +52,7 @@ class ABC extends \App\Pages\Base
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
-      
+
 
         $this->detail->setVisible(true);
     }
@@ -129,6 +128,7 @@ class ABC extends \App\Pages\Base
                        join documents_view  on entrylist_view.document_id = documents_view.document_id 
                        
                     WHERE partion  is  not null and outprice>partion and documents_view.meta_name   in('GoodsIssue', 'POSCheck','ReturnIssue','TTN','OrderFood') 
+                    AND entrylist_view.tag in(0,-1,-4)  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br} 
@@ -155,6 +155,7 @@ class ABC extends \App\Pages\Base
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
                     WHERE  partion  is  not null and   entrylist_view.quantity  >0 and meta_name in('GoodsReceipt','RetCustIssue') 
+                    AND entrylist_view.tag in(0,-2,-8)  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     AND customers.detail not like '%<isholding>1</isholding>%' 
@@ -180,7 +181,7 @@ class ABC extends \App\Pages\Base
                     FROM  entrylist_view 
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE   partion  is  not null and  entrylist_view.quantity <0 and meta_name in('GoodsIssue', 'ReturnIssue',   'POSCheck','TTN','OrderFood' )  
+                    WHERE   partion  is  not null and  entrylist_view.quantity <0 and meta_name in('GoodsIssue',  'ReturnIssue',  'POSCheck','TTN','OrderFood' )  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     AND customers.detail not like '%<isholding>1</isholding>%' 
@@ -232,7 +233,7 @@ class ABC extends \App\Pages\Base
                     FROM   entrylist_view  
                     join customers on entrylist_view.customer_id = customers.customer_id 
                     join documents_view  on entrylist_view.document_id = documents_view.document_id 
-                    WHERE partion  is  not null and outprice>partion and entrylist_view.quantity <0 and meta_name in('GoodsIssue',  'ReturnIssue',  'POSCheck','TTN','OrderFood' )  
+                    WHERE partion  is  not null and outprice>partion and entrylist_view.quantity <0 and meta_name in('GoodsIssue', 'ReturnIssue',   'POSCheck','TTN','OrderFood' )  
                     AND entrylist_view.document_date >= " . $conn->DBDate($this->filter->from->getDate()) . "
                     AND entrylist_view.document_date <= " . $conn->DBDate($this->filter->to->getDate()) . "
                     {$this->br} 

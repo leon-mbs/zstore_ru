@@ -14,18 +14,17 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Items extends \App\Pages\Base
 {
-
     public $_items = array();
 
     public function __construct() {
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
             return;
@@ -34,7 +33,7 @@ class Items extends \App\Pages\Base
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('do_connect');
+            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -49,19 +48,19 @@ class Items extends \App\Pages\Base
 
         $this->add(new Form('upd'));
         $this->upd->add(new DropDownChoice('updcat', \App\Entity\Category::getList(), 0));
-        
+
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
-     
-     
+
+
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-        
-        
- 
+
+
+
         $this->add(new Form('importform'))->onSubmit($this, 'importOnSubmit');
         $this->importform->add(new CheckBox('createcat'));
-   
-        
+
+
     }
 
     public function onCheck($sender) {
@@ -75,7 +74,9 @@ class Items extends \App\Pages\Base
         $this->_items = array();
         $modules = System::getOptions("modules");
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/articles&' . System::getSession()->octoken;
-
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.articles&' . System::getSession()->octoken;
+        }
         $json = Helper::do_curl_request($url);
         if ($json === false) {
             return;
@@ -83,7 +84,7 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
         if (!isset($data)) {
 
-            $this->setError("invalidresponse");
+            $this->setError("Невірна відповідь");
             \App\Helper::log($json);
             return;
         }
@@ -94,8 +95,8 @@ class Items extends \App\Pages\Base
             if ($cat > 0) {
                 $where .= " and cat_id=" . $cat;
             }
-            $items = Item::find($where, "itemname");
-            foreach ($items as $item) {
+            
+            foreach (Item::findYield($where, "itemname") as $item) {
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
@@ -113,8 +114,8 @@ class Items extends \App\Pages\Base
             $this->exportform->newitemlist->Reload();
             $this->exportform->ecat->setValue(0);
         } else {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
             $this->setErrorTopPage($data['error']);
         }
     }
@@ -148,7 +149,7 @@ class Items extends \App\Pages\Base
         }
         if (count($elist) == 0) {
 
-            $this->setError('noselitem');
+            $this->setError('Не обрано товар');
             return;
         }
         $data = json_encode($elist);
@@ -159,6 +160,10 @@ class Items extends \App\Pages\Base
         );
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/addproducts&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.addproducts&' . System::getSession()->octoken;
+        }
+
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
             return;
@@ -166,12 +171,12 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('exported_items', count($elist));
+        $this->setSuccess("Експортовано ".count($elist)." товарів");
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -180,10 +185,10 @@ class Items extends \App\Pages\Base
     public function onUpdateQty($sender) {
         $modules = System::getOptions("modules");
         $cat = $this->upd->updcat->getValue();
-        
+
         $elist = array();
-        $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-        foreach ($items as $item) {
+        
+        foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }
@@ -198,6 +203,9 @@ class Items extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updatequantity&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updatequantity&' . System::getSession()->octoken;
+        }
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
             return;
@@ -205,21 +213,21 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('refreshed');
+        $this->setSuccess('Оновлено');
     }
 
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $cat = $this->upd->updcat->getValue();
- 
+
         $elist = array();
-        $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-         foreach ($items as $item) {
+        
+        foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }
@@ -232,6 +240,10 @@ class Items extends \App\Pages\Base
             'data' => $data
         );
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/updateprice&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.updateprice&' . System::getSession()->octoken;
+        }
+
         $json = Helper::do_curl_request($url, $fields);
         if ($json === false) {
             return;
@@ -239,30 +251,34 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('refreshed');
+        $this->setSuccess('Оновлено');
     }
 
     public function importOnSubmit($sender) {
         $modules = System::getOptions("modules");
         $common = System::getOptions("common");
-      
+
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('do_connect');
+            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
             return;
-        }        
-        
-        
-        
+        }
+
+
+
         $elist = array();
 
         $url = $modules['ocsite'] . '/index.php?route=api/zstore/getproducts&' . System::getSession()->octoken;
+        if($modules['ocv4']==1) {
+            $url = $modules['ocsite'] . '/index.php?route=api/zstore.getproducts&' . System::getSession()->octoken;
+        }
+
         $json = Helper::do_curl_request($url);
         if ($json === false) {
             return;
@@ -270,8 +286,8 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
 
         if ($data['error'] != "") {
-            $data['error']  = str_replace("'","`",$data['error']) ;
-            
+            $data['error']  = str_replace("'", "`", $data['error']) ;
+
             $this->setErrorTopPage($data['error']);
             return;
         }
@@ -326,46 +342,41 @@ class Items extends \App\Pages\Base
                     $image = new \App\Entity\Image();
                     $image->content = $im;
                     $image->mime = $imagedata['mime'];
-                    $conn =   \ZDB\DB::getConnect();
-                    if($conn->dataProvider=='postgres') {
-                      $image->thumb = pg_escape_bytea($image->thumb);
-                      $image->content = pg_escape_bytea($image->content);
-                        
-                    }
+                
 
                     $image->save();
                     $item->image_id = $image->image_id;
                 }
             }
-            
+
             if($sender->createcat->isChecked() && $product['cat_id'] >0) {
-                $cat_name =trim( $cats[$product['cat_id']]);
+                $cat_name =trim($cats[$product['cat_id']]);
                 if(strlen($cat_name)>0) {
-                   $cat_name = str_replace('&nbsp;','',$cat_name) ;
-                   if(strpos($cat_name,'&gt;')>0) {
-                       $ar = explode('&gt;',$cat_name) ;
-                       $cat_name = trim($ar[count($ar)-1] );
-                       
-                   }
-                   $cat = \App\Entity\Category::getFirst("cat_name=" . \App\Entity\Category::qstr($cat_name) ) ;
-                   
-                   if($cat == null) {
-                       $cat = new   \App\Entity\Category();
-                       $cat->cat_name = $cat_name; 
-                       $cat->save();
-                       
-                   }    
-                    
-                   $item->cat_id=$cat->cat_id; 
+                    $cat_name = str_replace('&nbsp;', '', $cat_name) ;
+                    if(strpos($cat_name, '&gt;')>0) {
+                        $ar = explode('&gt;', $cat_name) ;
+                        $cat_name = trim($ar[count($ar)-1]);
+
+                    }
+                    $cat = \App\Entity\Category::getFirst("cat_name=" . \App\Entity\Category::qstr($cat_name)) ;
+
+                    if($cat == null) {
+                        $cat = new   \App\Entity\Category();
+                        $cat->cat_name = $cat_name;
+                        $cat->save();
+
+                    }
+
+                    $item->cat_id=$cat->cat_id;
                 }
-            }           
-            
-            
+            }
+
+
             $item->save();
             $i++;
         }
 
-        $this->setSuccess("loaded_items", $i);
+        $this->setSuccess("Завантажено {$i} товарів");
     }
 
 }

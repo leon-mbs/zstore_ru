@@ -4,6 +4,7 @@ namespace App\Modules\WC;
 
 use App\Entity\Doc\Document;
 use App\Entity\Item;
+use App\Entity\Customer;
 use App\System;
 use App\Helper as H;
 use Zippy\Binding\PropertyBinding as Prop;
@@ -14,11 +15,10 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
-use \App\Application as App;
+use App\Application as App;
 
 class Orders extends \App\Pages\Base
 {
-
     public $_neworders = array();
     public $_eorders   = array();
 
@@ -26,7 +26,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg("Немає права доступу до сторінки");
 
             App::RedirectError();
             return;
@@ -35,6 +35,7 @@ class Orders extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->filter->add(new DropDownChoice('eistatus', array('pending' => 'В очікуванні', 'processing' => 'В обробці','on-hold'=>'На  утриманні' ), 'pending'));
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
@@ -43,9 +44,9 @@ class Orders extends \App\Pages\Base
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Выполнен', 'shipped' => 'Доставлен', 'canceled' => 'Отменен'), 'completed'));
+        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Виконаний', 'shipped' => 'Доставлений', 'cancelled' => 'Скасований'), 'completed'));
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
-
+          
     }
 
     public function onCheck($sender) {
@@ -58,14 +59,14 @@ class Orders extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $client = \App\Modules\WC\Helper::getClient();
-
+        $st = $this->filter->eistatus->getValue();
         $this->_neworders = array();
         $page = 1;
         while(true) {
 
 
             $fields = array(
-                'status' => 'pending', 'per_page' => 100, 'page' => $page
+                'status' => $st, 'per_page' => 100, 'page' => $page
             );
 
             try {
@@ -74,48 +75,33 @@ class Orders extends \App\Pages\Base
                 $this->setErrorTopPage($ee->getMessage());
                 return;
             }
-            $fields = array(
-                'status' => 'on-hold', 'per_page' => 100, 'page' => $page
-            );
-
-            try {
-                $data2 = $client->get('orders', $fields);
-            } catch(\Exception $ee) {
-                $this->setErrorTopPage($ee->getMessage());
-                return;
-            }
-            if (is_array($data) && is_array($data2)) {
-                $data = array_merge($data, $data2);
-            }
+        
             $page++;
 
             $c = count($data);
             if ($c == 0) {
                 break;
             }
-                    $conn = \ZDB\DB::getConnect();
- 
+            $conn = \ZDB\DB::getConnect();
+
             foreach ($data as $wcorder) {
 
-                   $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%' ")  ;
+                $cnt  = $conn->getOne("select count(*) from documents_view where meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%' ")  ;
 
-               // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
-                if (  intval($cnt) > 0) { //уже импортирован
+                // $isorder = Document::findCnt("meta_name='Order' and content like '%<wcorder>{$wcorder->id}</wcorder>%'");
+                if (intval($cnt) > 0) { //уже импортирован
                     continue;
                 }
 
                 $neworder = Document::create('Order');
-                $neworder->document_number = $neworder->nextNumber();
-                if (strlen($neworder->document_number) == 0) {
-                    $neworder->document_number = 'WC00001';
-                }
-                
+           
+
 
                 //товары
                 $j=0;
                 $itlist = array();
                 foreach ($wcorder->line_items as $product) {
-                    //ищем по артикулу 
+                    //ищем по артикулу
                     if (strlen($product->sku) == 0) {
                         continue;
                     }
@@ -124,7 +110,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("nofoundarticle_inorder", $product->name, $wcorder->order_id);
+                        $this->setWarn("Не знайдено артикул товара {$product->name} в замовленні номер " .  $wcorder->order_id);
                         continue;
                     }
                     $tovar->quantity = $product->quantity;
@@ -134,9 +120,9 @@ class Orders extends \App\Pages\Base
 
                     $itlist[$j] = $tovar;
                 }
-            if(count($itlist)==0)  {
-                return;
-            }                
+                if(count($itlist)==0) {
+                    return;
+                }
                 $neworder->packDetails('detaildata', $itlist);
                 $neworder->headerdata['pricetype'] = 'price1';
 
@@ -144,22 +130,27 @@ class Orders extends \App\Pages\Base
                 $neworder->headerdata['outnumber'] = $wcorder->id;
                 $neworder->headerdata['wcorderback'] = 0;
                 $neworder->headerdata['salesource'] = $modules['wcsalesource'];
-                $neworder->headerdata['wcclient'] = $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name;
+                $neworder->headerdata['phone'] = strlen($wcorder->billing->phone ??'') > 0 ? $wcorder->billing->phone :  ($wcorder->billing->phone ??'')   ;
+                $neworder->headerdata['wcclient'] = trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name);
                 $neworder->amount = H::fa($wcorder->total);
                 $neworder->payamount = $neworder->amount;
-                
-               
+
+                if($modules['wcmf']>0) {
+                  $neworder->headerdata['payment'] = $modules['wcmf'];
+                }
+
+
                 $neworder->document_date = time();
                 $neworder->notes = "WC номер:{$wcorder->id};";
-                $neworder->notes .= " Клиент:" . $wcorder->shipping->first_name . ' ' . $wcorder->shipping->last_name . ";";
+                $neworder->notes .= " Клієнт: " . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
                 if (strlen($wcorder->billing->email) > 0) {
                     $neworder->notes .= " Email:" . $wcorder->billing->email . ";";
                 }
                 if (strlen($wcorder->billing->phone) > 0) {
                     $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
                 }
-                $neworder->notes .= " Адрес:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
-                $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
+                $neworder->notes .= " Адреса:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
+                $neworder->notes .= " Комментар:" . $wcorder->customer_note . ";";
 
                 $this->_neworders[$wcorder->id] = $neworder;
             }
@@ -182,16 +173,43 @@ class Orders extends \App\Pages\Base
 
         foreach ($this->_neworders as $shoporder) {
 
+            $shoporder->document_number = $shoporder->nextNumber();
+            if (strlen($shoporder->document_number) == 0) {
+                $shoporder->document_number = 'WC00001';
+            }            
+
+
+           if($modules['wcinsertcust']==1  && strlen($shoporder->headerdata['phone'] ?? '' )>0) {
+                  $phone=\App\Util::handlePhone($shoporder->headerdata['phone']);
+                  $cust = Customer::getByPhone($phone) ;
+                  if ($cust == null) {
+                        $cust = new Customer();
+                        $cust->customer_name = trim($shoporder->headerdata['wcclient']);
+                        $cust->type = Customer::TYPE_BAYER;
+                        $cust->phone = $phone;
+                        $cust->comment = "Клiєнт WC";
+                        $cust->save();
+                  }
+                
+                if ($cust != null) {
+                    $shoporder->customer_id = $cust->customer_id  ;
+                }                
+                
+            }
+
+            
             $shoporder->save();
             $shoporder->updateStatus(Document::STATE_NEW);
             $shoporder->updateStatus(Document::STATE_INPROCESS);
-            if($modules['wcsetpayamount']==1){
+            if($modules['wcsetpayamount']==1) {
                 $shoporder->updateStatus(Document::STATE_WP);
-            }              
-            
+            }
+ 
+
         }
 
-        $this->setInfo('imported_orders', count($this->_neworders));
+        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень");
+
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -228,7 +246,7 @@ class Orders extends \App\Pages\Base
             $elist[] = $order;
         }
         if (count($elist) == 0) {
-            $this->setError('noselorder');
+            $this->setError('Не обрано ордер');
             return;
         }
 
@@ -250,11 +268,24 @@ class Orders extends \App\Pages\Base
             $order->save();
         }
 
+        $this->setSuccess("Оновлено ".count($elist)." замовлень");
 
-        $this->setSuccess("refrehed_orders", count($elist));
 
         $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);
         $this->updateform->orderslist->Reload();
     }
 
 }
+
+/*
+$order_statuses = array(
+    'wc-pending'    => _x( 'Pending payment', 'Order status', 'woocommerce' ),
+    'wc-processing' => _x( 'Processing', 'Order status', 'woocommerce' ),
+    'wc-on-hold'    => _x( 'On hold', 'Order status', 'woocommerce' ),
+    'wc-completed'  => _x( 'Completed', 'Order status', 'woocommerce' ),
+    'wc-cancelled'  => _x( 'Cancelled', 'Order status', 'woocommerce' ),
+    'wc-refunded'   => _x( 'Refunded', 'Order status', 'woocommerce' ),
+    'wc-failed'     => _x( 'Failed', 'Order status', 'woocommerce' ),
+);
+
+*/

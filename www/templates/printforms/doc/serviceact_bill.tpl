@@ -1,15 +1,15 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
         <td colspan="2">
-          {{#isfinished}}  Акт выполненных работ {{/isfinished}} 
-          {{^isfinished}}  Квитанция к {{/isfinished}} 
+          {{#isfinished}}  Акт виконаних робіт {{/isfinished}} 
+          {{^isfinished}}  Квитанція до {{/isfinished}} 
         
         
          {{document_number}}</td>
     </tr>
     <tr>
 
-        <td colspan="2">от {{date}}</td>
+        <td colspan="2">від {{date}}</td>
     </tr>
     <tr>
 
@@ -35,20 +35,20 @@
 
     {{#isdevice}}
     <tr>
-        <td colspan="2"> Принято от клиента</td>
+        <td colspan="2"> Прийнято від клієнта</td>
     </tr>
     <tr>
         <td colspan="2"> {{device}}</td>
     </tr>
     <tr>
-        <td colspan="2"> С/Н {{serial}}</td>
+        <td colspan="2"> с/н {{serial}}</td>
     </tr>
     {{/isdevice}}
 
     {{#iswork}}
 
     <tr>
-        <td colspan="2">Работы:</td>
+        <td colspan="2">Роботи:</td>
     </tr>
     {{#slist}}
     <tr>
@@ -61,7 +61,7 @@
   
     {{#isitems}}
    <tr>
-        <td colspan="2">Комплектующие:</td>
+        <td colspan="2">Комплектуючi:</td>
     </tr>
     {{#ilist}}
     <tr>
@@ -74,7 +74,7 @@
    
     {{#istotal}}
     <tr>
-        <td align="right">Всего:</td>
+        <td align="right">Всього:</td>
         <td align="right">{{total}}</td>
     </tr>
     {{/istotal}}
@@ -84,7 +84,7 @@
 
     {{#ispay}}
     <tr>
-        <td colspan="2">Оплаты:</td>
+        <td colspan="2">Оплати:</td>
     </tr>
     {{#plist}}
     <tr>
@@ -103,7 +103,7 @@
 
     </tr>
     <tr>
-        <td>Исполнитель</td>
+        <td>Виконавець</td>
         <td>________</td>
     </tr>
     <tr>
@@ -111,7 +111,7 @@
 
     </tr>
     <tr>
-        <td>Клиент</td>
+        <td>Клієнт</td>
         <td>________</td>
     </tr>
 </table>

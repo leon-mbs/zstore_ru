@@ -25,11 +25,13 @@ use Zippy\Html\Link\SubmitLink;
  */
 class OutcomeItem extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_rowid    = 0;
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 
@@ -37,12 +39,12 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
         $bid = \App\System::getBranch();
-     
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $tostore = array();
         $conn = \ZDB\DB::getConnect();
-        if ($this->_tvars["usebranch"]) {
+        if ($this->_tvars["usebranch"] ) {
             $rs = $conn->Execute("select  s.store_id,s.storename,b.branch_id ,b.branch_name from stores s join branches b on s.branch_id = b.branch_id where b.disabled <>  1 and b.branch_id <> {$bid}  order  by branch_name, storename");
             foreach ($rs as $it) {
                 $tostore[$it['store_id']] = $it['branch_name'] . ", " . $it['storename'];
@@ -77,6 +79,9 @@ class OutcomeItem extends \App\Pages\Base
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
+            if($this->_doc->state== Document::STATE_NEW) {
+                $this->_doc->document_date = time() ;               
+            }
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
@@ -117,15 +122,15 @@ class OutcomeItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $id = $item->item_id;
+        $rowid =  array_search($item, $this->_itemlist, true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
             return;
         }
         $this->editdetail->setVisible(true);
@@ -134,6 +139,7 @@ class OutcomeItem extends \App\Pages\Base
         $this->editdetail->edititem->setValue('');
         $this->editdetail->qtystock->setText('');
         $this->editdetail->editsnumber->setText('');
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -149,7 +155,8 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-        $this->_rowid = $item->item_id . $item->snumber;
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
+
     }
 
     public function saverowOnClick($sender) {
@@ -158,15 +165,16 @@ class OutcomeItem extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
         $item = Item::load($id);
+
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
@@ -174,28 +182,18 @@ class OutcomeItem extends \App\Pages\Base
             $slist = $item->getSerials($this->docform->store->getValue());
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('invalid_serialno');
+                $this->setError('Невірний номер серії');
                 return;
             }
         }
 
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+            $this->_itemlist[$this->_rowid] = $item;
         }
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -220,7 +218,7 @@ class OutcomeItem extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
- 
+
 
         $this->_doc->notes = $this->docform->notes->getText();
 
@@ -233,12 +231,12 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-      
-       if ($this->checkForm() == false) {
+
+        if ($this->checkForm() == false) {
             return;
         }
-      
-      
+
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -258,7 +256,7 @@ class OutcomeItem extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
+                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
                             return;
                         }
                     }
@@ -266,13 +264,13 @@ class OutcomeItem extends \App\Pages\Base
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
                 $tostore = $this->docform->tostore->getValue();
-                if ($sender->id == 'execdoc' && $tostore > 0) {
+                if ($sender->id == 'execdoc' && $tostore > 0) {    //создание  прихода
                     $ch = $this->_doc->getChildren('IncomeItem');
                     if (count($ch) > 0) {
-                        $this->setWarn('indocalreadyexists');
+                        $this->setWarn('Вже є прибутковий документ ');
                     } else {
                         if ($this->_doc->headerdata['store'] == $tostore) {
-                            $this->setWarn('thesamestore');
+                            $this->setWarn('Вибрано той самий склад');
                         }
                         $indoc = Document::create('IncomeItem');
 
@@ -285,16 +283,17 @@ class OutcomeItem extends \App\Pages\Base
                             $indoc->branch_id = $st->branch_id;
                         }
                         $indoc->document_number =  $indoc->nextNumber($indoc->branch_id);
-                        
+
                         $admin  =\App\Entity\User::getByLogin('admin') ;
                         $indoc->user_id = $admin->user_id;
-                        
-                        $indoc->notes = H::l('incomebasedon', $this->_doc->document_number, $this->_doc->headerdata['storename']);
+
+                        $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу " . $this->_doc->headerdata['storename'];
                         if ($this->_doc->branch_id > 0) {
                             $br = \App\Entity\Branch::load($this->_doc->branch_id);
-                            $indoc->notes = H::l('incomebasedonbr', $this->_doc->document_number, $this->_doc->headerdata['storename'], $br->branch_name);
+                            $indoc->notes = "На підставі {$this->_doc->document_number}, зі складу {$this->_doc->headerdata['storename']}, філія " . $br->branch_name;
                         }
 
+                        
                         $items = array();
 
                         foreach ($this->_itemlist as $it) {
@@ -312,11 +311,17 @@ class OutcomeItem extends \App\Pages\Base
 
                         if ($indoc->branch_id == 0) {
                             $indoc->user_id = \App\System::getUser()->user_id;
+                            $indoc->save();                            
                             $indoc->updateStatus(Document::STATE_EXECUTED);
                         }
                         if ($indoc->document_id > 0) {
-                            $this->setSuccess("createddoc", $indoc->document_number);
+                            $this->setSuccess("Створено документ " . $indoc->document_number);
                         }
+                        
+                        $this->_doc->notes = "Створено {$indoc->document_number}, на склад " . $indoc->headerdata['storename'];
+          
+                        $this->_doc->save();
+                        
                     }
                 }
             } else {
@@ -334,7 +339,7 @@ class OutcomeItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -347,23 +352,23 @@ class OutcomeItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введіть номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
 
 
@@ -380,16 +385,9 @@ class OutcomeItem extends \App\Pages\Base
         $item = Item::load($item_id);
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-      
+
     }
 
-    public function OnChangeStore($sender) {
-        if ($sender->id == 'store') {
-            //очистка  списка  товаров
-            $this->_itemlist = array();
-            $this->docform->detail->Reload();
-        }
-    }
 
     public function OnItemType($sender) {
         $this->editdetail->edititem->setKey(0);
@@ -407,20 +405,20 @@ class OutcomeItem extends \App\Pages\Base
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $code0 = $code;
-               $code = ltrim($code,'0');
-      $this->docform->barcode->setText('');
+        $code = ltrim($code, '0');
+        $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('noselstore');
+            $this->setError('Не обрано склад');
             return;
         }
 
         $code = Item::qstr($code);
-         $code0 = Item::qstr($code0);
+        $code0 = Item::qstr($code0);
 
         $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0} )");
         if ($item == null) {
-            $this->setError('noitem');
+            $this->setError('Товар не знайдено');
             return;
         }
 

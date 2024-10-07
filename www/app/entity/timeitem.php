@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use \App\Helper as H;
+use App\Helper as H;
 
 /**
  * Класс-сущность  запись  о  рабочем  времени
@@ -13,15 +13,14 @@ use \App\Helper as H;
  */
 class TimeItem extends \ZCL\DB\Entity
 {
-
-    const TIME_WORK = 1;   //Рабочий день
-    const TINE_OVER = 2;   //переработка
-    const TINE_WN   = 3;   //работа в  выходные  и ночь
+    public const TIME_WORK = 1;   //Рабочий день
+    public const TINE_OVER = 2;   //переработка
+    public const TINE_WN   = 3;   //работа в  выходные  и ночь
     // const TINE_FREE   = 4;   //отгул
-    const TINE_HL    = 5;   //отпуск
-    const TINE_ILL   = 6;   //больничный
-    const TINE_BT    = 7;   //командировка
-    const TINE_OTHER = 10;   //другое
+    public const TINE_HL    = 5;   //отпуск
+    public const TINE_ILL   = 6;   //больничный
+    public const TINE_BT    = 7;   //командировка
+    public const TINE_OTHER = 10;   //другое
 
     protected function init() {
         $this->time_id = 0;
@@ -36,14 +35,14 @@ class TimeItem extends \ZCL\DB\Entity
 
     public static function getTypeTime() {
         $list = array();
-        $list[self::TIME_WORK] = H::l('ts_worktime');
-        $list[self::TINE_OVER] = H::l('ts_overtime');
-        $list[self::TINE_WN] = H::l('ts_wntime');
-        // $list[self::TINE_FREE] = H::l('Отгул');
-        $list[self::TINE_HL] = H::l('ts_hol');
-        $list[self::TINE_ILL] = H::l('ts_ill');
-        $list[self::TINE_BT] = H::l('ts_bt');
-        $list[self::TINE_OTHER] = H::l('ts_other');
+        $list[self::TIME_WORK] = 'Робочий час';
+        $list[self::TINE_OVER] = 'Переробка';
+        $list[self::TINE_WN] = 'Вихідні, нічна зміна';
+        // $list[self::TINE_FREE] = 'Отгул';
+        $list[self::TINE_HL] = 'Відпустка';
+        $list[self::TINE_ILL] = 'Лікарняний';
+        $list[self::TINE_BT] = 'Відрядження';
+        $list[self::TINE_OTHER] = 'Інше';
 
         return $list;
     }
@@ -51,13 +50,13 @@ class TimeItem extends \ZCL\DB\Entity
     public function isValid() {
 
         if (($this->t_end - $this->t_start) < 300) {
-            return "ts_invalidinterval";
+            return "Невірний інтервал";
         }
         if (($this->t_end - $this->t_start) > (24 * 3600 - 300)) {
-            return "ts_invalidinterval";
+            return "Невірний інтервал";
         }
         if (($this->t_end - $this->t_start) <= $this->t_break) {
-            return "ts_invalidinterval";
+            return "Невірний інтервал";
         }
         $conn = \ZDB\DB::getConnect();
         $t_start = $conn->DBTimeStamp($this->t_start);
@@ -68,7 +67,7 @@ class TimeItem extends \ZCL\DB\Entity
         $cnt1 = $conn->GetOne($sql);
 
         if ($cnt > $cnt1) {
-            return "ts_intersect";
+            return "Інтервал перетинається з існуючим";
         }
 
         return "";

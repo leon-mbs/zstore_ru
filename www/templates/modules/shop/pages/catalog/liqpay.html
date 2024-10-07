@@ -4,7 +4,7 @@
 
     <div class="row" style="min-height:400px;">
         <div class="col-12 col-md-6 col-xl-4  ">
-            <h3 class="mt-2 mb-3">Оплата заказа {{onumber}}</h3>
+            <h3 class="mt-2 mb-3">Оплата замовлення {{onumber}}</h3>
             <table class="table table-sm">
                 {{#detail}}
                 <tr>
@@ -17,7 +17,7 @@
                 {{/detail}}
             </table>
 
-            <button class="btn btn-success" type="button" onclick="pay();">Оплатить</button>
+            <button class="btn btn-success" type="button" onclick="pay();">Оплатити</button>
             <!-- <div id="liqpay_checkout"></div> -->
         </div>
     </div>
@@ -48,7 +48,7 @@
                     action: 'pay',
                     amount: 200.53,
                     currency: 'UAH',
-                    description: 'Оплата товара',
+                    description: 'Оплата товару',
                     order_id: 'ABC12345678',
                     language: 'uk'
                 };

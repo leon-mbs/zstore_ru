@@ -1,13 +1,13 @@
 <html>
   <head>
-        <title> Общий чат   </title>
+        <title> Загальний чат   </title>
 
     </head>
 
     <body>
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">
-                <h4>Общий чат</h4>
+                <h4>Загальний чат</h4>
  
 
           <div class="card direct-chat direct-chat-primary">
@@ -51,8 +51,8 @@
                 {{/chat}}
                 <a id="endchat" name="endchat"></a>
                 <table style="width:100%;font-size:smaller">
-                <tr><td>      <a zippy="prevpart" > <i class="fa fa-angle-double-left" /> предыдущие</a></td>
-                <td class="text-right"><a zippy="nextpart" >  следующие <i class="fa fa-angle-double-right" /> </a></td></tr></table>
+                <tr><td>      <a zippy="prevpart" > <i class="fa fa-angle-double-left" ></i> попереднi</a></td>
+                <td class="text-right"><a zippy="nextpart" >  наступнi <i class="fa fa-angle-double-right" ></i> </a></td></tr></table>
                 
                
   
@@ -65,8 +65,8 @@
                     <div class="input-group  ">
                       <input zippy="searchtext" placeholder="Пошук..." class="form-control"   - >
                       <div class="input-group-append">
-                        <button type="submit" class="btn btn-info" type="button"  ><i class="fa fa-search" /></button>
-                        <a class="btn btn-outline-secondary" zippy="searchclear"   ><i class="fa fa-eraser " /></a>
+                        <button type="submit" class="btn btn-info"    ><i class="fa fa-search" ></i></button>
+                        <a class="btn btn-outline-secondary" zippy="searchclear"   ><i class="fa fa-eraser " ></i></a>
                       </div>
                     </div>       
                     
@@ -77,34 +77,34 @@
             <form  zippy="msgform" enctype="multipart/form-data"   >
               
              <div class="form-group">
-                     <label for="msgtext">Сообщение</label> 
+                     <label for="msgtext">Повiдомлення</label> 
                     <textarea required="required"   zippy="msgtext"   class="form-control"></textarea>
                      
                        
                   </div>
                  <div class="form-group">
-                     <label for="msgpersonal">Личное сообщение</label> 
+                     <label for="msgpersonal">Особисте повiдомлення</label> 
                     <select    zippy="msgpersonal"   class="form-control  ">
-                      <option value="0">Не выбрано</option>
+                      <option value="0">Не обрано</option>
                     </select>
                        
                   </div>
             <details>
-                <summary>Дополнительно</summary>
+                <summary>Додатково</summary>
                               
                    <div class="form-group">
-                     <label for="msgfile">Прикрпить файл</label> 
+                     <label for="msgfile">Прикрiпити файл</label> 
                     <input type="file"     zippy="msgfile"   class="form-control"/> 
                     </div>                         
                               
                 <div class="form-group">
                     <label for="msgdoc">Документ</label> 
-                     <input placeholder="Введите номер"    zippy="msgdoc"   class="form-control"/> 
+                     <input placeholder="Введiть номер"    zippy="msgdoc"   class="form-control"/> 
                 </div>                         
                 <div class="form-group">
-                     <label for="msglink">Внешняя ссылка</label> 
+                     <label for="msglink">Зовнiшнє посилання</label> 
                     <input type="url"     zippy="msglink"   class="form-control"/> 
-                    <small>Полный адрес, начиная с http</small>
+                    <small>Повна адреса, починаючи з http</small>
                     </div>                         
                               
                </details>                  
@@ -113,7 +113,7 @@
                   <br>
                  <div class="input-group">
                     
-                      <button type="submit" class="btn btn-primary">Отправить</button>
+                      <button type="submit" class="btn btn-primary">Вiдправити</button>
                     
                   </div>
                 </form>

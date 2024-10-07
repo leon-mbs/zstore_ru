@@ -13,13 +13,13 @@ use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
-use Zippy\WebApplication as App;
+use Zippy\Html\Link\ClickLink;
+use App\Application as App;
 
 class NotifyList extends \App\Pages\Base
 {
-
-    public  $user = null;
-    public  $ds;
+    public $user = null;
+    public $ds;
     private $users;
 
     public function __construct() {
@@ -57,16 +57,20 @@ class NotifyList extends \App\Pages\Base
 
         }
         if ($notify->sender_id == Notify::SYSTEM) {
-            $row->sender->setText(H::l("systemmsg"));
+            $row->sender->setText("Системне повідомлення");
             $row->sendericon->setAttribute('class', 'fa fa-cog');
         }
         if ($notify->sender_id == Notify::EVENT) {
-            $row->sender->setText(H::l("alertmsg"));
+            $row->sender->setText("Нагадування про подію");
             $row->sendericon->setAttribute('class', 'fa fa-calendar');
         }
         if ($notify->sender_id == Notify::SUBSCRIBE) {
-            $row->sender->setText(H::l("subsmsg"));
+            $row->sender->setText("Розсилка");
             $row->sendericon->setAttribute('class', 'fa fa-envelope');
+        }
+        if ($notify->sender_id == Notify::CRONTAB) {
+            $row->sender->setText("Планувальник");
+            $row->sendericon->setAttribute('class', 'fa fa-clock');
         }
 
 

@@ -1,13 +1,14 @@
 <html>
      <head>
-        <title> Производственные этапы  </title>
+        <title> Виробничі етапи  </title>
+      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     </head>
   <body>
         <div class="row">
             <div class="col-12  ">
 
-                <h3>Производственные этапы</h3>
+                <h3>Виробничі етапи</h3>
 
 
 
@@ -17,7 +18,7 @@
 
             <div class="row">
                 <div class="col-12  ">
-                    <a zippy="opencal" class="btn btn-sm btn-primary ml-2"><i class="fa fa-calendar-alt "></i> Календарь</a>
+                    <a zippy="opencal" class="btn btn-sm btn-primary ml-2"><i class="fa fa-chart-gantt "></i> Діаграма Гантта</a>
 
 
 
@@ -26,13 +27,13 @@
 
 
 
-                            <label for="fproc"> Процесс </label>
+                            <label for="fproc"> Процес </label>
                             <select class="form-control mr-2" zippy="fproc">
-                                <option value="0">Не выбран</option>
+                                <option value="0">Не обрано</option>
                             </select>
-                            <label for="fparea"> Участок </label>
+                            <label for="fparea"> Дільниця </label>
                             <select class="form-control mr-2" zippy="fparea">
-                                <option value="0">Не выбран</option>
+                                <option value="0">Не обрано</option>
                             </select>
 
 
@@ -49,14 +50,24 @@
 
                     <table class="table   table-sm   ">
                         <tr>
+                           <th colspan="2" ></th>
+                           <th colspan="3" class="text-center">План</th>
+                           <th colspan="3" class="text-center">Факт</th>
+                           <th colspan="6"></th>
+                        </tr>
+                        <tr>
 
-                            <th>Наименование</th>
-                            <th>Статус</th>
-                            <th>Начало</th>
-                            <th>Конец</th>
+                            <th >Найменування</th>
+                            <th  >Статус</th>
+                            <th>Початок</th>
+                            <th>Кінець</th>
+                            <th>Годин</th>
+                            <th>Початок</th>
+                            <th>Кінець</th>
+                            <th>Годин</th>
 
-                            <th>Процесс</th>
-                            <th>Серия, партия</th>                        
+                            <th>Процес</th>
+                            <th>Серія, партія</th>                        
 
 
                             <th></th>
@@ -71,21 +82,26 @@
                             <td zippy="sstate"></td>
 
 
-                            <td class="text-nowrap" zippy="startdate"></td>
-                            <td class="text-nowrap" zippy="enddate"></td>
+                            <td class="text-nowrap" zippy="startdateplan"></td>
+                            <td class="text-nowrap" zippy="enddateplan"></td>
+                            <td zippy="hoursplan" ></td>
+                            <td class="text-nowrap" zippy="startdatefact"></td>
+                            <td class="text-nowrap" zippy="enddatefact"></td>
+                            <td zippy="hoursfact" ></td>
+                            
                             <td zippy="pname"></td>
                             <td zippy="snumber"></td>
                             <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
 
 
                             <td  >
-                                <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
+                                <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
                             </td>
                             <td  >
-                                <a zippy="workers" title="Исполнители"><i class="fa fa-users"></i></a>
+                                <a zippy="workers" title="Виконавці"><i class="fa fa-users"></i></a>
                             </td>
                             <td  >
-                                <a zippy="agenda" title="Календарь"><i class="fa fa-calendar-day"></i></a>
+                                <a zippy="agenda" title="Календар"><i class="fa fa-calendar-day"></i></a>
                             </td>
                             <td  >
                                 <a zippy="card" title="Тех. карта"><i class="fa fa-wrench"></i></a>
@@ -111,13 +127,13 @@
         <div zippy="userspan"  class="row">
             <div   class="col-12 col-md-6 col-xl-4">
                 <h5 zippy="stageh5"></h5>
-                <small>Исполнители, которые берут участие в данном этапе с коэфициентом трудового участия 
-                для начисления зарплат                      </small>
+                <small>Виконавці, які беруть участь  в  данному  етапі з коефіцієнтом трудової участі 
+                для  нарахування  зарплат.          </small>
                 <form zippy="useraddform" class="form-inline ">
 
-                    <label for="adduser"> Исполнитель </label>
+                    <label for="adduser"> Виконавець </label>
                     <select class="form-control mr-2" zippy="adduser">
-                        <option value="0">Не выбран</option>
+                        <option value="0">Не обрано</option>
                     </select>
                     <label for="addktu"> КТУ </label>
                     <input pattern="[0-9,\.]+" style="width:75px" class="form-control qtyprice mr-2" zippy="addktu">
@@ -135,8 +151,8 @@
                 </table>
 
 
-                <input zippy="cancelusers" type="button" value="Отменить" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
-                <input zippy="saveusers"   type="button" value="Сохранить" class="btn btn-primary  ">
+                <input zippy="cancelusers" type="button" value="Скасувати" class="btn btn-outline-primary  ">  &nbsp;&nbsp;
+                <input zippy="saveusers"   type="button" value="Зберегти" class="btn btn-primary  ">
             </div>
 
         </div>
@@ -144,29 +160,29 @@
 
         <div zippy="cardpan"  class="row">
             <div   class="col-12 col-md-8 col-xl-6">
-                <a zippy="backc"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+                <a zippy="backc"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
                 <h5 zippy="stagenamec"></h5>
-                <b>Технологическая карта</b>
+                <b>Технологічна карта</b>
                 <div zippy="carddata" ></div>
             </div>
         </div>
 
         <div zippy="calpan"  class="row">
             <div   class="col-12 col-md-7 col-xl-5">
-                <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+                <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
                 <h5 zippy="stagenamed"></h5>
-                <b>График работ по этапу. План, часов: <span zippy="planhours"></span> </b>
+                <b>Графік робіт по етапу. План, годин: <span zippy="planhours"></span> </b>
                 <form zippy="calform" class="form-inline ">
 
                     <label for="addcaldate"> Дата </label>
                     <input  type="date"  class="form-control mr-2" zippy="addcaldate">
 
-                    <label for="addcalfrom"> с </label>
+                    <label for="addcalfrom"> з </label>
                     <input type="time"  class="form-control mr-2" zippy="addcalfrom">
                     <label for="addcalto"> по </label>
                     <input type="time"  class="form-control mr-2" zippy="addcalto">
 
-                    <input type="submit" class="  btn btn-success  " value="Добавить">
+                    <input type="submit" class="  btn btn-success  " value="Додати">
 
                 </form>   
                 <table class="table table-sm">
@@ -178,21 +194,21 @@
                         <td><a zippy="delcal"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
-                <b>Всего часов: <span zippy="facthours"></span></b>     
+                <b>Всього годин: <span zippy="facthours"></span></b>     
             </div>
         </div>
         <div zippy="statuspan"  class="row">
-            <div   class="col-12 col-md-6 col-xl-4">
-                <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+            <div   class="col-12 col-md-8 col-xl-6">
+                <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
                 <h5 zippy="stagenames"></h5>
                 <div class="navbar nav justify-content-start">
-                    <a title="Списать в производство сырье и материалы" class="btn btn-info mr-2" zippy="btntoprod">Списать</a>
+                    <a title="Списати у виробництво сировину та матеріали" class="btn btn-info mr-2" zippy="btntoprod">Списати</a>
+                    <a title="Оприбуткувати готову продукцію або напівфабрикати" class="btn btn-info mr-2" zippy="btnfromprod">Оприбуткувати</a>
+                    <a title="Сторонні  послуги " class="btn btn-info mr-2" zippy="btnservice">Отримані послуги</a>
 
-                    <a title="Оприходовать готовую продукцию или полуфабрикаты" class="btn btn-info mr-2" zippy="btnfromprod">Оприходовать</a>
-
-                    <a title="Запустить этап" class="btn btn-info mr-2" zippy="btnstart">Старт</a>
-                    <a title="Приостановить этап" class="btn btn-info mr-2" zippy="btnstop">Приостановить</a>
-                    <a title="Закрыть этап" class="btn btn-success mr-2" zippy="btnclose">Закрыть</a>
+                    <a title="Запустити етап" class="btn btn-info mr-2" zippy="btnstart">Старт</a>
+                    <a title="Призупинити етап" class="btn btn-info mr-2" zippy="btnstop">Призупинити</a>
+                    <a title="Закрити етап" class="btn btn-success mr-2" zippy="btnclose">Закрити</a>
 
 
                 </div>             
@@ -213,38 +229,136 @@
 
         <div zippy="calendarpan"  class="row">
             <div   class="col-12 col-xl-10 ">
-                <a zippy="backcal"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
+                <a zippy="backcal"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
+                <div class="navbar nav">
+                    
                 <form zippy="calfilter" class="form-inline ">
 
-                    <label for="calfilterpp"> Процесс </label>
+                    <label for="calfilterpp"> Процес </label>
                     <select  class="form-control mr-2" zippy="calfilterpp">
-                        <option value="0">Не выбран</option>
+                        <option value="0">Не обрано</option>
                     </select>
-                    <label data-label="calfilterps" for="calfilterps"> этап </label>
+                    <label data-label="calfilterps" for="calfilterps"> етап </label>
                     <select  class="form-control mr-2" zippy="calfilterps">
-                        <option value="0">Не выбран</option>
+                        <option value="0">Не обрано</option>
                     </select>
-                    <label for="calfilterpa"> произв. участок </label>
+                    <label for="calfilterpa"> вир. дільниця </label>
                     <select  class="form-control mr-2" zippy="calfilterpa">
-                        <option value="0">Не выбран</option>
+                        <option value="0">Не обрано</option>
                     </select>
-                    <label for="calfilteremp"> исполнитель </label>
+                    <label for="calfilteremp"> виконавець </label>
                     <select  class="form-control mr-2" zippy="calfilteremp">
-                        <option value="0">Не выбран</option>
+                        <option value="0">Не обрано</option>
                     </select>
 
                     <input zippy="filterok" type="submit" class="  btn btn-success  " value="ОК">
 
                 </form>          
+                </div>
+                      {{#gtp}}   
+                    <h4>План</h4>
+                    <div id="ganttplan"></div>  
+                      {{/gtp}}   
 
-                <div zippy='calendar'></div>
+                      {{#gtf}}   
+                     <h4>Факт</h4>
+                    <div id="ganttfact"></div>  
+                       {{/gtf}}    
+               
+        
+          </div>
+            
+            
             </div>
-        </div> 
 
-        <script>
+ 
+     <script type="text/javascript">
+  
+    
+      google.charts.load('current', {'packages':['gantt'], 'language': 'uk'});
+      google.charts.setOnLoadCallback(drawChart);
+
+      
+    var fontcolor='#000' ;
+    var bgcolor='#fff' ;
+        {{#darkmode}}
+            fontcolor='#fff' ;
+            bgcolor='#333' ;
+        {{/darkmode}}            
+     
+     
+   function daysToMilliseconds(days) {
+      return days * 24 * 60 * 60 * 1000;
+    }
+
+    
+    
+    
+    function drawChart() {
+
+      var options = {
+     
+          
+             
+      };        
+      {{#gtp}}     
+      
+      var datap = new google.visualization.DataTable();
+      datap.addColumn('string', 'Task ID');
+      datap.addColumn('string', '"Task Name"');
+      datap.addColumn('date', 'Start Date');
+      datap.addColumn('date', 'End Date');
+      datap.addColumn('number', 'Duration');
+      datap.addColumn('number', 'Percent Complete');
+      datap.addColumn('string', 'Dependencies');
+  
+      datap.addRows( 
+          
+          {{{gtp}}}
+      
+       )
+   
+
+      var chartp = new google.visualization.Gantt(document.getElementById('ganttplan'));
+   
+ 
+      chartp.draw(datap, options);
+      
+      {{/gtp}}
+      
+       {{#gtf}}     
+     
+      var dataf = new google.visualization.DataTable();
+      dataf.addColumn('string', 'Task ID');
+      dataf.addColumn('string', '"Task Name"');
+      dataf.addColumn('date', 'Start Date');
+      dataf.addColumn('date', 'End Date');
+      dataf.addColumn('number', 'Duration');
+      dataf.addColumn('number', 'Percent Complete');
+      dataf.addColumn('string', 'Dependencies');
+  
+      dataf.addRows( 
+          
+          {{{gtf}}}
+      
+       )
+   
+
+      var chartf = new google.visualization.Gantt(document.getElementById('ganttfact'));
+
+      chartf.draw(dataf, options);
+      
+      {{/gtf}} 
+      
+    }     
+     
+     
+
+     
+      
 
             function check_btnclose() {
-                return confirm("Закрыть этап?")
+                return confirm("Закрити етап?")
             }
         </script>  
     </body>

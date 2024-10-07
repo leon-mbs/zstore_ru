@@ -26,13 +26,16 @@ use Zippy\Html\Link\SubmitLink;
  */
 class ProdReceipt extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
 
-
+    /**
+    * @param mixed $docid      редактирование
+    * @param mixed $basedocid  создание на  основании
+    * @param mixed $st_id      этап  производства
+    */
     public function __construct($docid = 0, $basedocid = 0, $st_id = 0) {
         parent::__construct();
 
@@ -42,7 +45,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date'))->setDate(time());
-        $this->docform->add(new DropDownChoice('parea', \App\Entity\Prodarea::findArray("pa_name", ""), 0));
+        $this->docform->add(new DropDownChoice('parea', \App\Entity\ProdArea::findArray("pa_name", ""), 0));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $this->docform->add(new TextArea('notes'));
@@ -90,26 +93,27 @@ class ProdReceipt extends \App\Pages\Base
 
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
-                }
-                if ($basedoc instanceof Document) {
-                    $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
-                      foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                        $item->price = $item->getLastPartion();
-                        $this->_itemlist[$item->item_id] = $item;
-                      }
+                        $this->docform->notes->setText('Замовлення ' . $basedoc->document_number);
                         
-                    }
-                }
-                if ($basedoc->meta_name == 'Task') {
+                        foreach ($basedoc->unpackDetails('detaildata') as $item) {
+                            $item->price = $item->getProdprice($this->_doc->headerdata['store'],"",true);
+                            $this->_itemlist[] = $item;
+                        }
 
-                    $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
-                    $this->docform->parea->setValue($basedoc->headerdata['parea']);
-
-                    foreach ($basedoc->unpackDetails('prodlist') as $item) {
-                        $item->price = $item->getProdprice();
-                        $this->_itemlist[$item->item_id] = $item;
                     }
+                    if ($basedoc->meta_name == 'Task') {
+
+                        $this->docform->notes->setText('Наряд ' . $basedoc->document_number);
+                        $this->docform->parea->setValue($basedoc->headerdata['parea']);
+
+                        foreach ($basedoc->unpackDetails('prodlist') as $item) {
+                            $item->price = $item->getProdprice();
+                            $this->_itemlist[] = $item;
+                        }
+                    }
+              
+                    
                 }
             }
 
@@ -162,7 +166,8 @@ class ProdReceipt extends \App\Pages\Base
 
         $this->editdetail->edititem->setValue($item->item_id);
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
+
     }
 
     public function deleteOnClick($sender) {
@@ -170,9 +175,10 @@ class ProdReceipt extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$item->item_id]);
+        $rowid =  array_search($item, $this->_itemlist, true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->item_id => $this->_itemlist[$item->item_id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+
         $this->calcTotal();
         $this->docform->detail->Reload();
     }
@@ -180,7 +186,7 @@ class ProdReceipt extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function saverowOnClick($sender) {
@@ -190,19 +196,19 @@ class ProdReceipt extends \App\Pages\Base
 
 
         $id = $this->editdetail->edititem->getValue();
+  
+        $item = Item::load($id);
 
-        if ($id == 0) {
-            $this->setError("noselitem");
+        if ($item == null) {
+            $this->setError("Не обрано товар");
             return;
         }
 
 
-        $item = Item::load($id);
-
         $item->quantity = $this->editdetail->editquantity->getText();
         $item->price = $this->editdetail->editprice->getText();
         if ($item->price == 0) {
-            $this->setWarn("no_price");
+            $this->setWarn("Не вказана ціна");
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
         $item->sdate = $this->editdetail->editsdate->getDate();
@@ -210,30 +216,16 @@ class ProdReceipt extends \App\Pages\Base
             $item->sdate = '';
         }
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Потрібна партія виробника");
             return;
         }
 
-
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+            $this->_itemlist[$this->_rowid] = $item;
         }
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
-        $this->_rowid = 0;
-
-      //  $this->editdetail->setVisible(false);
-      //  $this->docform->setVisible(true);
 
         //очищаем  форму
         $this->editdetail->edititem->setValue(0);
@@ -249,7 +241,7 @@ class ProdReceipt extends \App\Pages\Base
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
-        $this->calcTotal();        
+        $this->calcTotal();
     }
 
     public function savedocOnClick($sender) {
@@ -306,7 +298,7 @@ class ProdReceipt extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
         App::Redirect("\\App\\Pages\\Register\\StockList");
@@ -334,21 +326,21 @@ class ProdReceipt extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
 
 
@@ -372,7 +364,7 @@ class ProdReceipt extends \App\Pages\Base
         $price = $item->getProdprice();
         $this->editdetail->editprice->setText($price > 0 ? H::fa($price) : '');
 
-      
+
     }
 
 }

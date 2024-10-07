@@ -11,7 +11,6 @@ use App\Helper as H;
  */
 class ReturnIssue extends Document
 {
-
     public function generateReport() {
 
 
@@ -47,7 +46,8 @@ class ReturnIssue extends Document
                         "document_number" => $this->document_number,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed)
+                        "payamount"           => H::fa($this->payamount),
+                        "payed"           => H::fa($this->headerdata['payed'])
         );
 
         $report = new \App\Report('doc/returnissue.tpl');
@@ -75,20 +75,79 @@ class ReturnIssue extends Document
             $sc->tag=Entry::TAG_RSELL;
             $sc->save();
         }
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->payed, $this->headerdata['payment']  );
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['payed'], $this->headerdata['payment']);
+    
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_INCOME);
+        $this->DoBalans() ;
+
+        if($this->headerdata["bonus"] > 0) {
+                $ca = new \App\Entity\CustAcc();
+
+                $ca->document_id = $this->document_id;
+                $ca->amount = $this->headerdata["bonus"];
+                $ca->optype = \App\Entity\CustAcc::BONUS;
+               
+                $ca->customer_id = $this->customer_id;
+
+                $ca->save();       
         }
 
+        //штраф  сотруднику
+       if ($this->parent_id > 0) {
+            $parent = Document::load($this->parent_id);
+            $user = \App\Entity\User::load($parent->user_id);        
+            $disc = \App\System::getOptions("discount");
+            $emp_id = \App\System::getUser()->employee_id ;
+            if($emp_id >0 && $disc["fineret"] >0  && $parent->meta_name=='POSCheck') {
+                $b =  $this->amount * $disc["fineret"] / 100;
+                $ua = new \App\Entity\EmpAcc();
+                $ua->optype = \App\Entity\EmpAcc::FINE;
+                $ua->document_id = $this->document_id;
+                $ua->emp_id = $emp_id;
+                $ua->amount = 0-$b;
+                $ua->save();
+
+            }
+            
+        }     
+        
         return true;
     }
 
     protected function getNumberTemplate() {
         return 'BK-000000';
     }
+    /**
+    * @overrride
+    */
+    public function DoBalans() {
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+     
+        if(($this->customer_id??0) == 0) {
+            return;
+        }
 
+              
+        //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where  paytype < 1000 and  coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+        
+        if($this->payamount >0) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $this->payamount;
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+    }
 }

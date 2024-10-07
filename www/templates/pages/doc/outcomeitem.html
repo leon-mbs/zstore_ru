@@ -1,78 +1,81 @@
 <html>
     <head>
-          <title> Списание ТМЦ</title>
+          <title> Списання ТМЦ</title>
     </head>
     <body>
 
 
         <form zippy="docform" enctype="multipart/form-data">
-            <h3> Списание ТМЦ</h3>
+            <h3> Списання ТМЦ</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number">
+                        <input style="width:150px" class="form-control"   zippy="document_number">
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
-                    </div>
-                    <div class="form-group  ">
-                        <label for="store">Со склада</label>
-                        <select class="form-control" zippy="store">
-                            <option value="0">Не выбрано</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="mtype">Тип расходов</label>
-                        <select class="form-control" zippy="mtype">
-                            <option value="0">Не выбрано</option>
-                        </select>
+                        <input style="width:150px" class="form-control"   zippy="document_date" required="required">
                     </div>
 
-                    {{#usebranch}}
 
                     <div class="form-group  ">
-                        <label for="tostore">Оприходовать на склад другого филиала</label>
-                        <select class="form-control" zippy="tostore">
-                            <option value="0">Не выбрано</option>
-                        </select>
-                        <small class="form-text text-muted">При проведении будет создан документ 'Оприходование на склад'.
-                            Этот документ не будет проведен и ему не будет присвоен автор пока
-                            пользователь, который имеет право работы с целевым филиалом, не сохранит созданный документ. </small>
-                    </div>
-                    {{/usebranch}}
-
-                    <div class="form-group  ">
-                        <label for="notes">Примечание </label>
+                        <label for="notes">Примітка </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
                     </div>
 
                 </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-group  ">
+                        <label for="store">Зi складу</label>
+                        <select class="form-control" zippy="store">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mtype">Тип витрат</label>
+                        <select class="form-control" zippy="mtype">
+                            <option value="0">Не обрано</option>
+                        </select>
+                    </div>
+
+                    {{#usebranch}}
+
+                    <div class="form-group  ">
+                        <label for="tostore">Оприходувати на склад iншої фiлiї</label>
+                        <select class="form-control" zippy="tostore">
+                            <option value="0">Не обрано</option>
+                        </select>
+                        <small class="form-text text-muted">При проведеннi буде створено документ 'Оприходування на склад'.
+                            Цей документ не буде проведено та йому не буде присвоєно автора, поки
+                            користувач, який має право роботи з цiльовою фiлiєю, не збереже новостворений документ. </small>
+                    </div>
+                    {{/usebranch}}                
+                </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-8 col-xl-6">
+                <div class="col-12 col-md-9 col-xl-7">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input  autofocus="on"   autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
                     </div>
                     {{/usescanner}}
-                    <a class="btn btn-info  " zippy="addrow">Добавить позицию</a>
+                    <a class="btn btn-info  " zippy="addrow">Додати позицію</a>
                     <table class="table table-sm">
                         <tr>
-                            <th>Название</th>
+                            <th>Назва</th>
                             <th>Код</th>
-                            <th>Ед.</th>
+                            <th>Од.</th>
                             {{#usesnumber}}
-                            <th>Серия</th>
+                            <th>Серія</th>
 
                             {{/usesnumber}}
-                            <th width="40" class="text-right">Кол.</th>
+                            <th width="40" class="text-right">Кіл.</th>
 
                             <th  ></th>
                         </tr>
@@ -100,41 +103,46 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
+                    <input type="button" value="Скасувати" zippy="backtolist" class="btn   btn-outline-secondary">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>
             </div>
 
 
-        </p>
+
 
     </form>
     <form zippy="editdetail">
-        <h4>Введение товара </h4>
+        <h4>Введення товару </h4>
         <div class="row">
             <div class="col-12 col-md-4">
 
                 <div class="form-group">
-                    <label for="edititem">Наименование</label>
-                    <input class="form-control" zippy="edititem" placeholder="Начните вводить... ">
+                    <label for="edititem">Найменування</label>
+                    <input  autofocus="on"  class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
 
 
-                    Наличие: <span zippy="qtystock"></span>
+                    Наявність: <span zippy="qtystock"></span>
 
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editsnumber">Партия поставщика</label>
+                   {{^usesnumberitem}}
+                        <label for="editsnumber">Серія (партія) виробника </label>
+                         {{/usesnumberitem}}
+                         {{#usesnumberitem}}
+                        <label for="editsnumber">Серійний номер </label>
+                         {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
 
                 </div>
                 {{/usesnumber}}
                 <div class="form-group">
-                    <label for="editquantity">Количество</label>
+                    <label for="editquantity">Кількість</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
                            required="required" pattern="[0-9,\.]+"/>
@@ -142,18 +150,17 @@
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Отменить" class="btn   btn-outline-secondary">
+                    <input type="button" zippy="cancelrow" value="До переліку" class="btn   btn-outline-secondary mr-2">
+                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
+                    
                 </div>
             </div>
         </div>
 
     </form>
     <script>
-        $(document).ready(function () {
-
-            $('#barcode').focus();
-        });
+   
+     
 
         function onBarCode(ele) {
 

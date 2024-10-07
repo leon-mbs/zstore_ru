@@ -5,7 +5,7 @@ namespace App\Modules\Shop\Pages\Admin;
 use App\Application as App;
 use App\Entity\Item;
 use App\Modules\Shop\Entity\Product;
-use \App\Entity\Category;
+use App\Entity\Category;
 use App\System;
 use Zippy\Binding\PropertyBinding as PB;
 use Zippy\Html\DataList\ArrayDataSource;
@@ -22,18 +22,18 @@ use Zippy\Html\Panel;
 
 class ProductList extends \App\Pages\Base
 {
-
     private $_item;
     private $store      = "";
     private $op;
-    public  $attrlist   = array(), $imglist = array();
-    public  $group      = null;
-    public  $_grouplist = array();
+    public $attrlist   = array();
+    public $imglist = array();
+    public $group      = null;
+    public $_grouplist = array();
 
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');
+            System::setErrorMsg("Немає права доступу до сторінки");
             App::RedirectError();
             return;
         }
@@ -41,7 +41,7 @@ class ProductList extends \App\Pages\Base
         $this->op = System::getOptions("shop");
         if (strlen($this->op['defcust']) == 0 || strlen($this->op['defpricetype']) == 0) {
 
-            $this->setWarn('notsetoptionsmag');
+            $this->setWarn('Не виконано всі необхідні налаштування магазина. Перейдіть на сторінку налаштувань');
         }
 
 
@@ -49,14 +49,14 @@ class ProductList extends \App\Pages\Base
 
         $this->_grouplist = Category::findFullData($clist);
 
-        usort($this->_grouplist, function($a, $b) {
+        usort($this->_grouplist, function ($a, $b) {
             return $a->full_name > $b->full_name;
         });
 
         $fc = new Category();
         $fc->cat_id = 0;
-        $fc->cat_name = \App\Helper::l("allcategory");
-        $fc->full_name = \App\Helper::l("allcategory");
+        $fc->cat_name = "Всі категорії";
+        $fc->full_name = "Всі категорії";
 
         $first = array($fc);
 
@@ -69,8 +69,8 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->add(new Form('searchform'))->onSubmit($this, 'searchformOnSubmit');
         $this->listpanel->searchform->add(new TextInput('skeyword'));
 
-        $this->listpanel->searchform->add(new TextInput('smanuf' ));
-         
+        $this->listpanel->searchform->add(new TextInput('smanuf'));
+
         $this->listpanel->searchform->add(new ClickLink('sclear'))->onClick($this, 'onSClear');
 
         $this->listpanel->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
@@ -129,7 +129,7 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->plist->Reload();
     }
 
-//строка товара
+    //строка товара
     public function plistOnRow($row) {
         $item = $row->getDataItem();
 
@@ -143,7 +143,7 @@ class ProductList extends \App\Pages\Base
         $row->add(new \Zippy\Html\Image("lphoto"))->setUrl('/loadshopimage.php?id=' . $item->image_id . '&t=t');
     }
 
-//редактирование
+    //редактирование
 
     public function lnameOnClick($sender) {
 
@@ -184,7 +184,7 @@ class ProductList extends \App\Pages\Base
         $this->listpanel->setVisible(true);
     }
 
-//строка  атрибута
+    //строка  атрибута
     public function attrlistOnRow($row) {
         $attr = $row->getDataItem();
 
@@ -214,15 +214,22 @@ class ProductList extends \App\Pages\Base
 
         $file = $sender->photo->getFile();
         if (strlen($file["tmp_name"]) > 0) {
+        
+            if (filesize($file["tmp_name"])  > pow(2,20)) {
+
+                    $this->setError('Розмір файлу більше 1M');
+                    return;
+            }            
+         
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('invalidformat');
+                $this->setError('Невірний формат');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 10000000) {
-                $this->setError('toobigimage');
+                $this->setError('Занадто великий розмір зображення');
                 return;
             }
 
@@ -231,8 +238,9 @@ class ProductList extends \App\Pages\Base
             $image->content = file_get_contents($file['tmp_name']);
             $image->mime = $imagedata['mime'];
 
+            $thumb = new \App\Thumb($file['tmp_name']);
+
             if ($imagedata[0] != $imagedata[1]) {
-                $thumb = new \App\Thumb($file['tmp_name']);
                 if ($imagedata[0] > $imagedata[1]) {
                     $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
                 }
@@ -242,14 +250,9 @@ class ProductList extends \App\Pages\Base
                 $image->content = $thumb->getImageAsString();
             }
 
-            $thumb->resize(256, 256);
+            $thumb->resize(512, 512);
             $image->thumb = $thumb->getImageAsString();
-            $conn =   \ZDB\DB::getConnect();
-            if($conn->dataProvider=='postgres') {
-              $image->thumb = pg_escape_bytea($image->thumb);
-              $image->content = pg_escape_bytea($image->content);
-                
-            }
+         
 
             $image->save();
             $this->_item->productdata->images[] = $image->image_id;
@@ -262,7 +265,7 @@ class ProductList extends \App\Pages\Base
 
     public function imglistOnRow($row) {
         $image = $row->getDataItem();
-        $row->add(new \Zippy\html\Image("imgitem"))->setUrl('/loadshopimage.php?id=' . $image->image_id . "&t=t");
+        $row->add(new \Zippy\Html\Image("imgitem"))->setUrl('/loadshopimage.php?id=' . $image->image_id . "&t=t");
         $row->add(new ClickLink("idel", $this, "idelOnClick"));
     }
 
@@ -288,7 +291,6 @@ class ProductList extends \App\Pages\Base
 
 class ProductDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -342,7 +344,6 @@ class ProductDataSource implements \Zippy\Interfaces\DataSource
 //выводит  элементы  формы  ввода   в  зависимости  от  типа  атрибута
 class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\Interfaces\SubmitDataRequest
 {
-
     protected $productattribute = null;
 
     public function __construct($id, $productattribute) {
@@ -352,11 +353,12 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
 
     public function getContent($attributes) {
         $ret = "<td>{$this->productattribute->attributename}</td><td>";
-        $nodata = \App\Helper::l("shopattrnodata");
+        $nodata = "Немає даних";
+        $sel = '';
         //'Есть/Нет'
         if ($this->productattribute->attributetype == 1) {
-            $yes = \App\Helper::l("shopattryes");
-            $no = \App\Helper::l("shopattrno");
+            $yes = "Є";
+            $no = "Немає";
 
             $s1 = ($this->productattribute->value == -1 || strlen($this->productattribute->value) == 0) ? 'selected="on"' : '';
             $s2 = $this->productattribute->value == '0' ? 'selected="on"' : '';
@@ -447,11 +449,11 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
                 }
             }
             $this->productattribute->attributevalue = implode(',', $values);
-        };
+        }
     }
 
     public function clean() {
-        $this->value = array();
+      //  $this->value = array();
     }
 
 }

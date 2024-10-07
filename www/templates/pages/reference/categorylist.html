@@ -2,27 +2,27 @@
     <head>
         <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
         <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
-              <title> Категории товаров</title>
+              <title> Категорії товарів</title>
  
     </head>
 
     <body>
         <div class="row">
-            {{#usecattree}}
-            <div class="col-12 col-md-10 col-xl-8">
+                {{#usecattree}}
+               <div class="col-12 col-md-11 col-xl-10">
                 {{/usecattree}}
                 {{^usecattree}}        
-                <div class="col-12 col-md-8 col-xl-6">
-                    {{/usecattree}}    
+                <div class="col-12 col-md-10 col-xl-8">
+                {{/usecattree}}    
                     <div zippy="categorytable">
-                        <h3>Категории товаров
+                        <h3>Категорії товарів
                             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                                data-toggle="popover"
-                               data-placement="bottom" data-content="Категории предназначены для группировки товаров в Прайс, а также для
-                               задания наценки по умолчанию для товаров, в которих цена и наценка не указаны явно"></i>
+                               data-placement="bottom" data-content="Категорії призначені для групування товарів в Прайс, а також для
+                               визначення націнки за замовчуванням для товарів, де ціна і націнка не вказані явно"></i>
 
                         </h3>
-                        <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
+                        <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
                         <table class="table table-bordered   table-sm">
                             <tr>
                                 {{#useimages}}
@@ -30,10 +30,16 @@
                                 {{/useimages}}
                                 <th>Назва</th>
                                 {{#usecattree}}
-                                <th class="text-right"> Родительская</th>
+                                <th > Батькiвська</th>
                                 {{/usecattree}}
-                                <th class="text-right">Кол. ТМЦ </th>
+                                <th colspan="2"  style="width:20px" >  
+                                &nbsp;&nbsp;<i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Порядок виводу в меню та онлайн каталозi "></i>
 
+                                 </th>
+                                <th class="text-right"> ТМЦ </th>
+
+                                <th></th>
                                 <th></th>
                             </tr>
                             <tr zippy="categorylist">
@@ -48,10 +54,16 @@
                                 {{#usecattree}}
                                 <td zippy="p_name"></td>
                                 {{/usecattree}}
+                                 <td >
+                                  <a zippy="down"><i class="fa fa-arrow-down"></i></a> 
+                                </td>
+                                <td > 
+                                  <a zippy="up"><i class="fa fa-arrow-up"></i></a> &nbsp;    
+                                 </td> 
                                 <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
-
-                                <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
-                                    &nbsp;&nbsp;&nbsp;<a                             zippy="delete" title="Изъять"><i class="fa fa-trash"></i></a></td>
+                                <td> <a zippy="prices" title="Змiнити цiни">-<i class="fa fa-coins"></i>+ </a>   </td>
+                                <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> 
+                                    &nbsp;&nbsp;&nbsp;<a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
                             </tr>
                         </table>
 
@@ -59,64 +71,127 @@
                     </div>
 
 
-                </div>
+              
             </div>
-            <div class="row">
-                <div class="col-6 col-md-4">
+         
+        </div>
+    <div class="row">
+                <div class="col-6 col-md-4  col-xl-3">
 
                     <form zippy="categorydetail" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="editcat_name">Название</label>
-                            <input required="required" class="form-control" zippy="editcat_name"/>
+                            <label for="editcat_name">Назва</label>
+                            <input autofocus="on"   required="required" class="form-control" zippy="editcat_name"/>
+                        </div>
+                       <div class="form-group">
+                            <label for="editcat_desc">Примiтка</label>
+                            <input   class="form-control" zippy="editcat_desc"/>
                         </div>
                         {{#usecattree}}
                         <div class="form-group">
-                            <label for="editparent">Родительская</label>
+                            <label for="editparent">Батькiвська</label>
                             <select   class="form-control" zippy="editparent">
-                                <option value=0>Не указана</option>
+                                <option value=0>Не вказано</option>
                             </select>
+                            <small>Категорiя  не повинна мати ТМЦ</small>
                         </div>
                         {{/usecattree}}
                         <div class="form-group  ">
-                            <label for="editprice">Наценки в %</label>
+                            <label for="editprice">Націнки в %</label>
                             <div>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice1"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice2"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice3"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice4"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice5"/>
-                                <small class="form-text text-muted">Типы цен задаются в настройках. </small>
+                                <small class="form-text text-muted">Типи цін задаються в налаштуваннях </small>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="editparent">Изображения</label>
+                            <label for="editparent">Зображення</label>
                             <input  accept="image/png,image/jpeg" type="file" class="form-control" zippy="editaddfile">
-                            <small>Изображения должны быть квадратными, иначе будут обрезаны</small> 
+                            <small>Зображення повинно бути квадратним (інакше буде обрізано) та з розміром  файлу  не більше 1M </small>
                         </div>
                         <div class="form-group">
                             <img zippy="editimage" style="height:128px"><br>
                             <div class="form-check">
                                 <input zippy="editdelimage" type="checkbox" class="form-check-input">
 
-                                <span data-label="editdelimage" for="editdelimage">Удалить изображение</span>       
+                                <span data-label="editdelimage" for="editdelimage">Видалити зображення</span>       
                             </div> 
                         </div> 
                         <div class="form-check">
                             <input zippy="editnoshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="editnoshop">Не показывать в онлайн-каталоге</label>
+                            <label class="form-check-label" for="editnoshop">Не показувати в онлайн каталозi</label>
                         </div>
                         <div class="form-check">
                             <input zippy="editnofastfood" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="editnofastfood">Не показывать в кафе</label>
+                            <label class="form-check-label" for="editnofastfood">Не показувати в кафе</label>
                         </div>
+                           <div class="form-check">
+                                <input zippy="editnoprice" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="editnoprice">Не показувати в прайсi</label>
+                            </div>
+                        
                         <div class="form-group">
-                            <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                            <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+                            <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">
+                            <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                            
                         </div>
-                    </form>
+                </form>   
                 </div>
-            </div>
+            </div>       
+        
+        <div class="row">
+            <div class="col-12  col-md-7  col-xl-5">
+                  
+                 <form  zippy="categoryprice">
+                    <h5 zippy="catprname"></h5>  
+                        <div class="form-group row">
+                            <div class="col-auto pt-1"> 
+                            <label for="ptype">Тип цiни</label>
+                            </div>
+                             <div class="col-auto"> 
+                            <select   class="form-control" zippy="ptype">
+                               
+                            </select>
+                            </div>
+                        </div>                     
+                    <div class="form-group  ">
+                         <label   for="editprice">Змiнити на  суму або процент</label>
+                             <input required="required" style="width: 100px"   class="form-control" zippy="chprice"/>
+
+                             <small class="form-text text-muted">Наприклад  5, -2, 3%, -0.5%. </small>
+
+                    </div>              
+                     <div class="form-check">                    
+                           <input type="checkbox"  zippy="rnd">  <label   for="rnd">Закруглити до **9 </label>
+                    </div> 
+                    <div class="form-group  ">
+                      <input  zippy="calccp"  type="submit" value="Перерахувати" class="btn btn-primary  ">
+                    </div> 
+                     <table class="ctable"> 
+                     <tr zippy="cplist">
+                       <td zippy="cplname"></td>
+                       <td zippy="cplcode" class="text-nowrap"></td>
+                       <td zippy="cplold" class="text-right"></td>
+                       <td>    <input  pattern="[0-9\.]+" style="width: 100px"   class="form-control" zippy="cplnew"/></td>    
+                       </tr>
+
+                     </table> 
+                     <div class="form-group mt-2 ">
+                                 
+                    <a zippy="backprice" class="btn btn-sucondary  ">Скасувати</a>
+                    &nbsp;&nbsp;<input zippy="savecp"  type="submit" value="Зберегти" class="btn btn-success  ">
+                    </div> 
+                    
+ 
+                 </form>
+           </div>
         </div>
+
+         
+        
         <script>
 $(document).ready(function () {
 
@@ -128,7 +203,12 @@ $(document).ready(function () {
 
 });
 
-
+    function check_savecp(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }
         </script>
 
     </body>

@@ -2,30 +2,30 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Оплата по производству
+            Оплата по виробництву
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="5">
-            Период с {{datefrom}} по {{dateto}}
+            Період з {{datefrom}} по {{dateto}}
         </td>
     </tr>
        <tr>
 
         <td   colspan="5">
-            <b>По нарядам</b>
+            <b>По нарядах</b>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Исполнитель</th>
+        <th style="border: solid black 1px">Виконавець</th>
 
-        <th align="right" style="border: solid black 1px">Нарядов</th>
-        <th align="right" style="border: solid black 1px">Часов</th>
+        <th align="right" style="border: solid black 1px">Нарядів</th>
+        <th align="right" style="border: solid black 1px">Годин</th>
 
-        <th align="right" style="border: solid black 1px">Сумма</th>
+        <th align="right" style="border: solid black 1px">Сума</th>
 
     </tr>
         {{#_detail}}
@@ -52,18 +52,18 @@
               <tr>
 
         <td   colspan="5">
-            <b>По производственных этапах</b>
+            <b>По виробничим етапам</b>
         </td>
     </tr>
       <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Исполнитель</th>
+        <th style="border: solid black 1px">Виконавець</th>
 
-        <th align="right" style="border: solid black 1px">Этапов</th>
-        <th align="right" style="border: solid black 1px">Часов</th>
+        <th align="right" style="border: solid black 1px">Етапiв</th>
+        <th align="right" style="border: solid black 1px">Годин</th>
 
-        <th align="right" style="border: solid black 1px">Сумма</th>
+        <th align="right" style="border: solid black 1px">Сума</th>
 
     </tr>
         {{#_detail2}}
@@ -84,5 +84,4 @@
 
 
 <br> <br>
-</body>
-</html>
+

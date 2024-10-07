@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title> Товары на складе  </title>
+        <title> Товари на складі  </title>
 
    
         <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
@@ -12,64 +12,119 @@
         <div class="row">
 
             <div class="col-12    " zippy="itempanel">
-                <h3>Товары на складе </h3>
+                <h3>Товари на складі </h3>
                 <div class="navbar nav  ">
-                    <form zippy="filter" class="form-inline">
+                    <form zippy="filter" class="row   g-2 align-items-center">
+                        <div class="col-auto">
+       
+                        <input autofocus="on" autocomplete="off" placeholder="Пошук..." class="form-control mr-sm-2" type="search"     onkeydown="onSearch()" zippy="searchkey">
+                       </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
 
-
-                        <input autocomplete="off" placeholder="Имя или код..." class="form-control mr-sm-2" type="text"
-                               onkeydown="onSearch()" zippy="searchkey">
-
-                        <label for="searchcat">категория</label>
+                        <label class="col-auto mt-2" for="searchcat">категорія</label>
+                                 <div class="col-auto">
 
                         <select class="form-control mr-sm-2" zippy="searchcat">
                             <option value="0">Не задано</option>
                         </select>
-                        <label for="searchstore">Склад</label>
+                        </div>
+                        </div>
+                        </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="searchstore">Склад</label>
+                               <div class="col-auto">
                         <select class="form-control mr-sm-2" zippy="searchstore">
-                            <option value="0">По всем</option>
+                            <option value="0">По всім</option>
                         </select>
-                        <label for="searchbrand">Бренд </label>
-                        <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
+                         </div>
+                        </div>
+                        </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="searchprice">Сума по  </label>
 
-                        <input class="btn btn-outline-success  " type="submit" value="ОК">
+                                 <div class="col-auto">
+                      <select class="form-control mr-sm-2" zippy="searchprice">
+                            
+                        </select>
+                          </div>
+                          </div>
+                        </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="searchbrand">Бренд </label>
+                         <div class="col-auto">
+                      <input autocomplete="off"   class="form-control mr-2" zippy="searchbrand"/>
+                     </div>
+                     </div>
+                     </div>
+                           <div class="col-auto">
+                       <select class="form-control mr-sm-2" zippy="searchqty">
+                            <option value="0">На  складі </option>
+                            <option value="1">В  мінусі </option>
+                            <option value="2">Всі </option>
+                        </select>
 
-                    </form>
+                      </div>
+                      
+                 <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                              <label class="col-auto mt-2"  for="searchtype">Тип</label>
+                          <div class="col-auto">
+                            <select zippy="searchtype" class="form-control mr-sm-2">
+                                <option value="0">Всі</option>
+                                <option value="1">Товари</option>
+                                <option value="2">Матеріали та комплектуючі</option>
+                                <option value="3">МШП</option>
+                                <option value="4">Готова продукція</option>
+                                <option value="5">Напівфабрикати</option>
+
+                            </select>
+                          </div>
+                       </div>
+                      </div>                      
+                      
+                          <div class="col-auto">
+                      <input class="btn btn-outline-success  " type="submit" value="ОК">
+                      </div>
+                    
+                   
+                   </form>
                 </div>
-                <a zippy="csv">Экспорт в Excel</a>
-
+                <a zippy="csv">Експорт у Excel</a>
+                <a zippy="printqty" class=" ml-4  " title="Друкувати вiдфiльтрованi по кiлькостi наявних"> <i class="fa fa-print"></i> </a>
                 <table class="table      table-sm  table-hover ">
                     <tr>
                         {{#useimages}}
                         <th></th>
                         {{/useimages}}
 
-                        <th>Название</th>
+                        <th>Назва</th>
 
 
-                        <th>Артикул</th>
-                        <th>Категория</th>
+                        <th>Код</th>
+                        <th>Категорія</th>
                         <th>Бренд</th>
-                        <th>Ед.</th>
-                        <th> </th>
+                        <th>Од.</th>
+                    
 
-                        <th class="text-right  ">Мин. кол.</th>
-                        <th class="text-right  ">Кол.</th>
-                        {{^noshowpartion}}
-                        <th class="text-right  ">На сумму</th>
+                        <th class="text-right  ">Кіл.</th>
+   {{^noshowpartion}}                         
+                        <th class="text-right  ">Обл. ціна</th>
+   {{/noshowpartion}}         
+   
+   {{^nohowprodprice}}       
+                        <th class="text-right  ">Прод. ціна</th>
+   {{/nohowprodprice}}                               
+                        <th class="text-right  ">На суму</th>
 
-                        {{/noshowpartion}}                        
-
-                        {{#hp1}}<th class="text-right  ">{{hp1}}</th>{{/hp1}}
-                        {{#hp2}}<th class="text-right  ">{{hp2}}</th>{{/hp2}}
-                        {{#hp3}}<th class="text-right  ">{{hp3}}</th>{{/hp3}}
-                        {{#hp4}}<th class="text-right  ">{{hp4}}</th>{{/hp4}}
-                        {{#hp5}}<th class="text-right  ">{{hp5}}</th>{{/hp5}}
-                        {{^noshowpartion}}
+                                           
 
 
-                        <th style="width:50px"></th>
-                        {{/noshowpartion}}
+                        <th  ></th>
+                    
 
 
                     </tr>
@@ -82,68 +137,66 @@
                         </td>
                         {{/useimages}}
 
-                        <td zippy="itemname"></td>
+                        <td ><a zippy="itemname"></a></td>
 
                         <td zippy="code" class=" text-nowrap"></td>
                         <td zippy="cat_name"></td>
                         <td zippy="brand"></td>
                         <td zippy="msr"></td>
-                        <td  class="text-right"><i title="Акция" zippy="hasaction" class="fa fa-gift"/></td>
 
-                        <td zippy="minqty" class="text-right  "></td>
+
                         <td zippy="iqty" class="text-right  "></td>
-                        {{^noshowpartion}}
-
-
+                        
+                           {{^noshowpartion}} 
+                        <td zippy="inprice" class="text-right  "></td>
+                           {{/noshowpartion}} 
+         
+                   {{^nohowprodprice}}       
+                        <td zippy="iprodprice" class="text-right  "></td>
+                   {{/nohowprodprice}}                               
                         <td zippy="iamount" class="text-right  "></td>
 
-                        {{/noshowpartion}}                        
+                            
 
-                        {{#hp1}}<td zippy="iprice1" class="text-right  "></td>{{/hp1}}
-                        {{#hp2}}<td zippy="iprice2" class="text-right  "></td>{{/hp2}}
-                        {{#hp3}}<td zippy="iprice3" class="text-right  "></td>{{/hp3}}
-                        {{#hp4}}<td zippy="iprice4" class="text-right  "></td>{{/hp4}}
-                        {{#hp5}}<td zippy="iprice5" class="text-right  "></td>{{/hp5}}
-                        {{^noshowpartion}}
-
-
-                        <td><a zippy="show" title="Детальная информация"><i class="fa fa-eye"></i></a></td>
-                        {{/noshowpartion}}
+                        <td>
+                       
+                            <a zippy="show" title="Детальна інформація"><i class="fa fa-eye"></i></a>
+                         
+                        </td>
+                        
 
 
                     </tr>
                     <tr>
-                        {{#useimages}}
-                        <td></td>
-                        {{/useimages}}
+                        <td colspan="10" class="  font-weight:bolder"> Всього на суму: <span zippy="totamount"></span> </td>
 
-                        {{^noshowpartion}}
-                        <td colspan="8" class="text-right font-weight-bolder"> Всего на сумму:</td>
-                        <td class="text-right font-weight-bolder" zippy="totamount"></td>
-                        <td></td>    {{/noshowpartion}}
                     </tr>
                 </table>
                 <div zippy="pag"></div>
 
             </div>
-            <div class="col-12   col-xl-10" zippy="detailpanel">
-                <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> К списку</a>
-                <h4 zippy="itemdetname"></h4>
+            <div class="col-12 col-md-10 col-xl-8" zippy="detailpanel">
+             <div class="row">
+              <div class="col-12 mb-4">
+                <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> До переліку</a>
+                <h3 zippy="itemdetname"></h3>
+                
+            {{^noshowpartion}}                 
+                <h5> Партiї облiку  </h5>
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
                         {{#usesnumber}}
-                        <th class="text-right text-nowrap">Серия</th>
+                        <th class="text-right text-nowrap">Серія</th>
 
-                        <th class="text-right text-nowrap">Годен до</th>
+                        <th class="text-right text-nowrap">Придатний до</th>
                         {{/usesnumber}}
-                        <th class="text-right text-nowrap">Уч. цена</th>
-                        {{#useval}}
-                        <th class="  text-nowrap">По курсу</th>
-                        {{/useval}}
-                        <th class="text-right text-nowrap">Кол.</th>
-                        <th class="text-right text-nowrap">На сумму</th>
-                        <th class="text-right text-nowrap ">Прод. цена</th>
+                        <th class="text-right text-nowrap">Обл. ціна</th>
+            
+                        <th class="text-right text-nowrap">Кіл.</th>
+                        <th class="text-right text-nowrap">На суму</th>
+                  
+                 
 
                           <th  > </th>
 
@@ -156,28 +209,87 @@
 
                         {{/usesnumber}}
                         <td zippy="partion" class="text-right  "></td>
-                        {{#useval}}
-                        <td zippy="rate"></td>
-                        {{/useval}}
+                
 
                         <td zippy="qty" class="text-right  "></td>
                         <td zippy="amount" class="text-right  "></td>
-                        <td zippy="price" class="text-right  "></td>
-                         <td  ><a zippy="createmove" >Создать перемещение</a></td>
+
+
+                         <td  ><a zippy="createmove" >Перемiстити партiю</a></td>
 
 
                     </tr>
                 </table>
-                <small><i class="fa fa-exclamation-triangle"/> Скорректировать партии, например, когда образовался минус, можно
-                    документом Перемещение партий .</small>
+                <small><i class="fa fa-exclamation-triangle"></i> Скоригувати партiї, наприклад, якщо утворився мiнус можна
+                    документом Перемiщення партiй.</small>
+             {{/noshowpartion}} 
+              </div>
+              
+              
+                <div class="col-6  ">
+                     <b>Остання продажа</b> <br>
+                  {{i_lastsell}}  <br>
+                     {{i_avgout}} <br>                 
+                     <b>Вiдпускнi цiни</b> <br>
+                    <table class="ctable">
+                      {{#i_plist}}
+                      <tr><td>{{i_pricename}}</td><td class="text-right">{{i_price}}</td></tr>
+                      {{/i_plist}}
+                      
+                    </table> 
+                   
+               </div>
+               
+                {{^noshowpartion}} 
+                <div class="col-6">
+                     <b>Остання закупка</b><br>
+                      {{i_lastbay}}  <br>
+                     {{#useval}}
+                       Валюта  {{i_rate}} <br>
+                     {{/useval}}  
+                 
+                     <form zippy="iformbay" class="form-inline mt-4">
+                       <label>Кiл.</label> 
+                       <input required="required" style="width:120px;" zippy="iformbayqty"  pattern="[0-9\.]+" class="form-control priceqty" >
+                       <input title="Додати в заявку постачальнику"   type="submit" value="В закупку"  class="btn btn-info" >
+                     </form>
+                     
 
+                     
+               </div>
+               
+                {{/noshowpartion}} 
+               
+             </div>
             </div>
 
 
         </div>
+        
+<div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td align="center" id="tag"></td>
+                            <tr>
+                            <tr>
+                                <td align="center"><a href="javascript:void(0)"
+                                                      onclick="$('#tag').printThis();$('#pform').modal('hide')"
+                                                      class="btn btn-success  ">Друк</a></td>
+                            <tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
         <script>
             function check_delete() {
-                return confirm("Удалить партию?")
+                return confirm("Видалити партію?")
             }
 
             $(document).ready(function () {
@@ -187,7 +299,7 @@
                     $(this).ekkoLightbox({'alwaysShowClose': true});
                 });
 
-                $('#searchkey').focus();
+        
 
 
             });

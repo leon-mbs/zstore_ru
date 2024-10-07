@@ -19,7 +19,6 @@ use Zippy\Html\Panel;
 
 class Users extends \App\Pages\Base
 {
-
     public $user = null;
 
     public function __construct() {
@@ -35,7 +34,7 @@ class Users extends \App\Pages\Base
 
         $this->add(new Panel("listpan"));
         $this->listpan->add(new Form('filter'))->onSubmit($this, 'OnFilter');
-        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\entity\UserRole::findArray('rolename', '', 'rolename'), 0));
+        $this->listpan->filter->add(new DropDownChoice('searchrole', \App\Entity\UserRole::findArray('rolename', '', 'rolename'), 0));
 
         $this->listpan->add(new ClickLink('addnew', $this, "onAdd"));
         $this->listpan->add(new DataView("userrow", new UserDataSource($this), $this, 'OnUserRow'))->Reload();
@@ -60,7 +59,7 @@ class Users extends \App\Pages\Base
     public function onAdd($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError('onlyadminsuser');
+            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
 
             return;
         }
@@ -77,7 +76,7 @@ class Users extends \App\Pages\Base
     public function onEdit($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError('onlyadminsuser');
+            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
 
             return;
         }
@@ -104,6 +103,7 @@ class Users extends \App\Pages\Base
             App::RedirectError();
             return false;
         }
+
         $emp = \App\Entity\Employee::getByLogin($this->user->userlogin);
 
         $this->user->email = $this->editpan->editform->editemail->getText();
@@ -116,7 +116,7 @@ class Users extends \App\Pages\Base
         $user = User::getByLogin($this->user->userlogin);
         if ($user instanceof User) {
             if ($user->user_id != $this->user->user_id) {
-                $this->setError('nouniquelogin');
+                $this->setError('Неунікальний логін');
 
                 return;
             }
@@ -126,23 +126,27 @@ class Users extends \App\Pages\Base
             if ($user instanceof User) {
                 if ($user->user_id != $this->user->user_id) {
 
-                    $this->setError('nouniqueemail');
+                    $this->setError('Неунікальний e-mail');
                     return;
                 }
             }
         }
         $this->user->role_id = $this->editpan->editform->editrole->getValue();
+        if($this->user->role_id==0) {
+            $this->setError('Не вказана роль');
+            return;
+        }
         $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1 : 0;
         $this->user->hidemenu = $this->editpan->editform->edithidemenu->isChecked() ? 1 : 0;
         $this->user->disabled = $this->editpan->editform->editdisabled->isChecked() ? 1 : 0;
 
         $pass = $this->editpan->editform->editpass->getText();
         if (strlen($pass) > 0) {
-            $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));;
+            $this->user->userpass = (\password_hash($pass, PASSWORD_DEFAULT));
         }
         if ($this->user->user_id == 0 && strlen($pass) == 0) {
 
-            $this->setError("enterpassword");
+            $this->setError("Введіть пароль");
             return;
         }
 
@@ -172,7 +176,7 @@ class Users extends \App\Pages\Base
     public function OnRemove($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError('onlyadminsuser');
+            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
 
             return;
         }
@@ -203,7 +207,7 @@ class Users extends \App\Pages\Base
 
     public function branchOnRow($row) {
         $item = $row->getDataItem();
-        $arr = @explode(',', $this->user->aclbranch);
+        $arr = @explode(',', $this->user->aclbranch ?? '');
         if (is_array($arr)) {
             $item->editbr = in_array($item->branch_id, $arr);
         }
@@ -220,7 +224,6 @@ class Users extends \App\Pages\Base
 
 class UserDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

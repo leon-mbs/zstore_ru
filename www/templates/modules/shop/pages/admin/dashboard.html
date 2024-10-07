@@ -2,7 +2,8 @@
 
         <head>
         <title> Дашборд  </title>
- 
+          <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
     </head>
     <body>
        
@@ -37,7 +38,19 @@
                 </div>                  
             
             </div>
+          <div class="w-100">   </div> 
          
+          <div class="col-12 col-md-4 col-xl-3   "> 
+             <table class="table table-sm">
+                <tr><td>Нових вiдвiдувачiв</td><td class="text-right">{{vnewv}}</td></tr>
+                <tr><td>Всього замовлень</td><td class="text-right">{{vorders}}</td></tr>
+                <tr><td>Виконаних замовлень</td><td class="text-right">{{vdoneorders}}</td></tr>
+                <tr><td>Позицiй, доданих до корзини</td><td class="text-right">{{vcart}}</td></tr>
+                <tr><td>Куплених позицiй</td><td class="text-right">{{vbayed}}</td></tr>
+             </table>
+           </div> 
+       <div class="w-100">   </div> 
+              
           <div class="col-12    ">   </div> 
              <div class="col-12 col-md-4   ">
                 
@@ -81,9 +94,9 @@
         
       
   
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+ 
     <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart'], 'language': 'ru'});
+      google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
       google.charts.setOnLoadCallback(drawChart);
 
 

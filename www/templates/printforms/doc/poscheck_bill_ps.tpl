@@ -1,11 +1,24 @@
 <font bold="true">a</font>
 <text>Чек {{document_number}}</text>
 <font >a</font>
-<text>от {{date}}</text>
+<text>вiд {{date}}</text>
 <align>left</align>
 
-<text>{{firm_name}}</text>   
-<text>ІНН {{inn}}</text>   
+    {{#fiscalnumber}}
+<text>Фiскальний чек</text>
+<text>ФН чека {{fiscalnumber}}</text>
+    {{/fiscalnumber}}
+   {{#fiscalnumberpos}}
+<text>ФН РРО {{fiscalnumberpos}}</text>   
+    {{/fiscalnumberpos}}
+
+<text>{{firm_name}}</text> 
+{{#inn}}  
+<text>ІПН {{inn}}</text>   
+{{/inn}}  
+{{#tin}}  
+<text>ЄДРПОУ {{tin}}</text>   
+{{/tin}}  
 <text>{{shopname}}</text>   
   {{#shopname}}
 <text>{{shopname}}</text>   
@@ -13,11 +26,11 @@
 <text>{{address}}</text>    
  
     {{#customer_name}}
-<text>Покупатель: {{customer_name}}</text>    
+<text>Покупець: {{customer_name}}</text>    
 
     {{/customer_name}}
-<text>Терминал: {{pos_name}}</text>    
-<text>Кассир: {{username}}</text>    
+<text>Термінал: {{pos_name}}</text>    
+<text>Касир: {{username}}</text>    
 
  
 
@@ -36,48 +49,53 @@
 <font bold="true">a</font>
 
 <align>right</align>
-<text>Всего: {{total}}</text>
+<text>Всього: {{total}}</text>
 <font >a</font>
  
 
-    {{^prepaid}}
-    {{#isdisc}}
-<text>Скидка: {{paydisc}}</text>
+  
+    {{#totaldisc}}
+<text>Знижка: {{totaldisc}}</text>
  
-    {{/isdisc}}
+    {{/totaldisc}}
    {{#delbonus}}
- <text>Списано бонусов: {{delbonus}}</text>
+ <text>Списано бонусiв: {{delbonus}}</text>
  
     {{/delbonus}}
+   {{#prepaid}}
+ <text>Передплата: {{prepaid}}</text>
+ 
+    {{/prepaid}}
 
- <text>К оплате: {{payamount}}</text>
+ <text>До сплати: {{payamount}}</text>
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
- <text>Сдача: {{exchange}}</text>
+ <text>Решта: {{exchange}}</text>
  {{/exchange}} 
-    {{/prepaid}}
+ 
     
     
-        {{#nal}}
- <text>Форма оплаты: нал</text>        
-
-        {{/nal}}
-        {{^nal}}
- <text>Форма оплаты: безнал</text>        
-
-        {{/nal}}    
+        {{#form1}}
+ <text>Форма оплати: готiвка</text>        
+        {{/form1}}
+        {{#form2}}
+ <text>Форма оплати: банкiвська карта</text>        
+        {{/form2}}    
+        {{#form3}}
+ <text>Форма оплати: готiвка + карта</text>        
+        {{/form3}}    
     
         {{#trans}}
- <text>№ транзакции  {{trans}}</text>        
+ <text>№ транзакції  {{trans}}</text>        
           
         {{/trans}}    
     {{#addbonus}}
- <text>Насчитано бонусов: {{addbonus}}</text>
+ <text>Нараховано бонусiв: {{addbonus}}</text>
  
     {{/addbonus}}
     {{#allbonus}}
 
- <text>Всего бонусов: {{allbonus}}</text>
+ <text>Всього бонусiв: {{allbonus}}</text>
  
     {{/allbonus}}
     
@@ -85,12 +103,20 @@
 <font bold="true">a</font>
 <align>center</align>
 <newline ></newline>
-<text>  {{checkslogan}}</text>    
-{{#docqrcodeurl}}
+
+{{#checkslogan}}
+<text>  {{checkslogan}}</text>
+{{/checkslogan}}
+
+{{#promo}}
+<text>  {{promo}}</text>  
+{{/promo}}  
+
+{{#isdocqrcode}}
 <font >a</font>
 <newline ></newline>
-<qrcode type="code128"> {{docqrcodeurl}}</qrcode>
-{{/docqrcodeurl}}
+<qrcode  > {{docqrcodeurl}}</qrcode>
+{{/isdocqrcode}}
 <newline ></newline>
  
    

@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App;
 
 /**
  * вспомагательный  клас  для  работы  с датами
  */
-class  DateTime
+class DateTime
 {
-
     private $time;
 
     public function __construct($time = 0) {
@@ -24,7 +22,7 @@ class  DateTime
     }
 
     public function getISO() {
-        return date(\DateTime::ISO8601, $this->time);
+        return date(\DateTimeInterface::ISO8601, $this->time);
     }
 
 

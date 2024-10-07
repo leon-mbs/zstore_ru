@@ -9,23 +9,23 @@
 <ul class="nav nav-tabs">
   
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Форма для печати</a>
+    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Форма для друку</a>
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Связанные документы <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Пов'язанi документи <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Комментарии  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Коментарi  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tfiles"><i class="fa fa-paperclip"></i> Прикрепленные файлы <span   class="badge badge-pill badge-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tfiles"><i class="fa fa-paperclip"></i> Прикрiпленi файли <span   class="badge badge-pill badge-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#thist"><i class="fa fa-calendar-alt"></i> История изменений</a>
+    <a class="nav-link" data-toggle="tab" href="#thist"><i class="fa fa-calendar-alt"></i> Iсторiя змiн</a>
   </li>
 <li class="nav-item" v-show="docdata.isscan">
-    <a class="nav-link" data-toggle="tab" href="#tscan"><i class="fa fa-image"></i> Скан оригинала</a>
+    <a class="nav-link" data-toggle="tab" href="#tscan"><i class="fa fa-image"></i> Скан оригiналу</a>
   </li>
  
 </ul>  
@@ -33,19 +33,20 @@
   
   <div class="tab-pane   show active" id="tprint"> 
        
-       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Печать"><i class="fa fa-print mr-2"></i> </a>
+       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Друк"><i class="fa fa-print mr-2"></i> </a>
        <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print mr-2"></i></a>   
     
         
-        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Экспорт в Word"><i class="fa fa-file-word mr-2"></i>   </a>
-        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
-        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Экспорт в PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
-        <a v-show="docdata.exports.email" v-on:click="sendmail"   href="javascript:void(0)"  title="Отправка почтой"> <i class="fa fa-envelope mr-2"></i>  </a>
+        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт у Word"><i class="fa fa-file-word mr-2"></i>   </a>
+        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
+        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт у PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
+        <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Вiдправка електронною поштою "> <i class="fa fa-envelope mr-2"></i>  </a>
+        <a v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode mr-2"></i>  </a>
     
         <span v-show="docdata.exports.pos">
        
-       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Печать на чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Печать на чековом принтере"><i class="fas fa-cash-register mr-1"></i> </a>
+       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-cash-register mr-1"></i> </a>
          </span>            
        
        <br>
@@ -63,7 +64,7 @@
               <table class="table table-sm"   >
                 <tr>
                     <td colspan="2" v-show="docdata.pdoc_id>0">
-                       <b>Родительский документ:</b> <br> <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
+                       <b>Батькiвський документ:</b> <br> <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
                     </td>
                 </tr>
                 <tr v-for="item   in  reldocs" >
@@ -74,14 +75,14 @@
             <hr>
             <form onsubmit="return  false"     >
 
-                <label for="addrel">Добавить дочерний документ:</label>
+                <label for="addrel">Додати дочiрнiй документ:</label>
                 <div class="form-group">
-                    <typeahead  ref="docth"  :onquery="ontext"  :onhit="selectdoc" placeholder="Начните вводить номер..."></typeahead>   
+                    <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Почнiть вводити номер..."></typeahead>   
 
                 </div>
 
                
-                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="Добавить">
+                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="Додати">
             </form>
       </div>
       </div>
@@ -105,11 +106,11 @@
                      <form id="msgform"  onsubmit="return  false"  >
        
                         <div class="form-group">
-                            <label for="addmsg"> Комментарий: </label>
+                            <label for="addmsg"> Коментар: </label>
                             <textarea  name="msgtext"  class="form-control" required="required"  
                                       style=" height:120px;"></textarea>
                         </div>
-                        <input v-on:click="onaddmsg" class="btn btn-success  " type="button" value="Добавить">
+                        <input v-on:click="onaddmsg" class="btn btn-success  " type="button" value="Додати">
                     </form>   
   </div>
   </div>
@@ -133,15 +134,15 @@
                      <form id="fileaddform" onsubmit="return  false"  enctype="multipart/form-data">
 
                         <div class="form-group">
-                            <label for="addfile"> Выбрать файл: </label>
+                            <label for="addfile"> Вибрати файл: </label>
                             <input name="addfile" class="form-control" type="file" required="required"  >
                         </div>
 
                         <div class="form-group">
-                            <label for="adddescfile"> Комментарий </label>
+                            <label for="adddescfile"> Коментар </label>
                             <input name="adddescfile" class="form-control" type="text"    >
                         </div>
-                        <input v-on:click="onaddfile" class="btn btn-success  " type="button" value="Добавить">
+                        <input v-on:click="onaddfile" class="btn btn-success  " type="button" value="Додати">
 
 
                     </form>   
@@ -149,44 +150,44 @@
   </div>
   </div>
  <div class="tab-pane  " id="thist">
-             <div class="row">
+             <div class="row" style="font-size:smaller">
 
                         <div class="col-auto ">
-                            <h5>История статусов</h5>
+                            <h5>Iсторiя статусiв</h5>
                             <table class="table table-sm">
                                 <tr>
                                     <th>Статус</th>
                                     <th>Дата</th>
-                                    <th>Изменил</th>
+                                    <th>Змiнив</th>
 
 
                                 </tr>
                                 <tr  v-for="item   in docdata.loglist"  >
                                     <td >{{item.statename}}</td>
                                     <td class="text-nowrap "  >{{item.statedate}}</td>
-                                    <td zippy="stateuser">{{item.stateuser}}</td>
+                                    <td >{{item.stateuser}}</td>
 
 
                                 </tr>
                             </table>
                         </div>
                         <div class="col-auto ">
-                            <h5>История оплат</h5>
+                            <h5>Iсторiя оплат</h5>
                             <table class="table table-sm">
                                 <tr>
                                     <th>Дата</th>
-                                    <th>Счет</th>
-                                    <th class="text-right">Доход</th>
-                                    <th class="text-right">Расход</th>
+                                    <th>Рахунок</th>
+                                    <th class="text-center">+</th>
+                                    <th class="text-center">-</th>
                                   
 
 
                                 </tr>
                                 <tr v-for="item   in docdata.paylist">
-                                    <td class="text-nowrap " zippy="paydate">{{item.paydate}}</td>
-                                    <td zippy="paymf">{{item.paymf}}</td>
-                                    <td class="text-right " zippy="payamountp">{{item.payamountp}}</td>
-                                    <td class="text-right " zippy="payamountm">{{item.payamountm}}</td>
+                                    <td class="text-nowrap " >{{item.paydate}}</td>
+                                    <td >{{item.paymf}}</td>
+                                    <td class="text-right " >&nbsp;{{item.payamountp}}</td>
+                                    <td class="text-right " >&nbsp;{{item.payamountm}}</td>
                                 
 
                                 </tr>
@@ -198,12 +199,12 @@
                                 <tr>
                                     <th>ТМЦ</th>
                                     <th>Код</th>
-                                    <th class="text-right">Кол.</th>
+                                    <th class="text-right">Кiл.</th>
                                     
-                                    <th v-show="docdata.showpartion" class="text-right">Уч. цена</th>
+                                    <th v-show="docdata.showpartion" class="text-right">Обл. цiна</th>
                                   
-                                    <th class="text-right">Цена</th>
-                                    <th class="text-right">Сумма</th>
+                                    <th class="text-right">Цiна</th>
+                                    <th class="text-right">Сума</th>
 
                                 </tr>
                                 <tr v-for="item   in docdata.entrylist" >
@@ -225,12 +226,44 @@
   <div class="tab-pane  " id="tscan" v-show="docdata.isscan">
        <img   :src="docdata.scanimage"  />
 
-  </div>
+  </div>                          
+       
  
 </div>
+              <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body  ">
+                          <table class="table table-sm">
+                          <tr><td align="center">
+                            <h5 >QR код для  оплати</h5>
+                           </td></tr>
+                          <tr><td align="center">
+                          <div class="mb-2"   v-html="docdata.qr.img" > </div>
+                          </td></tr>
+                          <tr><td align="center">
+                          <a  class="btn btn-info  "  :href="docdata.qr.url" >  Відкрити посилання        </a>
 
+                           <a class="btn btn-success   " v-on:click.prevent="copycb" title="Скопіювати в кліпборд" >Скопіювати </a>
+                          </td></tr> </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div> 
   
         </div>
+        
+        
+      
+        
       {|={{ }}=|}  
         <script>
 
@@ -263,7 +296,7 @@
                       if(data.error  != "") {
                           toastr.error(data.error)
                       } else {
-                         //отправляем на  принтер 
+                         //відправляємо на принтер 
                          sendPS("["+data.buf+"]" )                             
                           
                       }
@@ -285,7 +318,8 @@
                    path:'',
                    loaded:false,
                   docdata:{
-                      exports:{}
+                      exports:{} ,
+                      qr:{}
                   } ,
                   reldocs:[] ,
                   childdocid:0,
@@ -351,7 +385,7 @@
                    callPageMethod(this.path +'::loaddata',[this.docid], null,(data)=> 
                   {
                     
-                        
+
                       this.loaded = true;
                       this.docdata = JSON.parse(data) ;
                       this.loaddocs()  
@@ -367,23 +401,53 @@
                 }
                ,
                sendmail:function(){
+
+                  if(confirm("Вiдправити?")==false) {
+                      return;
+                  }
+                   
+                   
                   callPageMethod(this.path +'::onMail',[this.docid], null,(data)=> 
                   {    
                       var ret = JSON.parse(data) ;
                       if(ret.ok==true) {
-                           toastr.success('Отправлено','',{'timeOut':'2000'})   
+                           toastr.success('Вiдправлено','',{'timeOut':'2000'})   
                       }  else {
                            toastr.error(ret.error,'',{'timeOut':'5000'})                             
                       }
                                          
                        
-                  });                       
+                  });           
+                   
+                   
+                  
                } 
                ,
+               qrpay:function( ){
+                   
+                 $('#modalqr').modal('show')  
+                  
+               }   ,
+           
+             copycb:function( ){
+ 
+            
+                if(navigator.clipboard){
+                    navigator.clipboard.writeText(this.docdata.qr.url);
+                }else alert('Ваш браузер не підтримує Clipboard'); 
+  
+      
+                  
+               }   ,
+           
                opendoc:function(id){
                    
                   this.docid = id 
                   _docid = id 
+                  
+               //   window.location="index.php?p=App/Pages/Register/DocList&arg="+id
+                  
+                  
                }   ,
              
              
@@ -402,10 +466,6 @@
                                   this.loaddocs() 
                               });
                } ,
-                selectdoc: function (id){
-            
-                    this.childdocid = id 
-                },
                 ontext: async function (query){
                    
                     var url  = getMethodUrl(this.path +'::getDocs',[query, this.docid])
@@ -472,7 +532,7 @@
                 } ,  
                 delfile:function( id){
                     
-                   callPageMethod(this.path+'::delfile',[ id], null,(data)=> 
+                   callPageMethod(this.path+'::delfile',[ id,this.docid], null,(data)=> 
                      {
                         this.loadfiles() 
                      });

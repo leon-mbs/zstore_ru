@@ -19,26 +19,23 @@ use App\Util;
  */
 class Main extends Base
 {
-  
-
     private $_docstatelist;
 
     public function __construct() {
         parent::__construct();
 
-        $this->_tvars['curversion'] = System::CURR_VERSION;
-        $this->_tvars['curversionbd'] = System::getOptions('version',false);
 
+        
         $user = System::getUser();
 
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
 
-        $this->_tvars['wminqty'] = strpos(System::getUser()->widgets, 'wminqty') !== false;
-        $this->_tvars['wsdate'] = strpos(System::getUser()->widgets, 'wsdate') !== false;
-        $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets, 'wrdoc') !== false;
-        $this->_tvars['wmdoc'] = strpos(System::getUser()->widgets, 'wmdoc') !== false;
-        $this->_tvars['winfo'] = strpos(System::getUser()->widgets, 'winfo') !== false;
-        $this->_tvars['wgraph'] = strpos(System::getUser()->widgets, 'wgraph') !== false;
+        $this->_tvars['wminqty'] = strpos(System::getUser()->widgets ?? '', 'wminqty') !== false;
+        $this->_tvars['wsdate'] = strpos(System::getUser()->widgets ?? '', 'wsdate') !== false;
+        $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets ?? '', 'wrdoc') !== false;
+        $this->_tvars['wmdoc'] = strpos(System::getUser()->widgets ?? '', 'wmdoc') !== false;
+        $this->_tvars['winfo'] = strpos(System::getUser()->widgets ?? '', 'winfo') !== false;
+        $this->_tvars['wgraph'] = strpos(System::getUser()->widgets ?? '', 'wgraph') !== false;
         if ($user->rolename == 'admins') {
             $this->_tvars['wminqty'] = true;
 
@@ -61,13 +58,13 @@ class Main extends Base
         if (strlen($brids) > 0) {
             $br = " and d.branch_id in ({$brids}) ";
         }
-        
-       
+
+
         if (strlen($brids) > 0) {
             $brf = " and branch_id in ({$brids}) ";
-        }        
-        
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        }
+
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -93,15 +90,14 @@ class Main extends Base
             $this->add(new Paginator("sdpag", $sdlist));
             $sdlist->Reload();
         }
-        //минимальное количество  
+        //минимальное количество
         if ($this->_tvars['wminqty'] == true) {
             $data = array();
-            $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
-            where  {$cstr} 1=1 group by store_id, item_id    ) t
+            $sql = "select t.qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
+            (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
             join items  i  on t.item_id = i.item_id
-              join stores  s  on t.store_id = s.store_id
            
-            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  s.storename ";
+            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  i.itemname ";
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
@@ -122,9 +118,9 @@ class Main extends Base
         if ($this->_tvars['wrdoc'] == true) {
             $data = array();
 
-            $sql = "SELECT u.username,d.document_number,d.document_id,d.amount,d.meta_desc,d.state,l.md  FROM (SELECT     document_id,user_id,MAX(createdon) AS md from docstatelog where     createdon >  " . $conn->DBDate(strtotime("-1 week", time())) . " GROUP BY document_id,user_id      ) l 
-                      join documents_view d  on l.document_id= d.document_id  
-                      join users_view u  on l.user_id= u.user_id where  1=1 {$br} ORDER  BY  md desc";
+            $sql = "SELECT u.username,d.document_number,d.document_id,d.amount,d.meta_desc,d.state ,d.lastupdate 
+                      from documents_view d    
+                      join users_view u  on d.user_id= u.user_id where  d.lastupdate >  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ORDER  BY  d.lastupdate desc,document_id desc";
 
 
             $rc = $conn->Execute($sql);
@@ -144,16 +140,16 @@ class Main extends Base
             $doclist->Reload();
         }
 
-        
-        
-       
+
+
+
         //мои  документы
         if ($this->_tvars['wmdoc'] == true) {
             $data = array();
 
             $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ";
 
-            $rc = $conn->SelectLimit($sql,25,0);
+            $rc = $conn->SelectLimit($sql, 25, 0);
 
             foreach ($rc as $row) {
                 $data[] = new \App\DataItem($row);
@@ -170,11 +166,11 @@ class Main extends Base
             $doclist->Reload();
         }
 
-         //структура  доходов  и расходов
+        //структура  доходов  и расходов
         $dt = new \App\DateTime();
 
         $to = $dt->startOfMonth()->getTimestamp();
-        $dt = $dt->subMonth(3);
+        $dt = $dt->subMonth(12);
         $from = $dt->startOfMonth()->getTimestamp();
 
         $names = \App\Entity\IOState::getTypeList();
@@ -194,26 +190,26 @@ class Main extends Base
         ";
 
         $rs = $conn->Execute($sql);
- 
+
 
         $ps = [];
         $ps[]=["name","amount"] ;
-        
+
         foreach ($rs as $row) {
-               
-           $ps[]=[$names[$row['iotype']],abs(round($row['am']))] ;
-            
+
+            $ps[]=[$names[$row['iotype']],abs(round($row['am']))] ;
+
         }
         $this->_tvars['ps'] = json_encode($ps);
-    
-        //сравнение  доходов  и расходов  
+
+        //сравнение  доходов  и расходов
         $mon = array();
         $in = array();
         $out = array();
 
         $pc=[];
-        
-        $mlist = Util::genPastMonths(6);
+
+        $mlist = Util::genPastMonths(12);
 
         foreach ($mlist as $m) {
             $sql = " 
@@ -237,21 +233,21 @@ class Main extends Base
             ";
             $in = abs(round($conn->GetOne($sql)));
 
-               
+
             $pc[]=[$m['name'],$in,$out]  ;
-            
+
         }
         $this->_tvars['pc'] = json_encode($pc);
 
         //реализация
         $ts = [];
-      //  $ts[] = ['Month','Goods','Service'];
+        //  $ts[] = ['Month','Goods','Service'];
 
-        $mlist = Util::genPastMonths(6);
+        $mlist = Util::genPastMonths(12);
 
         foreach ($mlist as $m) {
 
-            
+
             $sql = "
            select  coalesce(sum(0-(e.outprice*e.quantity))) as summa 
               from entrylist_view  e
@@ -284,11 +280,11 @@ class Main extends Base
                   ";
 
             $ser = abs(round($conn->GetOne($sql)));
-            
+
             $ts[] = [$m['name'],$ser,$tov];
-            
-            
-            
+
+
+
         }
         $this->_tvars['ts'] = json_encode($ts);
 
@@ -298,26 +294,31 @@ class Main extends Base
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
-        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty <>0  and item_id in (select item_id from items where disabled<>1 )                     ";
+//        $sql = " select coalesce(sum(partion*qty),0) as cnt  from  store_stock_view  where {$cstr} qty >0  and item_id in (select item_id from items where disabled<>1 )                     ";
+ //       $sql = " SELECT  SUM(( select coalesce(sum(st1.qty*st1.partion),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id )) AS ss  FROM items
+   //              where     ( select coalesce(sum(st1.qty),0 ) from store_stock_view st1 where {$cstr}  st1.item_id= items.item_id ) >0   ";
 
+        $sql = " SELECT coalesce( SUM( qty * partion),0)  from store_stock where {$cstr} item_id in (select item_id from items where  disabled<>1) ";
+        
+                 
         $this->_tvars['biitemscnt'] = H::fa($conn->GetOne($sql));
-
-
-        //к оплате         
-        $sql = "SELECT COALESCE( SUM(   s_active - s_passive    ) ,0) AS d   FROM cust_acc_view where  s_active > s_passive   ";
+        
+        $cust_acc_view = \App\Entity\CustAcc::get_acc_view()  ;
+        
+        //к оплате
+        $sql = "SELECT COALESCE( SUM(   a.s_active - a.s_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active > a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
-        $sql = "SELECT COALESCE( SUM(   b_active - b_passive    ) ,0) AS d   FROM cust_acc_view where  b_active > b_passive   ";
+        $sql = "SELECT COALESCE( SUM(   a.b_active - a.b_passive    ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active > a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
-        
-        
         $this->_tvars['bicredit'] = H::fa($sum);
-         //ожидается  оплата
-        $sql = "SELECT COALESCE( SUM( s_passive -  s_active      ) ,0) AS d   FROM cust_acc_view where  s_active < s_passive   ";
+
+        //ожидается  оплата
+        $sql = "SELECT COALESCE( SUM( a.s_passive -  a.s_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.s_active < a.s_passive   ";
         $sum = doubleval($conn->GetOne($sql));
-        $sql = "SELECT COALESCE( SUM(  b_passive -  b_active      ) ,0) AS d   FROM cust_acc_view where  b_active < b_passive   ";
+        $sql = "SELECT COALESCE( SUM(  a.b_passive -  a.b_active      ) ,0) AS d   FROM ({$cust_acc_view}) a where  a.b_active < a.b_passive   ";
         $sum += doubleval($conn->GetOne($sql));
-        
         $this->_tvars['bidebet'] = H::fa($sum);
+
 
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' {$brf})";
 
@@ -325,7 +326,7 @@ class Main extends Base
         $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' {$brf})";
         $this->_tvars['bibeznal'] = H::fa($conn->GetOne($sql));
 
-        
+
 
     }
 
@@ -346,10 +347,13 @@ class Main extends Base
     public function mqlistOnRow($row) {
         $item = $row->getDataItem();
 
-        
-        $row->add(new Label('wmq_storename', $item->storename));
         $row->add(new Label('wmq_itemname', $item->itemname));
         $row->add(new Label('wmq_item_code', $item->item_code));
+        
+        
+        $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;
+        
+        $row->add(new Label('wmq_cust', $d->customer_name ?? ''));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
         $row->add(new Label('wmq_minqty', H::fqty($item->minqty)));
     }
@@ -357,7 +361,7 @@ class Main extends Base
     public function rdoclistOnRow($row) {
         $item = $row->getDataItem();
 
-        $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->md))));
+        $row->add(new Label('wrd_date', \App\Helper::fd(strtotime($item->lastupdate))));
         $row->add(new Label('wrd_type', $item->meta_desc));
         $row->add(new Label('wrd_state', $this->_docstatelist[$item->state]));
         $row->add(new Label('wrd_user', $item->username));
@@ -385,9 +389,10 @@ class Main extends Base
         $data = array();
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "SELECT u.username,d.document_number,d.amount,d.meta_desc,d.state,l.md  FROM (SELECT     document_id,user_id,MAX(createdon) AS md from docstatelog where  1=1 {$br} and createdon >  " . $conn->DBDate(strtotime("-1 week", time())) . " GROUP BY document_id,user_id      ) l 
-                      join documents_view d  on l.document_id= d.document_id  
-                      join users_view u  on l.user_id= u.user_id  ORDER  BY  md desc";
+            $sql = "SELECT u.username,d.document_number,d.document_id,d.amount,d.meta_desc,d.state ,d.lastupdate 
+                      from documents_view d    
+                      join users_view u  on d.user_id= u.user_id where  d.lastupdate >  " . $conn->DBDate(strtotime("-1 week", time())) . "  {$br} ORDER  BY  d.lastupdate desc,document_id desc";
+
 
         $rc = $conn->Execute($sql);
 
@@ -402,7 +407,7 @@ class Main extends Base
             $data['C' . $i] = $this->_docstatelist[$row['state']];
             $data['D' . $i] = array('value' => H::fa($row['amount']), 'format' => 'number');
             $data['E' . $i] = $row['username'];
-            $data['F' . $i] = \App\Helper::fd(strtotime($row['md']));
+            $data['F' . $i] = \App\Helper::fd(strtotime($row['lastupdate']));
         }
 
         H::exportExcel($data, $header, 'recentlydoc.xlsx');
@@ -420,7 +425,7 @@ class Main extends Base
         $user = System::getUser();
 
         $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ";
-        $rc = $conn->SelectLimit($sql,25,0);
+        $rc = $conn->SelectLimit($sql, 25, 0);
 
         $header = array();
         $data = array();
@@ -442,7 +447,7 @@ class Main extends Base
         //  if (strlen($brids) > 0) {
         //      $br = " and d.branch_id in ({$brids}) ";
         //  }
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -456,31 +461,34 @@ class Main extends Base
         foreach ($stock as $st) {
             $i++;
             $data['A' . $i] = $st->storename;
-            $data['B' . $i] = $st->itemname;
-            $data['C' . $i] = $st->snumber;
-            $data['D' . $i] = H::fd($st->sdate);
-            $data['E' . $i] = array('value' => H::fqty($st->qty), 'format' => 'number');
+            $data['B' . $i] = $st->cat_name;
+            $data['C' . $i] = $st->itemname;
+            $data['D' . $i] = $st->item_code;
+            $data['E' . $i] = $st->bar_code;
+            $data['F' . $i] = $st->snumber;
+            $data['G' . $i] = H::fd($st->sdate);
+            $data['H' . $i] = array('value' => H::fqty($st->qty), 'format' => 'number');
         }
         H::exportExcel($data, $header, 'termitem.xlsx');
     }
 
     public function onMQcsv($sender) {
+        $br ="";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
-            $br = " and d.branch_id in ({$brids}) ";
+            $br = " and branch_id in ({$brids}) ";
         }
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
-            $cstr = "   store_id in ({$cstr})  and  ";
+            $cstr = " where store_id in ({$cstr})     ";
         }
         $conn = $conn = \ZDB\DB::getConnect();
 
-        $sql = "select t.qty,s.storename, t.store_id, i.minqty,i.itemname,i.item_code   from (select store_id, item_id, coalesce(sum( qty),0) as qty   from  store_stock
-            where  {$cstr} 1=1 group by store_id, item_id    ) t
-            join items  i  on t.item_id = i.item_id
-              join stores  s  on t.store_id = s.store_id
+       $sql = "select t.qty, i.minqty,i.itemname,i.item_code,i.item_id,i.bar_code,i.cat_name   from 
+            (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock    {$cstr}       group by  item_id    ) t
+            join items_view  i  on t.item_id = i.item_id
            
-            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  s.storename ";
+            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  i.itemname ";
 
         $rc = $conn->Execute($sql);
         $header = array();
@@ -489,12 +497,17 @@ class Main extends Base
         $i = 0;
         foreach ($rc as $row) {
             $i++;
-            $data['A' . $i] = $row['storename'];
+            
+        $d = \App\Entity\Doc\Document::getFirst("  meta_name='GoodsReceipt'  {$br}  and document_id in (select document_id from entrylist_view where  item_id = {$row['item_id']}) ","document_id desc") ;
+            
+
+            $data['A' . $i] = $row['cat_name'];
             $data['B' . $i] = $row['itemname'];
             $data['C' . $i] = $row['item_code'];
-            $data['D' . $i] = H::fd($row['sdate']);
-            $data['E' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
-            $data['F' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
+            $data['D' . $i] = $row['bar_code'];
+            $data['E' . $i] = $d->customer_name ?? '';
+            $data['F' . $i] = array('value' => H::fqty($row['qty']), 'format' => 'number');
+            $data['G' . $i] = array('value' => H::fqty($row['minqty']), 'format' => 'number');
         }
         H::exportExcel($data, $header, 'minqty.xlsx');
     }

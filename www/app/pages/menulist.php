@@ -17,14 +17,13 @@ use Zippy\Html\Panel;
 
 class MenuList extends \App\Pages\Base
 {
-
     private $metadatads;
-    public  $pricelist = array();
+    public $pricelist = array();
 
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg(H::l('onlyadminpage'));
+            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
             App::RedirectError();
             return false;
         }
@@ -103,19 +102,19 @@ class MenuList extends \App\Pages\Base
         $title = '';
         switch($item->meta_type) {
             case 1:
-                $title = H::l('md_doc');
+                $title = 'Документ';
                 break;
             case 2:
-                $title = H::l('md_rep');
+                $title = 'Звіт';
                 break;
             case 3:
-                $title = H::l('md_reg');
+                $title = 'Журнал';
                 break;
             case 4:
-                $title = H::l('md_ref');
+                $title = 'Довідник';
                 break;
             case 5:
-                $title = H::l('md_ser');
+                $title = 'Сервісна сторінка';
                 break;
         }
 
@@ -150,6 +149,7 @@ class MenuList extends \App\Pages\Base
         $item->save();
 
         $this->listpan->metarow->Reload();
+        \App\Session::getSession()->menu = [];
     }
 
     public function toffOnClick($sender) {
@@ -158,6 +158,7 @@ class MenuList extends \App\Pages\Base
         $item->save();
 
         $this->listpan->metarow->Reload();
+        \App\Session::getSession()->menu = [];
     }
 
     public function rowdeleteOnClick($sender) {
@@ -165,6 +166,7 @@ class MenuList extends \App\Pages\Base
         \App\Entity\MetaData::delete($item->meta_id);
 
         $this->listpan->metarow->Reload();
+        \App\Session::getSession()->menu = [];
     }
 
     public function editformOnSubmit($sender) {
@@ -192,6 +194,8 @@ class MenuList extends \App\Pages\Base
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_meta_name->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
+
+        \App\Session::getSession()->menu = [];
     }
 
 }

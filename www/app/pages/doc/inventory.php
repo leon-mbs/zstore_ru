@@ -26,20 +26,31 @@ use Zippy\Html\Link\SubmitLink;
  */
 class Inventory extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_rowid    = 0;
+    private $_qint     = false;
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 
+        $qtydigits = \App\System::getOption("common",'qtydigits');
+        
+        $this->_qint = intval($qtydigits)==0;
+        
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('category', Category::getList(  ), 0))->onChange($this, 'OnChangeCat');
+        $this->docform->add(new DropDownChoice('category', Category::getList(), 0))->onChange($this, 'OnChangeCat');
+
+        $this->docform->add(new TextInput('brand'));
+        $this->docform->brand->setDataList(Item::getManufacturers());
+        
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new CheckBox('autoincome'));
         $this->docform->add(new CheckBox('autooutcome'));
@@ -52,6 +63,9 @@ class Inventory extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
+        $this->docform->add(new SubmitLink('delall'))->onClick($this, 'OnDelAll');
+        $this->docform->add(new SubmitLink('sortname'))->onClick($this, 'OnSortName');
+        $this->docform->add(new SubmitLink('sortcode'))->onClick($this, 'OnSortCode');
 
         $this->add(new Form('editdetail'))->setVisible(false);
 
@@ -70,6 +84,7 @@ class Inventory extends \App\Pages\Base
             $this->docform->document_date->setDate(time());
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->category->setValue($this->_doc->headerdata['cat']);
+            $this->docform->brand->setText($this->_doc->headerdata['brand']);
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->autoincome->setChecked($this->_doc->headerdata['autoincome']);
@@ -99,39 +114,53 @@ class Inventory extends \App\Pages\Base
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
 
         //  $row->add(new Label('quantity', H::fqty($item->quantity)));
-        $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')))->onChange($this,"onText",true);
+        $row->add(new TextInput('qfact', new \Zippy\Binding\PropertyBinding($item, 'qfact')))->onChange($this, "onText", true);
 
-        $row->item->setAttribute('class', "text-success");
-
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        if($this->_qint) {
+           $row->qfact->setAttribute('type', 'number');            
+        }
 
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
+
+        $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
+
     }
 
     //для  сохранения формы
     public function onText($sender) {
-        
-    }
-    public function deleteOnClick($sender) {
-        if (false == \App\ACL::checkEditDoc($this->_doc)) {
-            return;
-        }
-        $item = $sender->owner->getDataItem();
-        $id = $item->item_id . $item->snumber;
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
+    }
+
+
+
+    public function OnDelAll($sender) {
+
+        $items = [];
+        foreach ($this->docform->detail->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel != true) {
+                $item->seldel = false;
+                $items[]=$item;
+
+            }
+        }
+        $this->_itemlist = $items;
+
         $this->docform->detail->Reload();
     }
 
+
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
             return;
         }
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
+        $this->_rowid = -1;
+
     }
 
     public function saverowOnClick($sender) {
@@ -140,7 +169,7 @@ class Inventory extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано ТМЦ");
             return;
         }
         $item = Item::load($id);
@@ -148,26 +177,18 @@ class Inventory extends \App\Pages\Base
         $sn = trim($this->editdetail->editserial->getText());
 
 
-        $item->quantity = $item->getQuantity($store, $sn,$this->docform->document_date->getDate(0));
+        $item->quantity = $item->getQuantity($store, $sn, $this->docform->document_date->getDate(0));
         $item->qfact = $this->editdetail->editquantity->getText();
         $item->snumber = $sn;
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
+        foreach($this->_itemlist as $i=> $it) {
+            if($it->item_id==$item->item_id && $it->snumber==$item->snumber) {
+                $this->setError("ТМЦ  уже  в  списку") ;
+                return;
             }
         }
+        $this->_itemlist[] = $item;
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -199,24 +220,25 @@ class Inventory extends \App\Pages\Base
         $this->_doc->headerdata['autooutcome'] = $this->docform->autooutcome->isChecked() ? 1 : 0;
         $this->_doc->headerdata['reserved'] = $this->docform->reserved->isChecked() ? 1 : 0;
         $this->_doc->headerdata['cat'] = $this->docform->category->getValue();
+        $this->_doc->headerdata['brand'] = $this->docform->brand->getText();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
 
-           $reserved = array();
-           if($this->_doc->headerdata['reserved'] ==1) {
-               $conn = \ZDB\DB::getConnect();
-               $sql = "select item_id,sum(0-quantity) as cnt from entrylist_view where tag=-64 and stock_id in(select stock_id from store_stock where  store_id= {$this->_doc->headerdata['store']}) group by item_id"  ;
-               foreach($conn->Execute($sql) as $row){
-                  $reserved[$row['item_id']]  = $row['cnt'] ;  
-               };
-           }
-           
-        
-        
+        $reserved = array();
+        if($this->_doc->headerdata['reserved'] ==1) {
+            $conn = \ZDB\DB::getConnect();
+            $sql = "select item_id,sum(0-quantity) as cnt from entrylist_view where tag=-64 and stock_id in(select stock_id from store_stock where  store_id= {$this->_doc->headerdata['store']}) group by item_id"  ;
+            foreach($conn->Execute($sql) as $row) {
+                $reserved[$row['item_id']]  = $row['cnt'] ;
+            }
+        }
+
+
+
         foreach ($this->_itemlist as $item) {
-            $item->quantity = $item->getQuantity($this->_doc->headerdata['store'], $item->snumber,$this->docform->document_date->getDate(0));
+            $item->quantity = $item->getQuantity($this->_doc->headerdata['store'], $item->snumber, $this->docform->document_date->getDate(0));
             if($reserved[$item->item_id] > 0  && $this->_doc->headerdata['reserved']  ==1) {
-               $item->quantity += $reserved[$item->item_id] ;
+                $item->quantity += $reserved[$item->item_id] ;
             }
         }
 
@@ -224,12 +246,12 @@ class Inventory extends \App\Pages\Base
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-   
+
         if ($this->checkForm() == false) {
             return;
         }
-   
-   
+
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -255,7 +277,7 @@ class Inventory extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -268,21 +290,21 @@ class Inventory extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введіть номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено ТМЦ");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не обрано склад");
         }
 
 
@@ -304,16 +326,16 @@ class Inventory extends \App\Pages\Base
         $cat_id = $sender->getValue();
 
         if ($cat_id > 0) {
-            
+
             $c = Category::load($cat_id) ;
             $ch = $c->getChildren();
             $ch[]=$cat_id;
-                 
-            
-            
+
+
+
             $itemlist = array();
             foreach ($this->_itemlist as $item) {
-                if ( in_array($item->cat_id,$ch) ) {
+                if (in_array($item->cat_id, $ch)) {
                     $itemlist[$item->item_id] = $item;
                 }
             }
@@ -326,44 +348,50 @@ class Inventory extends \App\Pages\Base
     public function OnAutocompleteItem($sender) {
         $store_id = $this->docform->store->getValue();
         $text = trim($sender->getText());
-        $cat_id = intval( $this->docform->category->getValue() );
+        $cat_id = intval($this->docform->category->getValue());
         $common = \App\System::getOptions('common')  ;
-        if($common['usecattree'] != 1 || $cat_id==0){
+        if($common['usecattree'] != 1 || $cat_id==0) {
             return Item::findArrayAC($text, $store_id, $cat_id);
         }
-  
+
         $c = Category::load($cat_id) ;
         $ch = $c->getChildren();
         $ch[]=$cat_id;
         $ret = array();
-        foreach($ch as $id){
+        foreach($ch as $id) {
             foreach(Item::findArrayAC($text, $store_id, $id) as $k=>$v) {
-                 $ret[$k]=$v;    
+                $ret[$k]=$v;
             }
         }
-        
-        
-        
+
+
+
         return $ret;
     }
 
     public function loadallOnClick($sender) {
         $this->_itemlist = array();
         $store_id = $this->docform->store->getValue();
-        $cat_id = $this->docform->category->getValue();
+
         $w = " disabled<> 1 and  item_id in (select item_id from  store_stock_view where  qty>0 and store_id={$store_id})    ";
+
+        $brand =trim( $this->docform->brand->getText() );
+        if(strlen($brand) >0){
+           $w = $w . " and manufacturer = " .Item::qstr($brand) ;
+        }
+        $cat_id = $this->docform->category->getValue();
         if ($cat_id > 0) {
-            
+
             $c = Category::load($cat_id) ;
             $ch = $c->getChildren();
             $ch[]=$cat_id;
-            $cats = implode(",",$ch)  ;              
-               
-            
+            $cats = implode(",", $ch)  ;
+
+
             $w = $w . " and cat_id in ({$cats}) ";
         }
-        $items = Item::find($w, 'itemname');
-        foreach ($items as $item) {
+        
+        foreach (Item::findYield($w, 'itemname') as $item) {
             $item->qfact = 0;
             $item->quantity = 0;
             $this->_itemlist[$item->item_id] = $item;
@@ -375,19 +403,25 @@ class Inventory extends \App\Pages\Base
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
         $code0 = $code;
-        $code = ltrim($code,'0');
+        $code = ltrim($code, '0');
 
-        foreach($this->_itemlist as $it){
-          if($it->item_code==$code || $it->bar_code==$code ){
-              $this->_itemlist[$it->item_id]->qfact += 1;
-                                           
-              $this->docform->detail->Reload();
-              return;
-          }                
+        foreach($this->_itemlist as $i=> $it) {
+            if($it->item_code==$code || $it->bar_code==$code) {
+                $d= $this->_itemlist[$i]->qfact;
+                $qf= doubleval($d) ;
+                $this->_itemlist[$i]->qfact = $qf + 1;
+
+                // Издаем звук если всё ок
+                App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
+
+
+                $this->docform->detail->Reload();
+                return;
+            }
         }
-        
-        
-        
+
+
+
         $store = $this->docform->store->getValue();
         $code_ = Item::qstr($code);
         $code0 = Item::qstr($code0);
@@ -395,20 +429,25 @@ class Inventory extends \App\Pages\Base
         $cat_id = $this->docform->category->getValue();
         $w = "item_code={$code_} or bar_code={$code_} or  item_code={$code0} or bar_code={$code0} ";
         if ($cat_id > 0) {
-         
-         
+
+
             $c = Category::load($cat_id) ;
             $ch = $c->getChildren();
             $ch[]=$cat_id;
-            $cats = implode(",",$ch)  ;              
-              
-         
+            $cats = implode(",", $ch)  ;
+
+
             $w = $w . " and cat_id in ({$cats}) ";
         }
         $item = Item::getFirst($w);
         if ($item == null) {
-            $this->setError('noitemcode', $code);
+            $this->setError("ТМЦ з кодом `{$code}` не знайдено");
+            // Издаем звук если ШК не найден
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
             return;
+        } else {
+            // Издаем звук если всё ок
+            App::$app->getResponse()->addJavaScript("new Audio('/assets/good.mp3').play()", true);
         }
 
         if ($this->_tvars["usesnumber"] == true && $item->useserial == 1) {
@@ -429,9 +468,28 @@ class Inventory extends \App\Pages\Base
             $this->_itemlist[$item->item_id] = $item;
         }
 
-        $this->_itemlist[$item->item_id]->qfact += 1;
+        $d= $this->_itemlist[$item->item_id]->qfact;
+        $qf= doubleval($d) ;
+        $this->_itemlist[$item->item_id]->qfact = $qf + 1;
+
 
         $this->docform->detail->Reload();
     }
 
+    public function OnSortName($sender) {
+         usort($this->_itemlist, function ($a, $b) {
+            return $a->itemname > $b->itemname;
+        });
+        $this->docform->detail->Reload();
+        
+    }
+        
+    public function OnSortCode($sender) {
+         usort($this->_itemlist, function ($a, $b) {
+            return $a->item_code > $b->item_code;
+        });
+        $this->docform->detail->Reload();
+
+    }
+    
 }

@@ -14,12 +14,11 @@ use App\System;
  */
 class ProdProc extends \ZCL\DB\Entity
 {
-
-    const STATE_NEW       = 0;
-    const STATE_INPROCESS = 1;
-    const STATE_STOPPED   = 2;
-    const STATE_FINISHED  = 3;
-    const STATE_CANCELED  = 4;
+    public const STATE_NEW       = 0;
+    public const STATE_INPROCESS = 1;
+    public const STATE_STOPPED   = 2;
+    public const STATE_FINISHED  = 3;
+    public const STATE_CANCELED  = 4;
 
     public $prodlist = array();
 
@@ -29,9 +28,18 @@ class ProdProc extends \ZCL\DB\Entity
 
     }
 
+    //копирование процесса
     public function clone() {
         $proc = new ProdProc();
         $proc->detail = $this->detail;
+        $proc->card = $this->card;
+        $diff = time()- $this->startdateplan;
+        if($diff<0) {
+            $diff=0;
+        }
+        $proc->startdateplan = intval($this->startdateplan) + $diff;
+        $proc->enddateplan = intval($this->enddateplan) + $diff;
+
         $proc->procname = $this->procname . "_copy";
         $proc->pp_id = 0;
         $proc->save();
@@ -39,6 +47,9 @@ class ProdProc extends \ZCL\DB\Entity
         foreach ($stlist as $st) {
             $st->st_id = 0;
             $st->pp_id = $proc->pp_id;
+            $st->startdateplan = $st->startdateplan + $diff;
+            $st->enddateplan = $st->enddateplan + $diff;
+
             $st->save();
         }
 
@@ -50,6 +61,8 @@ class ProdProc extends \ZCL\DB\Entity
         //упаковываем  данные в detail
         $this->detail = "<detail>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
+        $this->detail .= "<startdateplan>{$this->startdateplan}</startdateplan>";
+        $this->detail .= "<enddateplan>{$this->enddateplan}</enddateplan>";
         $prodlist = base64_encode(serialize($this->prodlist));
         $this->detail .= "<prodlist>{$prodlist}</prodlist>";
         $this->detail .= "</detail>";
@@ -68,13 +81,15 @@ class ProdProc extends \ZCL\DB\Entity
         $xml = simplexml_load_string($this->detail);
 
         $this->notes = (string)($xml->notes[0]);
+        $this->startdateplan = (string)($xml->startdateplan[0]);
+        $this->enddateplan = (string)($xml->enddateplan[0]);
         $this->prodlist = @unserialize(@base64_decode((string)($xml->prodlist[0])));
         if (!is_array($this->prodlist)) {
             $this->prodlist = array();
         }
-        
-        
-        
+
+
+
         parent::afterLoad();
     }
 
@@ -89,19 +104,19 @@ class ProdProc extends \ZCL\DB\Entity
 
         switch($state) {
             case ProdProc::STATE_NEW:
-                return Helper::l('stpp_new');
+                return "Новий";
             case ProdProc::STATE_INPROCESS:
-                return Helper::l('stpp_inprocess');
+                return "Виконується";
             case ProdProc::STATE_STOPPED:
-                return Helper::l('stpp_stopped');
+                return "Припинено";
             case ProdProc::STATE_FINISHED:
-                return Helper::l('stpp_finished');
+                return "Виконаний";
             case ProdProc::STATE_CANCELED:
-                return Helper::l('stpp_canceled');
+                return "Скасовано";
 
 
             default:
-                return Helper::l('st_unknow');
+                return "Невідомий статус";
         }
     }
 

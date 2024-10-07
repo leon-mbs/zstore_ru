@@ -11,7 +11,7 @@
     {{/islogo}}
     <tr>
         <td></td>
-        <td><b>Покупатель</b></td>
+        <td><b>Покупець</b></td>
         <td colspan="7"><b>{{customer_name}}</b></td>
     </tr>
     
@@ -25,14 +25,14 @@
    {{#address}}
     <tr>
         <td></td>
-        <td valign="top">Адрес</td>
+        <td valign="top">Адреса</td>
         <td colspan="7">{{address}}</td>
     </tr>
      {{/address}} 
    {{#edrpou}}
     <tr>
         <td></td>
-        <td valign="top">ОКПО</td>
+        <td valign="top">ЄДРПОУ</td>
         <td colspan="7">{{edrpou}}</td>
     </tr>
      {{/edrpou}}       
@@ -43,28 +43,28 @@
     <tr>
 
         <td></td>
-        <td><b> Продавец</b></td>
+        <td><b> Продавець</b></td>
         <td colspan="7"><b>{{firm_name}}</b></td>
 
     </tr>
     <tr>
 
         <td></td>
-        <td> Адрес</td>
+        <td> Адреса</td>
         <td colspan="7">{{firm_address}}</td>
 
     </tr>
     {{#fedrpou}}
     <tr>
         <td></td>
-        <td valign="top">ОКПО</td>
+        <td valign="top">ЄДРПОУ</td>
         <td colspan="7">{{fedrpou}}</td>
     </tr>
      {{/fedrpou}}     
      {{#finn}}
     <tr>
         <td></td>
-        <td valign="top">IНН</td>
+        <td valign="top">IПН</td>
         <td colspan="7">{{finn}}</td>
     </tr>
      {{/finn}}     
@@ -74,8 +74,8 @@
     <tr>
 
         <td></td>
-        <td> Договор</td>
-        <td colspan="7">{{contract}} от {{createdon}}</td>
+        <td> Договір</td>
+        <td colspan="7">{{contract}} вiд {{createdon}}</td>
 
     </tr>
     {{/iscontract}}
@@ -88,26 +88,35 @@
 
     </tr>
     {{/isbank}}
+     {{#iban}}
+    <tr>
+
+        <td></td>
+        <td> IBAN</td>
+        <td colspan="7">{{iban}}   </td>
+
+    </tr>
+    {{/iban}}
    <tr>
         <td colspan="9">{{{notes}}}</td>
     </tr>
     
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
-            Счет-фактура № {{document_number}} от {{date}}
+            Рахунок-фактура № {{document_number}} від {{date}}
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування
         </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
 
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кол.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Цена</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сумма</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кіл.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Ціна</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сума</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -122,18 +131,18 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="8" align="right">Вместе:</td>
+        <td style="border-top:1px #000 solid;" colspan="8" align="right">Разом:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-    {{#paydisc}}
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td colspan="8" align="right">Знижка:</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/paydisc}}
+    {{/totaldisc}}
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="8" align="right">К оплате:</td>
+        <td colspan="8" align="right">До сплати:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
@@ -146,11 +155,11 @@
        {{#payamount}}
    {{#totalstr}}
     <tr>
-        <td colspan="9">На сумму <b>{{totalstr}}</b></td>
+        <td colspan="9">На суму <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}      
-  {{/payamount}}                     
-                        <td colspan="5">
+  {{/payamount}}
+    <tr>                  <td colspan="5">
                             {{#isstamp}}
                             <img style="height:100px;" src='{{stamp}}'/>
                             {{/isstamp}}
@@ -166,5 +175,7 @@
                         </td>
 
                     </tr>
+          
+                             
                     </table>
 

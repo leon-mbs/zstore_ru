@@ -23,21 +23,22 @@ use Zippy\Html\Panel;
 //справочник  оборудования
 class EqList extends \App\Pages\Base
 {
-
     private $_item;
-    public  $_uselist = array();
+ 
+    private $_blist;
 
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowRef('EqList')) {
             return;
         }
+        $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnFilter');
         $this->filter->add(new TextInput('searchkey'));
         $this->filter->add(new DropDownChoice('searchemp', Employee::findArray("emp_name", "", "emp_name"), 0));
-
         $this->filter->add(new CheckBox('showdis'));
+
 
         $this->add(new Panel('itemtable'))->setVisible(true);
         $this->itemtable->add(new DataView('eqlist', new EQDS($this), $this, 'eqlistOnRow'));
@@ -60,14 +61,13 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->add(new TextArea('editdescription'));
         $this->itemdetail->add(new CheckBox('editdisabled'));
         $this->itemdetail->add(new CheckBox('editeq', true));
-
+        $this->itemdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'OnSubmit');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel('usetable'))->setVisible(false);
         $this->usetable->add(new Label('usename'));
         $this->usetable->add(new ClickLink('back'))->onClick($this, 'cancelOnClick');
-        $this->usetable->add(new DataView('uselist', new ArrayDataSource($this, '_uselist'), $this, 'uselistOnRow'));
     }
 
     public function eqlistOnRow(\Zippy\Html\DataList\DataRow $row) {
@@ -75,6 +75,7 @@ class EqList extends \App\Pages\Base
         $row->add(new Label('eq_name', $item->eq_name));
         $row->add(new Label('code', $item->code));
         $row->add(new Label('serial', $item->serial));
+        $row->add(new Label('branch', $this->_blist[$item->branch_id]));
 
         $row->add(new ClickLink('use'))->onClick($this, 'useOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -97,31 +98,42 @@ class EqList extends \App\Pages\Base
         $this->usetable->setVisible(true);
         $item = $sender->getOwner()->getDataItem();
         $this->usetable->usename->setText($item->eq_name);
-        $this->_uselist = array();
 
-        $list = \App\Entity\Doc\Document::find("meta_name='task' and state not in(2,3,1,9) ", "document_date desc");
+        $this->_tvars['use1'] =[] ;
+        $this->_tvars['use2'] =[] ;
 
-        foreach ($list as $task) {
+        foreach (\App\Entity\Doc\Document::findYield("meta_name='task' and state not in(2,3,1,9) ", "document_date asc") as $task) {
             foreach ($task->unpackDetails('eqlist') as $eq) {
-                if ($eq->eq_id > 0) {
+                if ($eq->eq_id == $item->eq_id) {
 
-                    $it = new \App\DataItem(array(
-                        "usetask"  => $task->document_number,
+                    $this->_tvars['use1'][] = array(
+
+                        "usedate"  => Helper::fd($task->document_date),
+                        "usedn"  => $task->document_number,
                         "useplace" => $task->headerdata['pareaname']
-                    ));
-                    $this->_uselist[] = $it;
+                    );
                 }
             }
         }
+     
+        foreach (\App\Entity\Doc\Document::findYield("meta_name='officedoc' and content  not like '%<eq>0</eq>%'  and state not in(2,3,1,9) ", "document_date asc") as $office) {
+                if (intval($office->headerdata['eq'] ??0) == $item->eq_id) {
 
-        $this->usetable->uselist->Reload();
+                    $this->_tvars['use2'][] = array(
+                        "usedate"  => Helper::fd($office->document_date),
+              
+                        "usedn"  => $office->document_number,
+                        "usetitle" => $office->notes
+                    );
+                }
+
+        }
+    
+
+       
     }
 
-    public function uselistOnRow(\Zippy\Html\DataList\DataRow $row) {
-        $item = $row->getDataItem();
-        $row->add(new Label('usetask', $item->usetask));
-        $row->add(new Label('useplace', $item->useplace));
-    }
+ 
 
     public function editOnClick($sender) {
         $this->_item = $sender->owner->getDataItem();
@@ -134,6 +146,7 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->editpa->setValue($this->_item->pa_id);
         $this->itemdetail->editdisabled->setChecked($this->_item->disabled);
         $this->itemdetail->editeq->setChecked($this->_item->eq);
+        $this->itemdetail->editbranch->setValue($this->_item->branch_id);
 
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->code);
@@ -147,6 +160,9 @@ class EqList extends \App\Pages\Base
         $this->itemdetail->setVisible(true);
         // Очищаем  форму
         $this->itemdetail->clean();
+        $b = \App\System::getBranch();
+        $this->itemdetail->editbranch->setValue($b > 0 ? $b : 0);
+        
         $this->itemdetail->editeq->setChecked(true);
         $this->_item = new Equipment();
     }
@@ -176,9 +192,13 @@ class EqList extends \App\Pages\Base
         $this->_item->pa_name = $this->itemdetail->editpa->getValueName();
 
         $this->_item->code = $this->itemdetail->editcode->getText();
-        $this->_item->balance = $this->itemdetail->editbalance->getText();
+        $this->_item->setBalance ( doubleval($this->itemdetail->editbalance->getText()) );
         $this->_item->enterdate = $this->itemdetail->editenterdate->getDate();
-
+        $this->_item->branch_id = $this->itemdetail->editbranch->getValue();
+        if ($this->_tvars['usebranch'] == true && $this->_item->branch_id == 0) {
+            $this->setError('Виберіть філію');
+            return;
+        }
         $this->_item->serial = $this->itemdetail->editserial->getText();
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->eq = $this->itemdetail->editeq->isChecked() ? 1 : 0;
@@ -192,7 +212,6 @@ class EqList extends \App\Pages\Base
 
 class EQDS implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {

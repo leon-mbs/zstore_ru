@@ -25,12 +25,15 @@ use Zippy\Html\Link\SubmitLink;
  */
 class InvoiceCust extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
     private $_rowid     = 0;
 
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -42,11 +45,9 @@ class InvoiceCust extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnCustomerFirm');
         $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()))->onChange($this, 'OnCustomerFirm');
-        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);;
+        $this->docform->add(new DropDownChoice('contract', array(), 0))->setVisible(false);
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new TextInput('rate','1'))->setVisible(false);
-        $this->docform->add(new DropDownChoice('val', H::getValList(), '0'))->onChange($this, 'OnVal');
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
@@ -61,8 +62,8 @@ class InvoiceCust extends \App\Pages\Base
 
         $this->docform->add(new TextInput('editnds', "0"));
         $this->docform->add(new SubmitButton('bnds'))->onClick($this, 'onNds');
-        
-        
+
+
         $this->docform->add(new TextInput('editdisc', "0"));
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
 
@@ -101,16 +102,12 @@ class InvoiceCust extends \App\Pages\Base
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payamount->setText($this->_doc->payamount);
             $this->docform->editpayamount->setText($this->_doc->payamount);
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-            $this->docform->editpayed->setText($this->_doc->payed);
-            $this->docform->payed->setText($this->_doc->payed);
+       
+            $this->docform->editpayed->setText($this->_doc->headerdata['payed']);
+            $this->docform->payed->setText($this->_doc->headerdata['payed']);
 
             $this->docform->nds->setText($this->_doc->headerdata['nds']);
             $this->docform->editnds->setText($this->_doc->headerdata['nds']);
-            $this->docform->val->setValue($this->_doc->headerdata['val']);
-            $this->docform->rate->setText($this->_doc->headerdata['rate']);
             $this->docform->disc->setText($this->_doc->headerdata['disc']);
             $this->docform->editdisc->setText($this->_doc->headerdata['disc']);
 
@@ -148,7 +145,7 @@ class InvoiceCust extends \App\Pages\Base
                 }
             }
         }
-        $this->OnVal($this->docform->val);
+
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
@@ -160,6 +157,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $row->add(new Label('item', $item->itemname));
         $row->add(new Label('code', $item->item_code));
+        $row->add(new Label('custcode', $item->custcode));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
@@ -182,15 +180,8 @@ class InvoiceCust extends \App\Pages\Base
         $this->editdetail->edititem->setKey($item->item_id);
         $this->editdetail->edititem->setText($item->itemname);
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
 
-        }
-
-        $this->_rowid = $item->rowid;
     }
 
     public function deleteOnClick($sender) {
@@ -200,15 +191,9 @@ class InvoiceCust extends \App\Pages\Base
         $item = $sender->owner->getDataItem();
 
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
+        $rowid =  array_search($item, $this->_itemlist, true);
 
-        }
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
 
         $this->docform->detail->Reload();
 
@@ -219,7 +204,7 @@ class InvoiceCust extends \App\Pages\Base
     public function addrowOnClick($sender) {
         $this->editdetail->setVisible(true);
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
         $this->editdetail->editprice->setText("0");
         $this->editdetail->editcustcode->setText("");
     }
@@ -229,7 +214,7 @@ class InvoiceCust extends \App\Pages\Base
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не обрано товар");
             return;
         }
 
@@ -239,18 +224,15 @@ class InvoiceCust extends \App\Pages\Base
         $item->price = $this->editdetail->editprice->getText();
         $item->custcode = $this->editdetail->editcustcode->getText();
         if ($item->price == 0) {
-            $this->setWarn("no_price");
+            $this->setWarn("Не вказана ціна");
         }
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
+            $this->_itemlist[$this->_rowid] = $item;
         }
-        $this->_itemlist[$item->rowid] = $item;
 
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -284,12 +266,10 @@ class InvoiceCust extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->payamount = $this->docform->payamount->getText();
 
-       $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->amount = doubleval($this->docform->total->getText());
+        $this->_doc->payed = doubleval($this->docform->payed->getText());
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
 
-        $this->_doc->headerdata['val'] = $this->docform->val->getValue();
-        $this->_doc->headerdata['valname'] = $this->docform->val->getValueName();
-        $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
 
@@ -316,7 +296,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("filemore10M");
+            $this->setError("Файл більше 10 МБ!");
             return;
         }
 
@@ -342,18 +322,10 @@ class InvoiceCust extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-             if ($this->_doc->payamount > $this->_doc->payed) {
-                $this->_doc->updateStatus(Document::STATE_WP);
-            }
-
-                //обновляем  курс
-                if (strlen($this->_doc->headerdata['val']) > 1) {
-                    $optval = \App\System::getOptions("val");
-                    if (strlen($optval[$this->_doc->headerdata['val']]) > 0) {
-                        $optval[$this->_doc->headerdata['val']] = $this->_doc->headerdata['rate'];
-                        \App\System::setOptions("val", $optval);
-                    }
+                if ($this->_doc->payamount > $this->_doc->payed) {
+                    $this->_doc->updateStatus(Document::STATE_WP);
                 }
+            
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
@@ -379,7 +351,7 @@ class InvoiceCust extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -412,12 +384,12 @@ class InvoiceCust extends \App\Pages\Base
 
     private function CalcPay() {
         $total = $this->docform->total->getText();
-        
+
 
         $nds = $this->docform->nds->getText();
         $disc = $this->docform->disc->getText();
         $total = $total + $nds - $disc;
- 
+
 
         $this->docform->editpayamount->setText(H::fa($total));
         $this->docform->payamount->setText(H::fa($total));
@@ -437,61 +409,36 @@ class InvoiceCust extends \App\Pages\Base
         $this->goAnkor("tankor");
     }
 
+
+
  
-
-    public function OnVal($sender) {
-        $val = $sender->getValue();
-        $this->docform->rate->setVisible(false);        
-        $rate = 1;
-        if (strlen($val) > 1) {
-            $optval = \App\System::getOptions("val");
-            foreach($optval['vallist'] as $v){
-                 if($v->code == $val) $rate=$v->rate;   
-            }
-            $this->docform->rate->setVisible(true);            
-        } 
-        $this->docform->rate->setText($rate);
-        
-    }
-
     /**
      * Валидация   формы
      *
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введіть номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не створено унікальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("noselsender");
+            $this->setError("Не обрано постачальника");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
         }
-        $val = $this->docform->val->getValue();
-        if (strlen($val) > 1) {
-            if($this->_doc->payamount  > $this->_doc->payed )  {
-                $this->setError("nocreditval");
-             
-                
-                return;
-            }
-            
-            
-        }
-       
+ 
 
         return !$this->isError();
     }
@@ -504,7 +451,7 @@ class InvoiceCust extends \App\Pages\Base
 
         $text = Item::qstr('%' . $sender->getText() . '%');
         return  Item::findArray('itemname', "(itemname like {$text} or item_code like {$text} or bar_code like {$text})  and disabled <> 1");
-        
+
     }
 
     public function OnAutoCustomer($sender) {
@@ -519,35 +466,27 @@ class InvoiceCust extends \App\Pages\Base
         $this->editnewitem->editnewitemmsr->setText('');
 
         $this->editnewitem->editnewitemname->setText('');
-        $this->editnewitem->editnewitemcode->setText('');
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
+        
     }
 
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено назву");
             return;
         }
         $item = new Item();
         $item->itemname = $itemname;
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewitemmsr->getText();
- 
-        if (strlen($item->item_code) > 0 && System::getOption("common", "nocheckarticle") != 1) {
 
-            $code = Item::qstr($item->item_code);
-            $cnt = Item::findCnt("  item_code={$code} ");
-            if ($cnt > 0) {
-                $this->setError('itemcode_exists');
-                return;
-            }
+        if ($item->checkUniqueArticle()==false) {
+              $this->setError('Такий артикул вже існує');
+              return;
+        }  
 
-        }   
-        if (strlen($item->item_code) == 0 &&  System::getOption("common", "autoarticle") == 1) {
-
-            $item->item_code = Item::getNextArticle();
-        }
-        
+     
 
 
         $item->cat_id = $this->editnewitem->editnewcat->getValue();

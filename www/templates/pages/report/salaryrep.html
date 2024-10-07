@@ -1,25 +1,26 @@
 <html>
    <head>
-        <title>  Отчет по заработной плате  </title>
+        <title>  Звіт по заробітній платі  </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Отчет по заработной плате </h3>
+                <h3>Звіт по заробітній платі </h3>
+                <small>Звіт базується  на  документах Нарахування  зарплати та  Виплата зарплати</small>
                 <div class="navbar nav">
                     <form zippy="filter" class="form-inline">
 
-                        <label for="from">С</label>
+                        <label for="from">З</label>
                         <select class="form-control  " zippy="mfrom"> </select>
                         <select class="form-control mr-sm-2" zippy="yfrom"> </select>
 
                         <label for="to">по</label>
                         <select class="form-control  " zippy="mto"> </select>
                         <select class="form-control mr-sm-2" zippy="yto"> </select>
-                        <label for="emp">сотрудник</label>
+                        <label for="emp">Співробітник</label>
                         <select class="form-control mr-sm-2" zippy="emp">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не обрано</option>
                         </select>
 
                         <input class="btn btn-outline-primary  " type="submit" value="ОК">
@@ -31,9 +32,9 @@
                 <a zippy="autoclick"></a>
                 <div zippy="detail">
                     <div>
-                       <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/slreport" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></a>
-                        <a href="/showreport/pdf/slreport" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                       <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/slreport" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/slreport" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
                     </div>
 

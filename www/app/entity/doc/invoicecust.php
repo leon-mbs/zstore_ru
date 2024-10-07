@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class InvoiceCust extends Document
 {
-
     public function generateReport() {
         $firm = H::getFirmData($this->firm_id, $this->branch_id);
 
@@ -39,7 +38,7 @@ class InvoiceCust extends Document
                        "iscontract"      => $this->headerdata["contract_id"] > 0,
                         "notes"           => nl2br($this->notes),
                        "total"           => H::fa($this->amount),
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         if ($this->headerdata["contract_id"] > 0) {
@@ -50,10 +49,10 @@ class InvoiceCust extends Document
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
-        
+
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);
-        
+
         $header['rate'] = $this->headerdata["rate"];
         if ($header['rate'] == 0 || $header['rate'] == 1) {
             $header['isval'] = false;
@@ -69,19 +68,15 @@ class InvoiceCust extends Document
     }
 
     public function Execute() {
-        $payed = $this->payed;
-        $rate= doubleval($this->headerdata["rate"]);
-        if ($rate != 0 && $rate != 1) {
-            $payed = $payed * $rate; 
-        }
-        if ($this->headerdata['payment'] > 0 && $payed >0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment'] );
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $this->payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+        $payed = $this->headerdata['payed'];
+  
 
-        }
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $payed, $this->headerdata['payment']);
+    
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+
+       $this->DoBalans() ;
+
 
         return true;
     }
@@ -96,5 +91,26 @@ class InvoiceCust extends Document
 
         return $list;
     }
+    /**
+    * @override
+    */
+    public function DoBalans() {
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+        if(($this->customer_id??0) == 0) {
+            return;
+        }
 
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->save();
+        }
+
+
+    }
 }

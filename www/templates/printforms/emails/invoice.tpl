@@ -1,10 +1,10 @@
-Добрый день, {{customer_name}}
+Добрий день, {{customer_name}}
 <br>
 <br>
-Счет на оплату {{number}} от {{date}} на сумму {{amount}}.
+Рахунок на оплату {{number}} вiд {{date}} на суму {{amount}}.
 <br>
 <br>
 
-С уважением,
+З повагою,
 {{firm_name}}
 

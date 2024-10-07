@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class IncomeItem extends Document
 {
-
     public function Execute() {
 
 
@@ -25,28 +24,29 @@ class IncomeItem extends Document
             $sc->setStock($stockto->stock_id);
             $sc->save();
             $amount = $amount + $item->quantity * $item->price;
-            if ($this->headerdata['mtype'] > 0) {
-                $io = new \App\Entity\IOState();
-                $io->document_id = $this->document_id;
-                $io->amount = $item->quantity * $item->price;
-                $io->iotype = $this->headerdata['mtype'];
 
-                $io->save();
-            }
 
 
         }
+        if ($this->headerdata['mtype'] > 0) {
+            $io = new \App\Entity\IOState();
+            $io->document_id = $this->document_id;
+            $io->amount = $amount;
+            $io->iotype = $this->headerdata['mtype'];
 
-        if ($this->headerdata['emp'] > 0 && $this->headerdata['exmf'] > 0 && $this->headerdata['examount'] > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'],  $this->notes);
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
-
-
+            $io->save();
         }
         
+        
+        if ($this->headerdata['examount'] > 0) {
+         
+            $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['examount'], $this->headerdata['exmf'], $this->notes);
+         
+            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
+
+        }
+
+
         if ($this->headerdata['emp'] > 0) {
             //авансовый    отчет
             $ua = new \App\Entity\EmpAcc();
@@ -71,10 +71,11 @@ class IncomeItem extends Document
         $i = 1;
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $name = $item->itemname;
+
 
             $detail[] = array("no"        => $i++,
-                              "item_name" => $name,
+                              "item_name" => $item->itemname,
+                              "item_code" => $item->item_code,
                               "snumber"   => $item->snumber,
                               "msr"       => $item->msr,
                               "quantity"  => H::fqty($item->quantity),

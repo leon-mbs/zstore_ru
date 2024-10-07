@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class User extends \ZCL\DB\Entity
 {
-
     /**
      * @see Entity
      *
@@ -23,6 +22,8 @@ class User extends \ZCL\DB\Entity
         $this->defsalesource = 0;
         $this->deffirm = 0;
         $this->hidesidebar = 0;
+        $this->prturn = 0;
+
         $this->usemobileprinter = 0;
         $this->pagesize = 25;
         $this->createdon = time();
@@ -50,8 +51,8 @@ class User extends \ZCL\DB\Entity
      *
      */
     protected function afterLoad() {
-        $this->createdon = strtotime($this->createdon);
-        $this->lastactive = strtotime($this->lastactive);
+        $this->createdon = strtotime($this->createdon ?? '');
+        $this->lastactive = strtotime($this->lastactive ?? '');
 
         //доступы  уровня  роли
         $acl = @unserialize($this->roleacl);
@@ -68,8 +69,9 @@ class User extends \ZCL\DB\Entity
         }
 
 
-        $this->noshowpartion = $acl['noshowpartion'];
-        $this->showotherstores = $acl['showotherstores'];
+        $this->canevent = $acl['canevent']??0;
+        $this->noshowpartion = $acl['noshowpartion']??0;
+        $this->showotherstores = $acl['showotherstores']??0;
 
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
@@ -84,7 +86,7 @@ class User extends \ZCL\DB\Entity
 
         $this->aclbranch = $acl['aclbranch'];
         $this->onlymy = $acl['onlymy'];
-        $this->hidemenu = $acl['hidemenu'];
+        $this->hidemenu = $acl['hidemenu']?? null;
 
         $options = @unserialize($this->options);
         if (!is_array($options)) {
@@ -94,21 +96,29 @@ class User extends \ZCL\DB\Entity
         $this->deffirm = (int)$options['deffirm'];
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
-        $this->defsalesource = (int)$options['defsalesource'];
+        $this->defsalesource = $options['defsalesource'] ??0 ;
         $this->pagesize = (int)$options['pagesize'];
-        $this->phone = (string)$options['phone'];
-        $this->viber = (string)$options['viber'];
+        $this->phone = $options['phone']?? '';
+        $this->viber = $options['viber']?? '';
 
-        $this->darkmode = (int)$options['darkmode'];
-        $this->emailnotify = (int)$options['emailnotify'];
+        $this->darkmode = $options['darkmode']?? 0;
+        $this->emailnotify = $options['emailnotify']?? 0;
         $this->hidesidebar = (int)$options['hidesidebar'];
-        $this->usemobileprinter = (int)$options['usemobileprinter'];
-        $this->prtype = (int)$options['prtype'];
-        $this->pwsym = (int)$options['pwsym'];
-        $this->pserver = $options['pserver'];
-        $this->mainpage = $options['mainpage'];
-        $this->favs = $options['favs'];
-        $this->chat_id = $options['chat_id'];
+        $this->usemobileprinter = $options['usemobileprinter']?? 0;
+
+        $this->prtype = $options['prtype'] ?? 0;
+        $this->pwsym = $options['pwsym']?? 0;
+        $this->pserver = $options['pserver']?? '';
+        $this->prtypelabel = $options['prtypelabel']?? 0;
+        $this->pwsymlabel = $options['pwsymlabel']?? 0;
+        $this->pserverlabel = $options['pserverlabel']?? '';
+        $this->prturn = $options['prturn']?? 0;
+        $this->pcplabel = $options['pcplabel']?? '';
+        $this->pcp = $options['pcp']?? '';
+
+        $this->mainpage = $options['mainpage']??'';
+        $this->favs = $options['favs']?? '';
+        $this->chat_id = $options['chat_id']?? '';
 
         parent::afterLoad();
     }
@@ -140,9 +150,17 @@ class User extends \ZCL\DB\Entity
         $options['darkmode'] = $this->darkmode;
         $options['emailnotify'] = $this->emailnotify;
         $options['usemobileprinter'] = $this->usemobileprinter;
+
         $options['pserver'] = $this->pserver;
         $options['prtype'] = $this->prtype;
         $options['pwsym'] = $this->pwsym;
+        $options['pserverlabel'] = $this->pserverlabel;
+        $options['prtypelabel'] = $this->prtypelabel;
+        $options['pwsymlabel'] = $this->pwsymlabel;
+        $options['prturn'] = $this->prturn;
+        $options['pcplabel'] = $this->pcplabel;
+        $options['pcp'] = $this->pcp;
+
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;
@@ -173,7 +191,9 @@ class User extends \ZCL\DB\Entity
      */
     public static function getByLogin($login) {
         $conn = \ZDB\DB::getConnect();
-        return User::getFirst('userlogin = ' . $conn->qstr($login));
+        $user = User::getFirst('userlogin = ' . $conn->qstr($login));
+  
+        return $user;
     }
 
     public static function getByEmail($email) {
@@ -227,7 +247,7 @@ class User extends \ZCL\DB\Entity
         $users = array();
 
         foreach (User::find('disabled <> 1', 'username') as $u) {
-            if ($u->userrole == 'admins' || $branch_id == 0) {
+            if ($u->rolename == 'admins' || $branch_id == 0) {
                 $users[$u->user_id] = $u->username;
                 continue;
             }
