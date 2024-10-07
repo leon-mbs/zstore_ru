@@ -222,7 +222,7 @@ FROM ((custacc e
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Общепит', 'OutFood', 'Продажи', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Платежный календарь', 'PayTable', 'Касса и платежи', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Управленческий баланс', 'Balance', '', 0);  
-update  metadata set  description ='Програма лояльности' where  meta_name='Discounts';
+update  metadata set  description ='Программа лояльности' where  meta_name='Discounts';
 update  metadata set  description ='Полученные услуги' where  meta_name='IncomeService';
 update  metadata set  description ='Доходы и расходы' where  meta_name='PayBalance';
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Офисный документ', 'OfficeDoc', '', 0);
