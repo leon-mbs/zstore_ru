@@ -1,6 +1,6 @@
 body {
     font-family: "Segoe UI","Roboto", "Helvetica Neue"; 
-    background-color: #FaFaFa;
+     
 }
       
 .brand-logo {
@@ -57,6 +57,17 @@ body {
 }
 .dark-mode .form-control-plaintext {
    color: #ccf;
+}
+
+.dark-mode input[type=text] {
+   color: #FFF;
+   background-color: rgb(52,58,64);
+}
+
+.dark-mode  pre  {
+   color:#fff; 
+ 
+     
 }
 
 .icon20 {
@@ -151,3 +162,13 @@ input[type=time] {
 a {
     cursor:pointer;
 }
+
+@media print {
+            @page {
+              margin: 0!important;
+            }
+            body {
+              margin-top: 0mm !important;
+            }
+
+
