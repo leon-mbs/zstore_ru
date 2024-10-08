@@ -6,7 +6,7 @@ use App\Application as App;
 use App\Entity\User;
 use App\Helper;
 use App\System;
-use Zippy\Html\Form\TextInput as TextInput;
+use Zippy\Html\Form\TextInput;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
@@ -17,7 +17,6 @@ class UserLogin extends \Zippy\Html\WebPage
 
         System::clean() ;
         System::getSession()->clean();
-
 
         $common = System::getOptions('common');
         \App\Session::getSession()->clipboard = null;
@@ -34,9 +33,7 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->add($form);
         $this->setError('');
 
-
         $this->_tvars['curversion'] = \App\System::CURR_VERSION ;
-
 
         $this->_tvars['appname'] = $common['shopname'];
         $this->_tvars['capcha'] = $common['capcha'] == 1;
@@ -56,19 +53,17 @@ class UserLogin extends \Zippy\Html\WebPage
             $entercode = $sender->capchacode->getText();
             $capchacode = $sender->capcha->getCode();
             if (strlen($entercode) == 0 || $entercode != $capchacode) {
-                $this->setError("Невірний код капчі");
+                $this->setError("Неверный код капчи");
                 $this->counter();
 
                 return;
             }
         }
         if ($login == '') {
-
-            $this->setError('Введіть логін');
+            $this->setError('Введите логин');
         } else {
             if ($password == '') {
-
-                $this->setError('Введіть пароль');
+                $this->setError('Введите пароль');
             }
         }
 
@@ -92,13 +87,12 @@ class UserLogin extends \Zippy\Html\WebPage
                 if (($_COOKIE['branch_id'] ?? 0) > 0) {
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
-             
   
                 if($user->rolename=='admins'   ){
                     $b=0;
                     $phpv =   phpversion()  ;
 
-                    $v = @file_get_contents("https://zippy.com.ua/version.json" );
+                    $v = @file_get_contents("https://ru.zippy.com.ua/version.json" );
                     $data = @json_decode($v, true);
                     if(is_array($data)){
                        $b= version_compare($data['version'] , System::CURR_VERSION);
@@ -124,7 +118,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 return;
             } else {
 
-                $this->setError('Невірний логін');
+                $this->setError('Неверный логин');
 
                 $this->counter();
             }
@@ -142,15 +136,13 @@ class UserLogin extends \Zippy\Html\WebPage
     }
 
     public function setError($msg) {
-
-
         $this->_tvars['alerterror'] = $msg;
     }
 
     private function counter() {
         $this->cntlogin++;
         if ($this->cntlogin == 5) {
-            $msg = "Багато невдалих авторизацій";
+            $msg = "Много неудачных авторизаций";
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
@@ -159,8 +151,7 @@ class UserLogin extends \Zippy\Html\WebPage
             \App\Entity\Notify::toSystemLog($msg) ;
             \App\Entity\Notify::toAdmin($msg) ;
 
-
-            $this->setError('Багато невдалих авторизацій. Адміністратору системи відправлено повідомлення');
+            $this->setError('Много неудачных авторизаций. Отправлено уведомление администратору');
             $this->loginform->setVisible(false);
 
         }

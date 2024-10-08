@@ -17,7 +17,6 @@ class Base extends \Zippy\Html\WebPage
     public function __construct($params = null) {
         global $_config;
 
-
         \Zippy\Html\WebPage::__construct();
 
         $user = System::getUser();
@@ -25,9 +24,6 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-
- 
-         
         
         $this->_tvars['curversion'] = System::CURR_VERSION ;
 
@@ -130,15 +126,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["note"] = $modules['note'] == 1;
         $this->_tvars["issue"] = $modules['issue'] == 1;
 
-        $this->_tvars["ppo"] = $modules['ppo'] == 1;
-        $this->_tvars["np"] = $modules['np'] == 1;
-        $this->_tvars["promua"] = $modules['promua'] == 1;
-        $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
-        $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
-        $this->_tvars["horoshop"] = $modules['horoshop'] == 1;
-        $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
-
-
+ 
 
         //  $printer = System::getOptions('printer');
 
@@ -166,40 +154,13 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["woocomerce"] = false;
         }
 
-        if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["ppo"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'np') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["np"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'promua') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["promua"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'checkbox') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["checkbox"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["vkassa"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'horoshop') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["horoshop"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["vdoc"] = false;
-        }
-
-        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"];
-
+ 
+         
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||
             $this->_tvars["note"] ||
-            $this->_tvars["issue"] ||
-            $this->_tvars["promua"] ||
-            $this->_tvars["ppo"] ||
-            $this->_tvars["horoshop"] ||
-            $this->_tvars["vdoc"] ||
-            $this->_tvars["np"]
+            $this->_tvars["issue"] 
         ) {
             $this->_tvars["showmodmenu"] = true;
         } else {
@@ -282,12 +243,12 @@ class Base extends \Zippy\Html\WebPage
             }
             if ($user->userlogin == "admin") {
                 if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                    $this->addToastrWarn("Змініть у профілі пароль за замовчуванням"); 
+                    $this->addToastrWarn("Смените  в  профиле пароль по умолчанию"); 
                 }
             }
             if ($user->rolename == "admins") {
                 if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                    $this->addToastrInfo("Є непрочитані системні повідомлення"); 
+                    $this->addToastrInfo("Есть непрочитанные системные сообщения"); 
                 }
             }           
                  
@@ -565,7 +526,7 @@ class Base extends \Zippy\Html\WebPage
             $d = \App\Entity\Doc\Document::load($e->document_id)  ;
 
             if($d == null) {
-                return "По  даному  ТМЦ  закупок не  було";
+                return "По  данному ТМЦ закупок не было";
             }
             $price = $e->partion;
             $quantity = $e->quantity;
@@ -775,7 +736,7 @@ class Base extends \Zippy\Html\WebPage
 
 
         if ($item->checkUniqueArticle()==false) {
-           return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
+           return json_encode(array('error'=>'Такой артикул уже существует'), JSON_UNESCAPED_UNICODE);
         }
 
         if (strlen($item->item_code) == 0 ){
@@ -787,7 +748,7 @@ class Base extends \Zippy\Html\WebPage
         $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
 
-            return json_encode(array('error'=>'ТМЦ з такою назвою і артикулом вже існує'), JSON_UNESCAPED_UNICODE);
+            return json_encode(array('error'=>'ТМЦ с таким артикулом и названием уже  существует'), JSON_UNESCAPED_UNICODE);
 
         }
 
@@ -861,11 +822,11 @@ class Base extends \Zippy\Html\WebPage
             $info['discount']  = $c->getDiscount()  ;
             $info['bonus']  = $c->getBonus()  ;
             if (doubleval($info['discount']) > 0) {
-                $info['disctext'] =  "Постійна знижка {$info['discount']}%";
+                $info['disctext'] =  "Постоянная скидка {$info['discount']}%";
                 $info['bonus'] =0;
             } else {
                 if ($info['bonus'] > 0) {
-                    $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
+                    $info['disctext'] = "Насчитано бонусов " . $info['bonus'];
                 }
             }
 
