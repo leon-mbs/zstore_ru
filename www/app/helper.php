@@ -817,9 +817,7 @@ class Helper
      * @return mixed
      */
     public static function getValName($vn) {
-        if($vn == 'Гривня') {
-            return 'UAH';
-        }
+      
         if($vn == 'Долар') {
             return 'USD';
         }
@@ -829,9 +827,7 @@ class Helper
         if($vn == 'Рубль') {
             return 'RUB';
         }
-        if($vn == 'Лей') {
-            return 'MDL';
-        }
+       
     }
 
     public static function exportXML($xml, $filename) {
@@ -1370,10 +1366,10 @@ class Helper
 
         $nocache = "?t=" . time() . "&s=" . Helper::getSalt() . '&phpv=' . $phpv . '_' . \App\System::CURR_VERSION;
 
-        $v = @file_get_contents("https://zippy.com.ua/checkver.php" . $nocache);
+        $v = @file_get_contents("https://ru.zippy.com.ua/checkver.php" . $nocache);
         $v = @json_decode($v, true);
         if(!is_array($v)) {
-            $v = @file_get_contents("https://zippy.com.ua/version.json" . $nocache);
+            $v = @file_get_contents("https://ru.zippy.com.ua/version.json" . $nocache);
             $v = @json_decode($v, true);
 
         }
