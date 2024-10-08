@@ -28,6 +28,8 @@ CREATE TABLE promocodes (
   PRIMARY KEY (id)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8;
 
+DROP TABLE IF EXISTS custacc;
+
 CREATE TABLE custacc (
   ca_id bigint(20) NOT NULL AUTO_INCREMENT,
   customer_id int(11) NOT NULL,
@@ -41,7 +43,7 @@ CREATE TABLE custacc (
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;  
 
 ALTER TABLE promocodes
-ADD UNIQUE INDEX code (code)  
+ADD UNIQUE INDEX code (code) ; 
 
 ALTER TABLE paylist CHANGE paytype paytype mediumint NOT NULL;
 
@@ -60,8 +62,6 @@ ALTER TABLE  entrylist ADD createdon DATE DEFAULT NULL ;
 ALTER TABLE  eventlist ADD createdby int(11) DEFAULT NULL;
 ALTER TABLE  store_stock ADD customer_id int(11) DEFAULT NULL;    
 
-  
- 
  
 DROP VIEW messages_view  ;
 
@@ -218,21 +218,24 @@ FROM ((custacc e
   JOIN customers c
     ON ((c.customer_id = e.customer_id))) ;
         
+DROP VIEW IF EXISTS cust_acc_view;
+
+update  metadata set  description ='Программа лояльности' where  meta_name='Discounts';
+update  metadata set  description ='Полученные услуги' where  meta_name='IncomeService';
+update  metadata set  description ='Доходы и расходы' where  meta_name='PayBalance';
+
     
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Общепит', 'OutFood', 'Продажи', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Платежный календарь', 'PayTable', 'Касса и платежи', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Управленческий баланс', 'Balance', '', 0);  
-update  metadata set  description ='Программа лояльности' where  meta_name='Discounts';
-update  metadata set  description ='Полученные услуги' where  meta_name='IncomeService';
-update  metadata set  description ='Доходы и расходы' where  meta_name='PayBalance';
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Офисный документ', 'OfficeDoc', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Офис', 'OfficeList', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Прогноз продаж', 'PredSell', 'Аналитика', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Возврат с производства', 'ProdReturn', 'Производство', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Комиссионные товары', 'ItemComission', 'Закупки', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товары на комиссии', 'ItemComission', 'Закупки', 0);
   
-                    
- 
     
 delete  from  options where  optname='version' ;
 insert  into options (optname,optvalue) values('version','6.11.0'); 
+
+

@@ -541,7 +541,7 @@ CREATE TABLE crontask (
   starton datetime DEFAULT NULL,
 
   PRIMARY KEY (id)
-) DEFAULT CHARSET = utf8;
+) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE roles (
   role_id int(11) NOT NULL AUTO_INCREMENT,
@@ -1392,7 +1392,7 @@ FROM ((custacc e
 INSERT INTO users (userlogin, userpass, createdon, email, acl, disabled, options, role_id ) VALUES( 'admin', '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.', '2017-01-01', 'admin@admin.admin', 'a:3:{s:9:\"aclbranch\";N;s:6:\"onlymy\";N;s:8:\"hidemenu\";N;}', 0, 'a:23:{s:8:\"defstore\";s:1:\"0\";s:7:\"deffirm\";s:1:\"0\";s:5:\"defmf\";s:1:\"0\";s:13:\"defsalesource\";s:1:\"0\";s:8:\"pagesize\";s:2:\"25\";s:11:\"hidesidebar\";i:0;s:8:\"darkmode\";i:1;s:11:\"emailnotify\";i:0;s:16:\"usemobileprinter\";i:0;s:7:\"pserver\";s:0:\"\";s:6:\"prtype\";i:0;s:5:\"pwsym\";i:0;s:12:\"pserverlabel\";s:0:\"\";s:11:\"prtypelabel\";i:0;s:10:\"pwsymlabel\";i:0;s:6:\"prturn\";i:0;s:8:\"pcplabel\";i:0;s:3:\"pcp\";i:0;s:8:\"mainpage\";s:15:\"\\App\\Pages\\Main\";s:5:\"phone\";s:0:\"\";s:5:\"viber\";s:0:\"\";s:4:\"favs\";s:0:\"\";s:7:\"chat_id\";s:0:\"\";}', 1);
 INSERT INTO roles (rolename, acl) VALUES( 'admins', 'a:11:{s:13:\"noshowpartion\";N;s:15:\"showotherstores\";N;s:7:\"aclview\";N;s:7:\"acledit\";N;s:6:\"aclexe\";N;s:9:\"aclcancel\";N;s:8:\"aclstate\";N;s:9:\"acldelete\";N;s:7:\"widgets\";N;s:7:\"modules\";N;s:9:\"smartmenu\";s:3:\"8,2\";}');
 UPDATE users set  role_id=(select role_id  from roles  where  rolename='admins' limit 0,1 )  where  userlogin='admin' ;
-
+            
  
 INSERT INTO stores (  storename, description) VALUES(  'Основной склад', '');
 INSERT INTO mfund (  mf_name, description, branch_id, detail) VALUES( 'Каса', '', NULL, '<detail><beznal>0</beznal><btran></btran><bank><![CDATA[]]></bank><bankacc><![CDATA[]]></bankacc></detail>');
@@ -1408,7 +1408,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Контрагенты', 'CustomerList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Приходная накладная', 'GoodsReceipt', 'Закупки', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Расходная накладная', 'GoodsIssue', 'Продажи', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Журнал документов', 'DocList', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Общий журнал', 'DocList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Гарантийный талон', 'Warranty', 'Продажи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Движение по складу', 'ItemActivity', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'ABC анализ', 'ABC', 'Аналитика', 0);
@@ -1423,7 +1423,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Заказы клиентов', 'OrderList', 'Продажи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Заказ', 'Order', 'Продажи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Оприходование с производства', 'ProdReceipt', 'Производство', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Списание с производство', 'ProdIssue', 'Производство', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Списание нас производство', 'ProdIssue', 'Производство', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Отчет по производству', 'Prod', 'Производство', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Производствкнные участки', 'ProdAreaList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Продажи', 'GIList', 'Продажи', 0);
@@ -1439,22 +1439,23 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Движение по денежным  счетам', 'PayActivity', 'Касса и платежи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Приходный ордер', 'IncomeMoney', 'Касса и платежи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Расходный ордер', 'OutcomeMoney', 'Касса и платежи', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Доъоды и расходы', 'PayBalance', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Інвентаризація', 'Inventory', 'Склад', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Доходы и расходы', 'PayBalance', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Инвентаризация', 'Inventory', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Счет, входящий', 'InvoiceCust', 'Закупки', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Счет-фактура', 'Invoice', 'Продажи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'Импорт', 'Import', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Движение ТМЦ', 'StockList', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Кассовый чек', 'POSCheck', 'Продажи', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товары в пути', 'CustOrder', 'Закупки', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Списання ТМЦ', 'OutcomeItem', 'Склад', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Списание ТМЦ', 'OutcomeItem', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Оприходование ТМЦ', 'IncomeItem', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ кассира', 'ARMPos', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Работы, услуги', 'SerList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Товары на складе', 'ItemList', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'Экспорт', 'Export', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Выплата зарплаты', 'OutSalary', 'Зарплата', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Звіт по зарплаті', 'SalaryRep', 'Касса и платежи', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Выплата зарплаты', 'OutSalary', 'Касса и платежи', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Отчет по зарплате', 'SalaryRep', 'Касса и платежи', 0);
+
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Договора', 'ContractList', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемещение ТМЦ', 'MoveItem', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Робочее время', 'Timestat', '', 0);
@@ -1463,15 +1464,16 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Расчеты с поставщиками', 'PaySelList', 'Касса и платежи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Расчеты с покупателями', 'PayBayList', 'Касса и платежи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемещегие средств', 'MoveMoney', 'Касса и платежи', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'заказ общепита', 'OrderFood', 'Общепит', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Заказ общепита', 'OrderFood', 'Общепит', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ кассира общепита', 'ARMFood', 'Общепит', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Общепит', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'АРМ кухни (бара)', 'ArmProdFood', 'Общепит', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Прибутки та видатки', 'IOState', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Замовленi товари', 'ItemOrder', 'Продажи', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Доходы и расходы', 'IOState', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Заказаные товары', 'ItemOrder', 'Продажи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 5, 'Программа лояльности', 'Discounts', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Начисление зарплаты', 'CalcSalary', 'Касса и платежи', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 4, 'Начисления и удержания', 'SalaryTypeList', '', 0);
+
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Пр. процессы', 'ProdProcList', 'Производство', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Пр. этапы', 'ProdStageList', 'Производство', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемещение партий ТМЦ', 'MovePart', 'Склад', 0);
@@ -1479,17 +1481,22 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Возврат поставщикам', 'Returnbayed', 'Закупки', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Полученные услуги', 'IncomeService', 'Услуги', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Состояние складов', 'StoreItems', 'Склад', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Товары у поставщика', 'CustItems', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Товары у поставщиков', 'CustItems', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Акт сверки', 'CompareAct', 'Контрагенти', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Зарезервованные товары', 'Reserved', 'Склад', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'OLAP анализ', 'OLAP', 'Аналитика', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Управленческий баланс', 'Balance', '', 0);  
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Офисный документ', 'OfficeDoc', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Офис', 'OfficeList', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Прогноз продаж', 'PredSell', 'Аналитика', 0);
+
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Общепит', 'OutFood', 'Продажи', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Платежный календарь', 'PayTable', 'Касса и платежи', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Управленческий баланс', 'Balance', '', 0);  
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Офисный документ', 'OfficeDoc', '', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Офис', 'OfficeList', '', 0);
+INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Прогноз продаж', 'PredSell', 'Аналитика', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Возврат с производства', 'ProdReturn', 'Производство', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товары на комиссии', 'ItemComission', 'Закупки', 0);
 
+
+ 
 
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(2, 105, 'Основная зарплата', 'осн', 0);
 INSERT INTO saltypes (st_id, salcode, salname, salshortname, disabled) VALUES(3, 200, 'Всего насчитано', 'вс. нар', 0);
