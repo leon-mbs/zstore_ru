@@ -219,6 +219,8 @@ FROM ((custacc e
     ON ((c.customer_id = e.customer_id))) ;
         
 DROP VIEW IF EXISTS cust_acc_view;
+DROP TABLE IF EXISTS ppo_zformrep;
+DROP TABLE IF EXISTS ppo_zformstat;
 
 update  metadata set  description ='Программа лояльности' where  meta_name='Discounts';
 update  metadata set  description ='Полученные услуги' where  meta_name='IncomeService';
