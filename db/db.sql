@@ -272,7 +272,7 @@ CREATE TABLE filesdata (
   file_id int(11) DEFAULT NULL,
   filedata longblob,
   UNIQUE KEY file_id (file_id)
-) ENGINE = MYISAM DEFAULT CHARSET = utf8;
+) ENGINE = MYISAM   ROW_FORMAT = COMPRESSED;
 
 CREATE TABLE firms (
   firm_id int(11) NOT NULL AUTO_INCREMENT,
@@ -288,7 +288,7 @@ CREATE TABLE images (
   mime varchar(16) DEFAULT NULL,
   thumb longblob,
   PRIMARY KEY (image_id)
-) ENGINE = MYISAM  DEFAULT CHARSET = utf8;
+) ENGINE = MYISAM  ROW_FORMAT = COMPRESSED;
 
 CREATE TABLE iostate (
   id int(11) NOT NULL AUTO_INCREMENT,
