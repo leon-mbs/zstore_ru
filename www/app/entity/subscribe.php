@@ -90,7 +90,7 @@ class Subscribe extends \ZCL\DB\Entity
         $list[self::MSG_SMS] = H::l("sb_msgsms");
         $list[self::MSG_SMS] = H::l("sb_msgsms");
        
-        if($sms['smstype']==2) {
+        if(($sms['smstype'] ?? -1)==2) {
             $list[self::MSG_VIBER] =  H::l("sb_msgviber");            
         }
         if(strlen(\App\System::getOption("common",'tbtoken'))>0) {

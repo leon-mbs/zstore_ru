@@ -102,7 +102,7 @@ class IncomeService extends \App\Pages\Base
         $this->setpanel->setform->add(new TextInput('editsqty', 1));
         $this->setpanel->setform->add(new TextInput('editsprice', 0));
         $this->setpanel->add(new Label('stitle'));
-        $this->setpanel->add(new ClickLink('backtolist', $this, "onback"));
+        $this->setpanel->add(new ClickLink('backtolista', $this, "onback"));
           
         
         

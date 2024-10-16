@@ -101,7 +101,7 @@ class System
 
         $options = self::getOptions($group);
 
-        return $options[$option];
+        return $options[$option] ??'';
     }
 
     /**

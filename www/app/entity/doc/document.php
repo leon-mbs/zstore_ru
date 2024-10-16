@@ -340,7 +340,7 @@ class Document extends \ZCL\DB\Entity
         $doc = new $fullclassname();
         $doc->meta_id = $meta['meta_id'];
         $doc->user_id = \App\System::getUser()->user_id;
-
+ 
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
             $doc->branch_id = \App\Acl::checkCurrentBranch();
@@ -361,6 +361,9 @@ class Document extends \ZCL\DB\Entity
         $class = "\\App\\Entity\\Doc\\" . $this->meta_name;
         $doc = new $class($this->getData());
         $doc->unpackData();
+        $doc->document_date=$this->document_date;
+        $doc->lastupdate=$this->lastupdate;
+       
         return $doc;
     }
 
