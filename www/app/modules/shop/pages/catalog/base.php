@@ -28,7 +28,7 @@ class Base extends \Zippy\Html\WebPage
         $customer_id =   System::getCustomer();
         
         
-        if ($_COOKIE['remembercust'] && $customer_id == 0) {
+        if (($_COOKIE['remembercust'] ??'') && $customer_id == 0) {
             $arr = explode('_', $_COOKIE['remembercust']);
           
             if ($arr[0] > 0 && $arr[1] === md5($arr[0] . $_config['common']['salt'])) {
@@ -53,12 +53,12 @@ class Base extends \Zippy\Html\WebPage
  
         $this->_tvars["custname"] = System::getSession()->custname;
         
-        
+        $shop["paysystem"] = $shop["paysystem"] ??0;
         $this->_tvars["currencyname"] = $shop["currencyname"];
         $this->_tvars["basketcnt"] = false;
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
-        $this->_tvars["usepayment"] = $shop["paysystem"] > 0 ;
+        $this->_tvars["usepayment"] = $shop["paysystem"]  > 0 ;
         $this->_tvars["wp"] = $shop["paysystem"] == 1;
         $this->_tvars["lp"] = $shop["paysystem"] == 2;
 
@@ -72,8 +72,8 @@ class Base extends \Zippy\Html\WebPage
 
         $this->add(new ClickLink('logout', $this, 'LogoutClick'));
  
-        $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo']) > 0);
-        $this->logo->setValue($this->op['logo']);
+        $this->add(new \Zippy\Html\Link\BookmarkableLink('logo', "/"))->setVisible(strlen($this->op['logo'] ??'') > 0);
+        $this->logo->setValue($this->op['logo']??'');
         $this->_tvars["shopname"] = $this->op['shopname'];
         $this->_tvars["usefilter"] = strlen($this->op['usefilter']) > 0;
         $this->_tvars["usefeedback"] = strlen($this->op['usefeedback']) > 0;
@@ -98,7 +98,7 @@ class Base extends \Zippy\Html\WebPage
            $this->_tvars['pages'][]=array('link'=> $link  ,'title'=>$p->title);    
         }
         
-        if(strlen($_COOKIE['zippy_shop'])==0) {
+        if(strlen($_COOKIE['zippy_shop'] ??0)==0) {
            \App\Helper::insertstat(\App\Helper::STAT_HIT_SHOP,0,0) ;
            setcookie("zippy_shop","visited" , time() + 60 * 60 * 24);
        

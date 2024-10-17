@@ -13,7 +13,7 @@ class Basket implements \Zippy\Interfaces\DataSource
     public static function getBasket() {
       
         $basket = System::getSession()->productbasket;
-        if (!isset($basket)) {
+        if (!($basket instanceof Basket)) {
             $basket = new Basket();
             $cl = @unserialize($_COOKIE['shop_cart'] );
             if(is_array($cl)){

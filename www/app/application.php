@@ -101,21 +101,21 @@ class Application extends \Zippy\WebApplication
             "topic"          => "\\App\\Modules\\Note\\Pages\\ShowTopic"
         );
 
-        if (strlen($pages[$arr[0]]) > 0) {
-            if (strlen($arr[2]) > 0) {
+        if (strlen($pages[$arr[0]] ??'') > 0) {
+            if (strlen($arr[2] ??'') > 0) {
                 self::$app->LoadPage($pages[$arr[0]], $arr[1], $arr[2]);
             } else {
-                if (strlen($arr[1]) > 0) {
+                if (strlen($arr[1]??'') > 0) {
                     self::$app->LoadPage($pages[$arr[0]], $arr[1]);
                 } else {
-                    if (strlen($arr[0]) > 0) {
+                    if (strlen($arr[0]??'') > 0) {
                         self::$app->LoadPage($pages[$arr[0]]);
                     }
                 }
             }
             return;
         }
-        if (strlen($pages[$uri]) > 0) {
+        if (strlen($pages[$uri] ??'') > 0) {
             self::$app->LoadPage($pages[$uri]);
             return;
         }
@@ -124,7 +124,7 @@ class Application extends \Zippy\WebApplication
         $shoppages =      \App\Modules\Shop\Helper::getPages() ;
         
         if ( in_array($uri,$shoppages)  ) {
-            self::$app->LoadPage("\\App\\Modules\\Shop\\Pages\\CustomPage",$uri);
+            self::$app->LoadPage("\\App\\Modules\\Shop\\Pages\\Catalog\\CustomPage",$uri);
             return;
         }      
         //товары в онлайн каталоге
