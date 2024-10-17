@@ -6,7 +6,4 @@ www/cron.cmd
 www/.idea/
  
  
-www/logs/
-www/upload/
-/www/nbproject/private/
 www/sitemap.xml
