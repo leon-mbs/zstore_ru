@@ -290,7 +290,7 @@ class Main extends \App\Pages\Base
       
             }
             
-            if( (@$nodelist[$node->pid]) instanceof Node2 ) {
+            if( ($nodelist[$node->pid] ??null) instanceof Node2 ) {
                 if(!is_array($nodelist[$node->pid]->nodes))  $nodelist[$node->pid]->nodes  = array();
                 $nodelist[$node->pid]->nodes[]=$node; 
             }
