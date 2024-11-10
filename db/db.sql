@@ -1875,6 +1875,7 @@ INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, 
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Акт сверки', 'CompareAct', 'Контрагенты', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Зарезервированные товары', 'Reserved', 'Склад', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'OLAP анализ', 'OLAP', 'Аналитика', 0);
+INSERT INTO  metadata  (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Касса и платежи', 0);
 
   
 
