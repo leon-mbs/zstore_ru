@@ -62,7 +62,7 @@ class EmpAcc extends \App\Pages\Base
         $to = $dt->endOfMonth()->getTimestamp();
 
 
-        $conn = \Zdb\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
 
          $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
 
@@ -157,7 +157,7 @@ class EmpAcc extends \App\Pages\Base
         $from =  $this->filters->from->getDate();
         $to =  $this->filters->to->getDate();
         
-        $conn = \Zdb\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
 
         $sql = "select coalesce(sum(amount),0) from empacc where optype < 100 and  emp_id = {$emp_id} and createdon < " . $conn->DBDate($from);
 

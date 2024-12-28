@@ -27,7 +27,7 @@ class Items extends \App\Pages\Base
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
             System::setErrorMsg(H::l('noaccesstopage'));
 
-            App::RedirectError();
+           
             return;
         }
         $modules = System::getOptions("modules");
@@ -296,7 +296,7 @@ class Items extends \App\Pages\Base
             $w = $product['weight'];
             $w = str_replace(',', '.', $w);
             if ($product['weight_class_id'] == 2) {
-                $w = $w / 1000;
+                $w = doubleval($w) / 1000;
             } //граммы
             if ($w > 0) {
                 $item->weight = floatval($w);

@@ -25,8 +25,8 @@ class Stock extends \ZCL\DB\Entity
     /**
      * Метод  для   получения  имени  ТМЦ  с  ценой для выпадающих списков
      *
-     * @param mixed $criteria
-     * @return []
+     * @param mixed $store
+     * @param mixed $partname
      * @static
      */
     public static function findArrayAC($store, $partname = "") {

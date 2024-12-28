@@ -58,7 +58,7 @@ class SalaryRep extends \App\Pages\Base
         $yto = $this->filter->yto->getValue();
         $mto = $this->filter->mto->getValue();
         $mtoname = $this->filter->mto->getValueName();
-       $conn = \Zdb\DB::getConnect();
+       $conn = \ZDB\DB::getConnect();
 
         $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
 

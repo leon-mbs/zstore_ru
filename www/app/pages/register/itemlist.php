@@ -122,7 +122,7 @@ class ItemList extends \App\Pages\Base
 
     public function getTotalAmount() {
 
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -301,7 +301,7 @@ class ItemDataSource implements \Zippy\Interfaces\DataSource
 
         $form = $this->page->filter;
         $where = "   disabled <> 1 and  ( select sum(st1.qty) from store_stock st1 where st1.item_id= item_id ) <>0 ";
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }

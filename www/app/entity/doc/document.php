@@ -343,7 +343,7 @@ class Document extends \ZCL\DB\Entity
  
         $doc->branch_id = $branch_id;
         if ($branch_id == 0) {
-            $doc->branch_id = \App\Acl::checkCurrentBranch();
+            $doc->branch_id = \App\ACL::checkCurrentBranch();
         }
 
         return $doc;
@@ -381,7 +381,7 @@ class Document extends \ZCL\DB\Entity
         }
      
         //если нет права  выполнять    
-        if ($state >= self::STATE_EXECUTED && \App\Acl::checkExeDoc($this, false, false) == false) {
+        if ($state >= self::STATE_EXECUTED && \App\ACL::checkExeDoc($this, false, false) == false) {
 
             $this->headerdata['_state_before_approve_'] = $state;  //целевой статус
             if ($state == self::STATE_WA) {   //если на утверждение   то  ждем  утверждения

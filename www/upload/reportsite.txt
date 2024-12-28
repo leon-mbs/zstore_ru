@@ -1,0 +1,408 @@
+
+Z:\home\local.zstoreru\www\templates\pages\register\doclist.html
+   82:22  error  Element <tbody> must be used before <tr> in this context  element-permitted-order
+  173:30  error  Element <tr> is implicitly closed by sibling              no-implicit-close
+  175:30  error  Element <tr> is implicitly closed by sibling              no-implicit-close
+  176:30  error  Element <tr> is implicitly closed by sibling              no-implicit-close
+  180:30  error  Element <tr> is implicitly closed by parent </table>      no-implicit-close
+
+Z:\home\local.zstoreru\www\templates\pages\register\orderlist.html
+  190:74  error  Stray end tag '</i>'          close-order
+  216:82  error  Attribute "class" duplicated  no-dup-attr
+
+Z:\home\local.zstoreru\www\templates\pages\register\paylist.html
+  149:30  error  Element <tr> is implicitly closed by sibling          no-implicit-close
+  151:30  error  Element <tr> is implicitly closed by sibling          no-implicit-close
+  152:30  error  Element <tr> is implicitly closed by sibling          no-implicit-close
+  156:30  error  Element <tr> is implicitly closed by parent </table>  no-implicit-close
+
+Z:\home\local.zstoreru\www\templates\pages\register\paysellist.html
+  14:26  error  Stray end tag '</select>'  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\register\prodproclist.html
+  185:22  error  Element <tr> is implicitly closed by sibling          no-implicit-close
+  189:22  error  Element <tr> is implicitly closed by parent </table>  no-implicit-close
+  202:22  error  Element <tr> is implicitly closed by sibling          no-implicit-close
+  208:82  error  Class "fa" duplicated                                 no-dup-class
+  210:22  error  Element <tr> is implicitly closed by parent </table>  no-implicit-close
+  253:17  error  Attribute "zippy" using unquoted value                attr-quotes
+
+Z:\home\local.zstoreru\www\templates\pages\register\prodstagelist.html
+  240:22  error  Attribute "zippy" used ' instead of expected "  attr-quotes
+
+Z:\home\local.zstoreru\www\templates\pages\register\tasklist.html
+    6:6   error  Element <head> can only appear once under <html>  element-permitted-occurrences
+  159:26  error  Attribute "zippy" used ' instead of expected "    attr-quotes
+
+Z:\home\local.zstoreru\www\templates\pages\report\compareact.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  33:18   error  Unclosed element '<div>'                             close-order
+  36:103  error  Unclosed element '<i>'                               close-order
+  36:136  error  End tag '</a>' seen but there were open elements     close-order
+  40:22   error  End tag '</div>' seen but there were open elements   close-order
+  44:18   error  End tag '</div>' seen but there were open elements   close-order
+  45:14   error  End tag '</div>' seen but there were open elements   close-order
+  46:10   error  End tag '</div>' seen but there were open elements   close-order
+  47:6    error  End tag '</body>' seen but there were open elements  close-order
+  48:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\custorder.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  29:18   error  Unclosed element '<div>'                             close-order
+  32:102  error  Unclosed element '<i>'                               close-order
+  32:135  error  End tag '</a>' seen but there were open elements     close-order
+  35:22   error  End tag '</div>' seen but there were open elements   close-order
+  39:18   error  End tag '</div>' seen but there were open elements   close-order
+  40:14   error  End tag '</div>' seen but there were open elements   close-order
+  41:10   error  End tag '</div>' seen but there were open elements   close-order
+  42:6    error  End tag '</body>' seen but there were open elements  close-order
+  43:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\emptask.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  27:18   error  Unclosed element '<div>'                             close-order
+  30:102  error  Unclosed element '<i>'                               close-order
+  30:135  error  End tag '</a>' seen but there were open elements     close-order
+  34:22   error  End tag '</div>' seen but there were open elements   close-order
+  38:18   error  End tag '</div>' seen but there were open elements   close-order
+  39:14   error  End tag '</div>' seen but there were open elements   close-order
+  40:10   error  End tag '</div>' seen but there were open elements   close-order
+  41:6    error  End tag '</body>' seen but there were open elements  close-order
+  42:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\income.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  32:18   error  Unclosed element '<div>'                             close-order
+  35:99   error  Unclosed element '<i>'                               close-order
+  35:132  error  End tag '</a>' seen but there were open elements     close-order
+  39:22   error  End tag '</div>' seen but there were open elements   close-order
+  43:18   error  End tag '</div>' seen but there were open elements   close-order
+  44:14   error  End tag '</div>' seen but there were open elements   close-order
+  45:10   error  End tag '</div>' seen but there were open elements   close-order
+  46:6    error  End tag '</body>' seen but there were open elements  close-order
+  47:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\itemactivity.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  39:18   error  Unclosed element '<div>'                             close-order
+  42:105  error  Unclosed element '<i>'                               close-order
+  42:138  error  End tag '</a>' seen but there were open elements     close-order
+  46:22   error  End tag '</div>' seen but there were open elements   close-order
+  55:18   error  End tag '</div>' seen but there were open elements   close-order
+  56:14   error  End tag '</div>' seen but there were open elements   close-order
+  57:10   error  End tag '</div>' seen but there were open elements   close-order
+  71:6    error  End tag '</body>' seen but there were open elements  close-order
+  72:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\itemorder.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  29:18   error  Unclosed element '<div>'                             close-order
+  32:102  error  Unclosed element '<i>'                               close-order
+  32:135  error  End tag '</a>' seen but there were open elements     close-order
+  36:22   error  End tag '</div>' seen but there were open elements   close-order
+  40:18   error  End tag '</div>' seen but there were open elements   close-order
+  41:14   error  End tag '</div>' seen but there were open elements   close-order
+  42:10   error  End tag '</div>' seen but there were open elements   close-order
+  43:6    error  End tag '</body>' seen but there were open elements  close-order
+  44:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\noliq.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  30:18   error  Unclosed element '<div>'                             close-order
+  33:98   error  Unclosed element '<i>'                               close-order
+  33:131  error  End tag '</a>' seen but there were open elements     close-order
+  37:22   error  End tag '</div>' seen but there were open elements   close-order
+  41:18   error  End tag '</div>' seen but there were open elements   close-order
+  42:14   error  End tag '</div>' seen but there were open elements   close-order
+  43:10   error  End tag '</div>' seen but there were open elements   close-order
+  44:6    error  End tag '</body>' seen but there were open elements  close-order
+  45:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\outcome.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  49:18   error  Unclosed element '<div>'                             close-order
+  52:100  error  Unclosed element '<i>'                               close-order
+  52:133  error  End tag '</a>' seen but there were open elements     close-order
+  56:22   error  End tag '</div>' seen but there were open elements   close-order
+  60:18   error  End tag '</div>' seen but there were open elements   close-order
+  61:14   error  End tag '</div>' seen but there were open elements   close-order
+  62:10   error  End tag '</div>' seen but there were open elements   close-order
+  63:6    error  End tag '</body>' seen but there were open elements  close-order
+  64:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\payactivity.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  29:18   error  Unclosed element '<div>'                             close-order
+  32:104  error  Unclosed element '<i>'                               close-order
+  32:137  error  End tag '</a>' seen but there were open elements     close-order
+  34:22   error  End tag '</div>' seen but there were open elements   close-order
+  40:18   error  End tag '</div>' seen but there were open elements   close-order
+  41:14   error  End tag '</div>' seen but there were open elements   close-order
+  42:10   error  End tag '</div>' seen but there were open elements   close-order
+  43:6    error  End tag '</body>' seen but there were open elements  close-order
+  44:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\price.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  55:18   error  Unclosed element '<div>'                             close-order
+  58:98   error  Unclosed element '<i>'                               close-order
+  58:131  error  End tag '</a>' seen but there were open elements     close-order
+  61:22   error  End tag '</div>' seen but there were open elements   close-order
+  66:18   error  End tag '</div>' seen but there were open elements   close-order
+  67:14   error  End tag '</div>' seen but there were open elements   close-order
+  68:10   error  End tag '</div>' seen but there were open elements   close-order
+  69:6    error  End tag '</body>' seen but there were open elements  close-order
+  70:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\prod.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  32:18   error  Unclosed element '<div>'                             close-order
+  35:97   error  Unclosed element '<i>'                               close-order
+  35:130  error  End tag '</a>' seen but there were open elements     close-order
+  37:22   error  End tag '</div>' seen but there were open elements   close-order
+  41:18   error  End tag '</div>' seen but there were open elements   close-order
+  42:14   error  End tag '</div>' seen but there were open elements   close-order
+  43:10   error  End tag '</div>' seen but there were open elements   close-order
+  44:6    error  End tag '</body>' seen but there were open elements  close-order
+  45:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\reserved.html
+  15:101  error  Unclosed element '<i>'                                                  close-order
+  15:134  error  End tag '</a>' seen but there were open elements                        close-order
+  19:22   error  End tag '</div>' seen but there were open elements                      close-order
+  20:42   error  failed to tokenize "\">\r\n      ...", expected attribute, ">" or "/>"  parser-error
+
+Z:\home\local.zstoreru\www\templates\pages\report\returnbayed.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  18:18   error  Unclosed element '<div>'                             close-order
+  21:98   error  Unclosed element '<i>'                               close-order
+  21:131  error  End tag '</a>' seen but there were open elements     close-order
+  24:22   error  End tag '</div>' seen but there were open elements   close-order
+  28:18   error  End tag '</div>' seen but there were open elements   close-order
+  29:14   error  End tag '</div>' seen but there were open elements   close-order
+  30:10   error  End tag '</div>' seen but there were open elements   close-order
+  31:6    error  End tag '</body>' seen but there were open elements  close-order
+  32:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\returnselled.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  18:18   error  Unclosed element '<div>'                             close-order
+  21:98   error  Unclosed element '<i>'                               close-order
+  21:131  error  End tag '</a>' seen but there were open elements     close-order
+  24:22   error  End tag '</div>' seen but there were open elements   close-order
+  28:18   error  End tag '</div>' seen but there were open elements   close-order
+  29:14   error  End tag '</div>' seen but there were open elements   close-order
+  30:10   error  End tag '</div>' seen but there were open elements   close-order
+  31:6    error  End tag '</body>' seen but there were open elements  close-order
+  32:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\salaryrep.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  32:18   error  Unclosed element '<div>'                             close-order
+  35:101  error  Unclosed element '<i>'                               close-order
+  35:134  error  End tag '</a>' seen but there were open elements     close-order
+  38:22   error  End tag '</div>' seen but there were open elements   close-order
+  44:18   error  End tag '</div>' seen but there were open elements   close-order
+  45:14   error  End tag '</div>' seen but there were open elements   close-order
+  46:10   error  End tag '</div>' seen but there were open elements   close-order
+  47:6    error  End tag '</body>' seen but there were open elements  close-order
+  48:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\storeitems.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  39:18   error  Unclosed element '<div>'                             close-order
+  42:103  error  Unclosed element '<i>'                               close-order
+  42:136  error  End tag '</a>' seen but there were open elements     close-order
+  45:22   error  End tag '</div>' seen but there were open elements   close-order
+  54:18   error  End tag '</div>' seen but there were open elements   close-order
+  55:14   error  End tag '</div>' seen but there were open elements   close-order
+  56:10   error  End tag '</div>' seen but there were open elements   close-order
+  74:6    error  End tag '</body>' seen but there were open elements  close-order
+  75:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\report\timestat.html
+   7:10   error  Unclosed element '<div>'                             close-order
+   8:14   error  Unclosed element '<div>'                             close-order
+  31:18   error  Unclosed element '<div>'                             close-order
+  34:101  error  Unclosed element '<i>'                               close-order
+  34:134  error  End tag '</a>' seen but there were open elements     close-order
+  37:22   error  End tag '</div>' seen but there were open elements   close-order
+  43:18   error  End tag '</div>' seen but there were open elements   close-order
+  44:14   error  End tag '</div>' seen but there were open elements   close-order
+  45:10   error  End tag '</div>' seen but there were open elements   close-order
+  46:6    error  End tag '</body>' seen but there were open elements  close-order
+  47:2    error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\service\armpos.html
+  108:30  error  Element <tr> is implicitly closed by sibling  no-implicit-close
+
+Z:\home\local.zstoreru\www\templates\pages\service\armprodfood.html
+    8:10  error  Unclosed element '<div>'                             close-order
+  131:6   error  End tag '</body>' seen but there were open elements  close-order
+  132:2   error  End tag '</html>' seen but there were open elements  close-order
+
+Z:\home\local.zstoreru\www\templates\pages\service\import.html
+  490:30  error  Element <tr> is implicitly closed by parent </table>  no-implicit-close
+
+Z:\home\local.zstoreru\www\templates\pages\subscribes.html
+  166:43   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  171:34   error  Element <td> is implicitly closed by sibling  no-implicit-close
+  171:70   error  Raw "<" must be encoded as "&lt;"             no-raw-characters
+  171:75   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  181:58   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  183:38   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  184:35   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  184:43   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  184:56   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  184:79   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  184:92   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  184:101  error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  186:35   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  186:43   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  186:63   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  186:86   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  186:100  error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  186:108  error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  188:39   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  188:46   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  189:66   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  190:69   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  190:82   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+  190:89   error  Raw ">" must be encoded as "&gt;"             no-raw-characters
+
+Z:\home\local.zstoreru\www\templates\pages\systemlog.html
+  29:30  error  Element <p> is implicitly closed by sibling       no-implicit-close
+  30:30  error  Element <p> is implicitly closed by parent </td>  no-implicit-close
+
+Z:\home\local.zstoreru\www\templates\pages\timesheet.html
+  6:6  error  Element <head> can only appear once under <html>  element-permitted-occurrences
+
+Z:\home\local.zstoreru\www\templates\pages\userprofile.html
+  22:45  error  Attribute "value" used ' instead of expected "  attr-quotes
+  29:45  error  Attribute "value" used ' instead of expected "  attr-quotes
+  36:45  error  Attribute "value" used ' instead of expected "  attr-quotes
+  43:45  error  Attribute "value" used ' instead of expected "  attr-quotes
+  58:49  error  Attribute "value" used ' instead of expected "  attr-quotes
+
+Z:\home\local.zstoreru\www\templates\pages\users.html
+  82:37  error  Attribute "value" used ' instead of expected "  attr-quotes
+
+Z:\home\local.zstoreru\www\templates\printforms\doc\calcsalary.tpl
+   3:23  error  Attribute "colspan" has invalid value "{{colspan}}"  attribute-allowed-values
+  11:23  error  Attribute "colspan" has invalid value "{{colspan}}"  attribute-allowed-values
+  17:23  error  Attribute "colspan" has invalid value "{{colspan}}"  attribute-allowed-values
+  46:22  error  Attribute "colspan" has invalid value "{{colspan}}"  attribute-allowed-values
+
+Z:\home\local.zstoreru\www\templates\printforms\doc\invoice.tpl
+    7:40  error  Attribute "src" used ' instead of expected "  attr-quotes
+  155:56  error  Attribute "src" used ' instead of expected "  attr-quotes
+  162:56  error  Attribute "src" used ' instead of expected "  attr-quotes
+  168:22  error  Stray end tag '</tr>'                         close-order
+
+Z:\home\local.zstoreru\www\templates\printforms\report\compareact.tpl
+  1:2   error  Unclosed element '<table>'    close-order
+  1:34  error  Attribute "class" duplicated  no-dup-attr
+
+Z:\home\local.zstoreru\www\templates\printforms\report\custorder.tpl
+   1:34  error  Attribute "class" duplicated  no-dup-attr
+  49:2   error  Stray end tag '</body>'       close-order
+  50:2   error  Stray end tag '</html>'       close-order
+
+Z:\home\local.zstoreru\www\templates\printforms\report\emptask.tpl
+   1:34  error  Attribute "class" duplicated  no-dup-attr
+  87:2   error  Stray end tag '</body>'       close-order
+  88:2   error  Stray end tag '</html>'       close-order
+
+Z:\home\local.zstoreru\www\templates\printforms\report\income.tpl
+    1:34  error  Attribute "class" duplicated  no-dup-attr
+   70:2   error  Stray end tag '</table>'      close-order
+  102:2   error  Stray end tag '</table>'      close-order
+  133:2   error  Stray end tag '</table>'      close-order
+
+Z:\home\local.zstoreru\www\templates\printforms\report\itemactivity.tpl
+  1:34  error  Attribute "class" duplicated  no-dup-attr
+
+Z:\home\local.zstoreru\www\templates\printforms\report\itemorder.tpl
+   1:34  error  Attribute "class" duplicated  no-dup-attr
+  49:2   error  Stray end tag '</body>'       close-order
+  50:2   error  Stray end tag '</html>'       close-order
+
+Z:\home\local.zstoreru\www\templates\printforms\report\noliq.tpl
+   1:34  error  Attribute "class" duplicated  no-dup-attr
+  44:2   error  Stray end tag '</body>'       close-order
+  45:2   error  Stray end tag '</html>'       close-order
+
+Z:\home\local.zstoreru\www\templates\printforms\report\olap.tpl
+  3:37  error  Attribute "colspan" has invalid value "{{cols}}"  attribute-allowed-values
+  9:37  error  Attribute "colspan" has invalid value "{{cols}}"  attribute-allowed-values
+
+Z:\home\local.zstoreru\www\templates\printforms\report\outcome.tpl
+  107:2  error  Stray end tag '</table>'                                             close-order
+  140:2  error  Stray end tag '</table>'                                             close-order
+  172:2  error  Stray end tag '</table>'                                             close-order
+  218:2  error  Stray end tag '</table>'                                             close-order
+  263:2  error  Stray end tag '</table>'                                             close-order
+  303:2  error  failed to tokenize "<td align=...", expected attribute, ">" or "/>"  parser-error
+
+Z:\home\local.zstoreru\www\templates\printforms\report\prod.tpl
+    1:34  error  Attribute "class" duplicated                               no-dup-attr
+   29:6   error  Element <tr> is implicitly closed by sibling               no-implicit-close
+   69:6   error  Element <tr> is implicitly closed by sibling               no-implicit-close
+  102:6   error  Element <tr> is implicitly closed by adjacent <#document>  no-implicit-close
+  104:10  error  Element <td> is implicitly closed by adjacent <#document>  no-implicit-close
+  106:14  error  Unclosed element '<small>'                                 close-order
+  109:10  error  End tag '</td>' seen but there were open elements          close-order
+  110:6   error  End tag '</tr>' seen but there were open elements          close-order
+  112:6   error  Element <tr> is implicitly closed by sibling               no-implicit-close
+  138:2   error  End tag '</table>' seen but there were open elements       close-order
+
+Z:\home\local.zstoreru\www\templates\printforms\report\reserved.tpl
+  1:2   error  Unclosed element '<table>'    close-order
+  1:34  error  Attribute "class" duplicated  no-dup-attr
+
+Z:\home\local.zstoreru\www\templates\printforms\report\returnbayed.tpl
+  36:2  error  Stray end tag '</body>'  close-order
+  37:2  error  Stray end tag '</html>'  close-order
+
+Z:\home\local.zstoreru\www\templates\printforms\report\returnselled.tpl
+  36:2  error  Stray end tag '</body>'  close-order
+  37:2  error  Stray end tag '</html>'  close-order
+
+Z:\home\local.zstoreru\www\templates\widgets\itemsel.html
+  19:22  error  Element <option> is implicitly closed by parent </datalist>  no-implicit-close
+  19:29  error  Attribute "label" used ' instead of expected "               attr-quotes
+  19:47  error  Attribute "value" used ' instead of expected "               attr-quotes
+
+✖ 473 problems (473 errors, 0 warnings)
+
+More information:
+  https://html-validate.org/rules/element-case.html
+  https://html-validate.org/rules/attr-case.html
+  https://html-validate.org/rules/no-implicit-close.html
+  https://html-validate.org/rules/close-order.html
+  https://html-validate.org/rules/text-content.html
+  https://html-validate.org/rules/no-raw-characters.html
+  https://html-validate.org/rules/no-dup-class.html
+  https://html-validate.org/rules/attr-quotes.html
+  https://html-validate.org/rules/no-dup-attr.html
+  https://html-validate.org/rules/attribute-allowed-values.html
+  https://html-validate.org/rules/form-dup-name.html
+  https://html-validate.org/rules/element-permitted-parent.html
+  https://html-validate.org/rules/element-permitted-order.html
+  https://html-validate.org/rules/element-permitted-occurrences.html
+

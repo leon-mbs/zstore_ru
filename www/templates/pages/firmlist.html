@@ -6,12 +6,10 @@
 
     <body>
         <div class="row">
-             {{^loadkey}}
+          
                <div class="col-12 col-md-8 col-xl-6">
-             {{/loadkey}}
-             {{#loadkey}}
-               <div class="col-12   col-xl-10">
-             {{/loadkey}}
+         
+  
                 <div zippy="firmtable">
                     <h3>Список компаний </h3>
 
@@ -21,13 +19,7 @@
                             <th>Название</th>
                          
                             <th></th>
-   {{#loadkey}}
-                            <th  > </th>
-                            <th  >Собственник сертификата</th>
-                            <th  >Идентификатор ключа</th>
-                            
-                            
-                            {{/loadkey}}                               
+                              
                         </tr>
                         <tr zippy="firmlist">
                             <td zippy="firm_name"></td>
@@ -35,16 +27,10 @@
 
                             <td style="width:100px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a>
                              &nbsp;&nbsp; <a                                    zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
-    {{#loadkey}}
-                            <td  >
-                               <a  zippy="ppo" title="Загрузить ключ и сертификат" ><i class="fa fa-key"></a>
-                            </td>
-                            <td zippy="ppoowner"> </td>
-                            <td zippy="ppokeyid"> </td>
-                            {{/loadkey}}                                      
+                                        
                         </tr>
                     </table>
-                {{#loadkey}}    <small>Идентификатор ключа должен быть прописан в налоговой</small>       {{/loadkey}}     
+              
                 </div>
             </div>
         </div>
@@ -102,77 +88,7 @@
 
             </form>
         </div>
-          <div class="row">
-            
-            <form class="col-6 col-md-4  col-xl-3" zippy="keyform" enctype="multipart/form-data">
-                <h5>Загрузка ключа и сертификата</h5>
-            <small>Описание работы с ключами <a  target="_blank" href="https://zippy.com.ua/ext#6">здесь</a> </small>
-                  <div class="form-group">
-                    <label for="signtype">Метод подписи </label>
-                    <select   class="form-control" type="text" zippy="signtype">
-                      <option value="0">Внутренняя библиотека</option>
-                  <!--    <option value="1">Сервер с передачей ключа</option>
-                      <option value="2">Сервер с встроенным ключем</option>
-                      -->
-                    </select>
-                    
-                </div>  
-            
-                             
-                <div class="form-group">
-                    <label for="password">Пароль </label>
-                    <input required="required" class="form-control" type="text" zippy="password">
-                </div>
-                <div class="form-group">
-                    <label for="keyfile">Файл ключа </label>
-                    <input class="form-control" type="file" zippy="keyfile">
-                  
-                </div>
-                <div class="form-group">
-                    <label for="certfile">Файл сертификата </label>
-                    <input class="form-control" type="file" zippy="certfile">
-                </div>
-   <small>Для jks ключей (ПриватБанк) не обязательно</small>                      
-                <div class="form-group">
-                    <label for="serhost">Адрес сервера подписи </label>
-                    <input class="form-control"   zippy="serhost">
-                </div>
-                <div class="form-group">
-                    <label for="serport">Порт сервера </label>
-                    <input class="form-control"   zippy="serport">
-                </div>
-                <div class="form-check">
-                    <input zippy="usessl" type="checkbox" class="form-check-input">
-                    <label class="form-check-label text-bold" for="usessl">Проверить SSL сертификат</label>
-             <small for="usessl">В случае проблем с самоподписаным сертификатом необходимо добавить его в систему к списку доверенных.
-                 Или положить файл сертификата в папку config, переименовав в 'ssl.srt'
-                </small>       
-                </div>   
-
-                <div class="form-check">
-                   <input zippy="outher" type="checkbox" class="form-check-input">
-                   <label class="form-check-label" for="outher">Использовать внешний сервер</label>
-                  <br> <small>Если ошибка с таймаутом</small>
-               </div>                              
-                 
-                <span style="display:block" id="progress"></span>
-                <input zippy="send" type="button" value="Загрузить" class="btn btn-primary  ">&nbsp;&nbsp;
-                <input zippy="cancelppo" type="button" value="Закрыть" class="btn btn-outline-primary  ">
-                <input zippy="delppo" type="button" value="Удалить" class="btn btn-outline-danger  "> &nbsp;&nbsp; 
-      
-
-            </form>
-            
-            </div> 
-            <script>
-            
-            function check_send(){
-                $('#progress').text('Загрузка...');
-                $('#send').attr('disabled','disabled');
-               
-                return  true;
-            }
-            
-            </script>
+       
+          
     </body>
 </html>

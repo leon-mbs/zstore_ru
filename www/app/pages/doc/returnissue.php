@@ -281,53 +281,14 @@ class ReturnIssue extends \App\Pages\Base
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
 
-      $this->_doc->payed = $this->docform->payed->getText();
+        $this->_doc->payed = $this->docform->payed->getText();
         $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
 
         $isEdited = $this->_doc->document_id > 0;
 
         $pos_id = $this->docform->pos->getValue();
 
-        if ($pos_id > 0 && $sender->id == 'execdoc') {
-            $pos = \App\Entity\Pos::load($pos_id);
-            if ($pos->usefisc == 1 && $this->_tvars['ppo'] == true) {
-                $this->_doc->headerdata["fiscalnumberpos"]  =  $pos->fiscalnumber;
- 
-                if ($this->_basedocid > 0) {
-                    $basedoc = Document::load($this->_basedocid);
-                    $this->_doc->headerdata["docnumberback"] = $basedoc->headerdata["fiscalnumber"];
-                }
-
-                if (strlen($this->_doc->headerdata["docnumberback"]) == 0) {
-                    $this->setError("ppo_returndoc");
-                    return;
-                }
-
-                $this->_doc->headerdata["pos"] = $pos->pos_id;
-
-                $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                    //повторяем для  нового номера
-                    $pos->fiscdocnumber = $ret['doclocnumber'];
-                    $pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::checkback($this->_doc);
-                }
-                if ($ret['success'] == false) {
-                    $this->setErrorTopPage($ret['data']);
-                    return;
-                } else {
-
-                    if ($ret['docnumber'] > 0) {
-                        $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                        $pos->save();
-                        $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                    } else {
-                        $this->setError("ppo_noretnumber");
-                        return;
-                    }
-                }
-            }
-        }
+    
 
 
         $conn = \ZDB\DB::getConnect();

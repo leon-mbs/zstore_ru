@@ -61,7 +61,7 @@ class Service extends \ZCL\DB\Entity
     }
 
     public static function getCategoryList() {
-        $conn = \Zdb\DB::getConnect();
+        $conn = \Zdb\ZDB::getConnect();
 
         $list = $conn->GetCol("select distinct  category from services where  category  is not null order by category ");
         if (is_array($list)) {

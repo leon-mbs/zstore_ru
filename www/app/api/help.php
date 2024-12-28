@@ -13,7 +13,7 @@ class help
         global $_config;
 
         $path = '';
-        $name = ltrim($name, '\\');
+      
 
         $lang = $_config['common']['lang'];
 

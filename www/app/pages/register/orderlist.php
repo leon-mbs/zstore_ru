@@ -71,7 +71,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
         $this->statuspan->add(new Form('moveform'));
-        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList() ,\App\Acl::getCurrentBranch()))->onChange($this,"onBranch",true);
+        $this->statuspan->moveform->add(new DropDownChoice('brmove', \App\Entity\Branch::getList() ,\App\ACL::getCurrentBranch()))->onChange($this,"onBranch",true);
         $this->statuspan->moveform->add(new DropDownChoice('usmove',array(),0  ));
         $this->statuspan->moveform->add(new SubmitButton('bmove'))->onClick($this, 'MoveOnSubmit');
         
@@ -197,7 +197,7 @@ class OrderList extends \App\Pages\Base
      
     }
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
+        if (\App\ACL::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
         }
 
@@ -579,32 +579,7 @@ class OrderList extends \App\Pages\Base
             $this->setWarn('sumoverpay');
         }
 
-
-        if ($pos_id > 0) {
-            $pos = \App\Entity\Pos::load($pos_id);
-
-            $ret = \App\Modules\PPO\PPOHelper::checkpay($this->_doc, $pos_id, $amount, $form->payment->getValue());
-            if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                //повторяем для  нового номера
-                $pos->fiscdocnumber = $ret['doclocnumber'];
-                $pos->save();
-                $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-            }
-            if ($ret['success'] == false) {
-                $this->setErrorTopPage($ret['data']);
-                return;
-            } else {
-
-                if ($ret['docnumber'] > 0) {
-                    $pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                    $pos->save();
-                    $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                } else {
-                    $this->setError("ppo_noretnumber");
-                    return;
-                }
-            }
-        }
+ 
 
         Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(),  $form->pcomment->getText());
         \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, \App\Entity\IOState::TYPE_BASE_INCOME);

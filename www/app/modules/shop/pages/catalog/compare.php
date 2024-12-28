@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Pages\Catalog;
 
-use App\Modules\Shop\Comparelist;
+use App\Modules\Shop\CompareList;
 use App\Modules\Shop\Helper;
 use \App\Application as App;
 
@@ -19,7 +19,7 @@ class Compare extends Base
 
     protected function beforeRender() {
         parent::beforeRender();
-        $comparelist = Comparelist::getCompareList()->list;
+        $comparelist = CompareList::getCompareList()->list;
     }
 
     public function OnBack($sender) {
@@ -37,7 +37,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
 
     public function getContent($attributes) {
         $result = "<table     class=\"comparetable\" >";
-        $comparelist = Comparelist::getCompareList();
+        $comparelist = CompareList::getCompareList();
         $attrlist = array();
         $attrnames = array();
         $attrvalues = array();
@@ -103,7 +103,7 @@ class CompareGrid extends \Zippy\Html\CustomComponent implements \Zippy\Interfac
         $params = App::$app->getRequest()->request_params[$this->id];
 
         //$params = array_keys($params);
-        $comparelist = Comparelist::getCompareList();
+        $comparelist = CompareList::getCompareList();
         $comparelist->deleteProduct($params[0]);
         if ($comparelist->isEmpty()) {
             $filter = \App\Filter::getFilter("ProductCatalog");

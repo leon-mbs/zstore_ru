@@ -67,7 +67,7 @@ class Main extends Base
             $brf = " and branch_id in ({$brids}) ";
         }        
         
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -442,7 +442,7 @@ class Main extends Base
         //  if (strlen($brids) > 0) {
         //      $br = " and d.branch_id in ({$brids}) ";
         //  }
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
         }
@@ -469,7 +469,7 @@ class Main extends Base
         if (strlen($brids) > 0) {
             $br = " and d.branch_id in ({$brids}) ";
         }
-        $cstr = \App\Acl::getStoreBranchConstraint();
+        $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "   store_id in ({$cstr})  and  ";
         }

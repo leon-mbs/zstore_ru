@@ -9,9 +9,8 @@ use Zippy\Html\Label;
 use Zippy\Html\Panel;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\ArrayDataSource;
-
-use Zippy\Html\DataList\Column;
 use Zippy\Html\DataList\DataTable;
+use Zippy\Html\DataList\Column;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextInput;
@@ -56,10 +55,10 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $table = $this->witempan->add(new DataTable('witemselt', $ds, true, true));
         $table->setPageSize(H::getPG());
-        $table->AddColumn(new Column('itemname', H::l('name'), true, true, true));
-        $table->AddColumn(new Column('item_code', H::l('code'), true, true, false));
-        $table->AddColumn(new Column('bar_code', H::l('barcode'), true, true, false));
-        $table->AddColumn(new Column('manufacturer', H::l('brand'), true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', H::l('name'), true, true, true));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', H::l('code'), true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', H::l('barcode'), true, true, false));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', H::l('brand'), true, true, false));
 
         $table->setCellClickEvent($this, 'OnSelect');
         

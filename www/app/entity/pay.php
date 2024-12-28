@@ -138,7 +138,7 @@ class Pay extends \ZCL\DB\Entity
     //начисление  (списание)  бонусов
     public static function addBonus($document_id ,$amount  ) {
     
-        $conn = \Zdb\DB::getConnect();
+        $conn = \ZDB\DB::getConnect();
 
         $customer_id = (int)$conn->GetOne("select  customer_id  from  documents where  document_id=" . $document_id);
 

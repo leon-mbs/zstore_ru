@@ -136,7 +136,7 @@ class Customer extends \ZCL\DB\Entity
      *
      * @param mixed $search
      * @param mixed $type
-     * @param mixed $edrpou
+     * @param mixed $searchedrpou
      */
     public static function getList($search = '', $type = 0, $searchedrpou = false) {
 
