@@ -5,7 +5,13 @@
     </head>
 
     <body>
- 
+        <style>
+        .dark-mode  pre  {
+           color:#fff; 
+         
+             
+        }
+        </style>
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6"  >
                 <h4>Журнал системных сообщений</h4>
@@ -39,7 +45,26 @@
       
             </div>
 
+         <div class="col-12 col-md-4 "  >
+                <h5>Файловый лог</h5>
+                <table class="table table-sm    ">
+                    <tr  zippy="flist">
 
+                        <td zippy="fname">                        </td>
+                        <td> 
+                        <a zippy="fview"   title="Просмотр"> <i class="fa fa-eye"></i></a>
+                        &nbsp;&nbsp;<a zippy="fdown"   title="Загрузка"> <i class="fa fa-download"></i></a>
+                         </td>
+
+
+                    </tr>
+                </table> 
+                    
+                 <pre style="font-size:smaller" zippy="fc"  >    
+              
+                </pre>
+               
+              </div>
 
         </div>
  

@@ -51,11 +51,11 @@ class DocList extends \App\Pages\Base
         
         $filter = Filter::getFilter("doclist");
         if ($filter->isEmpty()) {
-            $filter->to = time();
+            $filter->to = 0;
        //     $d = new \App\DateTime() ;
 //            $d = $d->startOfMonth()->subMonth(1) ;
 //            $filter->from = $d->getTimestamp();
-            $filter->from = time() - (7 * 24 * 3600);
+            $filter->from = time() - (15 * 24 * 3600);
             $filter->page = 1;
             $filter->doctype = 0;
             $filter->customer = 0;
@@ -129,8 +129,8 @@ class DocList extends \App\Pages\Base
 
     public function onErase($sender) {
         $filter = Filter::getFilter("doclist");
-        $filter->to = time();
-        $filter->from = time() - (7 * 24 * 3600);
+        $filter->to = 0;
+        $filter->from = time() - (15 * 24 * 3600);
         $filter->page = 1;
         $filter->doctype = 0;
         $filter->status = 0;
@@ -142,8 +142,8 @@ class DocList extends \App\Pages\Base
         $filter->searchtext = '';
 
         $this->filter->clean();
-        $this->filter->to->setDate(time());
-        $this->filter->from->setDate(time() - (7 * 24 * 3600));
+        $this->filter->to->setDate(0);
+        $this->filter->from->setDate(time() - (15 * 24 * 3600));
         $this->filter->doctype->setValue(0);
         $this->filter->status->setValue(0);
         $this->filter->author->setValue(0);
@@ -158,7 +158,7 @@ class DocList extends \App\Pages\Base
         //запоминаем  форму   фильтра
         $filter = Filter::getFilter("doclist");
         $filter->from = $this->filter->from->getDate();
-        $filter->to = $this->filter->to->getDate(true);
+        $filter->to = $this->filter->to->getDate( );
         $filter->doctype = $this->filter->doctype->getValue();
         $filter->author = $this->filter->author->getValue();
         $filter->status = $this->filter->status->getValue();
@@ -634,13 +634,16 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
 
     private function getWhere($usedate=true) {
         //$user = System::getUser();
-
+        $where = " 1=1 ";
         $conn = \ZDB\DB::getConnect();
         $filter = Filter::getFilter("doclist");
         if($usedate){
-          $where = "  (document_date) >= " . $conn->DBDate($filter->from) . " and   (document_date) <= " . $conn->DBDate($filter->to);
-        } else {
-          $where = " 1=1 ";  
+            if($filter->from > 0) {
+                $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
+            }
+            if($filter->to > 0) {
+                $where .= " and  document_date <= " . $conn->DBDate($filter->to) ;
+            }
         }
         if ($filter->doctype > 0) {
             $where .= " and meta_id  ={$filter->doctype} ";
