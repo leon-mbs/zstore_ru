@@ -1,6 +1,7 @@
+www/logs/
+www/upload/
 www/vendor/
 www/composer.cmd
 www/cron.cmd
- 
  
 www/sitemap.xml
