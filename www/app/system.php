@@ -11,7 +11,7 @@ use App\Entity\User;
 class System
 {
     const CURR_VERSION= "6.6.5";
-
+  
     private static $_options = array();   //  для кеширования  
     private static $_cache   = array();   //  для кеширования
 
@@ -63,32 +63,50 @@ class System
 
         return Session::getSession();
     }
-
+    
+    
     /**
      * Возвращает набор  параметром  по  имени набора
      *
      * @param mixed $group
-     * @param mixed $isserialise
+     * @param mixed $reload
+ 
      */
-    public static function getOptions($group,$isserialise=true) {
+     public static function getOptions($group,$reload= false ) {
 
-        if (isset(self::$_options[$group])) {
-            return self::$_options[$group];
+        $opp  = Session::getSession()->options ??[] ;
+        if(!is_array($opp))  {
+            $opp=[];
+        }       
+       
+        if(isset($opp[$group]) && $reload==false  ) {
+            return $opp[$group];
         }
+       
+       
         $conn = \ZDB\DB::getConnect();
 
         $rs = $conn->GetOne("select optvalue from options where optname='{$group}' ");
-        if (strlen($rs) > 0) {
-            if(!$isserialise) return $rs;  //неупакопано
-            
-            $d =    @unserialize(@base64_decode($rs) );
-            if(!is_array($d) ) {
-               $d =  @unserialize( $rs );; //для  совместивости   
-            }
-            self::$_options[$group] = $d;
+        
+        if($group=='version')  {
+           return $rs; 
         }
-         
-        return self::$_options[$group] ?? ''  ;
+        if (strlen($rs) > 0) {
+            if(strpos($rs,':')>0) {
+                $d =  @unserialize($rs);
+                $opp[$group]  = $d;
+                Session::getSession()->options = $opp;
+                return $d;
+            }   
+
+            $d =    @unserialize(@base64_decode($rs));
+            $opp[$group]  = $d;
+            Session::getSession()->options = $opp;
+            return $d;
+            
+        }
+
+        
     }
 
     /**
@@ -101,7 +119,7 @@ class System
 
         $options = self::getOptions($group);
 
-        return $options[$option] ??'';
+        return $options[$option];
     }
 
     /**
@@ -111,14 +129,30 @@ class System
      * @param mixed $options
      */
     public static function setOptions($group, $options) {
-        self::$_options[$group] = $options;
+     
         $options = serialize($options);
-        $options = base64_encode($options) ;    
+        $options = base64_encode($options) ;
         $conn = \ZDB\DB::getConnect();
         $conn->Execute(" delete from options where  optname='{$group}' ");
         $conn->Execute(" insert into options (optname,optvalue) values ('{$group}'," . $conn->qstr($options) . " ) ");
+        Session::getSession()->options = [];
+    }
+    /**
+    * установить отьедный параметр
+    *
+    * @param mixed $group
+    * @param mixed $option
+    * @param mixed $value
+    */
+    public static function setOption($group, $option, $value) {
+
+        $options = self::getOptions($group);
+        $options[$option]  = $value;
+
+        self::setOptions($group, $options) ;
     }
 
+   
     public static function setCache($key, $data) {
         self::$_cache[$key] = $data;
     }

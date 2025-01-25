@@ -27,7 +27,7 @@ class Main extends Base
         parent::__construct();
 
         $this->_tvars['curversion'] = System::CURR_VERSION;
-        $this->_tvars['curversionbd'] = System::getOptions('version',false);
+        $this->_tvars['curversionbd'] = System::getOptions('version' );
 
         $user = System::getUser();
 
