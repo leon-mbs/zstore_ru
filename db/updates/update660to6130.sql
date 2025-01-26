@@ -222,6 +222,177 @@ DROP VIEW IF EXISTS cust_acc_view;
 DROP TABLE IF EXISTS ppo_zformrep;
 DROP TABLE IF EXISTS ppo_zformstat;
 
+
+ALTER TABLE promocodes ADD enddate  DATE DEFAULT null; 
+ALTER TABLE note_topics ADD ispublic   tinyint(1) DEFAULT 0;
+ALTER TABLE note_topicnode ADD islink  tinyint(1) DEFAULT 0;
+ALTER TABLE parealist ADD notes  varchar(255) DEFAULT NULL;
+ALTER TABLE equipments ADD pa_id int(11) DEFAULT  NULL;
+ALTER TABLE equipments ADD emp_id int(11) DEFAULT  NULL;
+ALTER TABLE equipments ADD invnumber  varchar(255) DEFAULT NULL;
+
+DROP VIEW IF EXISTS item_cat_view  ;
+
+CREATE VIEW item_cat_view
+AS
+SELECT
+  ic.cat_id AS cat_id,
+  ic.cat_name AS cat_name,
+  ic.detail AS detail,
+  ic.parent_id AS parent_id,
+  COALESCE((SELECT
+      COUNT(*)
+    FROM items i
+    WHERE i.cat_id = ic.cat_id), 0) AS itemscnt  ,
+    COALESCE((SELECT
+      COUNT(*)
+    FROM item_cat ic2
+    WHERE ic.cat_id = ic2.parent_id), 0) AS childcnt
+FROM item_cat ic   ;
+
+
+DROP VIEW IF EXISTS custitems_view  ;
+DROP TABLE IF EXISTS custitems  ;
+
+CREATE TABLE custitems (
+  custitem_id int(11) NOT NULL AUTO_INCREMENT,
+  item_id int(11)   NULL,
+  customer_id int(11) NOT NULL,
+  quantity decimal(10, 3) DEFAULT NULL,
+  price decimal(10, 2) NOT NULL DEFAULT '0.00',
+  cust_code varchar(255) NOT NULL,
+  cust_name varchar(255) NOT NULL,
+  brand varchar(255) NOT NULL,
+  store varchar(255) NOT NULL,
+  bar_code varchar(64) NOT NULL,
+  details TEXT DEFAULT NULL,
+  updatedon date NOT NULL,
+  PRIMARY KEY (custitem_id),
+  KEY item_id (item_id)
+) ENGINE = INNODB  DEFAULT CHARSET = utf8;
+
+
+CREATE
+VIEW custitems_view
+AS
+SELECT
+  s.custitem_id AS custitem_id,
+  s.cust_name AS cust_name,
+  coalesce(s.item_id,0) AS item_id,
+  s.customer_id AS customer_id,
+  s.quantity AS quantity,
+  s.price AS price,
+  s.cust_code AS cust_code,
+  s.brand AS brand,
+  s.store AS store,
+  s.bar_code AS bar_code,
+  s.details AS details,
+  s.updatedon AS updatedon,
+  c.customer_name AS customer_name
+FROM   custitems s
+ 
+  JOIN customers c
+    ON   s.customer_id = c.customer_id 
+WHERE c.status <> 1 
+ ;
+
+ 
+
+ 
+CREATE
+VIEW equipments_view
+AS
+SELECT
+  e.eq_id AS eq_id,
+  e.eq_name AS eq_name,
+  e.detail AS detail,
+  e.disabled AS disabled,
+  e.description AS description,
+  e.branch_id AS branch_id,
+  e.invnumber AS invnumber,
+  e.pa_id AS pa_id,
+  e.emp_id AS emp_id,
+  p.pa_name AS pa_name,
+  employees.emp_name AS emp_name
+FROM ((equipments e
+  LEFT JOIN employees
+    ON ((employees.employee_id = e.emp_id)))
+  LEFT JOIN parealist p
+    ON ((p.pa_id = e.pa_id))); 
+  
+ALTER TABLE documents ADD   INDEX parent_id (parent_id)   ; 
+ALTER TABLE documents ADD   INDEX document_number (document_number)   ; 
+ALTER TABLE employees ADD   INDEX login (login)   ; 
+ALTER TABLE metadata  ADD   INDEX meta_name (meta_name)   ; 
+
+ALTER TABLE equipments ADD  type  smallint DEFAULT 0;
+ALTER TABLE parealist  ADD  disabled  tinyint(1) DEFAULT 0;
+ALTER TABLE parealist  ADD  branch_id  int(11) DEFAULT null;
+
+CREATE TABLE  eqentry (
+  id int NOT NULL AUTO_INCREMENT,
+  eq_id int NOT NULL,
+  optype smallint NOT NULL,
+  amount decimal(10, 2) DEFAULT NULL,
+  document_id int DEFAULT NULL,
+  KEY (eq_id) ,
+  KEY (document_id) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
+
+ 
+
+CREATE
+VIEW eqentry_view
+AS
+SELECT
+  e.id AS id,
+  e.eq_id AS eq_id,
+  d.document_date AS document_date,
+  e.optype AS optype,
+  e.amount AS amount,
+  e.document_id AS document_id,
+  d.document_number AS document_number,
+  d.notes AS notes
+FROM (eqentry e
+  JOIN documents d
+    ON ((e.document_id = d.document_id)))  ;
+ 
+
+DROP VIEW if exists note_topicnodeview  ;
+
+CREATE
+VIEW note_topicnodeview
+AS
+SELECT
+  note_topicnode.topic_id AS topic_id,
+  note_topicnode.node_id AS node_id,
+  note_topicnode.tn_id AS tn_id,
+  note_topicnode.islink AS islink,
+  note_topics.title AS title,
+  note_topics.content AS content 
+   
+FROM note_topics
+  JOIN note_topicnode
+    ON note_topics.topic_id = note_topicnode.topic_id
+  JOIN note_nodes
+    ON note_topicnode.node_id = note_nodes.node_id    ;
+ 
+     
+CREATE TABLE shop_articles (
+  id int NOT NULL AUTO_INCREMENT,
+  title varchar(255) NOT NULL,
+  shortdata text DEFAULT NULL,
+  longdata longtext NOT NULL,
+  createdon date NOT NULL,
+  isactive tinyint NOT NULL DEFAULT 0,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
+
+    
+DROP VIEW if exists cust_acc_view;
+
+
 update  metadata set  description ='Программа лояльности' where  meta_name='Discounts';
 update  metadata set  description ='Полученные услуги' where  meta_name='IncomeService';
 update  metadata set  description ='Доходы и расходы' where  meta_name='PayBalance';
@@ -235,9 +406,11 @@ INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `d
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Прогноз продаж', 'PredSell', 'Аналитика', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Возврат с производства', 'ProdReturn', 'Производство', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товары на комиссии', 'ItemComission', 'Закупки', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операции с ОС и НМА', 'EQ', '', 0);
+
   
     
 delete  from  options where  optname='version' ;
-insert  into options (optname,optvalue) values('version','6.11.0'); 
+insert  into options (optname,optvalue) values('version','6.13.0'); 
 
 
