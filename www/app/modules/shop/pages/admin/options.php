@@ -31,6 +31,7 @@ class Options extends \App\Pages\Base
             return;
         }
 
+        $shop = System::getOptions("shop");
 
         $this->add(new Form('shop'))->onSubmit($this, 'saveShopOnClick');
 
@@ -55,9 +56,10 @@ class Options extends \App\Pages\Base
 
 
         $this->shop->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), "0"));
-        $this->shop->add(new DropDownChoice('firm', \App\Entity\Firm::findArray("firm_name", "disabled <>1"), "0"));
-        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['ocmf']??0));
 
+        $this->shop->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(2), 0 ));
+        $this->shop->add(new DropDownChoice('defstore',\App\Entity\Store::getList(),  0));
+    
 
 
         $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
@@ -72,8 +74,7 @@ class Options extends \App\Pages\Base
 
 
 
-        $shop = System::getOptions("shop");
-        if (!is_array($shop)) {
+         if (!is_array($shop)) {
             $shop = array();
         }
         $this->_pages =    $shop['pages'];
@@ -88,33 +89,34 @@ class Options extends \App\Pages\Base
         $this->shop->shopdefuser->setValue($shop['defuser']);
         $this->shop->shopdefbranch->setValue($shop['defbranch']);
         $this->shop->shopordertype->setValue($shop['ordertype']);
-        $this->shop->defmf->setValue($shop['defmf']);
+        $this->shop->defmf->setValue($shop['defmf']??0);
+        $this->shop->defstore->setValue($shop['defstore']??0);
         $this->shop->shopdefpricetype->setValue($shop['defpricetype']);
         $this->shop->salesource->setValue($shop['salesource']);
-        $this->shop->firm->setValue($shop['firm']);
+
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->uselogin->setChecked($shop['uselogin']);
         $this->shop->usefilter->setChecked($shop['usefilter']);
-        $this->shop->noshowempty->setChecked($shop['noshowempty']);
+        $this->shop->noshowempty->setChecked($shop['noshowempty']??false);
 
 
-        $this->shop->usefeedback->setChecked($shop['usefeedback']);
-        $this->shop->usemainpage->setChecked($shop['usemainpage']);
-        $this->shop->nouseimages->setChecked($shop['nouseimages']);
+        $this->shop->usefeedback->setChecked($shop['usefeedback']??false);
+        $this->shop->usemainpage->setChecked($shop['usemainpage']??false);
+        $this->shop->nouseimages->setChecked($shop['nouseimages']??false);
         $this->shop->shopname->setText($shop['shopname']);
         $this->shop->email->setText($shop['email']);
         $this->shop->currencyname->setText($shop['currencyname']);
         $this->shop->phone->setText($shop['phone']);
         $this->shop->pagesize->setText($shop['pagesize'] ?? 25);
 
-        $this->pay->paysystem->setValue($shop['paysystem']);
-        $this->pay->mf->setValue($shop['mf_id']);
-        $this->pay->lqpublic->setText($shop['lqpublic']);
-        $this->pay->lqpriv->setText($shop['lqpriv']);
-        $this->pay->wpsecret->setText($shop['wpsecret']);
-        $this->pay->wpmacc->setText($shop['wpmacc']);
-        $this->pay->wpsite->setText($shop['wpsite']);
-        $this->pay->addqr->setChecked($shop['addqr']);
+        $this->pay->paysystem->setValue($shop['paysystem']??0);
+        $this->pay->mf->setValue($shop['mf_id']??0);
+        $this->pay->lqpublic->setText($shop['lqpublic']??false);
+        $this->pay->lqpriv->setText($shop['lqpriv']??'');
+        $this->pay->wpsecret->setText($shop['wpsecret']??'');
+        $this->pay->wpmacc->setText($shop['wpmacc']??'');
+        $this->pay->wpsite->setText($shop['wpsite']??'');
+        $this->pay->addqr->setChecked($shop['addqr']??'');
         $this->onPaySystem(null);
 
 
@@ -169,8 +171,9 @@ class Options extends \App\Pages\Base
         $shop['ordertype'] = $this->shop->shopordertype->getValue();
         $shop['defpricetype'] = $this->shop->shopdefpricetype->getValue();
         $shop['defmf'] = $this->shop->defmf->getValue();
+        $shop['defstore'] = $this->shop->defstore->getValue();
         $shop['salesource'] = $this->shop->salesource->getValue();
-        $shop['firm'] = $this->shop->firm->getValue();
+
         $shop['email'] = $this->shop->email->getText();
         $shop['shopname'] = $this->shop->shopname->getText();
         $shop['currencyname'] = $this->shop->currencyname->getText();
@@ -199,10 +202,7 @@ class Options extends \App\Pages\Base
                 return;
             }
 
-            if ($imagedata[0] * $imagedata[1] > 10000000) {
-                $this->setError('Занадто великий розмір зображення');
-                return;
-            }
+         
 
             $name = basename($file["name"]);
             move_uploaded_file($file["tmp_name"], _ROOT . "upload/" . $name);

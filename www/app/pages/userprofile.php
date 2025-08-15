@@ -38,14 +38,14 @@ class UserProfile extends \App\Pages\Base
         $form->add(new TextInput('viber', $this->user->viber));
 
         $form->add(new CheckBox('darkmode', $this->user->darkmode));
-        $form->add(new CheckBox('emailnotify', $this->user->emailnotify));
-        $form->add(new CheckBox('botnotify', $this->user->botnotify))->setVisible(strlen($this->user->chat_id)>0);
         $form->add(new CheckBox('usemobileprinter', $this->user->usemobileprinter));
         $form->add(new CheckBox('hidesidebar', $this->user->hidesidebar));
-        $form->add(new DropDownChoice('deffirm', \App\Entity\Firm::getList(), $this->user->deffirm));
+        $form->add(new CheckBox('usebotfornotify', $this->user->usebotfornotify));
+
         $form->add(new DropDownChoice('defstore', \App\Entity\Store::getList(), $this->user->defstore));
         $form->add(new DropDownChoice('defmf', \App\Entity\MoneyFund::getList(), $this->user->defmf));
         $form->add(new DropDownChoice('pagesize', array(15 => 15, 25 => 25, 50 => 50, 100 => 100), $this->user->pagesize));
+        $form->add(new DropDownChoice('defpaytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], $this->user->defpaytype ))  ;
 
         $form->add(new DropDownChoice('defsalesource', H::getSaleSources(), $this->user->defsalesource));
 
@@ -95,6 +95,19 @@ class UserProfile extends \App\Pages\Base
         $form->onSubmit($this, 'onsubmitpass');
         $this->add($form);
 
+        $form = new Form('firmform');
+        $form->add(new TextInput('editpayname', $this->user->payname));
+        $form->add(new TextInput('editaddress', $this->user->address));
+        $form->add(new TextInput('edittin', $this->user->tin));
+        $form->onSubmit($this, 'saveFirmOnClick');
+        $this->add($form);     
+        
+        
+             
+        $form = new Form('scaleform');
+        $form->add(new TextInput('scaleserver', $this->user->scaleserver));
+        $form->onSubmit($this, 'saveScaleOnClick');
+        $this->add($form);     
 
         if(strlen($this->user->prtype) == 0) {
             $this->user->prtype = 0 ;
@@ -102,6 +115,7 @@ class UserProfile extends \App\Pages\Base
             $this->user->pwsym     = 32;
         }
 
+    
         $form = new Form('printer');
         $form->add(new DropDownChoice('prtype',[], 0))->onChange($this, "onPSType");
         $form->prtype->setValue($this->user->prtype);
@@ -114,13 +128,12 @@ class UserProfile extends \App\Pages\Base
         $form->add(new SubmitButton('savep'))->onClick($this, 'savePrinterOnClick');
         $this->add($form);
 
-
-
+  
 
         $this->onPSType(null);
 
         $form = new Form('printerlabel');
-        $form->add(new DropDownChoice('prtypelabel', 0))->onChange($this, "onPSTypelabel");
+        $form->add(new DropDownChoice('prtypelabel', [],0))->onChange($this, "onPSTypelabel");
         $form->prtypelabel->setValue($this->user->prtypelabel);
         $form->add(new DropDownChoice('prturn'));
         $form->prturn->setValue($this->user->prturn);
@@ -133,6 +146,8 @@ class UserProfile extends \App\Pages\Base
         $this->add($form);
 
         $this->onPSTypelabel(null);
+        
+        $this->_tvars['usebot'] = strlen($this->user->chat_id) > 0  ;
 
     }
 
@@ -143,13 +158,13 @@ class UserProfile extends \App\Pages\Base
         $this->user->viber = $sender->viber->getText();
 
         $this->user->darkmode = $sender->darkmode->isChecked() ? 1 : 0;
-        $this->user->botnotify = $sender->botnotify->isChecked() ? 1 : 0;
-        $this->user->emailnotify = $sender->emailnotify->isChecked() ? 1 : 0;
         $this->user->hidesidebar = $sender->hidesidebar->isChecked() ? 1 : 0;
+        $this->user->usebotfornotify = $sender->usebotfornotify->isChecked() ? 1 : 0;
 
-        $this->user->deffirm = $sender->deffirm->getValue();
+
         $this->user->defstore = $sender->defstore->getValue();
         $this->user->defmf = $sender->defmf->getValue();
+        $this->user->defpaytype = $sender->defpaytype->getValue();
         $this->user->defsalesource = $sender->defsalesource->getValue();
         $this->user->pagesize = $sender->pagesize->getValue();
         $this->user->mainpage = $sender->mainpage->getValue();
@@ -244,11 +259,14 @@ class UserProfile extends \App\Pages\Base
         $this->user->pwsym = trim($this->printer->pwsym->getText());
         $this->user->pserver = trim($this->printer->pserver->getText());
         $this->user->pserver  = rtrim($this->user->pserver, "/") ;
-
+        if($this->user->prtype >0) {
+           $this->user->usemobileprinter = 0;
+           $this->profileform->usemobileprinter->setChecked(0) ;                     
+        }
         $this->user->save();
         $this->setSuccess('Збережено');
         System::setUser($this->user);
-
+        App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
     public function onPSTypelabel($sender) {
@@ -274,9 +292,8 @@ class UserProfile extends \App\Pages\Base
             if($prtype==2) {
               $pr->labelrow("CLS");
 //              $pr->text("CODEPAGE 866");
-              $pr->text("DIRECTION 0");
+              $pr->text("DIRECTION 1");
               $pr->labelrow("TEXT 10,10,\"3\",0,1,1,\"Printer test\"");
-              $pr->labelrow("FEED 50");
               $pr->labelrow("PRINT 1,1");
             }
             $buf = $pr->getBuffer() ;
@@ -292,6 +309,13 @@ class UserProfile extends \App\Pages\Base
 
     }
 
+    public function saveScaleOnClick($sender) {
+        $this->user->scaleserver = $sender->scaleserver->getText() ;
+        $this->user->save();
+        $this->setSuccess('Збережено');
+        System::setUser($this->user);
+          
+    }
     public function savePrinterlabelOnClick($sender) {
 
 
@@ -306,7 +330,19 @@ class UserProfile extends \App\Pages\Base
         $this->user->save();
         $this->setSuccess('Збережено');
         System::setUser($this->user);
-
+        App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
 
+    
+    public function saveFirmOnClick($sender) {
+        $this->user->payname = $sender->editpayname->getText() ;
+        $this->user->address = $sender->editaddress->getText() ;
+        $this->user->tin = $sender->edittin->getText() ;
+
+        $this->user->save();
+        $this->setSuccess('Збережено');
+        System::setUser($this->user);
+          
+    }
+    
 }

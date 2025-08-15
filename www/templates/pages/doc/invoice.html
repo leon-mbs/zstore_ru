@@ -41,12 +41,7 @@
                         <small>Альтернативна назва для друкованої форми, якщо у покупця рiзнi компанiї</small>
                     </div>
 
-                    <div class="form-group  ">
-                        <label for="firm">Продавець</label>
-                        <select class="form-control" zippy="firm">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
+                
 
                     <div class="form-group  ">
                         <label for="contract" data-label="contract">Договір</label>
@@ -62,11 +57,11 @@
                 <div class="col-12 col-md-3">
                    <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
                    <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>
                     <div class="form-group  ">
                         <label for="store">Зі складу</label>
@@ -162,7 +157,7 @@
                 <div class="col-6">
                     <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
                     &nbsp;<input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="До сплати" class="btn btn-primary  ">
 
                 </div>
             </div>
@@ -173,7 +168,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">До сплати</h5>
+                            <h5 class="modal-title">Знижка</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -193,15 +188,16 @@
             </div>
              
         </form>
-        <form zippy="editdetail">
-            <h4>Редагування товару </h4>
+            
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-
+                <form zippy="editdetail">
+                    <h4>Редагування товару </h4>
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input autofocus="on"  placeholder="Почнiть вводити..." class="form-control " zippy="edittovar"/>
-
+                        <input    placeholder="Почнiть вводити..." class="form-control " zippy="edittovar"/>
+                       <a zippy="openitemsel">Відкрити довідник</a>
+                       <br>
                         Наявність: <span zippy="qtystock"></span>
                          {{^noshowpartion}}
                         <br>Облікова  ціна: <span zippy="pricestock"></span>
@@ -210,13 +206,13 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required 
                                pattern="[0-9,\.]+" style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"  pattern="[0-9,\.]+"   style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required   pattern="[0-9,\.]+"   style="width: 100px;">
                     </div>
 
 
@@ -225,11 +221,16 @@
                         <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
                         
                     </div>
-
+                   </form>
 
                 </div>
+             
+              <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>
+             </div>                
+            
             </div>
-        </form>
+       
         <form zippy="editserdetail">
             <h4>Редагування послуги</h4>
             <div class="row">
@@ -243,13 +244,13 @@
                     </div>
                     <div class="form-group">
                         <label for="editserquantity">Кiлькiсть</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserquantity" required="required"
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserquantity"  required 
                                pattern="[0-9,\.]+" style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editserprice">Цiна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserprice" required="required"
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserprice"  required 
                                pattern="[0-9,\.]+"                               style="width: 100px;">
 
                     </div>
@@ -272,7 +273,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input autofocus="on"   class="form-control " zippy="editcustname" required="required"/>
+                        <input autofocus="on"   class="form-control " zippy="editcustname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editcustphone">Телефон</label>
@@ -314,7 +315,8 @@
                     
             })
                  
-     
+                $("#edittovar").focus()    
+ 
                  
                  
           });   

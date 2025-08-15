@@ -48,7 +48,7 @@ class OfficeList extends \App\Pages\Base
 
         $this->filter->add(new CheckBox('archive'));
         $this->filter->add(new TextInput('searchcontext'));
-        $this->filter->add(new Date('from'));
+        $this->filter->add(new Date('from',strtotime('-1 month')));
         $this->filter->add(new Date('to'));
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtype'));
@@ -136,7 +136,7 @@ class OfficeList extends \App\Pages\Base
         }
 
 
-        if ($doc->document_id == @$this->_doc->document_id) {
+        if ($doc->document_id == ($this->_doc->document_id ?? 0)) {
             $row->setAttribute('class', 'table-success');
         }
 
@@ -531,10 +531,10 @@ class OfficeListDataSource implements \Zippy\Interfaces\DataSource
         $to = $filterform->to->getDate();
 
         if ($from > 0) {
-            $where .= " and date(document_date) >= " . $conn->DBDate($from);
+            $where .= " and  document_date >= " . $conn->DBDate($from);
         }
         if ($to > 0) {
-            $where .= " and date(document_date) <= " . $conn->DBDate($to);
+            $where .= " and  document_date <= " . $conn->DBDate($to);
         }
 
 

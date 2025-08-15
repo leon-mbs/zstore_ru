@@ -14,8 +14,9 @@ class Base extends \Zippy\Html\WebPage
     public $branch_id = 0;
 
 
-    public function __construct($params = null) {
+    public function __construct( ) {
         global $_config;
+
 
         \Zippy\Html\WebPage::__construct();
 
@@ -24,18 +25,27 @@ class Base extends \Zippy\Html\WebPage
             App::Redirect("\\App\\Pages\\Userlogin");
             return;
         }
-        
-        $this->_tvars['curversion'] = System::CURR_VERSION ;
+      
+        //миграция  данных
+        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
+            Helper::migration() ;
+            Session::getSession()->migrationcheck = true;
+        }       
+      //  $this->_tvars['curversion'] = System::CURR_VERSION ;
 
         $options = System::getOptions('common');
 
         //опции
-        $this->_tvars["usescanner"] = $options['usescanner'] == 1 || $options['usemobilescanner'] == 1;
-        $this->_tvars["usemobilescanner"] = $options['usemobilescanner'] == 1;
+        $this->_tvars["usescanner"] = $options['usescanner'] == 1  ;
+
         $this->_tvars["useimages"] = $options['useimages'] == 1;
         $this->_tvars["usebranch"] = $options['usebranch'] == 1;
+        $this->_tvars["usefood"] = $options['usefood'] == 1;
+        $this->_tvars["useprod"] = $options['useprod'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1;
+        $this->_tvars["noupdate"] = $options['noupdate'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
+        $this->_tvars["storeemp"] = $options['storeemp'] == 1;
         $this->_tvars["usemobileprinter"] = $user->usemobileprinter == 1;
         $this->_tvars["canevent"] = $user->canevent == 1;
         if($user->rolename=='admins') {
@@ -126,7 +136,14 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["note"] = $modules['note'] == 1;
         $this->_tvars["issue"] = $modules['issue'] == 1;
 
- 
+        $this->_tvars["ppo"] = $modules['ppo'] == 1;
+        $this->_tvars["np"] = $modules['np'] == 1;
+        $this->_tvars["promua"] = $modules['promua'] == 1;
+        $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
+        $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
+        $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
+       
+
 
         //  $printer = System::getOptions('printer');
 
@@ -154,13 +171,40 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["woocomerce"] = false;
         }
 
- 
-         
+        if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["ppo"] = false;
+        }
+        if (strpos(System::getUser()->modules ?? '', 'np') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["np"] = false;
+        }
+        if (strpos(System::getUser()->modules ?? '', 'promua') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["promua"] = false;
+        }
+        if (strpos(System::getUser()->modules ?? '', 'checkbox') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["checkbox"] = false;
+        }
+        if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["vkassa"] = false;
+        }
+     
+        if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
+            $this->_tvars["vdoc"] = false;
+        }
+       
+
+        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"];
+
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||
             $this->_tvars["note"] ||
-            $this->_tvars["issue"] 
+            $this->_tvars["issue"] ||
+            $this->_tvars["promua"] ||
+            $this->_tvars["ppo"] ||
+  
+         
+            $this->_tvars["vdoc"] ||
+            $this->_tvars["np"]
         ) {
             $this->_tvars["showmodmenu"] = true;
         } else {
@@ -188,92 +232,24 @@ class Base extends \Zippy\Html\WebPage
         //для скрытия блока разметки  в  шаблоне страниц
         $this->_tvars["hideblock"] = false;
 
-        //активные   пользователий
-        if ($options['showactiveusers'] == 1) {
-            $this->_tvars["showactiveusers"] = true;
-            $this->_tvars["activeuserscnt"] = 0;
-            $this->_tvars["aulist"] = array();
-
-            $conn = \ZDB\DB::getConnect();
-            $conn->Execute("update users  set  lastactive = now() where  user_id= " . $user->user_id);
-
-
-            $w = "     TIME_TO_SEC(timediff(now(),lastactive)) <300  ";
-          
-
-            if ($this->branch_id > 0) {
-                $w .= "  and  employee_id  in (select employee_id from employees where branch_id ={$this->branch_id}) ";
-            }
-
-
-            $users = \App\Entity\User::findArray('username', $w, 'username');
-            foreach ($users as $id => $u) {
-                if ($id == $user->user_id) {
-                    $id = null;
-                }
-                $this->_tvars["aulist"][] = array("auserid" => $id, 'ausername' => $u);
-            }
-
-
-            $this->_tvars["activeuserscnt"] = count($this->_tvars["aulist"]);
-            //  \App\Helper::sendLetter("softman@ukr.net","test3","sub")  ;
-        }
-        //чат
-        if ($options['showchat'] == 1) {
-            $this->_tvars["showchat"] = true;
-
-            $cnt = \App\Entity\Notify::findCnt("user_id=" . \App\Entity\Notify::CHAT . " and notify_id>" . intval($_COOKIE['last_chat_id'] ?? 0));
-
-            $this->_tvars["chatcnt"] = $cnt > 0 ? $cnt : false;
-
-        }
-
-
-        if((Session::getSession()->toasts ?? true) ==false) {
-           Session::getSession()->toasts = false;  
-           
-            if ($user->defstore == 0) {
-                //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі склад за замовчуванням\"");
-            }
-            if ($user->deffirm == 0) {
-                //   $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі компанію за замовчуванням\"");
-            }
-            if ($user->defmf == 0) {
-                //    $this->_tvars["toasts"][] = array('title' => "title:\"Вкажіть у профілі касу за замовчуванням\"");
-            }
-            if ($user->userlogin == "admin") {
-                if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
-                    $this->addToastrWarn("Смените  в  профиле пароль по умолчанию"); 
-                }
-            }
-            if ($user->rolename == "admins") {
-                if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
-                    $this->addToastrInfo("Есть непрочитанные системные сообщения"); 
-                }
-            }           
-                 
-           
-        }
+  
+  
      
     //    $duration =  Session::getSession()->duration() ;
      //   $this->_tvars['showver'] = $duration < 60   ;
 
         //планировщик
         $this->_tvars['cron']  = false;
-
-        $last = \App\Helper::getKeyValInt('lastcron')  ;
-        if(\App\System::useCron()  &&  (time() - $last) > \App\Entity\CronTask::MIN_INTERVAL) {
-            $this->_tvars['cron']  = true;
+        if(\App\System::useCron() ) {
+              $last = \App\Session::getSession()->lastcron ?? 0  ;
+              if(   (time() - $last) > \App\Entity\CronTask::MIN_INTERVAL) {
+                  $this->_tvars['cron'] = true;
+                  \App\Session::getSession()->lastcron = time();
+              }         
         }
-
-        //миграция  данных
-        if(  Session::getSession()->migrationcheck != true && ($this instanceof \App\Pages\Update)==false) {
-            Helper::migration() ;
-            Session::getSession()->migrationcheck = true;
-        }
-       
         
-      
+          
+    
     }
 
     public function LogoutClick($sender) {
@@ -298,9 +274,10 @@ class Base extends \Zippy\Html\WebPage
 
         System::setErrorMsg($msg);
     }
-    //вывод  как  bootstrap alert  (для сообщений что  могут  вызвать  ошибку  javascript)
+
     public function setErrorTopPage($msg) {
         $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
 
         System::setErrorMsg($msg, true);
     }
@@ -322,8 +299,10 @@ class Base extends \Zippy\Html\WebPage
 
         System::setInfoMsg($msg);
     }
+ 
     public function setInfoTopPage($msg) {
         $msg = str_replace("'", "`", $msg) ;
+        $msg = str_replace("\"", "`", $msg) ;
 
         System::setInfoMsg($msg, true);
     }
@@ -338,31 +317,23 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
         $this->_tvars['alerterror'] = "";
-        $this->_tvars['alertinfo'] = "";
-        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) { //стационарные сообщения
+        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
             $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
-
             $this->goAnkor('topankor');
-
-
-        }
-        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) { //стационарные сообщения
+        }       
+        $this->_tvars['alertinfo'] = "";
+        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) {
             $this->_tvars['alertinfo'] = System::getInfoMsgTopPage();
-
             $this->goAnkor('topankor');
-
-
-        }
+        }       
     }
 
     protected function afterRender() {
 
         $user = System::getUser();
         if (strlen(System::getErrorMsg() ?? '') > 0) {
-
             $this->addJavaScript("toastr.error('" . System::getErrorMsg() . "','',{'timeOut':'8000'})        ", true);
         }
-
         if (strlen(System::getWarnMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.warning('" . System::getWarnMsg() . "','',{'timeOut':'4000'})        ", true);
         }
@@ -372,11 +343,12 @@ class Base extends \Zippy\Html\WebPage
         if (strlen(System::getInfoMsg() ?? '') > 0) {
             $this->addJavaScript("toastr.info('" . System::getInfoMsg() . "','',{'timeOut':'3000'})        ", true);
         }
-
-
+      
+        
         $this->setError('');
         $this->setErrorTopPage('');
         $this->setInfoTopPage('');
+     
         $this->setSuccess('');
         $this->setInfo('');
         $this->setWarn('');
@@ -393,8 +365,8 @@ class Base extends \Zippy\Html\WebPage
 
     /**
      * Вставляет  JavaScript  в  конец   выходного HTML потока
-     * @param string  Код  скрипта
-     * @param boolean Если  true  - вставка  после  загрузки  документа в  браузер
+     * @param string $js Код  скрипта
+     * @param mixed $docready Если  true  - вставка  после  загрузки  документа в  браузер
      */
     public function addJavaScript($js, $docready = false) {
         App::$app->getResponse()->addJavaScript($js, $docready);
@@ -431,13 +403,16 @@ class Base extends \Zippy\Html\WebPage
             return  "N/A";
         }
 
-        $report = new \App\Report('cinfo.tpl');
-        $header = [];
+         $header = [];
 
         $header['name'] = $c->customer_name;
         $header['phone'] = $c->phone;
-        $header['email'] = strlen($c->email) > 0 ? $c->email : false;
+        $header['edrpou'] = $c->edrpou;
+        $header['email'] = strlen($c->email) > 0 ?  "<a target=\"_blank\" href=\"mailtp:{$c->email}\">{$c->email}</a>"  : false;
         $header['address'] = strlen($c->address) > 0 ? $c->address : false;
+        $header['telega'] = strlen($c->telega) > 0 ? "<a target=\"_blank\" href=\"tg://resolve?domain={$c->telega}\">{$c->telega}</a>" : false;  
+        
+        $header['viber'] = strlen($c->viber) > 0 ? "<a target=\"_blank\" href=\"viber://chat?number={$c->viber}\">{$c->viber}</a>" : false;    
         $header['comment'] = strlen($c->comment) > 0 ? $c->comment : false;
 
         $header['bonus'] = intval($c->getBonus());
@@ -491,17 +466,49 @@ class Base extends \Zippy\Html\WebPage
         $header['sumall'] = \App\Helper::fa($c->sumAll());
 
 
+        $report = new \App\Report('cinfo.tpl');
         $data = $report->generate($header);
         $data = str_replace("'", "`", $data)  ;
         //  $data = str_replace("\"","`",$data)  ;
 
-
-
-
+  
         return $data;
 
     }
 
+    public function getItemInfo($args, $post) {
+        $conn= \ZDB\DB::getConnect() ;
+
+        $it = \App\Entity\Item::load($args[0]);
+        if($it==null) {
+            return  "N/A";
+        }
+
+        
+        $header = [];
+
+        $header['itemname'] = $it->itemname;
+        $header['item_code'] = $it->item_code;
+        $header['bar_code'] = $it->bar_code;
+        $header['brand'] = $it->manufacturer;
+        $header['cat_name'] = $it->cat_name;
+        $header['qty'] =  Helper::fqty( $it->getQuantity() );
+        $header['price'] = Helper::fa(  $it->getPrice() );
+        $header['notes'] = str_replace("'","`",$it->notes) ;
+        $header['image'] = false;
+        if($it->image_id >0) {
+            $url=$it->getImageUrl();
+            $header['image'] = $url;
+        }
+    
+        $report = new \App\Report('iteminfo.tpl');
+        $data = $report->generate($header);
+        $data = str_replace("'", "`", $data)  ;
+        //  $data = str_replace("\"","`",$data)  ;
+ 
+        return $data;
+
+    }
 
     public function sendSMSCode($args, $post) {
 
@@ -514,27 +521,29 @@ class Base extends \Zippy\Html\WebPage
 
     
     /**
-    * добавляет стьроку  заказа в  заявку  поставщику
+    * добавляет строку  заказа в  заявку  поставщику
     * 
-    * @param mixed $args
+    * @param mixed $args   $args[0] - item_id;  $args[1]  - количество
     * @param mixed $post
     * @return mixed
     */
     public function addItemToCO($args, $post=null) {
         try{
             $e = \App\Entity\Entry::getFirst("item_id={$args[0]} and quantity > 0 and document_id in (select document_id from documents_view where  meta_name='GoodsReceipt' ) ","entry_id desc")  ;
-            $d = \App\Entity\Doc\Document::load($e->document_id)  ;
+ 
+            $d = \App\Entity\Doc\Document::load($e->document_id ??0)  ;
 
             if($d == null) {
-                return "По  данному ТМЦ закупок не было";
+                return "По  даному  ТМЦ  закупок не  було";
             }
             $price = $e->partion;
             $quantity = $e->quantity;
             $customer_id = $d->customer_id;
-            if($args[1] > 0) {
+            if(($args[1] ??0)  > 0) {
                 $quantity = $args[1] ;
             }
-            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$d->customer_id}   and state=1 ","document_id desc") ;
+            //ищем незакрытую заявку
+            $co = \App\Entity\Doc\Document::getFirst("meta_name='OrderCust' and  customer_id={$customer_id}   and state=1 ","document_id desc") ;
             
             if($co==null) {
                 $co = \App\Entity\Doc\Document::create('OrderCust');
@@ -586,11 +595,7 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-    /**
-    *  всплывающая  подсказка
-    * 
-    * @param mixed $text
-    */
+    /*
     protected function addToastrInfo($text,$ajax=false) {
         $text = str_replace('`',"'",$text) ;
         $text = str_replace('`',"\"",$text) ;
@@ -624,19 +629,19 @@ class Base extends \Zippy\Html\WebPage
           $this->addAjaxResponse($js) ; 
         }
     }
-    
+    */
     //callPM
 
     public function vonTextCust($args, $post=null) {
 
-        $list =\App\Util::tokv(\App\Entity\Customer::getList($args[0], $args[1]));
+        $list =\App\Util::tokv(\App\Entity\Customer::getList($args[0], $args[1]??null));
 
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
 
     public function vonTextItem($args, $post=null) {
 
-        $list =\App\Util::tokv(\App\Entity\Item::findArrayAC($args[0], $args[1], $args[2]));
+        $list =\App\Util::tokv(\App\Entity\Item::findArrayAC($args[0], $args[1]??null, $args[2]??null));
 
         return json_encode($list, JSON_UNESCAPED_UNICODE);
     }
@@ -675,7 +680,7 @@ class Base extends \Zippy\Html\WebPage
             $ret['itemname'] = $item->itemname;
 
             $ret['price'] = $item->getPriceEx(array(
-                 'pricetype'=>$p['pt'],
+                 'pricetype'=>$p['pt']??0,
                  'store'=>$p['store'] ,
                  'customer'=>$p['customer']
 
@@ -736,7 +741,7 @@ class Base extends \Zippy\Html\WebPage
 
 
         if ($item->checkUniqueArticle()==false) {
-           return json_encode(array('error'=>'Такой артикул уже существует'), JSON_UNESCAPED_UNICODE);
+           return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
         }
 
         if (strlen($item->item_code) == 0 ){
@@ -748,7 +753,7 @@ class Base extends \Zippy\Html\WebPage
         $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
 
-            return json_encode(array('error'=>'ТМЦ с таким артикулом и названием уже  существует'), JSON_UNESCAPED_UNICODE);
+            return json_encode(array('error'=>'ТМЦ з такою назвою і артикулом вже існує'), JSON_UNESCAPED_UNICODE);
 
         }
 
@@ -775,10 +780,7 @@ class Base extends \Zippy\Html\WebPage
             $stores = \App\Entity\Store::getList() ;
             $ret['stores'] =  \App\Util::tokv($stores) ;
         }
-        if($post->firms ?? null) {
-            $firms = \App\Entity\Firm::getList() ;
-            $ret['firms'] =  \App\Util::tokv($firms) ;
-        }
+      
         if($post->mfs ?? null) {
             $mfs = \App\Entity\MoneyFund::getList() ;
             $ret['mfs'] =  \App\Util::tokv($mfs) ;
@@ -797,7 +799,7 @@ class Base extends \Zippy\Html\WebPage
 
     }
 
-    //для vue
+   
     public function vgetPriceByQty($args, $post) {
         $post = json_decode($post) ;
 
@@ -822,11 +824,11 @@ class Base extends \Zippy\Html\WebPage
             $info['discount']  = $c->getDiscount()  ;
             $info['bonus']  = $c->getBonus()  ;
             if (doubleval($info['discount']) > 0) {
-                $info['disctext'] =  "Постоянная скидка {$info['discount']}%";
+                $info['disctext'] =  "Постійна знижка {$info['discount']}%";
                 $info['bonus'] =0;
             } else {
                 if ($info['bonus'] > 0) {
-                    $info['disctext'] = "Насчитано бонусов " . $info['bonus'];
+                    $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
                 }
             }
 

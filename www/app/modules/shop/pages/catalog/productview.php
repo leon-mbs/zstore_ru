@@ -48,10 +48,10 @@ class ProductView extends Base
         // $this->_description = $product->getDescription();
 
         $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'));
-//        $this->add(new \Zippy\Html\Link\BookmarkableLink('product_image'))->setValue("/loadshopimage.php?id={$product->image_id}");
-        $this->product_image->setAttribute('href', "/loadshopimage.php?id={$product->image_id}");
 
-        $this->product_image->add( new  \Zippy\Html\Image('product_imageimg'))->setUrl("/loadshopimage.php?id={$product->image_id}");
+        $this->product_image->setAttribute('href', $product->getImageUrl(true));
+
+        $this->product_image->add( new  \Zippy\Html\Image('product_imageimg'))->setUrl($product->getImageUrl(true));
         
         $this->add(new Label('productname', $product->itemname));
         $this->add(new Label('productcode', $product->item_code));
@@ -87,7 +87,7 @@ class ProductView extends Base
         $form->onSubmit($this, 'OnComment');
         $form->add(new TextInput('starnick'));
         $form->add(new TextInput('rating'));
-        $form->add(new TextArea('comment'));
+        $form->add(new TextArea('starcomment'));
         $form->add(new TextInput('capchacode'));
         $form->add(new \ZCL\Captcha\Captcha('capcha'));
 
@@ -149,7 +149,7 @@ class ProductView extends Base
         \App\Session::getSession()->recently = $recently;
 
 
-        if(strlen($_COOKIE['viewitem_'.$product->item_id])==0) {
+        if(strlen($_COOKIE['viewitem_'.$product->item_id]??'')==0) {
             \App\Helper::insertstat(\App\Helper::STAT_VIEW_ITEM, $product->item_id, 0) ;
             setcookie('viewitem_'.$product->item_id, "viewed", time() + 60 * 60 * 24);
 
@@ -327,7 +327,7 @@ class ProductView extends Base
 
     public function reclistOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("rcimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("rcimage", $item->getSEF()))->setValue( $item->getImageUrl(true,true) );
         $row->add(new BookmarkableLink("rcname", $item->getSEF()))->setValue($item->itemname);
 
     }

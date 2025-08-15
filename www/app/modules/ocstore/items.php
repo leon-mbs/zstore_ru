@@ -100,6 +100,8 @@ class Items extends \App\Pages\Base
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
+                if($item->noshop ==1)  continue;
+                 
                 if (in_array($item->item_code, $data['articles'])) {
                     continue;
                 } //уже  в  магазине
@@ -311,8 +313,8 @@ class Items extends \App\Pages\Base
             $item->manufacturer = $product['manufacturer'];
             $w = $product['weight'];
             $w = str_replace(',', '.', $w);
-            if ($product['weight_class_id'] == 2) {
-                $w = $w / 1000;
+            if ( intval($product['weight_class_id']) == 2) {
+                $w = doubleval($w) / 1000;
             } //граммы
             if ($w > 0) {
                 $item->weight = floatval($w);

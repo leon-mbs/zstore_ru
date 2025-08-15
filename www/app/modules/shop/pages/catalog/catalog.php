@@ -96,7 +96,7 @@ class Catalog extends Base
         $fields .= ",coalesce((  select     count(0)   from  shop_prod_comments c   where     c.item_id = items_view.item_id ),0) AS comments";
         $fields .= ",coalesce((  select     sum(r.rating)   from  shop_prod_comments r   where    r.item_id = items_view.item_id),0) AS ratings";
         $store = "";
-        if ($options['defstore'] > 0) {
+        if (( $options['defstore'] ?? 0 ) > 0) {
             $store = " s.store_id={$options['defstore']}  and ";
         }
         $fields .= ",coalesce((  select     sum(s.qty)   from  store_stock s  where  {$store}  s.item_id = items_view.item_id) ,0) AS qty";
@@ -218,7 +218,7 @@ class Catalog extends Base
         $item = $row->getDataItem();
         $options = \App\System::getOptions('shop');
 
-        $row->add(new BookmarkableLink("simage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("simage", $item->getSEF()))->setValue(  $item->getImageUrl(true,true));
         $row->add(new BookmarkableLink("scatname", $item->getSEF()))->setValue($item->itemname);
         $price = $item->getPurePrice($options['defpricetype']);
         $price = \App\Helper::fa($price);
@@ -269,7 +269,7 @@ class Catalog extends Base
 
     public function rOnRow($row) {
         $item = $row->getDataItem();
-        $row->add(new BookmarkableLink("rimage", $item->getSEF()))->setValue('/loadshopimage.php?id=' . $item->image_id . "&t=t");
+        $row->add(new BookmarkableLink("rimage", $item->getSEF()))->setValue(  $item->getImageUrl(true,true));
         $row->add(new BookmarkableLink("rname", $item->getSEF()))->setValue($item->itemname);
     }
 

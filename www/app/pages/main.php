@@ -30,24 +30,8 @@ class Main extends Base
 
         $this->_docstatelist = \App\Entity\Doc\Document::getStateList();
 
-        $this->_tvars['wminqty'] = strpos(System::getUser()->widgets ?? '', 'wminqty') !== false;
-        $this->_tvars['wsdate'] = strpos(System::getUser()->widgets ?? '', 'wsdate') !== false;
-        $this->_tvars['wrdoc'] = strpos(System::getUser()->widgets ?? '', 'wrdoc') !== false;
-        $this->_tvars['wmdoc'] = strpos(System::getUser()->widgets ?? '', 'wmdoc') !== false;
-        $this->_tvars['winfo'] = strpos(System::getUser()->widgets ?? '', 'winfo') !== false;
-        $this->_tvars['wgraph'] = strpos(System::getUser()->widgets ?? '', 'wgraph') !== false;
-        if ($user->rolename == 'admins') {
-            $this->_tvars['wminqty'] = true;
-
-            $this->_tvars['wsdate'] = true;
-            $this->_tvars['wrdoc'] = true;
-            $this->_tvars['wmdoc'] = true;
-            $this->_tvars['winfo'] = true;
-            $this->_tvars['wgraph'] = true;
-        }
-        if ($this->_tvars["usesnumber"] == false) {
-            $this->_tvars['wsdate'] = false;
-        }
+        $this->_tvars['dashboard'] =  (($user->dashboard ==1 ) ||  ($user->rolename=='admins') );
+     
         $br = '';
         $cstr = '';
         $brpay = '';
@@ -72,7 +56,7 @@ class Main extends Base
         $conn =   \ZDB\DB::getConnect();
 
         //просроченые товары
-        if ($this->_tvars['wsdate'] == true) {
+     
             $data = array();
             $stock = Stock::find(" {$cstr}   qty > 0 and sdate is not null  and sdate <  ADDDATE( now(), INTERVAL 7 day)  ");
 
@@ -89,15 +73,16 @@ class Main extends Base
             $sdlist->setPageSize(10);
             $this->add(new Paginator("sdpag", $sdlist));
             $sdlist->Reload();
-        }
+        
         //минимальное количество
-        if ($this->_tvars['wminqty'] == true) {
+       
             $data = array();
-            $sql = "select t.qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
-            (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
-            join items  i  on t.item_id = i.item_id
+            $sql = "select coalesce(t.qty,0) as qty, i.minqty,i.itemname,i.item_code,i.item_id   from 
+           items  i 
+          left join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock  where    {$cstr}  1=1        group by  item_id    ) t
+               on t.item_id = i.item_id
            
-            where i.disabled  <> 1 and  t.qty < i.minqty and i.minqty>0 order  by  i.itemname ";
+            where i.disabled  <> 1 and  coalesce(t.qty,0) < i.minqty and i.minqty>0 order  by  i.itemname ";
             $rs = $conn->Execute($sql);
 
             foreach ($rs as $row) {
@@ -112,10 +97,10 @@ class Main extends Base
             $mqlist->setPageSize(10);
             $this->add(new Paginator("mqpag", $mqlist));
             $mqlist->Reload();
-        }
+       
 
         //недавние  документы
-        if ($this->_tvars['wrdoc'] == true) {
+     
             $data = array();
 
             $sql = "SELECT u.username,d.document_number,d.document_id,d.amount,d.meta_desc,d.state ,d.lastupdate 
@@ -138,13 +123,12 @@ class Main extends Base
             $this->add(new Paginator("wrpag", $doclist));
 
             $doclist->Reload();
-        }
-
+      
 
 
 
         //мои  документы
-        if ($this->_tvars['wmdoc'] == true) {
+   
             $data = array();
 
             $sql = "select    d.document_id,d.meta_desc,d.document_number,d.document_date,d.amount from   documents_view d  where 1=1   {$br}  and  d.user_id={$user->user_id}   order  by  document_id desc  ";
@@ -164,7 +148,7 @@ class Main extends Base
             $this->add(new Paginator("wmpag", $doclist));
 
             $doclist->Reload();
-        }
+        
 
         //структура  доходов  и расходов
         $dt = new \App\DateTime();
@@ -182,7 +166,7 @@ class Main extends Base
         $sql = " 
          SELECT   iotype,coalesce(sum(amount),0) as am   FROM iostate_view 
              WHERE   
-              iotype >= 50    {$brpay}
+              iotype >= 50 and  iotype < 80    {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
               AND  document_date  <= " . $conn->DBDate($to) . "
              GROUP BY  iotype order  by  iotype  
@@ -197,7 +181,7 @@ class Main extends Base
 
         foreach ($rs as $row) {
 
-            $ps[]=[$names[$row['iotype']],abs(round($row['am']))] ;
+            $ps[]=[$names[$row['iotype']]??'',abs(round($row['am']??0))] ;
 
         }
         $this->_tvars['ps'] = json_encode($ps);
@@ -289,8 +273,8 @@ class Main extends Base
         $this->_tvars['ts'] = json_encode($ts);
 
         //инфоблоки
-        $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order')  
-         {$br}   and d.state in (7,21)      ";
+        $sql = " select coalesce(count(*),0) as cnt  from  documents_view d where  meta_name in ('Order','ServiceAct')  
+         {$br}   and d.state in (7,8,21,16)      ";
 
         $this->_tvars['biorders'] = $conn->GetOne($sql);
 
@@ -353,7 +337,7 @@ class Main extends Base
         
         $d = \App\Entity\Doc\Document::getFirst("meta_name='GoodsReceipt' and document_id in (select document_id from entrylist_view where  item_id = {$item->item_id})  ","document_id desc") ;
         
-        $row->add(new Label('wmq_cust', $d->customer_name ?? ''));
+        $row->add(new Label('wmq_cust', $d->customer_name ?? '-'));
         $row->add(new Label('wmq_qty', H::fqty($item->qty)));
         $row->add(new Label('wmq_minqty', H::fqty($item->minqty)));
     }

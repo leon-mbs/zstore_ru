@@ -76,7 +76,7 @@ class Util
     /**
      * Вставляет пробелы  между символами строки
      *
-     * @param mixed $data
+     * @param mixed $string
      */
     public static function addSpaces($string) {
         $_data = "";
@@ -106,23 +106,29 @@ class Util
      */
     public static function getMonth() {
         $list = array();
-        $list[1] = "Январь";
-        $list[2] = "Февраль";
-        $list[3] = "Март";
-        $list[4] = "Апрель";
-        $list[5] = "Май";
-        $list[6] = "Июнь";
-        $list[7] = "Июль";
-        $list[8] = "Август";
-        $list[9] = "Сентябрь";
-        $list[10] = "Октябрь";
-        $list[11] = "Ноябрь";
-        $list[12] = "Декабрь"; 
+        $list[1] = "Січень";
+        $list[2] = "Лютий";
+        $list[3] = "Березень";
+        $list[4] = "Квітень";
+        $list[5] = "Травень";
+        $list[6] = "Червень";
+        $list[7] = "Липень";
+        $list[8] = "Серпень";
+        $list[9] = "Вересень";
+        $list[10] = "Жовтень";
+        $list[11] = "Листопад";
+        $list[12] = "Грудень";
         return $list;
     }
 
 
- 
+
+
+    public static function money2str_ua($number) {
+
+        return mb_ucfirst( money2str_ua($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT) );
+    }
+
     /**
      *     Преобразование  первого  символа   в   верхний  регистр
      *
@@ -557,9 +563,11 @@ function dec_digits_group($number, $power, $digits = 1) {
     if (function_exists('gmp_init') && $power >0) {
         return   gmp_intval(gmp_mod(gmp_div(intval($number), gmp_pow(10, intval($power) * intval($digits))), gmp_pow(10, (int)$digits)));
     }
-    return    intval((intval($number)/pow(10, intval($power) * intval($digits))) % pow(10, $digits)) ;
-
-    // return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
+ 
+    
+    return  intval(($number/pow(10, intval($power) * intval($digits))) % pow(10, $digits)) ;
+  
+   //  return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
 }
 
 // service function to get plural form for the number

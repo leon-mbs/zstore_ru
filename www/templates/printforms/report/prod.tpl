@@ -36,7 +36,7 @@
 
 
         <th align="right" style="border: solid black 1px">Сума</th>
-
+       </tr>
         {{#_detail}}
     <tr>
 
@@ -76,7 +76,7 @@
 
 
         <th align="right" style="border: solid black 1px">Сума</th>
-
+      </tr>
         {{#_detail2}}
     <tr>
 
@@ -99,13 +99,50 @@
         <td align="right"><b>{{sum2}}</b></td>
     </tr>
     
+   {{#ismove}}
+      <tr>
+
+        <td colspan="4">
+            <h5> Переміщено між етапами </h5>
+        </td>
+    </tr>
+
+    <tr style="font-weight: bolder;">
+
+
+        <th style="border: solid black 1px">Найменування</th>
+
+        <th style="border: solid black 1px">Код</th>
+        <th   align="right" style="border: solid black 1px">Кіл.</th>
+        <th   align="right" style="border: solid black 1px"> </th>
+
+ 
+       </tr>
+        {{#_detail4}}
+     <tr>
+
+
+        <td>{{name}}</td>
+
+        <td align="right">{{code}}</td>
+        <td   align="right">{{qty}}</td>
+        <td   align="right"> </td>
+  
+
+    </tr>
+    {{/_detail4}}
+    {{/ismove}}    
+    
+    
+    
     <tr>
 
         <td colspan="4"><br>
             <h5> Готово до виробництва </h5>
-            <small>Напівфабрикати та готова продукція, які можуть бути виготовлені на <b> {{currdate}} </b> <br>відповідно до комплектів. 
+             Станом на <b> {{currdate}} </b>
+             <br><small>Напівфабрикати та готова продукція, які можуть бути виготовлені відповідно до комплектів. 
              Якщо матеріал або комплектуючі входять <br>в кілька позицій, будуть показані всі варіанти.
-            
+              </small>
         </td>
     </tr>
 
@@ -117,7 +154,7 @@
         <th style="border: solid black 1px">Код</th>
         <th colspan="2" align="right" style="border: solid black 1px">Кіл.</th>
 
-
+    </tr>
 
 
         {{#_detail3}}

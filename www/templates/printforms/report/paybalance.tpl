@@ -5,14 +5,14 @@
             Прибутки та видатки
         </td>
     </tr>
-    <tr>
+   
     <tr>
 
         <td align="center" colspan="3">
             Перiод з {{datefrom}} по {{dateto}} <br>
         </td>
     </tr>
-
+     <tr>
         <td colspan="3">
             <b>Прибутки</b>
         </td>
@@ -92,7 +92,8 @@
 
    {{#is3}}    
     
-    </tr>
+   
+     <tr> 
         <td colspan="3"> <br>
             <b>Деталiзацiя по ТМЦ </b>
         </td>       
@@ -123,7 +124,7 @@
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Виручка (відпускна ціна на кількість) мінус змінні витрати (собівартість)"></i>
+               title="Виручка (відпускна ціна на кількість) мінус витрати основної діяльності   (затрати на закупку)"></i>
         </td>
     </tr>
     <tr>
@@ -131,7 +132,7 @@
         <td align="right"> {{tvc}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Cобівартість"></i>
+               title="Витрати основної діяльності"></i>
         </td>
     </tr>
     <tr>
@@ -139,7 +140,7 @@
         <td align="right">{{OP}}  </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Витрати мінус змінні витрати (собівартість)"></i>
+               title="Всі витрати мінус змінні витрати "></i>
         </td>
     </tr>
     <tr>
@@ -147,7 +148,7 @@
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="проход мiнус видатки"></i>
+               title="Проход мiнус операцiйнi витрати (виручка мiнус всi витрати)"></i>
         </td>
     </tr>
    {{#isinv}}   

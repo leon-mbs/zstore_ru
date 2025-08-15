@@ -54,6 +54,7 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<isholding>{$this->isholding}</isholding>";
         $this->detail .= "<holding>{$this->holding}</holding>";
         $this->detail .= "<viber>{$this->viber}</viber>";
+        $this->detail .= "<telega>{$this->telega}</telega>";
         $this->detail .= "<nosubs>{$this->nosubs}</nosubs>";
         $this->detail .= "<allowedshop>{$this->allowedshop}</allowedshop>";
         $this->detail .= "<edrpou>{$this->edrpou}</edrpou>";
@@ -68,6 +69,11 @@ class Customer extends \ZCL\DB\Entity
         $this->detail .= "<address><![CDATA[{$this->address}]]></address>";
         $this->detail .= "<addressdel><![CDATA[{$this->addressdel}]]></addressdel>";
         $this->detail .= "<comment><![CDATA[{$this->comment}]]></comment>";
+        $this->detail .= "<passw><![CDATA[{$this->passw}]]></passw>";
+        $this->detail .= "<npcityref><![CDATA[{$this->npcityref}]]></npcityref>";
+        $this->detail .= "<npcityname><![CDATA[{$this->npcityname}]]></npcityname>";
+        $this->detail .= "<nppointref><![CDATA[{$this->nppointref}]]></nppointref>";
+        $this->detail .= "<nppointname><![CDATA[{$this->nppointname}]]></nppointname>";
         $this->detail .= "</detail>";
 
   
@@ -101,10 +107,16 @@ class Customer extends \ZCL\DB\Entity
         $this->addressdel = (string)($xml->addressdel[0]);
         $this->comment = (string)($xml->comment[0]);
         $this->viber = (string)($xml->viber[0]);
+        $this->telega = (string)($xml->telega[0]);
         $this->edrpou = (string)($xml->edrpou[0]);
         $this->firstname = (string)($xml->firstname[0]);
         $this->lastname = (string)($xml->lastname[0]);
         $this->chat_id = (string)($xml->chat_id[0]);
+        $this->passw = (string)($xml->passw[0]);
+        $this->npcityref = (string)($xml->npcityref[0]);
+        $this->npcityname = (string)($xml->npcityname[0]);
+        $this->nppointref = (string)($xml->nppointref[0]);
+        $this->nppointname = (string)($xml->nppointname[0]);
 
         $this->createdon = strtotime($this->createdon ?? '');
         
@@ -149,6 +161,14 @@ class Customer extends \ZCL\DB\Entity
         return Customer::getFirst(' phone = ' . $conn->qstr($phone) .' or   phone = ' . $conn->qstr('38'.$phone));
     }
 
+    public static function getByEdrpou($edrpou) {
+        $edrpou = trim($edrpou);
+        if (strlen($edrpou) == 0) {
+            return null;
+        }
+       
+        return Customer::getFirst(' detail like  ' . Customer::qstr("%<edrpou>{$edrpou}</edrpou>%") );
+    }
     public static function getByEmail($email) {
         if (strlen($email) == 0) {
             return null;
@@ -162,7 +182,7 @@ class Customer extends \ZCL\DB\Entity
      *
      * @param mixed $search
      * @param mixed $type
-     * @param mixed $edrpou
+     * @param mixed $searchedrpou
      */
     public static function getList($search = '', $type = 0, $searchedrpou = false) {
 
@@ -202,7 +222,7 @@ class Customer extends \ZCL\DB\Entity
     public static function getLeadSources() {
         $options = \App\System::getOptions('common');
 
-        if (is_array($options['leadsources']) == false) {
+        if (is_array($options['leadsources']??null) == false) {
             $options['leadsources'] = array();
         }
 
@@ -221,7 +241,7 @@ class Customer extends \ZCL\DB\Entity
     public static function getLeadStatuses() {
         $options = \App\System::getOptions('common');
 
-        if (is_array($options['leadstatuses']) == false) {
+        if (is_array($options['leadstatuses']??null) == false) {
             $options['leadstatuses'] = array();
         }
 
@@ -377,6 +397,12 @@ class Customer extends \ZCL\DB\Entity
 
     }
 
-
+    public static function getConstraint() {
+        $user  = \App\System::getUser() ;
+        if(($user->custtype??0)  ==0 ){
+            return '';
+        }
+        return "  detail like '%<type>{$user->custtype}</type>%'   ";
+    }
 
 }

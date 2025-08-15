@@ -29,7 +29,7 @@ class Roles extends \App\Pages\Base
         if (System::getUser()->userlogin != 'admin') {
             $this->setError("До сторінки має доступ тільки користувач admin");
             App::RedirectError();
-            return false;
+            return  ;
         }
 
 
@@ -40,24 +40,20 @@ class Roles extends \App\Pages\Base
         $this->add(new Panel("editpanname"))->setVisible(false);
         $this->editpanname->add(new Form('editformname'))->onSubmit($this, 'savenameOnClick');
         $this->editpanname->editformname->add(new TextInput('editname'));
+        $this->editpanname->editformname->add(new CheckBox('editdisabled'));
         $this->editpanname->editformname->add(new Button('cancelname'))->onClick($this, 'cancelOnClick');
 
         $this->add(new Panel("editpan"))->setVisible(false);
+
         $this->editpan->add(new Form('editform'))->onSubmit($this, 'saveaclOnClick');
 
-
+        $this->editpan->editform->add(new DropDownChoice('editcusttype',[],0));
         $this->editpan->editform->add(new CheckBox('editnoshowpartion'));
         $this->editpan->editform->add(new CheckBox('editcanevent'));
+        $this->editpan->editform->add(new CheckBox('editdashboard'));
         $this->editpan->editform->add(new CheckBox('editshowotherstores'));
 
-        //виджеты
-        $this->editpan->editform->add(new CheckBox('editwminqty'));
-        $this->editpan->editform->add(new CheckBox('editwsdate'));
-        $this->editpan->editform->add(new CheckBox('editwrdoc'));
-        $this->editpan->editform->add(new CheckBox('editwmdoc'));
-        $this->editpan->editform->add(new CheckBox('editwinfo'));
-        $this->editpan->editform->add(new CheckBox('editwgraph'));
-
+      
         //модули
         $this->editpan->editform->add(new CheckBox('editocstore'));
         $this->editpan->editform->add(new CheckBox('editshop'));
@@ -67,11 +63,12 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editppo'));
         $this->editpan->editform->add(new CheckBox('editnp'));
         $this->editpan->editform->add(new CheckBox('editpu'));
-        $this->editpan->editform->add(new CheckBox('editpl'));
+
         $this->editpan->editform->add(new CheckBox('editcb'));
         $this->editpan->editform->add(new CheckBox('editvk'));
-        $this->editpan->editform->add(new CheckBox('edithr'));
+  
         $this->editpan->editform->add(new CheckBox('editvdoc'));
+
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -103,6 +100,7 @@ class Roles extends \App\Pages\Base
         $this->editpanname->setVisible(true);
         $this->role = $sender->getOwner()->getDataItem();
         $this->editpanname->editformname->editname->setText($this->role->rolename);
+        $this->editpanname->editformname->editdisabled->setChecked($this->role->disabled);
     }
 
     public function OnMenu($sender) {
@@ -142,30 +140,14 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->metaaccess->metarow->Reload();
 
 
+        $this->editpan->editform->editcusttype->setValue($this->role->custtype);
         $this->editpan->editform->editnoshowpartion->setChecked($this->role->noshowpartion);
         $this->editpan->editform->editcanevent->setChecked($this->role->canevent);
+        $this->editpan->editform->editdashboard->setChecked($this->role->dashboard);
         $this->editpan->editform->editshowotherstores->setChecked($this->role->showotherstores);
 
 
-        if (strpos($this->role->widgets, 'wminqty') !== false) {
-            $this->editpan->editform->editwminqty->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'wsdate') !== false) {
-            $this->editpan->editform->editwsdate->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'wrdoc') !== false) {
-            $this->editpan->editform->editwrdoc->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'wmdoc') !== false) {
-            $this->editpan->editform->editwmdoc->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'winfo') !== false) {
-            $this->editpan->editform->editwinfo->setChecked(true);
-        }
-        if (strpos($this->role->widgets, 'wgraph') !== false) {
-            $this->editpan->editform->editwgraph->setChecked(true);
-        }
-
+ 
 
         if (strpos($this->role->modules, 'ocstore') !== false) {
             $this->editpan->editform->editocstore->setChecked(true);
@@ -197,16 +179,16 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'vkassa') !== false) {
             $this->editpan->editform->editvk->setChecked(true);
         }
-        if (strpos($this->role->modules, 'horoshop') !== false) {
-            $this->editpan->editform->edithr->setChecked(true);
-        }
+    
         if (strpos($this->role->modules, 'vdoc') !== false) {
             $this->editpan->editform->editvdoc->setChecked(true);
         }
+        
     }
 
     public function savenameOnClick($sender) {
         $this->role->rolename = $this->editpanname->editformname->editname->getText();
+        $this->role->disabled = $this->editpanname->editformname->editdisabled->isChecked() ?1:0;
 
         $role = UserRole::getFirst('rolename=' . UserRole::qstr($this->role->rolename));
         if ($role instanceof UserRole) {
@@ -237,11 +219,20 @@ class Roles extends \App\Pages\Base
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpanmenu->setVisible(false);
+        
+      //обновляем текущего
+        $user = \App\Entity\User::load( \App\System::getUser()->user_id);
+        \App\System::setUser($user);
+        
+        App::Redirect("\\App\\Pages\\Roles");       
+        
     }
 
     public function saveaclOnClick($sender) {
 
+        $this->role->custtype = $this->editpan->editform->editcusttype->getValue() ;
         $this->role->canevent = $this->editpan->editform->editcanevent->isChecked() ? 1 : 0;
+        $this->role->dashboard = $this->editpan->editform->editdashboard->isChecked() ? 1 : 0;
         $this->role->noshowpartion = $this->editpan->editform->editnoshowpartion->isChecked() ? 1 : 0;
         $this->role->showotherstores = $this->editpan->editform->editshowotherstores->isChecked() ? 1 : 0;
 
@@ -280,29 +271,7 @@ class Roles extends \App\Pages\Base
         $this->role->aclstate = implode(',', $sarr);
         $this->role->acldelete = implode(',', $darr);
 
-        $widgets = "";
-
-        if ($this->editpan->editform->editwminqty->isChecked()) {
-            $widgets = $widgets . ',wminqty';
-        }
-        if ($this->editpan->editform->editwsdate->isChecked()) {
-            $widgets = $widgets . ',wsdate';
-        }
-        if ($this->editpan->editform->editwrdoc->isChecked()) {
-            $widgets = $widgets . ',wrdoc';
-        }
-        if ($this->editpan->editform->editwmdoc->isChecked()) {
-            $widgets = $widgets . ',wmdoc';
-        }
-        if ($this->editpan->editform->editwinfo->isChecked()) {
-            $widgets = $widgets . ',winfo';
-        }
-        if ($this->editpan->editform->editwgraph->isChecked()) {
-            $widgets = $widgets . ',wgraph';
-        }
-
-
-        $this->role->widgets = trim($widgets, ',');
+    
 
         $modules = "";
         if ($this->editpan->editform->editshop->isChecked()) {
@@ -335,12 +304,11 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editvk->isChecked()) {
             $modules = $modules . ',vkassa';
         }
-        if ($this->editpan->editform->edithr->isChecked()) {
-            $modules = $modules . ',horoshop';
-        }
+     
         if ($this->editpan->editform->editvdoc->isChecked()) {
             $modules = $modules . ',vdoc';
         }
+    
 
         $this->role->modules = trim($modules, ',');
 
@@ -348,6 +316,12 @@ class Roles extends \App\Pages\Base
         $this->listpan->rolerow->Reload();
         $this->listpan->setVisible(true);
         $this->editpan->setVisible(false);
+        
+        //обновляем текущего
+        $user = \App\Entity\User::load( \App\System::getUser()->user_id);
+        \App\System::setUser($user);
+        App::Redirect("\\App\\Pages\\Roles");       
+        
     }
 
     public function cancelOnClick($sender) {
@@ -387,6 +361,14 @@ class Roles extends \App\Pages\Base
         if ($item->cnt == 0) {
             $datarow->cnt->setVisible(false);
         }
+        
+        if($item->disabled == 1 ) {
+           $datarow->setAttribute('style',   'color: #aaa' );     
+           $datarow->acl->setVisible(false);     
+           $datarow->smenu->setVisible(false);     
+        }
+       
+          
     }
 
     public function metarowOnRow($row) {
@@ -415,27 +397,27 @@ class Roles extends \App\Pages\Base
         $item->stateacc = false;
         $item->cancelacc = false;
         $item->deleteacc = false;
-        $earr = @explode(',', $this->role->acledit);
+        $earr = @explode(',', $this->role->acledit ??'');
         if (is_array($earr)) {
             $item->editacc = in_array($item->meta_id, $earr);
         }
-        $sarr = @explode(',', $this->role->aclstate);
+        $sarr = @explode(',', $this->role->aclstate??'');
         if (is_array($sarr)) {
             $item->stateacc = in_array($item->meta_id, $sarr);
         }
-        $varr = @explode(',', $this->role->aclview);
+        $varr = @explode(',', $this->role->aclview??'');
         if (is_array($varr)) {
             $item->viewacc = in_array($item->meta_id, $varr);
         }
-        $xarr = @explode(',', $this->role->aclexe);
+        $xarr = @explode(',', $this->role->aclexe??'');
         if (is_array($xarr)) {
             $item->exeacc = in_array($item->meta_id, $xarr);
         }
-        $carr = @explode(',', $this->role->aclcancel);
+        $carr = @explode(',', $this->role->aclcancel??'');
         if (is_array($carr)) {
             $item->cancelacc = in_array($item->meta_id, $carr);
         }
-        $darr = @explode(',', $this->role->acldelete);
+        $darr = @explode(',', $this->role->acldelete??'');
         if (is_array($carr)) {
             $item->deleteacc = in_array($item->meta_id, $darr);
         }

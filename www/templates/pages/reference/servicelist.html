@@ -8,7 +8,7 @@
             <div class="col-12 col-md-8 col-xl-6">
                 <div zippy="servicetable">
                     <h3>Послуги, роботи </h3>
-                    <div class="navbar nav">
+                    <div class="card">
 
                         <form zippy="filter" class="form-inline">
 
@@ -74,7 +74,7 @@
                 <div class="form-group row">
                     <label class="col-5 col-form-label" for="editservice_name">Назва</label>
                    <div class="col-7"> 
-                    <input autofocus="on"   required="required" class="form-control" zippy="editservice_name"/>
+                    <input autofocus="on"    required  class="form-control" zippy="editservice_name"/>
                   </div>
                 </div>
                 <div class="form-group row">
@@ -84,15 +84,15 @@
                     </div>
                 </div>
                 <div class="form-group row ">
-                    <label class="col-5 col-form-label" for="editprice">Вартість</label>
+                    <label class="col-5 col-form-label" for="editprice">Вартість (ціна)</label>
                     <div class="col-7">
-                        <input zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                        <input required zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
                 <div class="form-group  row">
-                    <label class="col-5 col-form-label" for="editcost">Розцiнки</label>
+                    <label class="col-5 col-form-label" for="editcost">Розцiнки (собівартість)</label>
                     <div class="col-7">
-                        <input zippy="editcost" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                        <input required zippy="editcost" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
                 <div class="form-group  row">
@@ -122,13 +122,13 @@
             <div class="col-12 col-md-7 col-xl-5" zippy="setpanel">
                 <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> До довідника</a>
                 <h4 zippy="stitle"></h4>
-                <small>Комплекти (складовi частини) для готової продукцiї та напiвфабрикатiв</small>
+                <small>Комплектуючi та матерiали, необхiднi для виконання роботи</small>
                 <form zippy="setform" class="form-inline mt-2 mb-2">
                     <label for="editsname">ТМЦ</label>
                     <input placeholder="Почніть вводити.." class="form-control  mr-sm-2" zippy="editsname"/>
 
                     <label for="editsqty">Кіл.</label>
-                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty" required="required"
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required 
                            pattern="[0-9,\.]+" style="width:60px">
                     <input zippy="setformbtn" class="btn btn-outline-success  " type="submit" value="Додати">
                 </form>

@@ -5,7 +5,7 @@ require_once 'init.php';
 
 
 if (strpos($_SERVER['REQUEST_URI'], 'index.php') > 1) {
-    die('Сайт размещен не в корневой директории');
+    die('Сайт розміщено не в кореневій папці');
 }
 
 try {
@@ -24,32 +24,34 @@ try {
             \App\System::setUser($user);
             $user->lastactive = time();
             $user->save() ;
+            \App\System::checkUpdate()  ;
         }
     }
 
-    $mainpage='\App\Pages\Main';
+    $mainpage='\App\Pages\Blank';
     $user=\App\System::getUser() ;
     if(strlen($user->mainpage)>0) {
-        $mainpage =  $user->mainpage;
+        $mainpage = $user->mainpage;
     }
 
     $app = new \App\Application();
     $modules = \App\System::getOptions('modules');
 
-    if ($modules['shop'] == 1 && \App\System::getOption('shop', 'usemainpage')==1) {
-        $app->Run('\App\Modules\Shop\Pages\Catalog\Main', 0);
+    if (($modules['shop'] ??0)== 1 && \App\System::getOption('shop', 'usemainpage')==1) {
+        $app->Run('\App\Modules\Shop\Pages\Catalog\Main' );
     } else {
         $app->Run($mainpage);
     }
 
 
 } catch (Throwable $e) {
-    if ($e instanceof \ADODB_Exception) {
-
-        \ZDB\DB::getConnect()->RollbackTrans(); // откат транзакции
-    }
     $msg = $e->getMessage();
-    $logger->error($e);
+    $logger->error($msg);
+    if ($e instanceof \ADODB_Exception) {
+        \ZDB\DB::getConnect()->RollbackTrans(); // откат транзакции
+        $logger->debug($e->sql);        
+    }
+
     if ($e instanceof Throwable) {
         echo $e->getMessage() . '<br>';
         echo $e->getLine() . ' ';

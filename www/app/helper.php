@@ -16,7 +16,7 @@ class Helper
     public const STAT_PROMO = 4;     //промо код
     public const STAT_NEW_SHOP = 5;     //уникальнных  посетителей
     public const STAT_CARD_SHOP = 6;     //позиций в  корзине
-
+    public const STAT_DOC_ISEDITED = 7;     //редактируется документ
 
     private static $meta = array(); //кеширует метаданные
 
@@ -68,7 +68,7 @@ class Helper
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
-        $_SESSION['userlogin'] = 'Гость';
+        $_SESSION['userlogin'] = 'Гiсть';
 
         Application::Redirect("\\App\\Pages\\UserLogin");
 
@@ -259,6 +259,7 @@ class Helper
                 $mdata[] = new \App\Entity\MetaData(array('meta_id' => 10018, 'meta_name' => "/OCStore/Items", 'meta_type' => 6, 'description' => "Товари (Опенкарт)"));
             }
         }
+      
         return $mdata;
     }
 
@@ -283,10 +284,7 @@ class Helper
     public static function sendLetter($emailto, $text, $subject = "") {
         global $_config;
 
-
-        if(\App\System::useEmail() == false) {
-            return;
-        }
+   
 
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom) == 0) {
@@ -320,12 +318,13 @@ class Helper
             //  $d = $mail->send() ;
             if($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
+                self::logerror($mail->ErrorInfo) ;
             } else {
                 //  System::setSuccessMsg('E-mail відправлено');
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
-
+            self::logerror($e->getMessage()) ;
         }
 
         /*
@@ -358,14 +357,20 @@ class Helper
             $mime = "application/pdf";
         }
 
+        $data = file_get_contents($file['tmp_name']);
+       
+        if(strlen($data) > (1024*1024*4) ) {
+           // throw new \Exception('Розмір файлу більше 4M');
+           return 0;
+        }        
+        
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
         $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}') ";
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 
-        $data = file_get_contents($file['tmp_name']);
-
+     
 
         $data = $conn->qstr($data);
         $sql = "insert  into filesdata (file_id,filedata) values ({$id},{$data}) ";
@@ -425,7 +430,7 @@ class Helper
     /**
      * возварщает список  документов
      *
-     * @param mixed $id
+ 
      */
     public static function getDocTypes() {
         $conn = \ZDB\DB::getConnect();
@@ -458,9 +463,18 @@ class Helper
      *
      * @param mixed $msg
      */
-    public static function log($msg) {
+    public static function logdebug($msg) {
         global $logger;
         $logger->debug($msg);
+    }
+    /**
+     * логгирование
+     *
+     * @param mixed $msg
+     */
+    public static function log($msg) {
+        global $logger;
+        $logger->info($msg);
     }
 
     /**
@@ -473,23 +487,7 @@ class Helper
         $logger->error($msg);
     }
 
-    /**
-     * Возвращает компанию  по  умолчанию
-     *
-     */
-    public static function getDefFirm() {
-        $user = System::getUser();
-        if($user->deffirm > 0) {
-            return $user->deffirm;
-        }
-        $st = \App\Entity\Firm::getList();
-
-        if(count($st) > 0) {
-            $keys = array_keys($st);
-            return $keys[count($keys) - 1];
-        }
-        return 0;
-    }
+ 
 
     /**
      * Возвращает склад  по  умолчанию
@@ -509,6 +507,18 @@ class Helper
     }
 
     /**
+     * Возвращает тип оплаты  по  умолчанию
+     *
+     */
+    public static function getDefPayType() {
+        $user = System::getUser();
+   
+        return intval($user->defpaytype);
+      
+
+     
+    }
+   /**
      * Возвращает расчетный счет  по  умолчанию
      *
      */
@@ -535,7 +545,7 @@ class Helper
         if(!is_array($common)) {
             $common = array();
         }
-        $salesourceslist = $common['salesources'];
+        $salesourceslist = $common['salesources'] ??'';
         if(is_array($salesourceslist) == false) {
             $salesourceslist = array();
         }
@@ -670,8 +680,12 @@ class Helper
      * @return mixed
      */
     public static function fasell($am) {
-
-        $ret = self::fa($am);
+        $common = \App\System::getOptions("common");
+        $ret = self::fa($am); 
+        if ($common['sellcheck'] !=1   ) { 
+            return $ret;
+        }
+        
 
         $ret = doubleval($ret);
         $ret = number_format($ret, 2, '.', '');
@@ -729,22 +743,11 @@ class Helper
     /**
      * возвращает  данные  фирмы.  Учитывает  филиал  если  задан
      */
-    public static function getFirmData($firm_id = 0, $branch_id = 0) {
-        $data = array();
-        if($firm_id > 0) {
-            $firm = \App\Entity\Firm::load($firm_id);
-            if($firm == null) {
-                $firm = \App\Entity\Firm::load(self::getDefFirm());
-            }
-            if($firm != null) {
-                $data = $firm->getData();
-            }
-        } else {
-            $firm = \App\Entity\Firm::load(self::getDefFirm());
-            if($firm != null) {
-                $data = $firm->getData();
-            }
-        }
+    public static function getFirmData(  $branch_id = 0) {
+        
+         
+        $data = System::getOptions("firm");
+ 
 
         if($branch_id > 0) {
             $branch = \App\Entity\Branch::load($branch_id);
@@ -757,6 +760,11 @@ class Helper
             }
         }
 
+        $user = System::getUser() ;
+        if(strlen($user->payname ??'')>0)   $data['firm_name']  = $user->payname;
+        if(strlen($user->address ??'')>0)   $data['address']  = $user->address;
+        if(strlen($user->tin ??'')>0)   $data['tin']  = $user->tin;
+         
         return $data;
     }
 
@@ -817,7 +825,9 @@ class Helper
      * @return mixed
      */
     public static function getValName($vn) {
-      
+        if($vn == 'Гривня') {
+            return 'UAH';
+        }
         if($vn == 'Долар') {
             return 'USD';
         }
@@ -827,7 +837,9 @@ class Helper
         if($vn == 'Рубль') {
             return 'RUB';
         }
-       
+        if($vn == 'Лей') {
+            return 'MDL';
+        }
     }
 
     public static function exportXML($xml, $filename) {
@@ -929,7 +941,7 @@ class Helper
 
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 
-        $spreadsheet = $reader->loadSpreadsheetFromFile($csvfile);
+        $spreadsheet = $reader->loadSpreadsheetFromString(file_get_contents($csvfile));
 
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 
@@ -1012,9 +1024,9 @@ class Helper
     /**
      * Вставка  данных  в  таблицу  статистики
      *
-     * @param mixed $cat
-     * @param mixed $key
-     * @param mixed $data
+     * @param int $cat
+     * @param int $key
+     * @param int $data
      * @return mixed
      */
     public static function insertstat(int $cat, int $key, int $data) {
@@ -1031,19 +1043,32 @@ class Helper
 
 
     /**
-     * Печать  этикеток
+     * Печать  этикеток     
      *
-     * @param array $items
+     * @param array $items  ТМЦ
+     * @param mixed $pqty  явное  указание  количества копий
+     * @param array $tags  дополнительные поля
      */
     public static function printItems(array $items, $pqty = 0, array $tags = []) {
+        $user = \App\System::getUser();
+
         $printer = \App\System::getOptions('printer');
 
         $prturn = \App\System::getUser()->prturn;
 
         $htmls = "";
-
-        $report = new \App\Report('item_tag.tpl');
-
+        $rows = [];
+        
+        
+        if($user->prtypelabel == 0) {
+            $report = new \App\Report('item_tag.tpl');
+        }
+        if($user->prtypelabel == 1) {
+            $report = new \App\Report('item_tag_ps.tpl');
+        }
+        if($user->prtypelabel == 2) {
+            $report = new \App\Report('item_tag_ts.tpl');
+        }
         foreach($items as $item) {
             if(intval($item->item_id) == 0) {
                 continue;
@@ -1073,6 +1098,7 @@ class Helper
             $header['isarticle'] = $printer['pcode'] == 1;
             $header['isbarcode'] = false;
             $header['isqrcode'] = false;
+            $header['isweight'] = $item->isweight ==1 && $item->quantity > 0 ;
 
 
             $header['article'] = $item->item_code;
@@ -1080,20 +1106,24 @@ class Helper
             $header['country'] = $item->country;
             $header['brand'] = $item->manufacturer;
             $header['notes'] = $item->notes;
+            $header['quantity'] = $item->quantity;
 
 
             if(strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
-                $writer = new \Endroid\QrCode\Writer\PngWriter();
+               
+                if($user->prtypelabel == 0) {
+                    $writer = new \Endroid\QrCode\Writer\PngWriter();
 
-                $qrCode = new \Endroid\QrCode\QrCode($item->url);
+                    $qrCode = new \Endroid\QrCode\QrCode($item->url);
 
-                $qrCode->setSize(500);
-                $qrCode->setMargin(5);
+                    $qrCode->setSize(500);
+                    $qrCode->setMargin(5);
 
-                $result = $writer->write($qrCode);
+                    $result = $writer->write($qrCode);
 
-                $dataUri = $result->getDataUri();
-                $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
+                    $dataUri = $result->getDataUri();
+                    $header['qrcodeattr'] = "src=\"{$dataUri}\"  ";
+                }
                 $header['qrcode'] = $item->url;
                 $header['isqrcode'] = true;
 
@@ -1105,20 +1135,27 @@ class Helper
                 $barcode = $item->bar_code;
                 if(strlen($barcode) == 0) {
                     $barcode = $item->item_code;
-                }
+                }   
+                $header['barcode'] = $barcode;
+                $header['isbarcode'] = true;                 
+                
                 if(strlen($barcode) > 0) {
-                    $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-                    $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . "\"";
-                    $header['barcodeattr'] = $da;
-                    $header['barcodewide'] = \App\Util::addSpaces($barcode);
-                    $header['barcode'] = $barcode;
-                    $header['isbarcode'] = true;
-
+                   if($user->prtypelabel == 0) {
+                        try{
+                            $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+                            $da = " src=\"data:image/png;base64," . base64_encode($generator->getBarcode($barcode, $printer['barcodetype'])) . "\"";
+                            $header['barcodeattr'] = $da;
+                            $header['barcodewide'] = \App\Util::addSpaces($barcode);
+                         
+                        } catch (\Throwable $e) {
+                           Helper::logerror("barcode: ".$e->getMessage()) ;
+                        }
+                   }
                 }
             }
 
             $header['price'] = self::fa($item->getPrice($printer['pricetype']));
-            if(intval($item->price) > 0) {
+            if(doubleval($item->price) > 0) {
                 $header['price'] = self::fa($item->price);  //по  документу
             }
 
@@ -1127,8 +1164,12 @@ class Helper
 
 
             $printqty = intval($item->printqty);
+            if($printqty == 5) { //не печатать
+               continue;
+            }
+
             if($printqty == 0) {
-                $printqty = 4;
+                $printqty = 1;
             }
 
             if($printqty == 1) {
@@ -1149,110 +1190,18 @@ class Helper
             if($pqty > 0) {
                 $qty = $pqty;
             }
-            for($i = 0; $i < intval($qty); $i++) {
-                $htmls = $htmls . $report->generate($header);
+            if($item->isweight ==1) {
+                $qty = 1;  //весовой товар
             }
-
-        }
-        $htmls = str_replace("\'", "", $htmls);
-
-        return $htmls;
-    }
-
-
-    /**
-     * Печать  этикеток на  ESC/POS
-     *
-     * @param array $items
-     */
-    public static function printItemsEP(array $items, $pqty = 0, array $tags = []) {
-        $user = \App\System::getUser();
-
-
-        $printer = \App\System::getOptions('printer');
-
-        $htmls = "";
-        $rows = [];
-
-        $report = new \App\Report('item_tag_ps.tpl');
-        if($user->prtypelabel == 2) {
-            $report = new \App\Report('item_tag_ts.tpl');
-        }
-
-        foreach($items as $item) {
-            $header = [];
-            if(strlen($item->shortname) > 0) {
-                $header['name'] = $item->shortname;
-            } else {
-                $header['name'] = $item->itemname;
+            
+            
+            //кастомные поля
+            foreach($item->getcf() as $cf){
+             //  $v=  str_replace("\"", "`", $v);
+             //  $v=  str_replace("'", "`", $v);
+               $header['cf_'.$cf->code]  = $cf->val; 
             }
-            $header['name'] = str_replace("'", "`", $header['name']);
-            $header['description'] = str_replace("'", "`", $item->description);
-
-            $header['docnumber'] = $tags['docnumber'] ?? "";
-
-            $header['isprice'] = $printer['pprice'] == 1;
-            $header['isarticle'] = $printer['pcode'] == 1;
-            $header['isbarcode'] = false;
-            $header['isqrcode'] = false;
-
-
-            $header['article'] = $item->item_code;
-            $header['garterm'] = $item->warranty;
-            $header['country'] = $item->country;
-            $header['brand'] = $item->manufacturer;
-            $header['notes'] = $item->notes;
-
-            $header['price'] = self::fa($item->getPrice($printer['pricetype']));
-            if(intval($item->price) > 0) {
-                $header['price'] = self::fa($item->price);  //по  документу
-            }
-
-
-            if(strlen($item->url) > 0 && $printer['pqrcode'] == 1) {
-                $header['qrcode'] = $item->url;
-                $header['isqrcode'] = true;
-
-            }
-            if($printer['pbarcode'] == 1) {
-
-                $barcode = $item->bar_code;
-                if(strlen($barcode) == 0) {
-                    $barcode = $item->item_code;
-                }
-                if(strlen($barcode) > 0) {
-                    $header['barcode'] = $barcode;
-                    $header['isbarcode'] = true;
-                }
-            }
-
-            $qty = intval($item->getQuantity());
-
-            $printqty = intval($item->printqty);
-            if($printqty == 0) {
-                $printqty = 4;
-            }
-
-            if($printqty == 1) {
-                $qty = 1;
-            }
-            if($printqty == 2) {
-                $qty = 2;
-            }
-            if($printqty == 3) ;
-            if($printqty == 4) {
-                if($qty > 10) {
-                    $qty = 10;
-                }
-            }
-            if(intval($item->quantity) > 0) {
-                $qty = intval($item->quantity);  //по  документу
-            }
-            if($pqty > 0) {
-                $qty = $pqty;
-            }
-
-
+            
             if($user->prtypelabel == 2) {
                 $header['name'] = str_replace("\"", "`", $header['name']);
                 $header['description'] = str_replace("\"", "`", $header['description']);
@@ -1274,7 +1223,9 @@ class Helper
                         $row = str_replace("\n", "", $row);
                         $row = str_replace("\r", "", $row);
                         $row = trim($row);
-                        $rows[] = $row;
+                        if($row != "") {
+                           $rows[] = $row;  
+                        }
                     }
                 }
 
@@ -1282,20 +1233,22 @@ class Helper
                 for($i = 0; $i < intval($qty); $i++) {
                     $htmls = $htmls . $report->generate($header);
                 }
-
-            }
-
+            }           
+         
 
         }
+        
+
         if($user->prtypelabel == 2) {
             return $rows;
         } else {
+            $htmls = str_replace("\'", "", $htmls);
             return $htmls;
         }
-
-
     }
 
+
+  
     //"соль" для  шифрования
     public static function getSalt() {
         $salt = self::getKeyVal('salt');
@@ -1357,7 +1310,7 @@ class Helper
 
     /**
      * проверка  новой версии
-     *
+     * @deprecated
      */
     public static function checkVer() {
 
@@ -1366,10 +1319,10 @@ class Helper
 
         $nocache = "?t=" . time() . "&s=" . Helper::getSalt() . '&phpv=' . $phpv . '_' . \App\System::CURR_VERSION;
 
-        $v = @file_get_contents("https://ru.zippy.com.ua/checkver.php" . $nocache);
+        $v = @file_get_contents("https://zippy.com.ua/checkver.php" . $nocache);
         $v = @json_decode($v, true);
         if(!is_array($v)) {
-            $v = @file_get_contents("https://ru.zippy.com.ua/version.json" . $nocache);
+            $v = @file_get_contents("https://zippy.com.ua/version.json" . $nocache);
             $v = @json_decode($v, true);
 
         }
@@ -1394,13 +1347,15 @@ class Helper
      *
      */
     public static function migration() {
+        global $logger;
         $conn = \ZDB\DB::getConnect();
 
-        $vdb=\App\System::getOptions('version', false) ;
+        $vdb=\App\System::getOptions('version',true ) ;
+        $common=\App\System::getOptions('common' ) ;
      
         $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
         if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
-            Helper::log("Миграция бонус");
+            Helper::log("Міграція бонус");
             $conn->BeginTrans();
             try {
                 $conn->Execute("delete from custacc where optype=1 ");
@@ -1413,7 +1368,7 @@ class Helper
                 $conn->CommitTrans();
 
             } catch(\Throwable $ee) {
-                global $logger;
+                
                 $conn->RollbackTrans();
                 System::setErrorMsg($ee->getMessage());
                 $logger->error($ee->getMessage());
@@ -1426,7 +1381,7 @@ class Helper
 
         $migrationbalans = \App\Helper::getKeyVal('migrationbalans'); //6.11.2
         if($migrationbalans != "done" && version_compare($vdb,'6.11.0')>=0) {
-            Helper::log("Миграция баланс");
+            Helper::log("Міграція баланс");
             //  + контрагента (active)  - наш кредитовый  долг
             //  - контрагента (passive)  - наш дебетовый  долг
             $conn->BeginTrans();
@@ -1482,7 +1437,7 @@ class Helper
                 $conn->CommitTrans();
 
             } catch(\Throwable $ee) {
-                global $logger;
+              
                 $conn->RollbackTrans();
                 System::setErrorMsg($ee->getMessage());
                 $logger->error($ee->getMessage());
@@ -1490,11 +1445,92 @@ class Helper
             }
         }
        
-        $migration6120 = \App\Helper::getKeyVal('migration6120'); 
-        if($migration6120 != "done" && version_compare($vdb,'6.12.0')>=0) {
-           Helper::log("Миграция 6120");
-     
+        $migration6118 = \App\Helper::getKeyVal('migration6118'); 
+        if($migration6118 != "done"  ) {
+            Helper::log("Міграція 6118");
+         
+            \App\Helper::setKeyVal('migration6118', "done");           
+        
+            try {
+          
+                 
+                 $w=  $conn->GetOne("select count(*) from metadata where meta_name='SalaryList' ");
+                 if(intval($w)==0){
+                      $conn->Execute("INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0) ");
+                 }
+              
+               
+       
+                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
+                           
+                 foreach($w as $e){
+                     if($e['Key_name']=='unuqnumber'){
+                          $conn->Execute("ALTER TABLE documents DROP INDEX `unuqnumber` ");
+                     }             
+      
+                 }
+              
+                       
+            } catch(\Throwable $ee) {
+         
+                $logger->error($ee->getMessage());
+               
+            }           
+           
         }
+        
+        
+        $migration12 = \App\Helper::getKeyVal('migration12');  
+        if($migration12 != "done" && version_compare($vdb,'6.12.0')>=0) {
+            Helper::log("Міграція 12");
+         
+            \App\Helper::setKeyVal('migration12', "done");           
+         
+        
+            try {
+          
+              foreach( \App\Entity\PromoCode::find("" ) as $p) {
+                  $p->enddate = $p->dateto ; 
+                  $p->save();
+              }   
+              foreach( \App\Entity\Equipment::find("" ) as $e) {
+                  $e->invnumber = $e->code ; 
+                  $e->pa_id = $e->pa_id_old ; 
+                  $e->emp_id = $e->emp_id_old ; 
+                  $e->invnumber = $e->code ; 
+               
+                  $e->save();
+              }   
+                     
+                       
+            } catch(\Throwable $ee) {
+         
+                $logger->error($ee->getMessage());
+               
+            }  
+        }
+            
+        $migration6150 = \App\Helper::getKeyVal('migration6150'); 
+        if($migration6150 != "done" && version_compare($vdb,'6.15.0')>=0  ) {
+        //    Helper::log("Міграція 6150");
+         
+            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name='OrderFood' ") );
+            if($cnt > 0){
+               $common['usefood'] = 1;
+               System::setOptions("common",$common) ;
+            }
+            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name in('ProdReceipt', 'ProdIssue') ") );
+            if($cnt > 0){
+               $common['useprod'] = 1;
+               System::setOptions("common",$common) ;
+            }
+            Session::getSession()->menu = [];     
+         
+            \App\Helper::setKeyVal('migration6150', "done");           
+        
+       
+        }       
     }
+
 
 }

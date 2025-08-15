@@ -5,7 +5,7 @@ namespace App\Pages\Register;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Helper as H;
-use App\Entity\Firm;
+ 
 use App\Entity\Customer;
 use App\System;
 use Zippy\Html\DataList\DataView;
@@ -29,7 +29,6 @@ class GRList extends \App\Pages\Base
 
     /**
      *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
     public function __construct() {
@@ -42,8 +41,8 @@ class GRList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Не проведені', 2 => 'Не сплачені', 3 => 'Всі'), 0));
-        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті',   1 => 'Не сплачені', 2 => 'Всі'), 0));
+
         $this->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
 
@@ -96,6 +95,14 @@ class GRList extends \App\Pages\Base
                 $row->istruck->setVisible(count($n)==0);
 
             }
+            if($doc->meta_name=='GoodsReceipt') {
+                if($doc->payamount == ($doc->headerdata['prepaid']??0) )  {
+                   $row->ispay->setVisible(false);    
+                }
+            }            
+            if($doc->state==9) {
+                $row->ispay->setVisible(false);    
+            }            
         }
 
 
@@ -114,7 +121,7 @@ class GRList extends \App\Pages\Base
     }
 
     public function statusOnSubmit($sender) {
-        if (\App\Acl::checkChangeStateDoc($this->_doc, true, true) == false) {
+        if (\App\ACL::checkChangeStateDoc($this->_doc, true, true) == false) {
             return;
         }
 
@@ -229,30 +236,30 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
     private function getWhere() {
         $user = System::getUser();
 
+        $common = System::getOptions("common");
+        $actualdate = $common['actualdate'] ??  strtotime('2023-01-01') ;
+        
         $conn = \ZDB\DB::getConnect();
 
-        $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue','PayComitent' )  ";
+        $actualdate =   $conn->DBDate($actualdate );
+        
+  
+        $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue','PayComitent' )   and document_date >= ".$actualdate;
 
         $status = $this->page->filter->status->getValue();
 
         if ($status == 0) {
-            $where .= " and ( (payamount > 0 and payamount > payed) or  (state <>" . Document::STATE_EXECUTED . ")) ";
+            $where .= "  and    state >3 and  state  not in(14,5,9 )        ";
         }
-
+      
         if ($status == 1) {
-            $where .= " and  state <>" . Document::STATE_EXECUTED;
+            $where .= " and state=". Document::STATE_WP;
         }
         if ($status == 2) {
-            $where .= " and  (payamount > 0 and payamount > payed)";
-        }
-        if ($status == 3) {
 
         }
 
-        $comp = $this->page->filter->searchcomp->getValue();
-        if ($comp > 0) {
-            $where = $where . " and firm_id = " . $comp;
-        }
+      
         $cust = $this->page->filter->searchcust->getKey();
         if ($cust > 0) {
             $where = $where . " and customer_id = " . $cust;

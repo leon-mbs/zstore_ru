@@ -93,6 +93,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->add(new TextInput('editcustomername'));
         $this->customerdetail->add(new TextInput('editphone'));
         $this->customerdetail->add(new TextInput('editviber'));
+        $this->customerdetail->add(new TextInput('edittelega'));
         $this->customerdetail->add(new TextInput('editpassword'));
         $this->customerdetail->add(new TextInput('editconfirm'));
         $this->customerdetail->add(new TextInput('editemail'));
@@ -226,6 +227,7 @@ class CustomerList extends \App\Pages\Base
 
         $row->add(new Label('customerphone', $item->phone));
         $row->add(new Label('customeremail', $item->email));
+        $row->add(new Label('customeredrpou', $item->edrpou));
         $row->add(new Label('leadstatus', $item->leadstatus));
         $row->add(new Label('createddate', Helper::fd($item->createdon)));
         $row->add(new Label('docs', $item->docs))->setVisible($item->docs > 0);
@@ -296,6 +298,7 @@ class CustomerList extends \App\Pages\Base
         $this->customerdetail->editcustomername->setText($this->_customer->customer_name);
         $this->customerdetail->editphone->setText($this->_customer->phone);
         $this->customerdetail->editviber->setText($this->_customer->viber);
+        $this->customerdetail->edittelega->setText($this->_customer->telega);
         $this->customerdetail->editemail->setText($this->_customer->email);
         $this->customerdetail->editaddress->setText($this->_customer->address);
         $this->customerdetail->editaddressdel->setText($this->_customer->addressdel);
@@ -362,6 +365,7 @@ class CustomerList extends \App\Pages\Base
         }
         $this->_customer->phone = $this->customerdetail->editphone->getText();
         $this->_customer->viber = $this->customerdetail->editviber->getText();
+        $this->_customer->telega = $this->customerdetail->edittelega->getText();
         $this->_customer->email = $this->customerdetail->editemail->getText();
         $this->_customer->address = $this->customerdetail->editaddress->getText();
         $this->_customer->addressdel = $this->customerdetail->editaddressdel->getText();
@@ -673,7 +677,7 @@ class CustomerList extends \App\Pages\Base
     }
 
     private function updateDocs() {
-        $this->_doclist = \App\Entity\doc\Document::find(' state <> 9 and  customer_id=' . $this->_customer->customer_id,'document_date desc',10);
+        $this->_doclist = \App\Entity\Doc\Document::find(' state <> 9 and  customer_id=' . $this->_customer->customer_id,'document_date desc',10);
         $this->contentview->dw_doc->Reload();
 
     }
@@ -711,7 +715,7 @@ class CustomerList extends \App\Pages\Base
         $doc = $row->getDataItem();
 
         $row->add(new Label('doc_amount',  Helper::fa($doc->amount) ));
-        $row->add(new Label('doc_state',   \App\Entity\doc\Document::getStateName($doc->state) ));
+        $row->add(new Label('doc_state',   \App\Entity\Doc\Document::getStateName($doc->state) ));
 
         $row->add(new ClickLink('doc'))->onClick($this, 'docOnClick');
         $row->doc->setValue($doc->document_number);

@@ -1858,8 +1858,8 @@ INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'АРМ кассира (общепит)', 'ARMFood', 'Общепит', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Журнал доставок', 'DeliveryList', 'Общепит', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'АРМ кухни (бара)', 'ArmProdFood', 'Общепит', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Доходы  и расходы', 'IOState', '', 0);
-INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Заказанные товары', 'ItemOrder', 'Продажи', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 3, 'Доходы  и затраты', 'IOState', '', 0);
+INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  2, 'Заказыные товары', 'ItemOrder', 'Продажи', 0);
 INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 5, 'Скидки и акции', 'Discounts', '', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Начисление зарплаты', 'CalcSalary', 'Зарплата', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  4, 'Начисления и удержания', 'SalaryTypeList', '', 0);
@@ -1869,7 +1869,7 @@ INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 1, 'Перемещение партий ТМЦ', 'MovePart', 'Склад', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Возврат покупателей', 'Returnselled', 'Продажи', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Возврат поставщикам', 'Returnbayed', 'Закупки', 0);
-INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Оказанные услуги', 'IncomeService', 'Услуги', 0);
+INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  1, 'Оказаные услуги', 'IncomeService', 'Услуги', 0);
 INSERT INTO `metadata` (`meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Состояние  складов', 'StoreItems', 'Склад', 0);
 INSERT INTO `metadata` (  `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES(  3, 'Товары у поставщиков', 'CustItems', '', 0);
 INSERT INTO `metadata` ( `meta_type`, `description`, `meta_name`, `menugroup`, `disabled`) VALUES( 2, 'Акт сверки', 'CompareAct', 'Контрагенты', 0);

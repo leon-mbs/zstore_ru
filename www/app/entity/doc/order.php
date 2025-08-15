@@ -45,26 +45,39 @@ class Order extends \App\Entity\Doc\Document
             $allbonus = $c->getBonus();
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData( $this->branch_id);
 
-        $da=  trim($this->headerdata["npaddressfull"] ) ;
+        $da=  trim($this->headerdata["npaddressfull"] ??'') ;
         
         if(strlen($da)==0) {
-           $da=  trim($this->headerdata["ship_address"] ) ;
+           $da =  trim($this->headerdata["ship_address"] ??'') ;
         }
+        $iban=''; 
+        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
+        
+        if($mf != null  ) {
+            $iban = $mf->iban??'';
+        }        
+       
+        
+        if($this->getHD("paytype",0) != 2){  //только для постоплаты
+           $iban=''; 
+        }
+        
         
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "phone"           => $this->headerdata["phone"],
                         "email"           => $this->headerdata["email"],
+                        "paytypename"     => $this->getHD("paytypename",'') ,
                         "delivery"        => $this->headerdata["delivery_name"],
                         "ship_address"    => strlen($da) > 0 ? $da: false,
                         "notes"           => nl2br($this->notes),
-                        "outnumber"       => $this->headerdata["outnumber"],
-                        "isoutnumber"     => strlen($this->headerdata["outnumber"]) > 0,
+                        "outnumber"       => $this->headerdata["outnumber"]??'',
+                        "isoutnumber"     => strlen($this->headerdata["outnumber"]??'') > 0,
                         "document_number" => $this->document_number,
-                         "iban"      => strlen($firm['iban']) > 0 ? $firm['iban'] : false,
+                         "iban"      => strlen($iban) > 0 ? $iban : false,
                          "firm_name" => $firm['firm_name'],
 
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
@@ -77,7 +90,7 @@ class Order extends \App\Entity\Doc\Document
                         "payed"           => $this->headerdata['payed'] > 0 ? H::fa($this->headerdata['payed']) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );                                                                               
-        $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
+        $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
 
 
 
@@ -96,9 +109,8 @@ class Order extends \App\Entity\Doc\Document
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        if($this->payed == 0) {
-            $list['Invoice'] = self::getDesc('Invoice');
-        }
+        //   $list['Invoice'] = self::getDesc('Invoice');
+
       //  $list['POSCheck'] = self::getDesc('POSCheck');
         $list['Task'] = self::getDesc('Task');
         $list['TTN'] = self::getDesc('TTN');
@@ -128,10 +140,10 @@ class Order extends \App\Entity\Doc\Document
             );
         }
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $printer = System::getOptions('printer');
         $style = "";
-        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+        if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
 
         }
@@ -141,7 +153,7 @@ class Order extends \App\Entity\Doc\Document
                         "firm_name"       => $firm["firm_name"],
                         "phone"           => $firm["phone"],
                         "delivery"        => $this->headerdata["delivery_name"],
-                         "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
+                        "customer_name"   => strlen($this->headerdata["customer_name"]) > 0 ? $this->headerdata["customer_name"] : false,
                         "document_number" => $this->document_number,
                         "style"           => $style,
                         "total"           => H::fa($this->amount)
@@ -220,7 +232,7 @@ class Order extends \App\Entity\Doc\Document
        
         
         
-            if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
+            if (false == $item->checkMinus($item->quantity, $this->headerdata['store']) && $this->headerdata['store'] >0 ) {
                 throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
 
             }
@@ -239,7 +251,6 @@ class Order extends \App\Entity\Doc\Document
 
             }
         }
-
     }
     //отмена  резерва
     public function unreserve() {
@@ -301,5 +312,35 @@ class Order extends \App\Entity\Doc\Document
         }
              
     }
-    
+    /**
+    * список  неотправленных позиций
+    * 
+    */
+    public function getNotSendedItem() {
+         $notsendqty=[]; 
+         $sendqty=[]; 
+         $notsend=0;
+         $docs= Document::find("state >=5 and meta_name  in ('GoodsIssue','TTN') and parent_id=". $this->document_id);   
+         foreach($docs as $d)  {
+             foreach($d->unpackDetails('detaildata') as $item){
+                if(!isset($sendqty[$item->item_id]) ) {
+                    $sendqty[$item->item_id]=0; 
+                }  
+                $sendqty[$item->item_id] += $item->quantity;
+             }
+         }
+         foreach($this->unpackDetails('detaildata') as $item){
+            if(($sendqty[$item->item_id] ?? 0) ==0)  {
+                $notsend=$item->quantity;
+            }   else {
+                $notsend=$item->quantity - $sendqty[$item->item_id];  
+            }
+            if($notsend > 0) {
+                $notsendqty[$item->item_id] = $notsend;
+            }
+            
+         }        
+     
+         return $notsendqty;
+    }    
 }

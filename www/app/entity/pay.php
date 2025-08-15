@@ -43,9 +43,9 @@ class Pay extends \ZCL\DB\Entity
      * Добавляет платеж
      *
      * @param mixed $document_id документ
-     * @param mixed $isdoc оплата выполнена  документом нужно отличать при отмене документа
+     * @param mixed $paydate оплата выполнена  документом нужно отличать при отмене документа
      * @param mixed $amount сумма
-     * @param mixed $mf денежный счет
+     * @param mixed $mf_id денежный счет
      * @param mixed $comment коментарий
      * @param mixed $nobank  без банковского  процента 
      */
@@ -68,7 +68,7 @@ class Pay extends \ZCL\DB\Entity
         if($options['allowminusmf'] !=1 && $amount < 0) {
             $b = \App\Entity\MoneyFund::Balance() ;
 
-            if($b[$mf_id] < abs($amount)) {
+            if(( $b[$mf_id] ??0) < abs($amount)) {
                 throw new \Exception('Сума  на рахунку недостатня  для  оплати')  ;
             }
         }

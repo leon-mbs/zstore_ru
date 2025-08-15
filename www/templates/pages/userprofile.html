@@ -7,40 +7,41 @@
     <body>
 
         <div class="row ">
-            <div class="col-10  col-md-8 col-lg-6">
+            <div class="col-10  col-md-8 col-lg-6 col-xl-5">
 
                 <h4>Мій профіль</h4>
                 <form role="form" zippy="profileform">
                     <div class="row ">
                         <div class="col-12 col-md-6 ">         
 
-
-                            <div class="form-group  ">
-                                <label for="defstore">Компанія за замовчуванням</label>
-
-                                <select class="form-control" zippy="deffirm">
-                                    <option value='0'>Не встановлено</option>
-                                </select>
-                            </div>
+                      
                             <div class="form-group  ">
                                 <label for="defstore">Склад за замовчуванням</label>
 
                                 <select class="form-control" zippy="defstore">
-                                    <option value='0'>Не встановлено</option>
+                                    <option value="0">Не встановлено</option>
                                 </select>
                             </div>
                             <div class="form-group  ">
                                 <label for="defmf">Грошовий рахунок за замовчуванням</label>
 
                                 <select class="form-control" zippy="defmf">
-                                    <option value='0'>Не встановлено</option>
+                                    <option value="0">Не встановлено</option>
                                 </select>
+                            </div>
+                        <div class="form-group  ">
+                                <label for="defpaytype">Тип оплати за замовчуванням</label>
+
+                                <select class="form-control" zippy="defpaytype">
+                                    <option value="0">Не встановлено</option>
+                                </select>
+                                <small>Для Замовлення  та  Акту виконаних послуг</small>
                             </div>
                             <div class="form-group  ">
                                 <label for="defsalesource">Джерело продаж за замовчуванням</label>
 
                                 <select class="form-control" zippy="defsalesource">
-                                    <option value='0'>Не встановлено</option>
+                                    <option value="0">Не встановлено</option>
                                 </select>
                             </div>
                             <div class="form-group  ">
@@ -49,50 +50,22 @@
                                 <select class="form-control" zippy="pagesize" style="width:100px;">
 
                                 </select>
-
+                                 <small>Велике значення  може  сповільнити  роботу програми</small>
+                                 </div>
 
                                 <div class="form-group  ">
                                     <label for="mainpage">Головна сторiнка</label>
 
                                     <select class="form-control" zippy="mainpage">
-                                        <option value='\App\Pages\Main'>Дашборд (вiджети)</option>
+                                        <option value="\App\Pages\Blank">Не вказано</option>
+                                        <option value="\App\Pages\Main">Дашборд (вiджети)</option>
                                     </select>
                                 </div>
 
                               
                               
                                 
-                            </div>
-                           <div class="form-check">
-                                <input zippy="emailnotify" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="emailnotify">Вiдправляти повiдомлення на e-mail </label>
-
-                            </div>   
-                           <div class="form-check">
-                                <input zippy="botnotify" type="checkbox" class="form-check-input">
-                                <label data-label="botnotify" class="form-check-label" for="botnotify">Вiдправляти повiдомлення телеграм боту </label>
-
-                            </div>   
-                 
-                           <div class="form-check">
-                                <input zippy="hidesidebar" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="hidesidebar">Ховати бокове меню </label>
-
-                            </div>
-                          
-                           <div class="form-check">
-                                <input zippy="darkmode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="darkmode">Нiчна тема </label>
-
-                            </div>
-                                  <div class="form-check">
-                                    <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
-                                    <label class="form-check-label" for="usemobileprinter">Відкривати друк в новій вкладці  </label> 
-                                   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділитись. 
-                                    Стосується тільки системних принтерів"></i>
-
-                                </div>                              
+                             
                         </div>
 
 
@@ -114,6 +87,37 @@
                                 <input   class="form-control" zippy="viber">
                             </div>   
 
+                          
+                  
+                 
+                           <div class="form-check">
+                                <input zippy="hidesidebar" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="hidesidebar">Ховати бокове меню </label>
+
+                            </div>
+
+                           {{#usebot}}
+                             <div class="form-check">
+                                <input zippy="usebotfornotify" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usebotfornotify">Дублювати повiдомлення в телеграмi </label>
+
+                            </div>
+                           {{/usebot}}
+
+                           <div class="form-check">
+                                <input zippy="darkmode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="darkmode">Нiчна тема </label>
+
+                            </div>
+                                  <div class="form-check">
+                                    <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
+                                    <label class="form-check-label" for="usemobileprinter">Відкривати друк в новій вкладці  </label> 
+                                   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Для мобільних пристроїв, щоб друкувати відповідним додатком через меню Поділитись. 
+                                    Стосується тільки системних принтерів"></i>
+
+                                </div>                             
+                            
                         </div>
 
 
@@ -131,10 +135,52 @@
                     </div>            
                 </form>
             </div>
+            <div class="col-10 col-lg-3 col-md-4 col-xl-3">
+
+                <h4>Зміна пароля</h4>
+                <form role="form" zippy="passwordform">
+
+                    <div class="form-group">
+                        <label for="userpassword">Новий пароль</label>
+                        <input type="password" class="form-control" zippy="userpassword"  required >
+                        <small>Перед введенням перевірте розкладку та регістр клавіатури </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userpassword">Підтвердження</label>
+                        <input type="password" class="form-control " zippy="confirmpassword"  required >
+                    </div>
+
+                    <button type="submit"   class="btn btn-primary">Зберегти</button>
+                </form>
+                <br>
+             <h4>Альтернативні дані  продавця</h4>
+             <small>Якщо відрізняются від даних компанії</small>
+              <form role="form" zippy="firmform">
+                    <div class="form-group">
+                            <label for="editpayname" data-label="editpayname">Назва</label>
+                            <input class="form-control" type="text" zippy="editpayname">
+                    </div>                    
+                    <div class="form-group">
+                            <label for="editaddress" data-label="editpayname">Адреса</label>
+                            <input class="form-control" type="text" zippy="editaddress">
+                    </div>                    
+                    <div class="form-group row">
+                            <label class="col-5 col-form-label" for="edittin" data-label="edittin">ЄДРПОУ </label>
+                            <div class="col-7">
+                                <input class="form-control" type="text" zippy="edittin">
+                            </div>
+                                        
+                    </div>                    
+                             
+                  <button type="submit"   class="btn btn-primary">Зберегти</button>
         
+             </form>
+            </div>
             <div class="col-10  col-md-4 col-xl-3">
+            <small>  <a href="/index.php?p=App/Pages/Options#printer"><i class="fa fa-link"></i> Параметри для етикеток і цінників</a> </small>
                          <h4>Принтер чеків</h4>
-                         <small><a href="https://zippy.com.ua/ext#10">Опис</a></small>
+                         <small><a href="https://zippy.com.ua/ext#id10">Опис</a></small>
                          <form zippy="printer">
                             <div class="form-group  ">
                                 <label for="prtype">Тип підключення</label>
@@ -142,7 +188,7 @@
                                      <option value="0">Системний принтер</option>
                                      <option value="1">Print сервер</option>
                                 </select>
-                                <small data-label="pserver">Опис <a href="https://zippy.com.ua/ext#10" target="_blank">тут</a>  </small>
+                                <small data-label="pserver">Опис <a href="https://zippy.com.ua/ext#id10" target="_blank">тут</a>  </small>
                             </div>    
                                  
                                 
@@ -161,7 +207,7 @@
                                      <option value="866">866</option>
                                      <option value="1251">win-1251</option>
                                 </select>
-                                <small>Кодування, виставлене в  принтері</small>    
+                                <small data-label="pcp">Кодування, виставлене в  принтері</small>    
                             </div>    
                                  
                                          
@@ -182,7 +228,7 @@
                                      <option value="1">Print сервер (режим  receipt)</option>
                                      <option value="2">Print сервер (режим  label)</option>
                                 </select>
-                                <small data-label="pserverlabel">Опис <a href="https://zippy.com.ua/ext#10" target="_blank">тут</a>  </small>
+                                <small data-label="prtypelabel"  >Опис <a href="https://zippy.com.ua/ext#id10" target="_blank">тут</a>  </small>
                             </div>    
                                  
                                 
@@ -201,12 +247,12 @@
                                      <option value="866">866</option>
                                      <option value="1251">win-1251</option>
                                 </select>
-                                <small>Кодування, виставлене в  принтері</small>    
+                                <small data-label="pcplabel">Кодування, виставлене в  принтері</small>    
                             </div>    
                             
                              <div class="form-group  ">
                                 <label for="prturn">Поворот зображення</label>
-                                <select class="form-control" zippy="prturn">
+                                <select style="width:100px" class="form-control" zippy="prturn">
                                      <option value="0">0</option>
                                      <option value="1">90%</option>
                                      <option value="2">-90%</option>
@@ -219,31 +265,59 @@
                                 <a   zippy="pstestlabel" >Тест принтера</a>
                             </div>                            
                          </form>   
+                         <h4>Електронні ваги</h4>
+                       
+                        <small>Мають бути реалізовані в  POS сервері. Опис <a  href="https://zippy.com.ua/ext#id10">тут</a> </small>
+                  
+                         <form zippy="scaleform">
+                             <div class="form-group  ">
+                                <label   for="scaleserver">Адреса POS серверу</label>
+                                <input   required="on" class="form-control" zippy="scaleserver">
+                                 
+                            </div>
+                              <div class="form-group">
+                                <input   class="btn btn-primary" type="submit" value="Зберегти">
+                            </div>                            
+                             <div class="form-group">
+                                <a id="testscale" href="#"    >Тест </a>
+                            </div>                           
+                        </form>       
         </div>
-            <div class="col-10 col-lg-3 col-md-3 col-xl-2">
-
-                <h4>Зміна пароля</h4>
-                <form role="form" zippy="passwordform">
-
-                    <div class="form-group">
-                        <label for="userpassword">Новий пароль</label>
-                        <input type="password" class="form-control" zippy="userpassword" required="required">
-                        <small>Перед введенням перевірте розкладку та регістр клавіатури </small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userpassword">Підтвердження</label>
-                        <input type="password" class="form-control " zippy="confirmpassword" required="required">
-                    </div>
-
-                    <button type="submit"   class="btn btn-primary">Зберегти</button>
-                </form>
-                <br>
-
-
-            </div>
+          
         </div>
+       <script>
+         $(document).ready(function () {
+         
+            $('#testscale').click(function(event) {
+                event.preventDefault();
+                
+                var url = $("#scaleserver").val() 
 
+           var opt={
+               method: 'GET'  
+           };              
+                    
+            fetch(url+"/scale",opt)                                            
+  
+              .then((response) => {
+                  return response.json();
+              })
+              .then((data) => {
+                 if(data.success == true){
+                     toastr.success("Вага "+ data.weight )   
+                 }   else {
+                     toastr.error(data.error )        
+                 }
+              })
+               .catch(function (error) {
+                    toastr.error(error )       
+                });  
+            
+                
+               
+            });   
+  });                
+        </script> 
 
     </body>
 

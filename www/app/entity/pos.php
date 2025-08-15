@@ -23,14 +23,18 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->details .= "<address><![CDATA[{$this->address}]]></address>";
         $this->details .= "<pointname><![CDATA[{$this->pointname}]]></pointname>";
+        $this->details .= "<payeq><![CDATA[{$this->payeq}]]></payeq>";
 
         $this->details .= "<fiscalnumber>{$this->fiscalnumber}</fiscalnumber>";
         $this->details .= "<fiscallocnumber>{$this->fiscallocnumber}</fiscallocnumber>";
         $this->details .= "<fiscdocnumber>{$this->fiscdocnumber}</fiscdocnumber>";
+        $this->details .= "<firmname>{$this->firmname}</firmname>";
+        $this->details .= "<tin>{$this->tin}</tin>";
+        $this->details .= "<ipn>{$this->ipn}</ipn>";
 
         $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
         $this->details .= "<testing>{$this->testing}</testing>";
-        $this->details .= "<firm_id>{$this->firm_id}</firm_id>";
+
         $this->details .= "<vktoken>{$this->vktoken}</vktoken>";
         $this->details .= "<cbkey>{$this->cbkey}</cbkey>";
         $this->details .= "<cbpin>{$this->cbpin}</cbpin>";
@@ -39,10 +43,7 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<ppocert><![CDATA[{$this->ppocert}]]></ppocert>";
         $this->details .= "<ppokey><![CDATA[{$this->ppokey}]]></ppokey>";
         $this->details .= "<ppopassword>{$this->ppopassword}</ppopassword>";
-        $this->details .= "<ppohost>{$this->ppohost}</ppohost>";
-        $this->details .= "<ppoport>{$this->ppoport}</ppoport>";
-        $this->details .= "<ppousessl>{$this->ppousessl}</ppousessl>";
-        $this->details .= "<pposigntype>{$this->pposigntype}</pposigntype>";
+       
         $this->details .= "<ppokeyid>{$this->ppokeyid}</ppokeyid>";
         $this->details .= "<ppoisjks>{$this->ppoisjks}</ppoisjks>";
         
@@ -58,13 +59,17 @@ class Pos extends \ZCL\DB\Entity
         $this->comment = (string)($xml->comment[0]);
         $this->address = (string)($xml->address[0]);
         $this->pointname = (string)($xml->pointname[0]);
+        $this->payeq = (string)($xml->payeq[0]);
         $this->vktoken = (string)($xml->vktoken[0]);
         $this->cbkey = (string)($xml->cbkey[0]);
         $this->cbpin = (string)($xml->cbpin[0]);
         $this->fiscalnumber = (string)($xml->fiscalnumber[0]);
         $this->fiscallocnumber = (int)($xml->fiscallocnumber[0]);
         $this->fiscdocnumber = (int)($xml->fiscdocnumber[0]);
-        $this->firm_id = (int)($xml->firm_id[0]);
+        $this->firmname = (string)($xml->firmname[0]);
+        $this->tin = (string)($xml->tin[0]);
+        $this->ipn = (string)($xml->ipn[0]);
+
         $this->autoshift = (int)($xml->autoshift[0]);
 
         $this->testing = (int)($xml->testing[0]);
@@ -77,13 +82,9 @@ class Pos extends \ZCL\DB\Entity
         $this->ppokey = (string)($xml->ppokey[0]);
         $this->ppocert = (string)($xml->ppocert[0]);
         $this->ppopassword = (string)($xml->ppopassword[0]);
-        $this->ppohost = (string)($xml->ppohost[0]);
-        $this->ppoport = (int)($xml->ppoport[0]);
-        $this->ppousessl = (string)($xml->ppousessl[0]);
-        $this->pposigntype = (int)($xml->pposigntype[0]);
         $this->ppoisjks = (int)($xml->ppoisjks[0]);
         $this->ppokeyid = (string)($xml->ppokeyid[0]);
-        $this->iban = (string)($xml->iban[0]);
+  
         
         parent::afterLoad();
     }

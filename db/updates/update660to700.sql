@@ -130,10 +130,11 @@ ALTER TABLE store_stock ADD emp_id int(11) DEFAULT NULL;
 ALTER TABLE store_stock ADD INDEX  (emp_id) ; 
 ALTER TABLE store_stock ADD customer_id int(11) DEFAULT NULL;    
 
-
-ALTER TABLE ppo_zformstat ADD amount4 decimal(10, 2)  default 0;
-
+ 
 ALTER TABLE entrylist ADD createdon DATE DEFAULT NULL ;
+
+ALTER TABLE roles ADD disabled  tinyint(1) DEFAULT 0;
+ALTER TABLE entrylist ADD cost decimal(11, 2) DEFAULT 0 ;
  
 
 
@@ -213,12 +214,13 @@ SELECT
   store_stock.item_id AS item_id,
   store_stock.partion AS partion,
   case when entrylist.createdon  is NULL  then documents.document_date else entrylist.createdon  end      AS document_date,
+  entrylist.cost AS cost,
   entrylist.outprice AS outprice
-FROM ((entrylist
-  LEFT JOIN store_stock
-    ON ((entrylist.stock_id = store_stock.stock_id)))
+FROM entrylist
+  LEFT JOIN store_stock 
+    ON entrylist.stock_id = store_stock.stock_id
   JOIN documents
-    ON ((entrylist.document_id = documents.document_id)));    
+    ON entrylist.document_id = documents.document_id;    
     
     
 
@@ -462,7 +464,20 @@ SELECT
   p.detail AS detail
 FROM prodproc p ;
 
- 
+DROP VIEW roles_view  ;
+
+CREATE VIEW roles_view
+AS
+SELECT
+  `roles`.`role_id` AS `role_id`,
+  `roles`.`rolename` AS `rolename`,
+  `roles`.`disabled` AS `disabled`,
+  `roles`.`acl` AS `acl`,
+  (SELECT
+      COALESCE(COUNT(0), 0)
+    FROM `users`
+    WHERE (`users`.`role_id` = `roles`.`role_id`)) AS `cnt`
+FROM `roles`; 
     
 DROP VIEW if exists cust_acc_view;
 
@@ -485,6 +500,7 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
   INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
  
   INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення мiж етапами', 'ProdMove', 'Виробництво', 0);
+INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Авансовий звiт', 'AdvanceRep', 'Каса та платежі',   0);
   
 update  metadata set  description ='Програма лояльності' where  meta_name='Discounts';
 update  metadata set  description ='Отримані послуги' where  meta_name='IncomeService';

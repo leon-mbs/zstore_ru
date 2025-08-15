@@ -373,6 +373,40 @@ class Discounts extends \App\Pages\Base
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
+ 
+   public function onAddBonus($sender) {
+        
+        $am=intval($sender->amountbc->getText() );
+        $cid=intval($sender->custbc->getKey() );
+        $sender->amountbc->setText('') ;
+        $sender->custbc->setText('') ;
+        $sender->custbc->setKey(0) ;
+         
+        if($am != 0  && $cid >0) {
+             
+            $cb = new \App\Entity\CustAcc();
+
+            $cb->customer_id = $cid;
+          //  $cb->document_id = $this->document_id;
+            $cb->amount =    $am;
+            $cb->optype = \App\Entity\CustAcc::BONUS;
+            $cb->createdon = time();
+            $cb->save();
+            
+            $this->OnPL(null);
+            if($am > 0) {
+                $am = "+". $am;
+            }
+            $n = new \App\Entity\Notify();
+            $n->user_id = \App\Entity\Notify::SYSTEM;
+
+            $n->message = "Користувач ".System::getUser()->username." змінив ({$am}) бонуси контрагента  " .$sender->custbc->getText()  ;
+            $n->save();            
+            
+            
+        }
+    }
+ 
      
      //список  бонусоы ц контрагентов
     public function OnPL($sender) {
@@ -707,10 +741,10 @@ class Discounts extends \App\Pages\Base
            
         }    
         
-        $row->add(new  Label("pdateto", $p->dateto > 0 ? H::fd($p->dateto) :''));
+        $row->add(new  Label("pdateto", $p->enddate > 0 ? H::fd($p->enddate) :''));
         $row->add(new  ClickLink('pdel'))->onClick($this, 'pdeleteOnClick');
         
-        if($p->dateto > 0 && $p->dateto < time()) {
+        if($p->enddate > 0 && $p->enddate < time()) {
            $p->disabled = 1;
         }
         $row->setAttribute('style', $p->disabled == 1 ? 'color: #aaa' : null);
@@ -774,8 +808,8 @@ class Discounts extends \App\Pages\Base
         $pc->disc = doubleval($sender->peditdisc->getText() );
         $pc->discf = doubleval($sender->peditdiscf->getText() );
         $pc->refbonus = intval( $sender->peditbonus->getText() );
-        $pc->dateto = $sender->peditdate->getDate();
-        if($pc->dateto >0 && $pc->dateto < time()) {
+        $pc->enddate = $sender->peditdate->getDate();
+        if($pc->enddate >0 && $pc->enddate < time()) {
            $this->setError('Неправильна дата') ;
            return; 
         }
@@ -816,29 +850,7 @@ class Discounts extends \App\Pages\Base
         $this->setSuccess('Збережено');
     }
   
-    public function onAddBonus($sender) {
-        
-        $am=intval($sender->amountbc->getText() );
-        $cid=intval($sender->custbc->getKey() );
-        $sender->amountbc->setText('') ;
-        $sender->custbc->setText('') ;
-        $sender->custbc->setKey(0) ;
-         
-        if($am != 0  && $cid >0) {
-             
-            $cb = new \App\Entity\CustAcc();
-
-            $cb->customer_id = $cid;
-          //  $cb->document_id = $this->document_id;
-            $cb->amount =    $am;
-            $cb->optype = \App\Entity\CustAcc::BONUS;
-            $cb->createdon = time();
-            $cb->save();
-            
-            $this->OnPL(null);
-        }
-    }
-
+ 
 }
 
 class DiscCustomerDataSource implements \Zippy\Interfaces\DataSource
@@ -1080,10 +1092,7 @@ class PromoDataSource implements \Zippy\Interfaces\DataSource
      
         $list = [];
               
-        foreach(PromoCode::findYield("", "   id desc ", $count, $start) as $p) {
-            if($p->dateto > 0 && $p->dateto < time()) {
-               continue;
-            }      
+        foreach(PromoCode::findYield("disabled=0  and coalesce(enddate,now()) >=now()", "   id desc ", $count, $start) as $p) {
             $list[] = $p; 
         }
         

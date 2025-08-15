@@ -40,7 +40,7 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('detail', array(), 1))->onChange($this, 'OnDetail');
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(1), 0));
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeListInM(), \App\Entity\IOState::TYPE_FIN));
 
         $this->docform->add(new DropDownChoice('contract', array(), 0));
         $this->docform->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
@@ -59,11 +59,15 @@ class IncomeMoney extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->mtype->setValue($this->_doc->headerdata['type']);
-
-            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->detail->setValue($this->_doc->headerdata['detail']);
-            $this->docform->customer->setKey($this->_doc->customer_id);
-            $this->docform->customer->setText($this->_doc->customer_name);
+
+            if($this->_doc->headerdata['detail']==1 || $this->_doc->headerdata['detail']==2 ) {
+               $this->docform->customer->setKey($this->_doc->customer_id);
+               $this->docform->customer->setText($this->_doc->customer_name);
+            }
+            if($this->_doc->headerdata['detail']==3) {
+               $this->docform->emp->setValue($this->_doc->headerdata['emp']);
+            }
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
@@ -212,13 +216,23 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->emp->setVisible(false);
         $this->docform->customer->setVisible(false);
         $this->docform->contract->setVisible(false);
+        $this->docform->mtype->setVisible(false);        
         if ($sender->getValue() == 1 || $sender->getValue() == 2) {
             $this->docform->contract->setVisible(true);
             $this->docform->customer->setVisible(true);
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_BASE_INCOME) ;            
         }
         if ($sender->getValue() == 3) {
             $this->docform->emp->setVisible(true);
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_OTHER_INCOME) ;            
+       }
+       
+        if ($sender->getValue() == 0   ) {
+            $this->docform->mtype->setVisible(true);
+            $this->docform->mtype->setValue(0) ;            
         }
+         
+        
     }
 
 }

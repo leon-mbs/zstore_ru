@@ -25,12 +25,15 @@ class Inventory extends Document
             if ($item->quantity < $item->qfact && $this->headerdata['autoincome'] == 1) {
                 $qty = $item->qfact - $item->quantity;
                 $where = "store_id=" . $this->headerdata['store'] . " and item_id=" . $item->item_id;
+                if($this->headerdata['storeemp'] ) {
+                   $where .= " and emp_id=" . $this->headerdata['storeemp']  ;
+                }
                 $price = 0;
                 $stp = Stock::getFirst($where, "stock_id desc");  //последняя цена
                 if ($stp->partion > 0) {
                     $price = $stp->partion;
                 }
-                $stock = Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, time(), true);  //последняя цена
+                $stock = Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, time(), true,0,$this->headerdata['storeemp'] );  //последняя цена
 
 
                 $sc = new Entry($this->document_id, $qty * $stock->partion, $qty);
@@ -54,7 +57,7 @@ class Inventory extends Document
       
                 $q= $item->quantity;
                 $item->quantity = $qty;
-                $listst = Stock::pickup($this->headerdata['store'], $item);
+                $listst = Stock::pickup($this->headerdata['store'], $item,$this->headerdata['storeemp']);
                 $item->quantity = $q;                
                 foreach ($listst as $st) {
                     $sc = new Entry($this->document_id, 0 - $qty * $st->partion, 0 - $st->quantity);
@@ -96,10 +99,12 @@ class Inventory extends Document
             $b= $conn->GetOne($sql);
             
             $name = $item->itemname;
+            $code = $item->item_code;
             $q = H::fqty($item->quantity);
             if (round($item->qfact) == round($q)) {
                 $detail[] = array("no"        => $i++,
                                   "item_name" => $name,
+                                  "item_code" => $code,
                                   "qfact"     => $item->qfact,
                                   "snumber"   => $item->snumber,
                                   "quantity"  => $user->rolename != 'admins' ? '-' :$q
@@ -110,6 +115,7 @@ class Inventory extends Document
                 $summinus += $b;
                 $detaillost[] = array("no"        => $i++,
                                       "item_name" => $name,
+                                      "item_code" => $code,
                                       "qfact"     => $item->qfact,
                                       "snumber"   => $item->snumber,
                                       "quantity"  => $user->rolename != 'admins' ? '-' :$q
@@ -120,6 +126,7 @@ class Inventory extends Document
 
                 $detailover[] = array("no"        => $i++,
                                       "item_name" => $name,
+                                      "item_code" => $code,
                                       "qfact"     => $item->qfact,
                                       "snumber"   => $item->snumber,
                                       "quantity"  => $user->rolename != 'admins' ? '-' :$q
@@ -135,10 +142,15 @@ class Inventory extends Document
             "notes"           => nl2br($this->notes),
             "reserved"           => $this->headerdata["reserved"]==1,
             "store"           => $this->headerdata["storename"],
+            "storeemp"             => false,
             "summinus"           => $summinus > 0 ? H::fa($summinus) : false,
             "sumplus"           => $sumplus > 0 ? H::fa($sumplus) : false ,
             "document_number" => $this->document_number
         );
+        if ($this->headerdata["storeemp"] > 0  ) {
+            $header['storeemp'] = $this->headerdata["storeempname"];
+        }
+        
         $report = new \App\Report('doc/inventory.tpl');
 
         $html = $report->generate($header);

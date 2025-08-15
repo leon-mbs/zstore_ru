@@ -59,7 +59,8 @@ class Application extends \Zippy\WebApplication
         $api = explode('/', $uri);
 
         if ($api[0] == 'api' && count($api) > 1) {
-
+            \App\System::checkIP()  ;
+          
             $class = $api[1];
 
             try {
@@ -106,12 +107,13 @@ class Application extends \Zippy\WebApplication
             "doclist"    => "\\App\\Pages\\Register\\DocList",
             "scat"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Main",
             "pcat"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Catalog",
+            "blog"       => "\\App\\Modules\\Shop\\Pages\\Catalog\\Blog",
             "project"    => "\\App\\Modules\\Issue\\Pages\\ProjectList",
             "issue"      => "\\App\\Modules\\Issue\\Pages\\IssueList",
             "topic"      => "\\App\\Modules\\Note\\Pages\\ShowTopic"
         );
 
-        if (strlen($pages[$arr[0]]) > 0) {
+        if (strlen($pages[$arr[0]]?? '') > 0) {
             if (strlen($arr[2] ?? '') > 0) {
                 self::$app->LoadPage($pages[$arr[0]], $arr[1], $arr[2]);
             } else {
@@ -125,7 +127,7 @@ class Application extends \Zippy\WebApplication
             }
             return;
         }
-        if (strlen($pages[$uri]) > 0) {
+        if (strlen($pages[$uri]?? '') > 0) {
             self::$app->LoadPage($pages[$uri]);
             return;
         }

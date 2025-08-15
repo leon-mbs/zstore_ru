@@ -97,14 +97,14 @@ class PayBalance extends \App\Pages\Base
               GROUP BY  iotype order  by  iotype  
                          
         ";
-
+        
         $rs = $conn->Execute($sql);
         $tin = 0;
         foreach ($rs as $row) {
             $detailitem = array();
 
             $detailitem["in"]   = H::fa($row['am']);
-            $detailitem["type"] = $pl[$row['iotype'] ] ;
+            $detailitem["type"] = $pl[$row['iotype'] ] ??0;
             $detailitem["docdet"] = false ;
             if($det) {
 
@@ -179,7 +179,7 @@ class PayBalance extends \App\Pages\Base
 
         $detail3=[];
         $sql = " 
-         SELECT   iotype,coalesce(abs(sum(amount)),0) as am   FROM iostate_view 
+         SELECT   iotype,coalesce( (sum(amount)),0) as am   FROM iostate_view 
              WHERE   
               iotype in (30,31,80,81)     {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
@@ -214,7 +214,7 @@ class PayBalance extends \App\Pages\Base
         
         
         $sql = " 
-         SELECT   coalesce(sum(abs(amount)),0)  as am   FROM iostate_view 
+         SELECT   coalesce(sum( (amount)),0)  as am   FROM iostate_view 
              WHERE   
               iotype  = " . \App\Entity\IOState::TYPE_BASE_OUTCOME . "   {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
@@ -223,10 +223,10 @@ class PayBalance extends \App\Pages\Base
                          
         ";
 
-        $OPOUT = $conn->GetOne($sql); // переменные расходы
+        $OPOUT = 0-$conn->GetOne($sql); // переменные расходы
 
         $sql = " 
-         SELECT   coalesce(  sum(abs(amount)),0)  as am   FROM iostate_view 
+         SELECT   coalesce(  sum( (amount)),0)  as am   FROM iostate_view 
              WHERE   
               iotype  = " . \App\Entity\IOState::TYPE_BASE_INCOME . "   {$brpay}
               AND document_date  >= " . $conn->DBDate($from) . "
@@ -245,9 +245,9 @@ class PayBalance extends \App\Pages\Base
         $inv = 0;
 
         foreach (\App\Entity\Equipment::find('disabled<>1') as $oc) {
-            if ($oc->getBalance($to) > 0) {
-                $inv += $oc->getBalance($to);
-            }
+           // if ($oc->getBalance($to) > 0) {
+             //todo   $inv += $oc->getBalance($to);
+          //  }
         }
         $sql = " 
          SELECT   coalesce(  sum(partion*qty),0)     FROM store_stock_view 

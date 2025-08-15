@@ -2,8 +2,7 @@
    <head>
         <title>  Журнал нарядів </title>
 
-    </head>
-    <head>
+ 
         <link rel="stylesheet" type="text/css" href="/vendor/leon-mbs/zippy/zcl/gantt/jquery.ganttView.css"/>
 
         <link href="/assets/css/ekko-lightbox.css" rel="stylesheet" type="text/css">
@@ -21,7 +20,7 @@
         <div class="row">
             <div class="col-12  col-xl-10">
                 <h3>Журнал нарядів</h3>
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filterform" class="form-inline">
 
 
@@ -90,7 +89,7 @@
                                 </tr>
                                 <tr zippy="tasklist">
 
-                                    <td zippy="tasknumber"></td>
+                                    <td ><a zippy="tasknumber"></a></td>
 
 
                                     <td zippy="taskdocument_date" style="white-space:   nowrap"></td>
@@ -120,7 +119,7 @@
                         <div class="col-12   ">
 
 
-                            <div class="navbar nav">
+                            <div class="card">
                                 <form zippy="statusform" class="form-inline ">
                                     <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 "><i
                                             class="fas fa-wrench"></i> На виконання
@@ -156,7 +155,7 @@
                 </div> <!-- tasktab -->
                 <div zippy="caltab" class="tab-pane    ">
 
-                    <div zippy='calendar'></div>
+                    <div zippy="calendar"></div>
 
 
                 </div>

@@ -302,13 +302,28 @@ class Printer
         }
 
     }
+   public function addString(string $str) {
+        $bytes = str_split($str) ;
+       
+        foreach($bytes as $b) {
+            $this->buffer[]= ord($b); 
+        }
+
+    }
 
 
     public function align($align) {
         $this->buffer[]= 0x1b;
         $this->buffer[]= 0x61;
         $this->buffer[]= $align;
+  
 
+    }
+    public function lm($margin) {
+        $this->buffer[]= self::GS;
+        $this->buffer[]= ord('L');
+        $this->buffer[]= $this->intLowHigh($margin, 2);
+ 
     }
     public function newline() {
         $this->buffer[]= self::LF;
@@ -430,14 +445,112 @@ class Printer
     * вывод QR кода
     *
     * @param mixed $text
-    * @param mixed $type     EAN13 Code128 Code39
+    * @param int $size     
     */
     public function QR($text, int $size=12) {
+      
+        if($size <1 || $size >24) {
+            $size=12;
+        }
+        
+//  $text="https://cabinet.tax.gov.ua/cashregs/check?id=TEST-_SNWpN&date=20250224&time=19%3A20%3A40&fn=TEST398593&sm=210.00&mac=8d1a9061525192ba4ece6238f06596c552cbe318954df87809ef39c796bda7b5";     
+
+   
+  if(false){  
+  
+  
+  $this->buffer=[];   
+  $connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector( );
+$printer = new \Mike42\Escpos\Printer($connector);
+ 
+        
+$printer->qrCode($text,0,$size);        
+        
+  $ff=   $connector->getData();   
+   $t = str_split($ff) ;
+        foreach($t as $b) {
+              $this->buffer[]= ord($b);
+        }
+$printer->close();
+$b = json_encode( $this->buffer) ;
+
+            \App\Helper::log($b) ;
+
+        
+    return; 
+
+    }
+    
+        
+  
+        $ec = Printer::QR_ECLEVEL_L   ;
+        $model = Printer::QR_MODEL_2   ;
+        $cn = '1'; // Code type for QR code
+        // Select model: 1, 2 or micro.
+        $this -> wrapperSend2dCodeData(chr(65), $cn, chr(48 + $model) . chr(0));
+        // Set dot size.
+        $this -> wrapperSend2dCodeData(chr(67), $cn, chr($size));
+        // Set error correction level: L, M, Q, or H
+        $this -> wrapperSend2dCodeData(chr(69), $cn, chr(48 + $ec));
+        // Send content & print
+        $this -> wrapperSend2dCodeData(chr(80), $cn, $text, '0');
+        $this -> wrapperSend2dCodeData(chr(81), $cn, '', '0');
+  
+     //   $b = json_encode( $this->buffer) ;
+
+     //   \App\Helper::log($b) ;
+
+    }
+    
+    
+    /**
+     * Wrapper for GS ( k, to calculate and send correct data length.
+     *
+     * @param string $fn Function to use
+     * @param string $cn Output code type. Affects available data
+     * @param string $data Data to send.
+     * @param string $m Modifier/variant for function. Often '0' where used.
+     * @throws InvalidArgumentException Where the input lengths are bad.
+     */
+    protected function wrapperSend2dCodeData($fn, $cn, $data = '', $m = '')
+    {
+          $this->buffer[]= self::GS;
+        $header = $this -> intLowHigh(strlen($data) + strlen($m) + 2, 2);
+        $str=  "(k" . $header . $cn . $fn . $m . $data ;
+        
+        $t = str_split($str) ;
+        foreach($t as $b) {
+             $this->buffer[]= ord($b);
+        }        
+        
+    }    
+ /**
+     * Generate two characters for a number: In lower and higher parts, or more parts as needed.
+     *
+     * @param int $input Input number
+     * @param int $length The number of bytes to output (1 - 4).
+     */
+    protected static function intLowHigh($input, $length)
+    {
+        $maxInput = (256 << ($length * 8) - 1);
+        $outp = "";
+        for ($i = 0; $i < $length; $i++) {
+            $outp .= chr($input % 256);
+            $input = (int)($input / 256);
+        }
+        return $outp;
+    }
+      
+    
+ 
+    public function QR_($text, int $size=12) {
 
         if($size <1 || $size >24) {
             $size=12;
         }
 
+  
+ 
         //    $text = $this->encode($text)  ;
         $store_len = strlen($text) + 3;
         $store_pL = intval($store_len % 256);
@@ -466,7 +579,7 @@ class Printer
 
 
     }
-
+   
 
     /**
     * вывод QR кода
@@ -474,7 +587,7 @@ class Printer
     * @param mixed $text
     * @param mixed $type     EAN13 Code128 Code39
     */
-    public function BarCode($text, int $type) {
+    public function BarCode($text,   $type) {
         if($type == self::BARCODE_CODE128) {
 
             $text = "{B".$text;
@@ -537,7 +650,7 @@ class Printer
     *
     * @param mixed $height
     */
-    public function barcodeHeight(int $height = 100) {
+    public function barcodeHeight(  $height = 100) {
         if($height < 1 || $height > 255) {
             return;
         }
@@ -550,7 +663,7 @@ class Printer
     *
     * @param mixed $width
     */
-    public function barcodeWidth(int $width = 2) {
+    public function barcodeWidth(  $width = 2) {
         if($width < 2 || $width > 6) {
             return;
         }
@@ -560,7 +673,7 @@ class Printer
     /**
     * цвет
     *
-    * @param mixed $color   0,1
+    * @param int $color   0,1
     */
     public function color(int $color) {
         if($color == 0  || $color ==1) {
@@ -589,10 +702,10 @@ class Printer
     /**
     * размер  текста
     *
-    * @param mixed $widthMultiplier   1 - 8
-    * @param mixed $heightMultiplier  1 - 8
+    * @param int $widthMultiplier   1 - 8
+    * @param int $heightMultiplier  1 - 8
     */
-    public function textSize(int $widthMultiplier, int $heightMultiplier) {
+    public function textSize(int  $widthMultiplier, int $heightMultiplier) {
         if($widthMultiplier < 1 ||  $widthMultiplier >8) {
             $widthMultiplier=1;
         }
@@ -612,7 +725,7 @@ class Printer
 
         $pr = new \App\Printer() ;
 
-        $allowed = ['size','separator','align','barcode','qrcode','text','font','newline','cash','cut','partialcut','beep','color','commands','row'];
+        $allowed = ['size','separator','align','leftmargin','barcode','qrcode','text','font','newline','cash','cut','partialcut','beep','color','commands','row'];
 
         $xml = "<root>{$xml}</root>" ;
         $xml = @simplexml_load_string($xml) ;
@@ -689,6 +802,10 @@ class Printer
             return;
         }
 
+        if($name==='leftmargin') {
+           $this->lm($val) ;
+            return; 
+        }
         if($name==='commands') {
             $bl=[];
             foreach(explode(',', $val) as $b) {
@@ -722,7 +839,7 @@ class Printer
                 return;
             }
 
-            $this->textSize($attr['width'], $attr['height']) ;
+            $this->textSize(intval($attr['width']), intval($attr['height']) ) ;
         }
         if($name==='qrcode') {
             if(isset($attr['size'])) {
@@ -773,7 +890,7 @@ class Printer
             if($val=="b") {
                 $m = $m | self::MODE_FONT_B;
             }
-            if($attr['bold']=="true") {
+            if(($attr['bold'] ?? false)=="true") {
                 $m = $m | self::MODE_EMPHASIZED ;
             }
 
@@ -803,7 +920,7 @@ class Printer
                 }
                 $l += $cl;
 
-                $cols[]=array("text"=>$coltext,"length"=>$cl,"align"=>$attr['align'] );
+                $cols[]=array("text"=>$coltext,"length"=>$cl,"align"=>$attr['align']??'' );
 
 
             }
@@ -843,6 +960,12 @@ class Printer
         $pr = new \App\Printer(true) ;
 
         foreach($arr as $row)  {
+            
+    //украинское i на  ангглийсккое  хз  почему
+        $row = str_replace("і", "i", $row);
+        $row = str_replace("І", "I", $row);
+              
+            
             $pr->labelrow($row);
         }
 

@@ -28,11 +28,11 @@ class MovePart extends \App\Pages\Base
 {
     public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
      /**
     * @param mixed $docid     редактирование
-    * @param mixed $basedocid  создание на  основании
+    * @param mixed $tostock  создание на  основании
     */
    public function __construct($docid = 0, $tostock = 0) {
         parent::__construct();
@@ -189,6 +189,9 @@ class MovePart extends \App\Pages\Base
         }
         if (strlen($st->snumber) > 0) {
             $str = $str . ', ' . $st->snumber;
+        }
+        if (strlen($st->emp_id) > 0) {
+            $str = $str . ', ' . $st->emp_name;
         }
         $str = $str . ', ' . H::fa($st->partion);
         $str = $str . ', ' . H::fqty($st->qty);

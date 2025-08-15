@@ -33,7 +33,7 @@ class TTN extends \App\Pages\Base
     public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
     private $_orderid   = 0;
     private $_changedpos  = false;
 
@@ -46,8 +46,7 @@ class TTN extends \App\Pages\Base
 
         $common = System::getOptions("common");
 
-        $this->_tvars["colspan"] = $common['usesnumber'] == 1 ? 8 : 6;
-
+     
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
@@ -69,8 +68,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
-        $this->docform->add(new DropDownChoice('firm', \App\Entity\Firm::getList(), H::getDefFirm()));
-
+         
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList(), H::getDefPriceType()));
         $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray('emp_name', '', 'emp_name')));
 
@@ -156,7 +154,7 @@ class TTN extends \App\Pages\Base
             $this->docform->order->setText($this->_doc->headerdata['order']);
             $this->_orderid = $this->_doc->headerdata['order_id'];
 
-            $this->docform->firm->setValue($this->_doc->firm_id);
+          
             $this->OnChangeCustomer($this->docform->customer);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -170,7 +168,8 @@ class TTN extends \App\Pages\Base
                     $this->_basedocid = $basedocid;
                     if ($basedoc->meta_name == 'Order') {
 
-
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
+       
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
@@ -184,32 +183,26 @@ class TTN extends \App\Pages\Base
                         $this->docform->ship_address->setText($basedoc->headerdata['ship_address']);
                         $this->docform->delivery->setValue($basedoc->headerdata['delivery']);
 
-                        $this->_doc->headerdata['bayarea'] = $basedoc->headerdata['bayarea'];
+              
                         $this->_doc->headerdata['baycity'] = $basedoc->headerdata['baycity'];
+                        $this->_doc->headerdata['baycityname'] = $basedoc->headerdata['baycityname'];
                         $this->_doc->headerdata['baypoint'] = $basedoc->headerdata['baypoint'];
+                        $this->_doc->headerdata['baypointname'] = $basedoc->headerdata['baypointname'];
+                   //     $this->_doc->headerdata['moneyback'] = $basedoc->payamount;
  
                         $notfound = array();
                         $order = $basedoc->cast();
 
-                        //проверяем  что уже есть отправка
-                        $list = $order->getChildren('TTN');
-
-                        if (count($list) > 0 && $common['numberttn'] <> 1) {
-
-                            $this->setError('У замовлення вже є відправки');
-                            App::Redirect("\\App\\Pages\\Register\\GIList");
-                            return;
+                        if($order->getNotSendedItem() == 0){
+                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
                         }
-                        $list = $order->getChildren('GoodsIssue');
-
-                        if (count($list) > 0 && $common['numberttn'] <> 1) {
-
-                            $this->setError('У замовлення вже є відправки');
-                            App::Redirect("\\App\\Pages\\Register\\GIList");
-                            return;
+                        if($order->getHD('paytype',0) == 3){
+                            $this->setWarn('В замовленні не передбачена оплата. Створіть чек  або ВН') ;
+                            App::Redirect("\\App\\Pages\\Register\\OrderList");
+                            return; 
                         }
+                
                         $this->docform->total->setText($order->amount);
-
 
                         if($order->headerdata['store']>0) {
                             $this->docform->store->setValue($order->headerdata['store']);
@@ -245,13 +238,13 @@ class TTN extends \App\Pages\Base
 
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
+       
                         $notfound = array();
                         $invoice = $basedoc->cast();
 
                         $this->docform->total->setText($invoice->amount);
-                        $this->docform->firm->setValue($basedoc->firm_id);
-
+                        
 
                         $this->OnChangeCustomer($this->docform->customer);
 
@@ -284,9 +277,9 @@ class TTN extends \App\Pages\Base
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
-
-                        $this->docform->firm->setValue($basedoc->firm_id);
-
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
+       
+                      
                         $this->OnChangeCustomer($this->docform->customer);
                         $k = 1;      //учитываем  скидку
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
@@ -313,14 +306,14 @@ class TTN extends \App\Pages\Base
                             $this->docform->customer->setText($basedoc->headerdata['customer_name']);
                         }
 
-
+                        $this->_doc->headerdata["firm_name"]= $basedoc->headerdata["firm_name"];
+       
                         $this->docform->salesource->setValue($basedoc->headerdata['salesource']);
                         $this->docform->pricetype->setValue($basedoc->headerdata['pricetype']);
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->nostore->setChecked(true);
 
-                        $this->docform->firm->setValue($basedoc->firm_id);
-
+                       
                         $this->OnChangeCustomer($this->docform->customer);
                         $k = 1;      //учитываем  скидку
                         if ($basedoc->headerdata["paydisc"] > 0 && $basedoc->amount > 0) {
@@ -387,44 +380,41 @@ class TTN extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
+      
 
         $this->docform->barcode->setText('');
         if ($code == '') {
             return;
         }
 
-
-        foreach ($this->_itemlist as $ri => $_item) {
-            if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
-                $this->_itemlist[$ri]->quantity += 1;
-                $this->docform->detail->Reload();
-                $this->calcTotal();
-
-                return;
-            }
-        }
-
-
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
             $this->setError('Не обрано склад');
             return;
+        }        
+        $item = Item::findBarCode($code,$store_id);
+        if($item != null){
+            foreach ($this->_itemlist as $ri => $_item) {
+                if ($_item->item_id == $item->item_id) {
+                    $this->_itemlist[$ri]->quantity += 1;
+                    $this->docform->detail->Reload();
+                    $this->calcTotal();
+
+                    return;
+                }
+            }
+
         }
+   
 
-        $code_ = Item::qstr($code);
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$code_} or bar_code = {$code_})");
-
+      
         if ($item == null) {
 
             $this->setWarn("Товар з кодом `{$code}` не знайдено");
             return;
         }
 
-
-        $store_id = $this->docform->store->getValue();
-
+   
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
@@ -592,10 +582,7 @@ class TTN extends \App\Pages\Base
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
 
-        $this->_doc->firm_id = $this->docform->firm->getValue();
-        if ($this->_doc->firm_id > 0) {
-            $this->_doc->headerdata['firm_name'] = $this->docform->firm->getValueName();
-        }
+       
 
         $this->_doc->headerdata['order_id'] = $this->_orderid;
         $this->_doc->headerdata['order'] = $this->docform->order->getText();
@@ -669,32 +656,13 @@ class TTN extends \App\Pages\Base
                         }
 
                     }
-                    
-                    if( $basedoc->meta_name =='Order') {
-                        
-
-                        if($basedoc->state == Document::STATE_INPROCESS || $basedoc->state == Document::STATE_READYTOSHIP) {
-                            $basedoc->updateStatus(Document::STATE_INSHIPMENT);
-                        }                            
-                    
-                        
-                        $basedoc->unreserve();
-                    }                    
+                    if($basedoc->meta_name == 'Order') {
+                        $basedoc->unreserve();     
+                    }            
+                                   
                     
                 }  
- 
-                // проверка на минус  в  количестве
-                $allowminus = System::getOption("common", "allowminus");
-                if ($allowminus != 1) {
-
-                    foreach ($this->_itemlist as $item) {
-                        $qty = $item->getQuantity($this->_doc->headerdata['store']);
-                        if ($qty < $item->quantity) {
-                            $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
-                            return;
-                        }
-                    }
-                }                  
+                          
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
                 
                            

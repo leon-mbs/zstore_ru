@@ -11,7 +11,7 @@ abstract class JsonRPC
     public const VERSION = '2.0';
 
     public function Execute() {
-
+      
 
         $request = file_get_contents('php://input');
         // $request = '{"jsonrpc": "2.0", "method": "token", "params": {"login":"admin","password":"admin"}, "id": 1}';
@@ -71,7 +71,8 @@ abstract class JsonRPC
                 }
             }
 
-            $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
+          //  $key = strlen($api['key']) > 0 ? $api['key'] : "defkey";
+            $key = 'api'.\App\Helper::getSalt();
 
 
             //   $decoded = \Firebase\JWT\JWT::decode($jwt, $key, array('HS256'));
@@ -105,10 +106,10 @@ abstract class JsonRPC
     /**
      * Processes the user input, and prepares a response (if necessary).
      *
-     * @param string $json
+     * @param mixed $input
      * Single request object, or an array of request objects, as a JSON string.
      *
-     * @return array|null
+     * @return array|null   $input
      * Returns a response object (or an error object) when a query is made.
      * Returns an array of response/error objects when multiple queries are made.
      * Returns null when no response is necessary.
@@ -257,6 +258,7 @@ abstract class JsonRPC
         if ($result != false) {
             return self::response($id, $result);
         }
+        return [];
     }
 
     /**

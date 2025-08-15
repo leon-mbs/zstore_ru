@@ -13,7 +13,7 @@ use App\Helper as H;
 class GoodsReceipt extends Document
 {
     public function generateReport() {
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $i = 1;
 
@@ -43,13 +43,14 @@ class GoodsReceipt extends Document
                         "firm_name"       => $firm['firm_name'],
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
-                        "isval"           => strlen($this->_doc->headerdata['val']) > 1,
-                        "valname"           => $this->_doc->headerdata['valname'],
-                        "rate"           => $this->_doc->headerdata['rate'],
+                        "isval"           => strlen($this->headerdata['val']) > 1,
+                        "valname"           => $this->headerdata['valname'],
+                        "rate"           => $this->headerdata['rate'],
                         "customer_name"   => $this->customer_name,
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
+                        "storeemp"             => false,
+                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
                         "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
         );
         if ($this->headerdata["contract_id"] > 0) {
@@ -57,6 +58,10 @@ class GoodsReceipt extends Document
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
         }
+        if ($this->headerdata["storeemp"] > 0  ) {
+            $header['storeemp'] = $this->headerdata["storeempname"];
+        }
+
 
         $header['notes'] = nl2br($this->notes)  ;
         $header['storename'] = $this->headerdata["storename"]  ;
@@ -113,7 +118,7 @@ class GoodsReceipt extends Document
         $total = $total * $rate;
 
 
-        $k = $this->amount >0 ? $total / $this->amount : 1;
+        $k = $this->amount > 0 ? $total / $this->amount : 1;
 
 
         //аналитика
@@ -127,7 +132,7 @@ class GoodsReceipt extends Document
                 $iprice = 0;
             }
        //     $item->amount = $iprice * $item->quantity;
-            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true,$this->headerdata['comission']==1 ? $this->customer_id :0);
+            $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $iprice, $item->snumber, $item->sdate, true,$this->headerdata['comission']==1 ? $this->customer_id :0,$this->headerdata['storeemp']??0);
 
             $sc = new Entry($this->document_id, $iprice * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
@@ -172,6 +177,8 @@ class GoodsReceipt extends Document
                 $pay->notes = 'Доставка';
                 $pay->user_id = \App\System::getUser()->user_id;
                 $pay->save();
+                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
+                
            }
            
             
@@ -181,7 +188,7 @@ class GoodsReceipt extends Document
         }
 
         
-        if(H::getKeyValBool('CI_optupdate')==true) {
+        if(($common['ci_update'] ?? 0 )==1) {
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
                  $ci = \App\Entity\CustItem::getFirst("item_id={$item->item_id} and customer_id={$this->customer_id}") ;

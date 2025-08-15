@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 /**
- * Клас-сущность  коментари
+ * Клас-сущность  коментарий
  *
  * @table=messages
  * @view=messages_view
@@ -36,8 +36,8 @@ class Message extends \ZCL\DB\Entity
      * возвращает список сообщений
      *
      * @param mixed $type
-     * @param mixed $item_d
-     * @param mixed $sort
+     * @param mixed $item_id
+  
      */
     public static function getMessages($type, $item_id) {
         return \App\Entity\Message::find("item_type ={$type} and item_id={$item_id}", "message_id ");

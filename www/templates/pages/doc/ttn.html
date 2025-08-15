@@ -12,11 +12,11 @@
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required >
                     </div>
                     <div class="form-group">
                         <label for="order">Замовлення</label>
-                        <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order">
+                        <input readonly  class="form-control-plaintext" type="text" zippy="order">
 
                         <small zippy="notesfromorder"></small>
                     </div>
@@ -60,7 +60,7 @@
                 <div class="col-12 col-md-4  col-xl-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
+                        <input style="width:120px;" class="form-control" type="text" zippy="document_date"  required >
                     </div>
                     <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
@@ -69,12 +69,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group  ">
-                        <label for="firm">Продавець</label>
-                        <select class="form-control" zippy="firm">
-                            <option value="0">Не обрано</option>
-                        </select>
-                    </div>
+           
                     <div class="form-group  ">
                         <label for="store">Зі складу</label>
 
@@ -128,11 +123,11 @@
 
                     <div class="form-group">
                         <label data-label="sent_date" for="sent_date">Орієнтовна дата відправки</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="sent_date" required="required">
+                        <input style="width:120px;" class="form-control" type="text" zippy="sent_date"  required >
                     </div>
                     <div class="form-group">
                         <label data-label="delivery_date" for="delivery_date">Орієнтовна дата доставки</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="delivery_date" required="required">
+                        <input style="width:120px;" class="form-control" type="text" zippy="delivery_date"  required >
                     </div>
 
                 </div>
@@ -144,11 +139,7 @@
                         Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus="on"    type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
-                       {{#usemobilescanner}}  
-                        &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
-                                                       title="Сканувати мобiльним пристроєм"
-                                                       style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
-                                    {{/usemobilescanner}}  
+                 
                     </div>
                     {{/usescanner}}
 
@@ -160,13 +151,8 @@
                             <th>Назва</th>
                             <th>Код</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-
-                            {{/usesnumber}}
-                            {{#usesnumberdate}}
-                            <th>Дата</th>
-                            {{/usesnumberdate}}
+                           <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                        
 
 
                             <th class="text-right">Кіл.</th>
@@ -180,13 +166,8 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            {{/usesnumber}}
-
-                           {{#usesnumberdate}}
-                            <td zippy="sdate"></td>
-                            {{/usesnumberdate}}
+                            <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                        
 
 
                             <td zippy="quantity" class="text-right"></td>
@@ -203,14 +184,10 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            {{#usesnumber}}
+                         
 
                             <td></td>
-                            {{/usesnumber}}
-                            {{#usesnumberdate}}
-
-                            <td></td>
-                            {{/usesnumberdate}}
+                         
 
 
                             <td class="text-right"></td>
@@ -249,7 +226,7 @@
 
                     <div class="form-group">
                         <label for="edittovar">Назва</label>
-                        <input  autofocus="on"  placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Відкрити довідник</a>
+                        <input     placeholder="Почніть вводити..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Відкрити довідник</a>
                         <br>Наявність: <span zippy="qtystock"></span>
 
                     </div>
@@ -263,14 +240,14 @@
                     {{/usesnumber}}
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
 
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice"  required  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
@@ -299,7 +276,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
+                        <input class="form-control " zippy="editcustname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -319,141 +296,7 @@
                 </div>
             </div>
         </form>
-        <div id="modalscanner" class="modal  ">
-            <div class="modal-dialog modal-dialog-centered  modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Сканування</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
-                            <b>Налаштування камери <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
-                        </a>
-                        <div id="collapcescanner" class="collapse  ">
-                            <form class="controls">
-                                <div class="row reader-config-group">
-                                    <div class="col-12 col-sm-6">
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Тип коду</label>
-                                            <div class="col-sm-7">
-
-                                                <select id="decoder_readers" name="decoder_readers" class="form-control">
-                                                    <option value="code_128" selected="selected">Code 128</option>
-                                                    <option value="code_39">Code 39</option>
-                                                    <option value="code_39_vin">Code 39 VIN</option>
-                                                    <option value="ean">EAN</option>
-                                                    <option value="ean_extended">EAN-extended</option>
-                                                    <option value="ean_8">EAN-8</option>
-                                                    <option value="upc">UPC</option>
-                                                    <option value="upc_e">UPC-E</option>
-                                                    <option value="codabar">Codabar</option>
-                                                    <option value="i2of5">Interleaved 2 of 5</option>
-                                                    <option value="2of5">Standard 2 of 5</option>
-                                                    <option value="code_93">Code 93</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Роздiльна здатнiсть</label>
-                                            <div class="col-sm-7">
-
-                                                <select id="input-stream_constraints" name="input-stream_constraints"
-                                                        class="form-control">
-                                                    <option value="320x240">320px</option>
-                                                    <option selected="selected" value="640x480">640px</option>
-                                                    <option value="800x600">800px</option>
-                                                    <option value="1280x720">1280px</option>
-                                                    <option value="1600x960">1600px</option>
-                                                    <option value="1920x1080">1920px</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Patch-Size</label>
-                                            <div class="col-sm-7">
-
-                                                <select name="locator_patch-size" class="form-control">
-                                                    <option value="x-small">x-small</option>
-                                                    <option value="small">small</option>
-                                                    <option selected="selected" value="medium">medium</option>
-                                                    <option value="large">large</option>
-                                                    <option value="x-large">x-large</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Workers</label>
-                                            <div class="col-sm-7">
-
-                                                <select name="numOfWorkers" class="form-control">
-                                                    <option value="0">0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option selected="selected" value="4">4</option>
-                                                    <option value="8">8</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Half-Sample</label>
-                                            <div class="col-sm-7">
-
-                                                <input type="checkbox" checked="checked" name="locator_half-sample"/>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Камера</label>
-                                            <div class="col-sm-7">
-
-                                                <select name="input-stream_constraints" id="deviceSelection"
-                                                        class="form-control">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Zoom</label>
-                                            <div class="col-sm-7">
-
-                                                <select name="settings_zoom" class="form-control">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Пiдсвiтка</label>
-                                            <div class="col-sm-7">
-
-                                                <input type="checkbox" name="settings_torch"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <br><br>
-                        Код: <span id="scancode"></span>&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-sm btn-success" onclick="mcode()">Додати</button>
-                        <br>
-                        <br>
-
-                        <div id="interactive" class="viewport"></div>
-
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
+     
 
         {{#usescanner}}
         <script>
@@ -469,7 +312,8 @@
                 if (val != null) {
                     $('#stream_constraints').val(val);
                 }
-
+                  $("#edittovar").focus()    
+ 
 
             });
 
@@ -482,17 +326,7 @@
             }
 
 
-            function mcode() {
-                var code = $('#scancode').text();
-                if (code == "")
-                    return;
-
-                sessionStorage.setItem('decoder_readers', $('#decoder_readers').val());
-                sessionStorage.setItem('stream_constraints', $('#stream_constraints').val());
-                $('#barcode').val(code);
-                $('#addcode').click()
-            }
-
+       
 
          
 

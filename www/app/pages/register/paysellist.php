@@ -16,6 +16,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\DataList\Paginator;
 
 /**
  * журнал расчет с поставщиками
@@ -59,6 +60,8 @@ class PaySelList extends \App\Pages\Base
         $this->dlist->add(new Label("cnamed"));
         $this->dlist->add(new ClickLink("backd", $this, "onBack"));
         $this->dlist->add(new DataView('blist', new ArrayDataSource($this, '_blist'), $this, 'blistOnRow'));
+        $this->dlist->add(new Paginator('pagd', $this->dlist->blist));
+        $this->dlist->blist->setPageSize(H::getPG());
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -73,7 +76,7 @@ class PaySelList extends \App\Pages\Base
         $this->paypan->payform->add(new Date('pdate', time()));
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
-
+      
 
         $this->updateCust();
 
@@ -197,7 +200,7 @@ GROUP BY c.customer_name,
         $this->_doclist = array();
 
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
+        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = 21    and meta_name in('InvoiceCust','RetCustIssue','GoodsReceipt') ", "document_date desc, document_id desc") as $d) {
             $this->_doclist[] = $d;
 
         }
@@ -262,6 +265,7 @@ GROUP BY c.customer_name,
        
        if(strpos($sender->id,'stpayed')===0) {
            $doc->updateStatus(Document::STATE_PAYED,true);  
+           
        }      
        if(strpos($sender->id,'stdone')===0) {
            $doc->updateStatus(Document::STATE_FINISHED,true);  
@@ -315,6 +319,9 @@ GROUP BY c.customer_name,
         $this->paypan->payform->pamount->setText(H::fa($amount));
         $this->paypan->payform->pcomment->setText("");
         $this->paypan->pname->setText($this->_doc->document_number);
+        if($this->_doc->getHD('payment') >0) {
+            $this->paypan->payform->payment->setValue($this->_doc->getHD('payment'));
+        }
 
         $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();
@@ -348,13 +355,13 @@ GROUP BY c.customer_name,
 
             $this->setWarn('Сума більше необхідної');
         }
-        $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
-
-
+        
 
         if (in_array($this->_doc->meta_name, array( 'RetCustIssue'))) {
+           
+            \App\Entity\IOState::addIOState($this->_doc->document_id, 0 - $amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
             $amount = 0 - $amount;
-            $type = \App\Entity\IOState::TYPE_BASE_INCOME;
+   
         } else {
             $options=\App\System::getOptions('common')  ;
             if($options['allowminusmf'] !=1) {
@@ -366,14 +373,16 @@ GROUP BY c.customer_name,
                     return;
                 }
             }
-
+            \App\Entity\IOState::addIOState($this->_doc->document_id,  0-$amount, \App\Entity\IOState::TYPE_BASE_OUTCOME);
         }
 
 
  
         $payed = Pay::addPayment($this->_doc->document_id, $pdate, 0-$amount, $form->payment->getValue(), $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->_doc->document_id, 0-$amount, $type);
 
+   
+     
+            
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
         }
@@ -451,11 +460,15 @@ GROUP BY c.customer_name,
              WHERE  cv.customer_id={$this->_cust->customer_id} 
             {$br} AND optype IN (3)    
             GROUP BY cv.document_id,cv.document_number,cv.createdon,dv.meta_desc,dv.branch_name
+              HAVING  active <> passive
             ORDER  BY  cv.document_id ";
      
         foreach ( $conn->Execute($sql) as $d) {
          
-          
+                $diff = $d['active'] - $d['passive'];
+                if($diff==0) {
+                    continue;
+                }    
 
                 $r = new  \App\DataItem() ;
                 $r->document_id = $d['document_id'];
@@ -466,16 +479,13 @@ GROUP BY c.customer_name,
                 $r->s_active = $d['active'];
                 $r->s_passive = $d['passive'];
 
-                $diff = $d['active'] - $d['passive'];
-                if($diff==0) {
-                    continue;
-                }
+  
                 $bal +=  $diff;
                 $r->bal =  $bal;
 
                 $this->_blist[] = $r;
                 if($bal==0) {
-                    $this->_blist = array();
+                    $this->_blist = [];
                 }
 
 

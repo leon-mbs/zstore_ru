@@ -64,30 +64,13 @@ class OfficeDoc extends \App\Pages\Base
         $this->docform->add(new \ZCL\BT\Tags("doctags"));
 
         $this->docform->add(new DropDownChoice("user", [], 0));
-        $u = array();
-        $mn = (int)$conn->GetOne("select meta_id from metadata where  meta_name='OfficeDoc' ");
 
-        foreach (\App\Entity\User::find("disabled <> 1", "username asc") as $_u) {
-            if ($_u->rolename == 'admins') {
-                $u[$_u->user_id] = $_u->username;
-            } else {
-
-                if (\App\ACL::checkEditDoc($this->_doc, true, false, $_u->user_id) == true || \App\ACL::checkExeDoc($this->_doc, true, false, $_u->user_id) == true || \App\ACL::checkChangeStateDoc($this->_doc, true, false, $_u->user_id) == true) {
-                    $u[$_u->user_id] = $_u->username;
-                }
-
-
-            }
-        }
-        $this->docform->user->setOptionList($u);
 
 
         $emplist = \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name");
         $this->docform->add(new DropDownChoice("emp", $emplist, 0))->onChange($this, 'onEmp');
 
-        $eqlist = \App\Entity\Equipment::findArray("eq_name", "disabled<>1", "eq_name");
-        $this->docform->add(new DropDownChoice("eq", $eqlist, 0))->setVisible(count($eqlist)>0) ;
-
+      
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnChangeCustomer');
 
@@ -155,7 +138,7 @@ class OfficeDoc extends \App\Pages\Base
             $d = $this->_doc->unpackDetails('detaildata');
             $this->docform->doccontent->setText($d['data'] ?? '');
             $this->docform->user->setValue($this->_doc->user_id);
-            $this->docform->eq->setValue($this->_doc->headerdata['eq'] ?? 0);
+
 
         } else {
             if ($copyid > 0) {
@@ -175,6 +158,25 @@ class OfficeDoc extends \App\Pages\Base
 
             }
         }
+        
+        
+        $u = array();
+    //    $mn = (int)$conn->GetOne("select meta_id from metadata where  meta_name='OfficeDoc' ");
+
+        foreach (\App\Entity\User::find("disabled <> 1", "username asc") as $_u) {
+            if ($_u->rolename == 'admins') {
+                $u[$_u->user_id] = $_u->username;
+            } else {
+
+                if (\App\ACL::checkEditDoc($this->_doc, true, false, $_u->user_id) == true || \App\ACL::checkExeDoc($this->_doc, true, false, $_u->user_id) == true || \App\ACL::checkChangeStateDoc($this->_doc, true, false, $_u->user_id) == true) {
+                    $u[$_u->user_id] = $_u->username;
+                }
+
+
+            }
+        }
+        $this->docform->user->setOptionList($u);        
+        
         if ($this->_doc->document_id > 0) {
             $this->docform->doctags->setTags(\App\Entity\Tag::getTags(\App\Entity\Tag::TYPE_OFFICEDCO, (int)$this->_doc->document_id));
         }
@@ -209,15 +211,15 @@ class OfficeDoc extends \App\Pages\Base
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $data = $this->docform->doccontent->getText();
-        if (strlen($data) == 0) {
+        if (strlen($data) == 0)   {
             $this->setError('Не введено текст');
             return;
         }
         $this->_doc->packDetails('detaildata', array('data' => $data));
         $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
         $this->_doc->headerdata['fine'] = $this->docform->fine->getText();
-        $this->_doc->headerdata['eq'] = $this->docform->eq->getValue();
-        $this->_doc->headerdata['eq_name'] = $this->docform->eq->getValueName();
+
+
 
 
         $customer_id = $this->docform->customer->getKey();

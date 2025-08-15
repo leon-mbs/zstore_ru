@@ -32,7 +32,7 @@ class OrderFood extends \App\Pages\Base
 
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
     private $_prevcust = 0;   // преыдущий контрагент
 
@@ -654,8 +654,8 @@ class OrderFood extends \App\Pages\Base
 
         $this->editcust->setVisible(false);
         $this->docform->setVisible(true);
-        $this->docform->discount->setVisible(false);
-        $this->_discount = 0;
+     //   $this->docform->discount->setVisible(false);
+       // $this->_discount = 0;
     }
 
     public function cancelcustOnClick($sender) {

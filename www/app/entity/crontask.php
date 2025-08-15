@@ -76,6 +76,14 @@ class CronTask extends \ZCL\DB\Entity
                 \App\Helper::setKeyVal('lastcronh', time()) ;
 
             }
+       
+            //задачи в  конце дня
+            $last =   \App\Helper::getKeyVal('lastcronhed');
+            $endday = strtotime( date('Y-m-d 23:00') );
+            if($last !==  date('Ymd') && time() > $endday  ) {
+                \App\Helper::setKeyVal('lastcronhed',date('Ymd')) ;
+                \App\Entity\Subscribe::onEndDay();
+            }
 
             //задачи  раз  в  сутки
             $last =  intval(\App\Helper::getKeyVal('lastcrond'));
@@ -88,9 +96,10 @@ class CronTask extends \ZCL\DB\Entity
                   
                 
                 //очистка товаров у поставщика
-                $days = H::getKeyValint('CI_optclean') ;
+                $days = $options['ci_clean'] ?? 0;
                 if($days >0) {
                     $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;
+                    $conn->Execute("optimize table custitems ")   ;
                 }
 
                 
@@ -102,25 +111,12 @@ class CronTask extends \ZCL\DB\Entity
                 \App\Helper::setKeyVal('lastcronm', time()) ;
 
                 //очищаем статистику
-                $dt = $conn->DBDate(strtotime('-1 month', time())) ;
-                $conn->Execute("delete  from stats  where category in (1,2,3,5,6) and  dt < ". $dt) ;
+                $dt = $conn->DBDate(strtotime('-12 month', time())) ;
+                $conn->Execute("delete  from stats  where category not in  in (4) and  dt < ". $dt) ;
                 $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
-                   
-                //обновление  НП
-                if($modules['np'] == 1) {
-                    $api = new  \App\Modules\NP\Helper();
 
-                    $ret = $api->updatetCache()  ;
-                   
-                    if(strlen($ret['error'] ??'')>0 ) {
-                       $logger->error($ret['error']);  
-                    }
-                    if(strlen($ret['warn'] ??'')>0 ) {
-                       $logger->warn($ret['warn']);                           
-                       
-                    }           
-                }    
-                
+              //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
+              
         
                 
             }
@@ -179,18 +175,19 @@ class CronTask extends \ZCL\DB\Entity
 
                     if(strlen($user->chat_id) >0) {
                         $ret= \App\Entity\Subscribe::sendBot($user->chat_id, $text) ;
-                    } elseif(strlen($user->email) >0  && System::useEmail()) {
-                        $ret= \App\Entity\Subscribe::sendEmail($user->email, $text, "XStore  notify") ;
+                    } elseif(strlen($user->email) >0  ) {
+                        $ret= \App\Entity\Subscribe::sendEmail($user->email, $text, "ZStore  notify") ;
                     }
                     if(strlen($ret)==0) {
                         $done = true;
                     }
 
                 }
+             
                 if($task->tasktype==self::TYPE_AUTOSHIFT) {
                     $msg = unserialize($task->taskdata);
 
-                      
+                    $b=false;  
                     if($msg['type']=='ppro') {
                        $b=  \App\Modules\PPO\PPOHelper::autoshift($msg['pos_id'])  ;
                     }
@@ -230,7 +227,7 @@ class CronTask extends \ZCL\DB\Entity
         $ret=[];
         $ret[self::TYPE_SUBSEMAIL]  = 'Email по  підписці  ';
         $ret[self::TYPE_EVENTCUST]  = 'Подія з контрагентом ';
-        $ret[self::TYPE_AUTOSHIFT]  = 'Автозакриття зміни ';
+        $ret[self::TYPE_AUTOSHIFT]  = 'Автозакриття зміни ПРРО';
             
             
         return $ret;

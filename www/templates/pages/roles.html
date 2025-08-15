@@ -33,14 +33,18 @@
                 <h4> Редагування ролі</h4>
                 <form zippy="editformname" role="form">
                     <div class="form-group">
-                        <label for="editname">Им'я</label>
-                        <input class="form-control" zippy="editname" required="required">
+                        <label for="editname">Назва</label>
+                        <input class="form-control" zippy="editname"  required >
 
                     </div>
+                 <div class="form-check">
+                    <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                </div>                        
                     <div class="form-group">
+                          <a zippy="cancelname" class="btn btn-outline-secondary    ">Скасувати</a>
+                        <button type="submit" class="btn btn-primary ml-4  ">Зберегти</button>
 
-                        <button type="submit" class="btn btn-primary   ">Зберегти</button>
-                        &nbsp; <a zippy="cancelname" class="btn btn-outline-secondary    ">Відмінити</a>
                     </div>
                 </form>
             </div>
@@ -52,7 +56,7 @@
 
                     <div class="row">
 
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-xl-5">
 
                             <div class="form-group" zippy="metaaccess">
                                 &nbsp;<b><i class="fa fa-eye"></i></b> <span>Тiльки перегляд</span><br>
@@ -106,29 +110,50 @@
 
                             </div>
                             <div class="form-group">
-
+                            <a zippy="cancel" class="btn btn-outline-secondary    ">Скасувати</a>
+                              &nbsp;  &nbsp; 
                                 <button type="submit" class="btn btn-primary   ">Зберегти</button>
-                                &nbsp; <a zippy="cancel" class="btn btn-outline-secondary    ">Відмінити</a>
+                               
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4 col-xl-3">
 
                             <div class="form-group">
 
                                 <table class="table table-sm  ml-4">
                                     <tr>
                                         <td>
+                                        <label for="editcusttype">Доступ до  контрагентів </label>
+                                        <select zippy="editcusttype" class="form-control mr-sm-2">
+                                            <option value="0">Всі </option>
+                                            <option value="1">Покупці</option>
+                                            <option value="2">Постачальники</option>
+                                        
+                                        </select>                                        </td> 
+                                       </tr> 
+                                 <tr>
+                                        <td>
                                             <input class="form-check-input" type="checkbox" zippy="editnoshowpartion">
                                             <label class="form-check-label mr-sm-2" for="editnoshowpartion"> Не показувати закупiвельнi цiни</label>
                                         </td> 
-                                        </tr>  <tr>
+                                       </tr> 
+                                       
+                                        <tr>
                                         <td>
                                             <input class="form-check-input" type="checkbox" zippy="editcanevent">
                                             <label class="form-check-label mr-sm-2" for="editcanevent"> Може  створювати завдання iншим користувачам</label>
                                         </td> 
                                            
-                                    </tr>
+                                       </tr>
+                                        <tr>
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" zippy="editdashboard">
+                                            <label class="form-check-label mr-sm-2" for="editdashboard"> Показувати  вiджети на дашбордi</label>
+                                        </td> 
+                                           
+                                       </tr>
+                                       
                                         {{#usebranch}}
                                      <tr>  <td>
                                             <input class="form-check-input" type="checkbox" zippy="editshowotherstores">
@@ -136,53 +161,7 @@
                                         </td>
                                         {{/usebranch}}
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <b>Віджети на головній сторінці</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox" zippy="editwinfo">
-                                            <label class="form-check-label mr-sm-2" for="editwinfo"> Iнфоблоки</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox" zippy="editwgraph">
-                                            <label class="form-check-label mr-sm-2" for="editwgraph"> Графiки</label>
-                                        </td>
-                                    </tr>
-
-
-
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox" zippy="editwminqty">
-                                            <label class="form-check-label mr-sm-2" for="editwminqty"> Мінімальна
-                                                кількість</label>
-                                        </td>
-                                    </tr>
-                                    {{#usesnumberdate}}
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox" zippy="editwsdate">
-                                            <label class="form-check-label mr-sm-2" for="editwsdate"> Прострочені
-                                                товари</label>
-                                        </td>
-                                    </tr>
-                                    {{/usesnumberdate}}
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox" zippy="editwrdoc">
-                                            <label class="form-check-label mr-sm-2" for="editwrdoc"> Останні документи </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <input class="form-check-input" type="checkbox" zippy="editwmdoc">
-                                            <label class="form-check-label mr-sm-2" for="editwmdoc"> Мої документи </label>
-                                        </td>
-                                    </tr>
+                          
 
 
                                     <tr>
@@ -266,15 +245,7 @@
                                         </td>
                                     </tr>
                                     {{/promua}}
-                                  {{#paperless}}
-                                    <tr>
-                                        <td>
-
-                                            <input class="form-check-input" type="checkbox" zippy="editpl">
-                                            <label class="form-check-label mr-sm-2" for="editpl">Paperless</label>
-                                        </td>
-                                    </tr>
-                                    {{/paperless}}
+                           
                                   {{#checkbox}}
                                     <tr>
                                         <td>
@@ -295,15 +266,7 @@
                                     </tr>
                                     {{/vkassa}}
 
-                                   {{#horoshop}}
-                                    <tr>
-                                        <td>
-
-                                            <input class="form-check-input" type="checkbox" zippy="edithr">
-                                            <label class="form-check-label mr-sm-2" for="edithr">Хорошоп</label>
-                                        </td>
-                                    </tr>
-                                    {{/horoshop}}
+                         
                                    {{#vdoc}}
                                     <tr>
                                         <td>
@@ -343,9 +306,9 @@
 
                     </div>
                     <div class="form-group">
-
-                        <button type="submit" class="btn btn-primary   ">Зберегти</button>
-                        &nbsp; <a zippy="cancelmenu" class="btn btn-outline-secondary    ">Відмінити</a>
+                        <a zippy="cancelmenu" class="btn btn-outline-secondary    ">Скасувати</a>
+                        <button type="submit" class="btn btn-primary ml-4  ">Зберегти</button>
+                       
                     </div>
                 </form>
             </div>

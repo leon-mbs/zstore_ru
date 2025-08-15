@@ -28,7 +28,7 @@ class MoveItem extends \App\Pages\Base
 {
     public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
     /**
     * @param mixed $docid     редактирование
@@ -43,7 +43,9 @@ class MoveItem extends \App\Pages\Base
 
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
         $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+        $this->docform->add(new DropDownChoice('tostoreemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+ 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -85,6 +87,8 @@ class MoveItem extends \App\Pages\Base
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+            $this->docform->tostoreemp->setValue($this->_doc->headerdata['tostoreemp']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -127,6 +131,7 @@ class MoveItem extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('item', $item->itemname));
+        $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
 
@@ -215,7 +220,7 @@ class MoveItem extends \App\Pages\Base
             $this->_itemlist[$this->_rowid] = $item;
         }
 
-
+        $this->wselitem->setVisible(false);
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -233,6 +238,7 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->edititem->setText('');
 
         $this->editdetail->editquantity->setText("1");
+        $this->wselitem->setVisible(false);
         
         $this->editsnitem->setVisible(false);        
     }
@@ -245,10 +251,14 @@ class MoveItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-        $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
+        $this->_doc->headerdata['tostore'] =  intval( $this->docform->tostore->getValue());
         $this->_doc->headerdata['tostorename'] = $this->docform->tostore->getValueName();
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['store'] = intval( $this->docform->store->getValue() );
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['storeemp'] = intval( $this->docform->storeemp->getValue() );
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
+        $this->_doc->headerdata['tostoreemp'] = intval( $this->docform->tostoreemp->getValue() );
+        $this->_doc->headerdata['tostoreempname'] = $this->docform->tostoreemp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
@@ -328,13 +338,20 @@ class MoveItem extends \App\Pages\Base
         }
 
 
-        if (($this->docform->store->getValue() > 0) == false) {
+        if ( $this->_doc->headerdata['store'] == 0) {
             $this->setError("Не обрано склад");
         }
-        if (($this->docform->tostore->getValue() > 0) == false) {
+        if ( $this->_doc->headerdata['tostore'] == 0) {
             $this->setError("Не обрано склад");
         }
-
+        if ( $this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store']) {
+            $this->setError("Той самий склад");
+        }
+        if ( $this->_doc->headerdata['tostoreemp'] > 0 && ($this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store'] ) && ($this->_doc->headerdata['tostoreemp'] == $this->_doc->headerdata['storeemp'] )  ) {
+            $this->setError("Той самий склад");
+        }
+    
+      
 
         return !$this->isError();
     }
@@ -375,8 +392,7 @@ class MoveItem extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-        $code0 = $code;
-        $code = ltrim($code, '0');
+       
 
         $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
@@ -385,10 +401,10 @@ class MoveItem extends \App\Pages\Base
             return;
         }
 
-        $code = Item::qstr($code);
-        $code0 = Item::qstr($code0);
+   
 
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0}  )");
+        $item = Item::findBarCode($code,$store_id);
+ 
         if ($item == null) {
             $this->setError('Товар не знайдено');
             return;

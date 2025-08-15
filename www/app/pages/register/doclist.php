@@ -307,9 +307,10 @@ class DocList extends \App\Pages\Base
     }
 
     public function show($doc) {
-        $doc = $doc->cast();
-
-        $this->_doc = $doc;
+        $doc = Document::load($doc->document_id);;
+ 
+        $this->_doc = $doc->cast();
+ 
         if (false == \App\ACL::checkShowDoc($this->_doc, true)) {
             return;
         }
@@ -348,6 +349,7 @@ class DocList extends \App\Pages\Base
         $this->statusform->bstatus->setVisible($ch==true && $this->_doc->state != Document::STATE_WA);
         $this->statusform->bprint->setVisible($this->_doc->meta_name=='GoodsReceipt' ||
                                               $this->_doc->meta_name=='IncomeItem' ||
+                                              $this->_doc->meta_name=='MoveItem' ||
                                               $this->_doc->meta_name=='Order' ||
                                               $this->_doc->meta_name=='GoodsIssue' ||
                                               $this->_doc->meta_name=='TTN' ||
@@ -409,9 +411,9 @@ class DocList extends \App\Pages\Base
 
         $user = System::getUser();
 
-        if( $this->_doc->meta_name == 'OfficeDoc' ){
+        if($item->meta_name == 'OfficeDoc' ){
               
-            if (false == $this->_doc->checkExe($user)) {
+            if (false == $item->checkExe($user)) {
                 return;
             }
         }            
@@ -507,6 +509,17 @@ class DocList extends \App\Pages\Base
 
         $doc = $doc->cast();
 
+        
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+
+        if($da>$doc->document_date) {
+           $this->setError("Не можна скасовувати документ старший " .date('Y-m-d', $da));
+           return;
+            
+        }
+        
+        
         //   if (false == \App\ACL::checkEditDoc($doc, true))
         //     return;
         $user = System::getUser();
@@ -516,7 +529,7 @@ class DocList extends \App\Pages\Base
                 //свой может  отменить
             } else {
 
-                $this->setError("Немає права відміняти документ " . $doc->meta_desc);
+                $this->setError("Немає права скасовувати документ " . $doc->meta_desc);
                 return;
             }
         }
@@ -558,8 +571,8 @@ class DocList extends \App\Pages\Base
             return;
         }
         if(strlen($doc->headerdata["fiscalnumber"]??'')>0) {
-            $this->setWarn('Відмінено фіскалізований документ') ;
-
+            $this->setError('Не можна  скасовувати фіскалізований документ') ;
+            return;
         }
 
 
@@ -631,9 +644,14 @@ class DocList extends \App\Pages\Base
 
 
             if ($sender->id == "bstatus") {
-                $newst =   $this->statusform->mstates->getValue() ;
-                if($newst >0  && $newst != $this->_doc->state) {
-                    $this->_doc->updateStatus($newst, true);
+                $newst =  $this->statusform->mstates->getValue() ;
+                if($newst > 0  && $newst != $this->_doc->state) {
+                    if($newst == Document::STATE_EXECUTED) {
+                        $this->_doc->updateStatus($newst, true );    
+                    } else {
+                        $this->_doc->updateStatus($newst  );                        
+                    }
+                    
                 }
 
 
@@ -720,7 +738,7 @@ class DocList extends \App\Pages\Base
 
     public function printlabels($sender) {
         $buf=[];
-        $one = $this->statusform->print1->isChecked();
+        $one = $this->statusform->print1->isChecked() ? 1:0;
         $items=[];
         foreach($this->_doc->unpackDetails('detaildata') as $it) {
             if($this->_doc->meta_name=='GoodsReceipt') {
@@ -731,16 +749,16 @@ class DocList extends \App\Pages\Base
         }
 
         $user = \App\System::getUser() ;
-          
+        $ret = H::printItems($items,$one);   
+           
         if(intval($user->prtypelabel) == 0) {
         
-            $htmls = H::printItems($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
-
+           
             if(\App\System::getUser()->usemobileprinter == 1) {
-                \App\Session::getSession()->printform =  $htmls;
+                \App\Session::getSession()->printform =  $ret;
                 $this->addAjaxResponse("     window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
             } else {
-                $this->addAjaxResponse("  $('#tag').html('{$htmls}') ; $('#pform').modal()");
+                $this->addAjaxResponse("  $('#tag').html('{$ret}') ; $('#pform').modal()");
             }
             return;
         }
@@ -748,7 +766,6 @@ class DocList extends \App\Pages\Base
         
         try {
 
-            $ret = H::printItemsEP($items, $one ? 1 : 0,array('docnumber'=>$this->_doc->document_number));
             if(intval($user->prtypelabel) == 1) {
                 if(strlen($ret)==0) {
                    $this->addAjaxResponse(" toastr.warning( 'Нема  данних для  друку ' )   ");
@@ -794,10 +811,8 @@ class DocList extends \App\Pages\Base
             
             $dataUri = \App\Util::generateQR($url, 150, 5)  ;
             $html = "<img src=\"{$dataUri}\"  />";
-            $this->addAjaxResponse("  $('#urllink').attr('href','{$url}') ;  $('#imagelink').html('{$html}') ; $('#modalqr').modal()");
-            return;
- 
-
+            $this->addAjaxResponse("  $('#urllink').attr('href','{$url}') ;  $('#imagelink').html('{$html}') ; $('#modalqr').modal()" );
+        
 
     }
     
@@ -818,10 +833,10 @@ class DocDataSource implements \Zippy\Interfaces\DataSource
         $filter = Filter::getFilter("doclist");
         if($usedate == true   ) {
             if($filter->from > 0) {
-                $where .= " and date(document_date) >= " . $conn->DBDate($filter->from) ;
+                $where .= " and  document_date >= " . $conn->DBDate($filter->from) ;
             }
             if($filter->to > 0) {
-                $where .= " and date(document_date) <= " . $conn->DBDate($filter->to) ;
+                $where .= " and  document_date <= " . $conn->DBTimeStamp($filter->to+3600*24-1) ;
             }
         }    
             

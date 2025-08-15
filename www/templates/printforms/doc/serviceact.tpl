@@ -26,7 +26,7 @@
     {{#isdevice}}
     <tr>
         <td colspan="7">
-            Виріб, матеріали: {{device}} с/н: {{devsn}}
+           Прийнято від замовника: {{device}} с/н: {{devsn}}
         </td>
 
     </tr>
@@ -128,7 +128,7 @@
                         <td> </td>
                         <td colspan="4">
                             {{#isstamp}}
-                            <img style="height:100px;" src='{{stamp}}'/>
+                            <img style="height:100px;" src="{{stamp}}"/>
                             {{/isstamp}}
 
                             {{^isstamp}}

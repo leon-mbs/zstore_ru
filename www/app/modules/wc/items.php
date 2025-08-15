@@ -90,6 +90,7 @@ class Items extends \App\Pages\Base
             if (strlen($item->item_code) == 0) {
                 continue;
             }
+            if($item->noshop ==1)  continue;
             if (in_array($item->item_code, $skus)) {
                 continue;
             } //уже  в  магазине
@@ -174,9 +175,7 @@ class Items extends \App\Pages\Base
                 return;
             }
              $c = count($data);
-
-            \App\Helper::log($page*$c);
-
+   
             if ($c == 0) {
                 break;
             }

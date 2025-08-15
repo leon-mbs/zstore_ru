@@ -53,7 +53,7 @@ class ARMFood extends \App\Pages\Base
         $food = System::getOptions("food");
         if (!is_array($food)) {
             $food = array();
-            $this->setWarn('Не вказано параметри в загальних налаштуваннях');
+            $this->setWarn('Не вказано параметри в  налаштуваннях');
         }
         $this->_worktype = intval( $food['worktype'] );
 
@@ -80,7 +80,8 @@ class ARMFood extends \App\Pages\Base
         $this->setupform->add(new DropDownChoice('store', \App\Entity\Store::getList(), $filter->store));
         $this->setupform->add(new DropDownChoice('nal', \App\Entity\MoneyFund::getList(1), $filter->nal));
         $this->setupform->add(new DropDownChoice('beznal', \App\Entity\MoneyFund::getList(2), $filter->beznal));
-
+        $this->setupform->add(new ClickLink('options', $this, 'onOptions'));
+   
         //список  заказов
         $this->add(new Panel('orderlistpan'))->setVisible(false);
 
@@ -202,6 +203,34 @@ class ARMFood extends \App\Pages\Base
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
         $this->OnDelivery($this->docpanel->listsform->delivery);
+        
+        
+  
+        $this->add(new Form('optionsform'))->onSubmit($this, 'saveOptions');
+        $this->optionsform->add(new DropDownChoice('foodpricetype', \App\Entity\Item::getPriceTypeList(), $food['pricetype']));
+        $this->optionsform->add(new DropDownChoice('foodpricetypeout', \App\Entity\Item::getPriceTypeList(), $food['pricetypeout']??0));
+        $this->optionsform->add(new DropDownChoice('foodworktype', array(), $food['worktype']));
+        $this->optionsform->add(new CheckBox('fooddelivery', $food['delivery']));
+        $this->optionsform->add(new CheckBox('foodtables', $food['tables']));
+        $this->optionsform->add(new CheckBox('foodpack', $food['pack']));
+
+        $this->optionsform->add(new Textinput('goodname', $food['name']));
+        $this->optionsform->add(new Textinput('goodaddress', $food['address']));
+        $this->optionsform->add(new Textinput('goodphone', $food['phone']));
+        $this->optionsform->add(new Textinput('timepn', $food['timepn']));
+        $this->optionsform->add(new Textinput('timesa', $food['timesa']));
+        $this->optionsform->add(new Textinput('timesu', $food['timesu']));
+        $this->optionsform->setVisible(false) ;
+
+        $menu= \App\Entity\Category::findArray('cat_name', "detail  not  like '%<nofastfood>1</nofastfood>%' and coalesce(parent_id,0)=0",'cat_name')  ;
+       
+        $this->optionsform->add(new DropDownChoice('foodbasemenu',$menu,$food['foodbasemenu']));
+        $this->optionsform->add(new DropDownChoice('foodmenu2',$menu,$food['foodmenu2']));
+        $this->optionsform->add(new DropDownChoice('foodmenu3',$menu,$food['foodmenu3']));
+        $this->optionsform->add(new DropDownChoice('foodmenu4',$menu,$food['foodmenu4']));
+        
+        
+        
     }
 
     public function setupOnClick($sender) {
@@ -255,7 +284,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->checkpan->setVisible(false);
 
         $this->_doc = \App\Entity\Doc\Document::create('OrderFood');
-
+        $this->_doc->headerdata['delivery'] = 0;
 
         $this->_itemlist = array();
 
@@ -412,12 +441,14 @@ class ARMFood extends \App\Pages\Base
         $row->add(new ClickLink('bredit', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brclose', $this, 'OnStatus')) ;
         $row->add(new ClickLink('brrefuse', $this, 'OnStatus')) ;
+        $row->add(new ClickLink('brrunner', $this, 'OnPrintRunner',true)) ;
 
         $row->brpay->setVisible(false);
         $row->brprint->setVisible(false);
         $row->brclose->setVisible(false);
         $row->brrefuse->setVisible(false);
         $row->bredit->setVisible(false);
+        $row->brrunner->setVisible(false);
 
 
         $haspayment = $doc->hasPayments() ;
@@ -444,6 +475,10 @@ class ARMFood extends \App\Pages\Base
             $row->brprint->setVisible(true);
         }
         
+        if ( $doc->state>4   ) {
+           $row->brrunner->setVisible(true);
+        }
+        
         
         if ($inprod) {
             $row->brclose->setVisible(false);
@@ -462,6 +497,7 @@ class ARMFood extends \App\Pages\Base
             $row->brrefuse->setVisible(false);
             $row->bredit->setVisible(false);
             $row->brprint->setVisible(false);
+            $row->brrunner->setVisible(false);
         }
      
         if ($doc->state == Document::STATE_WP   ) {
@@ -487,7 +523,7 @@ class ARMFood extends \App\Pages\Base
 
     public function updateorderlist($sender) {
         $conn = \ZDB\DB::getConnect();
-        $where = " (state not in(9) or content like '%<passfisc>1</passfisc>%' ) and date(document_date) >= " . $conn->DBDate(strtotime('-1 week'))    ;
+        $where = " (state not in(9) or content like '%<passfisc>1</passfisc>%' ) and  document_date  >= " . $conn->DBDate(strtotime('-1 week'))    ;
         if ($sender instanceof Form) {
             $text = trim($sender->searchnumber->getText());
             $cust = $sender->searchcust->getKey();
@@ -516,7 +552,7 @@ class ARMFood extends \App\Pages\Base
         $cat = $row->getDataItem();
         $row->add(new Panel('catbtn'))->onClick($this, 'onCatBtnClick');
         $row->catbtn->add(new Label('catname', $cat->cat_name));
-        $row->catbtn->add(new Image('catimage', "/loadimage.php?id=" . $cat->image_id));
+        $row->catbtn->add(new Image('catimage',   $cat->getImageUrl()));
     }
 
     
@@ -563,7 +599,7 @@ class ARMFood extends \App\Pages\Base
         $row->add(new Panel('prodbtn'))->onClick($this, 'onProdBtnClick');
         $row->prodbtn->add(new Label('prodname', $prod->itemname));
         $row->prodbtn->add(new Label('prodprice', H::fa($prod->price)));
-        $row->prodbtn->add(new Image('prodimage', "/loadimage.php?id=" . $prod->image_id));
+        $row->prodbtn->add(new Image('prodimage', $prod->getImageUrl()));
     }
 
     //выбрана  группа
@@ -1043,7 +1079,8 @@ class ARMFood extends \App\Pages\Base
        
         $this->toprod()  ;
 
-        $this->onNewOrder();
+       // $this->onOrderList();
+        $this->onOrderList(null);
     }
 
     private function toprod() {
@@ -1146,7 +1183,8 @@ class ARMFood extends \App\Pages\Base
             $c = Customer::load($customer_id) ;
             $b=$c->getBonus();
             if($bonus> $b) {
-                $this->setWarn("У  контрагента  вього {$b} бонусів на рахунку");                
+                $this->setError("У  контрагента  вього {$b} бонусів на рахунку");                
+                return;
             }
            
         }
@@ -1188,6 +1226,7 @@ class ARMFood extends \App\Pages\Base
             $this->_doc->headerdata['exchange'] = $this->docpanel->payform->pfrest->getText();
             $this->_doc->headerdata['payed'] = $this->_doc->payed;
             $this->_doc->headerdata['exch2b'] = $this->docpanel->payform->pfexch2b->getText();
+            $this->_doc->headerdata['paytype'] = $this->_pt;
 
 
             $this->_doc->headerdata['trans'] = $this->docpanel->payform->pftrans->getText();
@@ -1296,9 +1335,7 @@ class ARMFood extends \App\Pages\Base
                                 $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
                                 $this->_doc->headerdata["checkbox"] = $ret['checkid'];
                             } else {
-
                                 throw new \Exception($ret);
-
                             }
 
                         }
@@ -1308,10 +1345,11 @@ class ARMFood extends \App\Pages\Base
 
                             if(is_array($ret)) {
                                 $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
+                                $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
+                                $this->_doc->headerdata["vkassa"] = $ret['checkid'];
+                                           
                             } else {
-
                                 throw new \Exception($ret);
-
                             }         
                         }
                         if( $this->_tvars['ppo'] == true) {
@@ -1416,10 +1454,10 @@ class ARMFood extends \App\Pages\Base
         $this->_doc->headerdata['store'] = $this->_store;
         $this->_doc->headerdata['pricetype'] = $this->_pricetype;
 
-        $this->_doc->firm_id = $this->_pos->firm_id;
+       
         $this->_doc->username = System::getUser()->username;
 
-        $firm = H::getFirmData($this->_doc->firm_id);
+        $firm = H::getFirmData( );
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
         $this->_doc->headerdata["inn"] = $firm['inn'];
         $this->_doc->headerdata["address"] = $firm['address'];
@@ -1553,24 +1591,36 @@ class ARMFood extends \App\Pages\Base
 
     public function getMessages($args, $post) {
 
+        $tables=[];
         $cntorder = 0;
         $cntprod = 0;
         $mlist = \App\Entity\Notify::find("checked <> 1 and user_id=" . \App\Entity\Notify::ARMFOOD);
-        foreach ($mlist as $n) {
+        foreach ($mlist as $n) {             
             $msg = @unserialize($n->message);
+            if(($msg['document_id'] ??0) >0) {
+                $doc = Document::load(intval($msg['document_id']));
 
-            $doc = Document::load(intval($msg['document_id']));
-
-            if ($doc->state == Document::STATE_NEW) {
-                $cntorder++;
+                if ($doc->state == Document::STATE_NEW) {
+                    $cntorder++;
+                } 
+            }
+            if(($msg['tableno'] ??0) >0) {
+                $tables[] = $msg['tableno'];
             }
         }
 
         \App\Entity\Notify::markRead(\App\Entity\Notify::ARMFOOD);
 
 
-
-        return json_encode(array( 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);
+        if($cntorder>0) {
+           return json_encode(array( 'cntorder' => $cntorder), JSON_UNESCAPED_UNICODE);    
+        }
+        if(count($tables) > 0 ) {
+           $msg = implode(', ',$tables)  ;
+             
+           return json_encode(array( 'tableno' => $msg), JSON_UNESCAPED_UNICODE);    
+        }
+        
     }
 
     public function getProdItems($args, $post=null) {
@@ -1624,6 +1674,7 @@ class ARMFood extends \App\Pages\Base
 
     }
     
+
     public function OnPrintBill($sender) {
 
 
@@ -1651,6 +1702,76 @@ class ARMFood extends \App\Pages\Base
         }
 
     }
+  
+    public function OnPrintRunner($sender) {
+        $printer = \App\System::getOptions('printer') ;
+        $user = \App\System::getUser() ;
+
+        $doc = $sender->getOwner()->getDataItem();
+        $header = [];
+        
+        $header['document_number']    =  $doc->document_number   ;
+        $header['time']    =  H::ft($doc->headerdata['time']) ;
+        $header['table']   =  $doc->headerdata['table'] ;
+        $header['notes']   =  $doc->notes ;
+        $header['detail']  =  [];
+        foreach ($doc->unpackDetails('detaildata') as $item) {
+            if( intval( $item->foodstate) > 1)  {
+                continue;
+            }
+            $name = strlen($item->shortname) > 0 ? $item->shortname : $item->itemname;
+
+            $header['detail'] [] = array(
+                "myself" => $item->myself ?' З собою':'',
+                "itemname" => $name,
+                "qty"   => H::fqty($item->quantity)
+                
+            );
+        }        
+        if(count($header['detail']) == 0) {
+            $this->addAjaxResponse(" toastr.warning( 'Всі позиції вже в роботі' )         ");
+            return;   
+        }
+        if(intval($user->prtype) == 0) {
+  
+            $report = new \App\Report('runner.tpl');
+            $html =  $report->generate($header);                  
+
+            
+            if($user->usemobileprinter == 1) {
+                \App\Session::getSession()->printform =  $html;
+
+                $this->addAjaxResponse("   window.open('/index.php?p=App/Pages/ShowReport&arg=print')");
+            } else {
+                $this->addAjaxResponse("  $('#rtag').html('{$html}') ; $('#prform').modal()");
+            }            
+            
+            
+
+            return;
+        }
+       
+        try {
+            $buf=[];
+            if(intval($user->prtype) == 1) {
+                
+                $report = new \App\Report('runner_ps.tpl');
+            
+                $html =  $report->generate($header);              
+                
+                $buf = \App\Printer::xml2comm($html);
+            }
+           
+            $b = json_encode($buf) ;
+            $this->addAjaxResponse(" sendPS('{$b}') ");
+
+        } catch(\Exception $e) {
+            $message = $e->getMessage()  ;
+            $message = str_replace(";", "`", $message)  ;
+            $this->addAjaxResponse(" toastr.error( '{$message}' )         ");
+
+        }       
+    }  
     
     //фискализация
     public function OnOpenShift($sender) {
@@ -1985,4 +2106,48 @@ class ARMFood extends \App\Pages\Base
 
     }   
 
+     public function onOptions($sender){
+         $this->optionsform->setVisible(true) ;
+         $this->setupform->setVisible(false);
+     }
+    
+     public function saveOptions($sender){
+         
+         
+          $food = System::getOptions("food");
+        if (!is_array($food)) {
+            $food = array();
+        }
+
+        $food['worktype'] = $sender->foodworktype->getValue();
+        $food['pricetype'] = $sender->foodpricetype->getValue();
+        $food['pricetypeout'] = $sender->foodpricetypeout->getValue();
+        $food['delivery'] = $sender->fooddelivery->isChecked() ? 1 : 0;
+        $food['tables'] = $sender->foodtables->isChecked() ? 1 : 0;
+
+        $food['pack'] = $sender->foodpack->isChecked() ? 1 : 0;
+        $food['name'] = $sender->goodname->getText() ;
+        $food['address'] = $sender->goodaddress->getText() ;
+        $food['phone'] = $sender->goodphone->getText() ;
+        $food['timepn'] = $sender->timepn->getText() ;
+        $food['timesa'] = $sender->timesa->getText() ;
+        $food['timesu'] = $sender->timesu->getText() ;
+        $food['foodbasemenu'] = $sender->foodbasemenu->getValue() ;
+        $food['foodbasemenuname'] = $sender->foodbasemenu->getValueName() ;
+        $food['foodmenu2'] = $sender->foodmenu2->getValue() ;
+        $food['foodmenu3'] = $sender->foodmenu3->getValue() ;
+        $food['foodmenu4'] = $sender->foodmenu4->getValue() ;
+        $food['foodmenuname'] = $sender->foodmenu2->getValueName() ;
+        $food['foodmenuname3'] = $sender->foodmenu3->getValueName() ;
+        $food['foodmenuname4'] = $sender->foodmenu4->getValueName() ;
+
+        System::setOptions("food", $food);
+        $this->setSuccess('Збережено');       
+         
+         
+       \App\Application::Redirect("\\App\\Pages\\Service\\ARMFood");; 
+     }
+    
+    
+    
 }

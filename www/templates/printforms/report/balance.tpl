@@ -5,7 +5,7 @@
             Управлiнський  баланс
         </td>
     </tr>
-    <tr>
+  
     <tr>
 
         <td align="center" colspan="2">
@@ -80,6 +80,13 @@
         <td align="right">        {{aeq}}             </td>
     </tr>
     {{/aeq}}                 
+    
+    {{#aprodrest}}                 
+    <tr>
+        <td >  Незавершене виробництво       </td>
+        <td align="right">        {{aprodrest}}             </td>
+    </tr>
+    {{/aprodrest}}                 
     
     
      <tr style="font-weight: bolder;">

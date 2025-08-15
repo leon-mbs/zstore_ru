@@ -16,6 +16,7 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
+use Zippy\Html\DataList\Paginator;
 
 /**
  * журнал расчет с покупателями
@@ -61,6 +62,8 @@ class PayBayList extends \App\Pages\Base
         $this->dlist->add(new Label("cnamed"));
         $this->dlist->add(new ClickLink("backd", $this, "onBack"));
         $this->dlist->add(new DataView('blist', new ArrayDataSource($this, '_blist'), $this, 'blistOnRow'));
+        $this->dlist->add(new Paginator('pagd', $this->dlist->blist));
+        $this->dlist->blist->setPageSize(H::getPG());
 
 
         $this->add(new \App\Widgets\DocView('docview'))->setVisible(false);
@@ -75,7 +78,7 @@ class PayBayList extends \App\Pages\Base
         $this->paypan->payform->add(new Date('pdate', time()));
 
         $this->paypan->add(new DataView('paylist', new ArrayDataSource($this, '_pays'), $this, 'payOnRow'))->Reload();
-
+    
 
         $this->updateCust();
 
@@ -127,7 +130,7 @@ GROUP BY c.customer_name,
  
         $sql = "SELECT c.customer_name,c.phone, c.customer_id
              FROM documents_view d  join customers c  on d.customer_id = c.customer_id and c.status=0    
-             WHERE  d.state = ". Document::STATE_WP  ." and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
+             WHERE  d.state > 4 and  (d.state = 21 or d.content like '%<waitpay>1</waitpay>%') and d.meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct')   {$hold}
              group by c.customer_name,c.phone, c.customer_id
              order by c.customer_name
              ";
@@ -203,7 +206,7 @@ GROUP BY c.customer_name,
         $this->_doclist = array();
 
 
-        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and   state = ". Document::STATE_WP  ."    and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct') ", "document_id asc ") as $d) {
+        foreach (\App\Entity\Doc\Document::findYield(" {$br} customer_id= {$this->_cust->customer_id}  and  ( state = 21 or  content like '%<waitpay>1</waitpay>%' )   and meta_name in('Order','Invoice','POSCheck','ReturnIssue','GoodsIssue','ServiceAct') ", "document_id asc ") as $d) {
             $this->_doclist[] = $d;
 
         }
@@ -260,15 +263,17 @@ GROUP BY c.customer_name,
     public function stOnClick($sender) {
         
        $item = $sender->getOwner()->getDataItem(); 
-       $doc = Document::load($item->document_id);
+       $this->_doc = Document::load($item->document_id);
        if(strpos($sender->id,'stpayed')===0) {
-           $doc->updateStatus(Document::STATE_PAYED,true);  
+          $this->markPayed()  ;
        }      
        if(strpos($sender->id,'stdone')===0) {
-           $doc->updateStatus(Document::STATE_FINISHED,true);  
+           $this->_doc->updateStatus(Document::STATE_FINISHED,true);  
        }      
        if(strpos($sender->id,'stclosed')===0) {
-           $doc->updateStatus(Document::STATE_CLOSED,true);  
+           $this->_doc->updateStatus(Document::STATE_CLOSED,true);  
+           $this->_doc->setHD('waitpay',0); 
+           $this->_doc->save();            
        }      
      
         
@@ -314,6 +319,9 @@ GROUP BY c.customer_name,
         $this->paypan->payform->pamount->setText(H::fa($this->_doc->payamount - $this->_doc->payed));
         $this->paypan->payform->pcomment->setText("");
         $this->paypan->pname->setText($this->_doc->document_number);
+        if($this->_doc->getHD('payment') >0)  {
+            $this->paypan->payform->payment->setValue($this->_doc->getHD('payment'));
+        }
 
         $this->_pays = \App\Entity\Pay::getPayments($this->_doc->document_id);
         $this->paypan->paylist->Reload();
@@ -354,8 +362,7 @@ GROUP BY c.customer_name,
 
             $this->setWarn('Сума більше необхідної');
         }
-        $type = \App\Entity\IOState::TYPE_BASE_INCOME;
-
+     
         if (in_array($this->_doc->meta_name, array(  'ReturnIssue'))) {
 
             $options=\App\System::getOptions('common')  ;
@@ -368,15 +375,20 @@ GROUP BY c.customer_name,
                     return;
                 }
             }
+             \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME, true);
             $amount = 0 - $amount;
-            $type = \App\Entity\IOState::TYPE_BASE_OUTCOME;
   
+  
+        }  else {
+            \App\Entity\IOState::addIOState($this->_doc->document_id,   $amount, \App\Entity\IOState::TYPE_BASE_INCOME );
+             
         }
 
  
         $payed =   Pay::addPayment($this->_doc->document_id, $pdate, $amount, $form->payment->getValue(), $form->pcomment->getText());
-        \App\Entity\IOState::addIOState($this->_doc->document_id, $amount, $type);
-
+ 
+ 
+            
         if($payed>=$this->_doc->payamount) {
             $this->markPayed()  ;
         }
@@ -396,27 +408,16 @@ GROUP BY c.customer_name,
 
 
     private function markPayed() {
+        $this->_doc = Document::load($this->_doc->document_id);
+
         if($this->_doc->state == Document::STATE_WP) {
-            $this->_doc = Document::load($this->_doc->document_id);
-            if($this->_doc->meta_name=='Order' || $this->_doc->meta_name=='Invoice') {
-                $this->_doc->updateStatus(Document::STATE_PAYED);
-                return;
-            }
-            if($this->_doc->meta_name=='ServiceAct') {
-                $this->_doc->updateStatus(Document::STATE_FINISHED, true);
-
-                return;
-            }
-            //предыдущий статус
-            $states = $this->_doc->getLogList();
-
-            $prev = intval($states[count($states)-2]->docstate)        ;
-            if($prev  < 5) {
-                $prev = Document::STATE_EXECUTED  ;
-            }
-            $this->_doc->updateStatus($prev, true);
-
+            
+            $this->_doc->updateStatus(Document::STATE_PAYED);            
         }
+       // if($this->_doc->meta_name=='Order' ||  $this->_doc->meta_name=='ServiceAct' ) {
+           $this->_doc->setHD('waitpay',0); 
+           $this->_doc->save();  
+     //   }         
 
     }
 
@@ -460,11 +461,15 @@ GROUP BY c.customer_name,
              WHERE  cv.customer_id={$this->_cust->customer_id} 
             {$br} AND optype IN (2)    
             GROUP BY cv.document_id,cv.document_number,cv.createdon,dv.meta_desc,dv.branch_name
+              HAVING  active <> passive
             ORDER  BY  cv.document_id ";
      
         foreach ( $conn->Execute($sql) as $d) {
                 
-            
+                $diff = $d['active'] - $d['passive'];
+                if($diff==0) {
+                    continue;
+                }    
                 $r = new  \App\DataItem() ;
                 $r->document_id = $d['document_id'];
                 $r->meta_desc = $d['meta_desc'];
@@ -475,17 +480,14 @@ GROUP BY c.customer_name,
                 $r->b_passive = $d['passive'];
 
        
-                $diff = $d['active'] - $d['passive'];
-                if($diff==0) {
-                    continue;
-                }
+       
                 $bal +=  $diff;
 
                 $r->bal =  $bal;
 
                 $this->_blist[] = $r;
                 if($bal==0) {
-                    $this->_blist = array();
+                    $this->_blist = [];
                 }
 
            

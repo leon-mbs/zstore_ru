@@ -29,7 +29,7 @@ class ReturnIssue extends \App\Pages\Base
     public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
     /**
     * @param mixed $docid     редактирование
@@ -204,6 +204,8 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
+        $this->editdetail->edittovar->setKey(0);
+        $this->editdetail->edittovar->setText('');
         $this->docform->setVisible(false);
         $this->_rowid = -1;
     }
@@ -283,7 +285,7 @@ class ReturnIssue extends \App\Pages\Base
         }
 
 
-        $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
@@ -449,7 +451,11 @@ class ReturnIssue extends \App\Pages\Base
 
         if($this->_basedocid >0) {
             $parent = Document::load($this->_basedocid) ;
-            $k = 1 - ($parent->amount - $total) / $parent->amount;
+            $k=1;
+            if($parent->amount >0) {
+                $k = 1 - ($parent->amount - $total) / $parent->amount;               
+            }
+
             $parentbonus = intval($parent->getBonus(false));   //списано
             if($parentbonus >0) {
                $retbonus = intval($parentbonus * $k) ;// доля
@@ -552,7 +558,6 @@ class ReturnIssue extends \App\Pages\Base
     public function backtolistOnClick($sender) {
         App::RedirectBack();
     }
-
 
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);

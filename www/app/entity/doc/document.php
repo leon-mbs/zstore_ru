@@ -45,6 +45,7 @@ class Document extends \ZCL\DB\Entity
     public const DEL_NP      = 4;    //  новая почта
     public const DEL_UP      = 5;    //  укрпочта
     public const DEL_MEEST   = 6;    //  мест
+    public const DEL_ROZ     = 7;    //  
 
     /**
      * Ассоциативный массив   с атрибутами заголовка  документа
@@ -100,9 +101,13 @@ class Document extends \ZCL\DB\Entity
     }
 
     protected function afterLoad() {
-        $this->document_date = strtotime($this->document_date);
-        $this->lastupdate = strtotime($this->lastupdate ?? '');
-
+        if(is_integer($this->document_date)==false && strlen($this->document_date) >0 ) {
+            $this->document_date = @strtotime($this->document_date);
+        }
+        if(is_integer($this->lastupdate)==false && strlen($this->lastupdate) >0 ) {
+            $this->lastupdate = @strtotime($this->lastupdate);
+        }
+       
         $this->unpackData();
     }
 
@@ -149,8 +154,7 @@ class Document extends \ZCL\DB\Entity
 
             $value= str_replace('<![CDATA[', '', $value) ;
             $value= str_replace(']]>', '', $value) ;
-
-            $value = $value ?? '';
+ 
 
             if (is_numeric($value) || strlen($value) == 0) {
 
@@ -219,7 +223,7 @@ class Document extends \ZCL\DB\Entity
     public function unpackDetails($dataname) {
         
         if(is_array($this->detaildata[$dataname] ?? null)) {
-            return $this->detaildata[$dataname] ;
+            return unserialize(serialize( $this->detaildata[$dataname] ));
         }
 
         //для   совместимтсти
@@ -237,8 +241,35 @@ class Document extends \ZCL\DB\Entity
        $this->detaildata[$dataname]= $list;
  
     }
+
     
-    
+    /**
+    * устанавливает значение  в шапке
+    * 
+    * @param mixed $name
+    * @param mixed $value
+    * @return mixed
+    */
+    public function setHD(string $name, $value=null)  {
+       if(strlen($name)=='')    return;
+       if($value==null) {
+          unset( $this->headerdata[$name] );    
+       }   else {
+          $this->headerdata[$name] = $value;       
+       }
+      
+    }
+ 
+    /**
+    * возвращает  значение  шапки без предупреждений в  старших версиях  PHP
+    * 
+    * @param mixed $name
+    * @param mixed $def
+    */
+    public function getHD(string $name, $def=null)  {    
+       return  $this->headerdata[$name] ?? $def ;
+    }    
+     
     /**
      * Генерация HTML  для  печатной формы
      *
@@ -320,10 +351,29 @@ class Document extends \ZCL\DB\Entity
             
             //лицевые счета  контрагентов
             $conn->Execute("delete from custacc where document_id=" . $this->document_id);
+            
+            $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
 
  
     }
 
+     /**
+     * проверка  может  ли  быть  отменен
+     * Возвращает  текст ошибки если  нет
+     */
+    public function canCanceled() {
+
+        $common = \App\System::getOptions('common') ;
+        $da = $common['actualdate'] ?? 0 ;
+
+        if($da>$this->document_date) {
+            return  "Не можна відміняти документ старший " .date('Y-m-d', $da);
+        }
+
+        return "";
+    }
+    
+    
     /**
      * создает  экземпляр  класса  документа   в   соответсии  с  именем  типа
      *
@@ -357,7 +407,11 @@ class Document extends \ZCL\DB\Entity
         $hash = md5(''.rand(1, 1000000), false);
         $hash = base64_encode(substr($hash, 0, 24));
         $doc->headerdata['hash'] = strtolower($hash)  ;
-
+    
+        $firm=Helper::getFirmData()  ;
+     
+        $doc->headerdata["firm_name"]  =  $firm['firm_name']  ;
+         
         return $doc;
     }
 
@@ -422,22 +476,28 @@ class Document extends \ZCL\DB\Entity
 
         $oldstate = $this->state;
         $this->state = $state;
-        if($state != $oldstate ) {
-            $this->insertLog($state);
-        }
-
+     
 
         $this->priority = $this->getPriorytyByState($this->state) ;
 
         $this->save();
 
         if ($oldstate != $state) {
+            $this->insertLog($state);            
+            
             $doc = $this->cast();
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);
+                if($state >4 && true) {
+                   $doc->DoAcc();   
+                }
+                
             }
-
+            // подписка  на  смену  статуса
             \App\Entity\Subscribe::onDocumentState($doc->document_id, $state);
+            
+           
+            
         }
 
         return true;
@@ -798,7 +858,7 @@ class Document extends \ZCL\DB\Entity
     /**
      *  проверка  был ли документ в  таких состояниях
      *
-     * @param mixed $states
+     * @param array $states
      */
     public function checkStates(array $states) {
         if (count($states) == 0) {
@@ -819,6 +879,10 @@ class Document extends \ZCL\DB\Entity
         return '';
     }
 
+    /**
+    * возвращает  условия для  ограничений  доступа...
+    * 
+    */
     public static function getConstraint() {
         $c = \App\ACL::getBranchConstraint();
         $user = System::getUser();
@@ -917,6 +981,7 @@ class Document extends \ZCL\DB\Entity
 
         $list[self::DEL_UP] = 'Укр. пошта';
         $list[self::DEL_MEEST] = 'Meest';
+        $list[self::DEL_ROZ] = 'Rozetka';
         $list[self::DEL_SERVICE] = 'Iнша служба доставки';
 
         return $list;
@@ -977,9 +1042,7 @@ class Document extends \ZCL\DB\Entity
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
         }
-
-
-        // @unlink($f);
+ 
     }
 
     /**
@@ -1034,9 +1097,13 @@ class Document extends \ZCL\DB\Entity
         if ($print == 0) {
             return '';
         }
-        $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
-        $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'code128')) . '">';
-
+        try{
+           $generator = new \Picqer\Barcode\BarcodeGeneratorPNG();
+           $img = '<img style="max-width:200px" src="data:image/png;base64,' . base64_encode($generator->getBarcode($this->document_number, 'code128')) . '">';
+        } catch (\Throwable $e) {
+          \App\Helper::logerror("barcode: ".$e->getMessage()) ;
+           return '';
+        }
         return $img;
     }
 
@@ -1051,7 +1118,7 @@ class Document extends \ZCL\DB\Entity
             return '';
         }
         $url =$this->getFiscUrl();
-        // $firm = \App\Entity\Firm::load($this->firm_id);
+        
         if($text) {
             if(strlen($url)==0) {
                 return false;
@@ -1071,44 +1138,53 @@ class Document extends \ZCL\DB\Entity
     /**
     * put your comment there...
     *
-    * @param mixed $text
-    * @return mixed
+      * @return mixed
     */
     public function getQRPay() {
 
         if(in_array($this->meta_name, ['GoodsIssue','Invoice','Order','POSCheck'])  ==  false) {
             return false;
         }
-
-        if($this->firm_id >0) {
-            $f =  \App\Entity\Firm::load($this->firm_id) ;
-        } else {
-            $f =  \App\Entity\Firm::load(\App\Helper::getDefFirm());
-        }
-
-        if($f == null) {
+        //оплачен
+        if( $this->payamount > 0 &&  $this->payamount <=  $this->payed  ) {
             return false;
         }
-        $kod=strlen($f->tin) >0 ? $f->tin : $f->inn;
-        if(strlen($kod)==0 || strlen($f->iban) == 0) {
+ 
+   
+        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
+        
+      
+        if($mf == null) {
+            return false;
+        }
+ 
+        $payee= $mf->payname ??'' ;
+        $kod= $mf->code ??'' ;   
+        $iban = $mf->iban??'';
+        if(strlen($kod)==0 || strlen($iban) == 0|| strlen($payee) == 0) {
             return false;
         }
 
-
+         
+        
         $number = $this->document_number;
         if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
             $number  =    $this->headerdata['outnumber']  ;
         }
 
-        $payment=$this->payamount;
+        $payamount=$this->payamount;
         if(($this->headerdata['payedcard'] ??0) > 0) {
-            $payment =  $this->headerdata['payedcard'] ;
+            $payamount =  $this->headerdata['payedcard'] ;
         }
 
+    
+ 
+        
+ 
         $url = "BCD\n002\n1\nUCT\n\n";
-        $url = $url . (strlen($f->payname) > 0 ? $f->payname : $f->firm_name) ."\n";
-        $url = $url .  $f->iban."\n";
-        $url = $url .  "UAH". \App\Helper::fa($payment)."\n";
+        $url = $url .  $payee ."\n";
+        $url = $url .  $iban."\n";
+        $url = $url .  "UAH". \App\Helper::fa($payamount)."\n";
         $url = $url .  $kod."\n\n\n";
         $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
 
@@ -1124,11 +1200,11 @@ class Document extends \ZCL\DB\Entity
 
         return array('qr'=>$img,
           'url'=>$url,
-//          "urlshort"=>"<a href=\"{$url}\">Відкрити посилання</a>",
+//         
           'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
- 
+   
 
     /**
     *    возвращает ссылку  на чек в  налоговой
@@ -1154,22 +1230,7 @@ class Document extends \ZCL\DB\Entity
         return $url;
     }
   
-    /**
-     * проверка  может  ли  быть  отменен
-     * Возвращает  текст ошибки если  нет
-     */
-    public function canCanceled() {
-
-        $common = \App\System::getOptions('common') ;
-        $da = $common['actualdate'] ?? 0 ;
-
-        if($da>$this->document_date) {
-            return  "Не можна відміняти документ старший " .date('Y-m-d', $da);
-        }
-
-        return "";
-    }
-
+  
     public function getID() {
         return $this->document_id;
     }
@@ -1217,4 +1278,69 @@ class Document extends \ZCL\DB\Entity
         return $payed;
     }    
     
+   /**
+   * кастомный  экспорт в  ексель вместо автоматического  преобразования  с HTML
+   * возвращает  готовый файл
+   * реализация производится  в  соответствующемклассе-наследнике
+   */
+   public function customExportExcel() { 
+       return '';
+   }   
+   /**
+   * кастомный  экспорт в  pdf вместо автоматического  преобразования  с HTML
+   * возвращает  готовый файл
+   * реализация производится  в  соответствующемклассе-наследнике
+   */
+   public function customExportPDF() { 
+       return ''; 
+   }   
+    
+    /**
+    * открыт на  редактирование
+    * 
+    * @param mixed $document_id
+    */
+    public static function checkout($document_id ) {
+        if(intval($document_id)==0)  return;
+        
+        $cat =Helper::STAT_DOC_ISEDITED;
+        $conn = \ZDB\DB::getConnect();
+        $dt = $conn->DBTimeStamp(strtotime('-2 hour'));
+        $conn->Execute("delete from stats where  category ={$cat} and dt < {$dt} ");
+      
+      
+        $user_id= intval($conn->GetOne("select vald from stats where  category ={$cat} and keyd = {$document_id} limit 0,1  ") );
+        if($user_id > 0) {
+            $user= \App\Entity\User::load($user_id) ;
+            \App\System::setWarnMsg("Документ  редагується  користувачем  ".$user->username)  ;
+            return;
+        }
+       
+        $user_id = \App\System::getUser()->user_id;
+        $dt = $conn->DBTimeStamp(time());
+        $conn->Execute("insert into stats  ( category, keyd,vald,dt)  values ({$cat},{$document_id},{$user_id},{$dt})");
+
+
+    }
+    
+    /**
+    * закончил редактирование
+    * 
+    * @param mixed $document_id
+    */
+    public static function checkin($document_id ) {
+        if(intval($document_id)==0)  return;
+    
+        $cat =Helper::STAT_DOC_ISEDITED;
+        $user_id = \App\System::getUser()->user_id;
+        $conn = \ZDB\DB::getConnect();
+        $conn->Execute("delete from stats where  category ={$cat} and keyd = {$document_id} and vald = {$user_id} ");
+      
+ 
+    }
+    
+    public   function DoAcc() {
+         
+    } 
+      
 }

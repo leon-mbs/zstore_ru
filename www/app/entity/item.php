@@ -48,14 +48,17 @@ class Item extends \ZCL\DB\Entity
         $this->rate = (string)($xml->rate[0]);
         $this->val = (string)($xml->val[0]);
         $this->zarp = (string)($xml->zarp[0]);
+        $this->costprice = (string)($xml->costprice[0]);
         $this->thumb = (string)($xml->thumb[0]);
 
+        $this->isweight = (int)$xml->isweight[0];
         $this->noprice = (int)$xml->noprice[0];
         $this->noshop = (int)$xml->noshop[0];
         $this->autooutcome = (int)$xml->autooutcome[0];
         $this->autoincome = (int)$xml->autoincome[0];
         $this->useserial = (int)$xml->useserial[0];
         $this->image_id = (int)$xml->image_id[0];
+        $this->imageurl = (string)$xml->imageurl[0];
 
         $this->techcard = (string)$xml->techcard[0];
         $this->weight = (string)$xml->weight[0];
@@ -66,12 +69,17 @@ class Item extends \ZCL\DB\Entity
         $this->manufacturer = (string)$xml->manufacturer[0];
         $this->shortname = (string)$xml->shortname[0];
         $this->warranty = (string)$xml->warranty[0];
+        $this->snumber = (string)$xml->snumber[0];
         $this->extdata = (string)$xml->extdata[0];
         $this->sef = (string)$xml->sef[0];
         $this->url = (string)$xml->url[0];
         $this->country = (string)$xml->country[0];
         $this->notes = (string)$xml->notes[0];
+        $this->bar_code1 = (string)$xml->bar_code1[0];
+        $this->bar_code2 = (string)$xml->bar_code2[0];
+        $this->cflist = (string)$xml->cflist[0];
         $reclist = (string)$xml->reclist[0];
+     
 
         if(strlen($reclist) >0) {
             $this->reclist = @unserialize(@base64_decode($reclist))   ;
@@ -89,7 +97,7 @@ class Item extends \ZCL\DB\Entity
         }
 
         $id = \App\System::getBranch();
-        if ($id > 0 && is_array($this->brprice[$id])) {
+        if ($id > 0 && is_array($this->brprice[$id]??null)) {
             $this->price1 = $this->brprice[$id]['price1'];
             $this->price2 = $this->brprice[$id]['price2'];
             $this->price3 = $this->brprice[$id]['price3'];
@@ -133,6 +141,7 @@ class Item extends \ZCL\DB\Entity
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
+        $this->detail .= "<isweight>{$this->isweight}</isweight>";
         $this->detail .= "<noprice>{$this->noprice}</noprice>";
         $this->detail .= "<noshop>{$this->noshop}</noshop>";
         $this->detail .= "<autooutcome>{$this->autooutcome}</autooutcome>";
@@ -145,9 +154,12 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<manufacturer><![CDATA[{$this->manufacturer}]]></manufacturer>";
         $this->detail .= "<shortname><![CDATA[{$this->shortname}]]></shortname>";
         $this->detail .= "<warranty><![CDATA[{$this->warranty}]]></warranty>";
+        $this->detail .= "<snumber><![CDATA[{$this->warranty}]]></snumber>";
         $this->detail .= "<extdata><![CDATA[{$this->extdata}]]></extdata>";
         $this->detail .= "<country><![CDATA[{$this->country}]]></country>";
         $this->detail .= "<notes><![CDATA[{$this->notes}]]></notes>";
+        $this->detail .= "<bar_code1><![CDATA[{$this->bar_code1}]]></bar_code1>";
+        $this->detail .= "<bar_code2><![CDATA[{$this->bar_code2}]]></bar_code2>";
         $this->detail .= "<techcard><![CDATA[{$this->techcard}]]></techcard>";
 
         $this->detail .= "<price1>{$this->price1}</price1>";
@@ -158,6 +170,7 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<val>{$this->val}</val>";
         $this->detail .= "<rate>{$this->rate}</rate>";
         $this->detail .= "<zarp>{$this->zarp}</zarp>";
+        $this->detail .= "<costprice>{$this->costprice}</costprice>";
         $this->detail .= "<thumb>{$this->thumb}</thumb>";
 
         $this->detail .= "<image_id>{$this->image_id}</image_id>";
@@ -170,6 +183,8 @@ class Item extends \ZCL\DB\Entity
         $this->detail .= "<url>{$this->url}</url>";
         $this->detail .= "<foodstate>{$this->foodstate}</foodstate>";
         $this->detail .= "<state>{$this->state}</state>";
+        $this->detail .= "<cflist>{$this->cflist}</cflist>";
+        $this->detail .= "<imageurl>{$this->imageurl}</imageurl>";
 
         //упаковываем  цены  по  филиалам
         $brprice = serialize($this->brprice);
@@ -237,7 +252,7 @@ class Item extends \ZCL\DB\Entity
         $price = 0;
         $_price = 0;
         $common = \App\System::getOptions("common");
-        if (strlen($common[$_price_]) == 0) {
+        if (strlen($common[$_price_]??'') == 0) {
             return 0;
         }
 
@@ -519,13 +534,16 @@ class Item extends \ZCL\DB\Entity
     }
 
     //средняя  учетная  цена
-    public function getPartion($store = 0, $snumber = "") {
+    public function getPartion($store = 0, $snumber = "",$emp=0) {
         $conn = \ZDB\DB::getConnect();
 
         $sql = "  select coalesce(sum(partion*qty),0) as p,coalesce(sum(qty),0) as q from  store_stock st  where     st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
             $sql = $sql . " and st.store_id=" . $store;
+        }
+        if ($emp > 0) {
+            $sql = $sql . " and st.emp_id=" . $emp;
         }
         if (strlen($snumber) > 0) {
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
@@ -572,11 +590,10 @@ class Item extends \ZCL\DB\Entity
     /**
      * возвращает количество на складах
      *
-     * @param mixed $item_id
      * @param mixed $store_id
      * @param mixed $snumber партия проиводителя
      */
-    public function getQuantity($store_id = 0, $snumber = "", $date=0) {
+    public function getQuantity($store_id = 0, $snumber = "", $date=0, $emp=0) {
         $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
@@ -586,6 +603,9 @@ class Item extends \ZCL\DB\Entity
         $where = "   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
             $where .= " and store_id = " . $store_id;
+        }
+        if ($emp > 0) {
+            $where .= " and emp_id = " . $emp;
         }
         if (strlen($snumber) > 0) {
             $where .= " and  snumber = " . $conn->qstr($snumber);
@@ -601,15 +621,35 @@ class Item extends \ZCL\DB\Entity
 
         $cnt = $conn->GetOne($sql);
         return $cnt;
+    }  
+    
+    
+    //количество  по  складам
+    public function getQuantityAllStores() {
+        $cstr = \App\ACL::getStoreBranchConstraint();
+        if (strlen($cstr) > 0) {
+            $cstr = "    store_id in ({$cstr})  and   ";
+        }
+
+        $conn = \ZDB\DB::getConnect();
+        $where = "   {$cstr}  item_id = {$this->item_id} ";
+    
+       
+        $sql = "  select coalesce(sum(qty),0) as totqty, store_id  from  store_stock_view where ". $where ."  group by store_id ";
+       
+        $ret=[];
+        foreach($conn->Execute($sql) as $r) {
+          $ret[$r['store_id']]= $r['totqty'];
+        }
+        return $ret;
     }
 
     /**
      * возвращает сумму на складах
      *
-     * @param mixed $item_id
      * @param mixed $store_id
      */
-    public function getAmount($store_id = 0) {
+    public function getAmount($store_id = 0,$emp_id=0) {
         $cstr = \App\ACL::getStoreBranchConstraint();
         if (strlen($cstr) > 0) {
             $cstr = "    store_id in ({$cstr})  and   ";
@@ -619,6 +659,9 @@ class Item extends \ZCL\DB\Entity
         $sql = "  select coalesce(sum(qty*partion),0) as amount  from  store_stock_view where   {$cstr}  item_id = {$this->item_id} ";
         if ($store_id > 0) {
             $sql .= " and store_id = " . $store_id;
+        }
+        if ($emp_id > 0) {
+            $sql .= " and emp_id = " . $emp_id;
         }
         $amount = $conn->GetOne($sql);
         return $amount;
@@ -693,8 +736,7 @@ class Item extends \ZCL\DB\Entity
     /**
      * Метод  для   получения  имени  ТМЦ   для выпадающих списков
      *
-     * @param mixed $criteria
-     * @return []
+     * @param mixed $partname
      * @static
      */
     public static function findArrayAC($partname, $store = 0, $cat = 0) {
@@ -731,6 +773,42 @@ class Item extends \ZCL\DB\Entity
     }
 
     /**
+    * поиск  по  штрих коду
+    * 
+    * @param mixed $code
+    * @param mixed $store_id
+    * @param mixed $cat_id
+    */
+    public static function findBarCode($code, $store_id = 0,$cat_id=0) {
+            $code0 = ltrim($code, '0');
+            $codes = Item::qstr($code) ;
+            $code0s = Item::qstr($code0) ;
+            $codex= trim($codes,"'") ;
+            $code0x= trim($code0s,"'") ;
+            
+            $w='';
+            if ($cat_id > 0) {
+
+
+                $c = Category::load($cat_id) ;
+                $ch = $c->getChildren();
+                $ch[]=$cat_id;
+                $cats = implode(",", $ch)  ;
+
+
+                $w =   "  cat_id in ({$cats}) and  ";
+            }            
+            
+            
+            if($store_id > 0)  {
+                $item = Item::getFirst($w." item_id in(select item_id from store_stock where store_id={$store_id}) and   (item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}   or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%' )");
+            }   else {
+                $item = Item::getFirst($w."  item_code = {$codes} or bar_code = {$codes} or bar_code = {$code0s}  or detail like '%<bar_code1><![CDATA[{$codex}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$codex}]]></bar_code2>%'   or detail like '%<bar_code1><![CDATA[{$code0x}]]></bar_code1>%'   or detail like '%<bar_code2><![CDATA[{$code0x}]]></bar_code2>%'   ");
+            }
+            return $item;
+    }
+      
+    /**
      * генерирует новый артикул
      *
      */
@@ -739,11 +817,13 @@ class Item extends \ZCL\DB\Entity
         if (\App\System::getOption("common", "autoarticle") != 1) {
             return "";    //не генерим
         }        
-        
+        $options = \App\System::getOptions('common');
+            
         $conn = \ZDB\DB::getConnect();
-        $letters = "ID";
+        $letters = $options['articleprefix'] ?? "ID";
+        $like= $letters=="" ?"" : " like '{$letters}%'" ;
         $last=0;
-        $sql = "select item_code from  items where  item_code like 'ID%'   order  by  item_id desc   ";  
+        $sql = "select item_code from  items where  item_code {$like}   order  by  item_id desc   ";  
  
         foreach($conn->Execute($sql) as $row) {
            $digits = intval( preg_replace('/[^0-9]/', '', $row['item_code']) );
@@ -753,11 +833,20 @@ class Item extends \ZCL\DB\Entity
         }
         
         $last++;
+          
+      //  $l =  gmp_init($last, 10);
+     //   $l=   gmp_add( $l , (gmp_init(1))) ;
+      //  $last = gmp_strval($l, 10);
+        
         $d=5;
         if( strlen( ''.$last) >$d){ //если не  влазит
            $d =  strlen( ''.$last); 
         }
-        $next = $letters . sprintf("%0{$d}d", $last);
+        if(strlen($letters) >0){
+           $next = "".$letters . sprintf("%0{$d}d", $last);
+        } else {
+           $next = "".$last;
+        }
 
         return $next;
     }
@@ -774,7 +863,15 @@ class Item extends \ZCL\DB\Entity
             return true;
         }
         $code = Item::qstr($this->item_code);
-        $cnt = Item::findCnt("item_id <> {$this->item_id} and  item_code={$code} ");
+        
+        if(strlen($this->manufacturer)==0){
+            $where = "item_id <> {$this->item_id} and  item_code={$code} ";  
+        }  else {
+             $manufacturer = Item::qstr($this->manufacturer);
+
+             $where = "item_id <> {$this->item_id} and ( item_code={$code} and manufacturer= {$manufacturer} )";  
+        }
+        $cnt = Item::findCnt($where);
         if ($cnt > 0) {
             return false;
         }
@@ -825,27 +922,34 @@ class Item extends \ZCL\DB\Entity
      */
     public function getProdprice() {
         $price = 0;
-        if ($this->zarp > 0) {
-            $price += doubleval($this->zarp);
+        if ($this->costprice > 0) {
+            $price += doubleval($this->costprice);
         }
-        $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
+        else {
+            $ilist = \App\Entity\ItemSet::find("pitem_id=" . $this->item_id);
 
-        if (count($ilist) > 0) {
-            foreach ($ilist as $iset) {
+            if (count($ilist) > 0) {
+                foreach ($ilist as $iset) {
 
-                if($iset->item_id > 0) {
-                    $it = \App\Entity\Item::load($iset->item_id);
-                    $pr = $it->getPartion(0);
-                    $price += ($iset->qty * $pr);
-                }
-                if($iset->service_id >0) {
-                    $price += ($iset->cost);
+                    if($iset->item_id > 0) {
+                        $it = \App\Entity\Item::load($iset->item_id);
+                        $pr = $it->getPartion(0);
+                        $price += doubleval($iset->qty * $pr);
+                    }
+                    if($iset->service_id >0) {
+                        $price += doubleval($iset->cost);
 
+                    }
                 }
             }
+            
         }
+        
         if ($price == 0) {   
             $price = $this->getPartion(0);
+        }
+        if($price==0) {
+            $price = $this->getLastPartion() ;
         }
         if($price==0) {
             \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собївартїсть") ;
@@ -857,4 +961,177 @@ class Item extends \ZCL\DB\Entity
     public function getID() {
         return $this->item_id;
     }
+
+     /**
+     * упаковка  штрих кода для  стикера 
+     * 
+     * @param mixed $price
+     * @param mixed $qty
+     * @param mixed $item_id
+     */
+     public static function packStBC($price,$qty,$item_id) {
+   
+        $price=doubleval(\App\Helper::fa($price));
+        $qty=doubleval(\App\Helper::fqty($qty));
+          
+        $barcode = "".$price.'-'.$qty. '-' . $item_id;  
+        
+        return $barcode;
+     }
+    
+    /**
+    * раcпаковка штрих кода стикера
+    * 
+    * @param mixed $barcode
+    */
+     public static function unpackStBC($barcode) {
+ 
+        
+        $s=explode('-',$barcode) ;
+        
+        $item= Item::load(trim($s[2]??0));
+        if($item != null)  {
+                
+                $item->price = \App\Helper::fa($s[0]);
+                $item->quantity =\App\Helper::fqty($s[1]);
+               
+        }   
+        return $item;            
+     }
+     
+     /**
+     * сохранить значения  кастомных  полей
+     * 
+     * @param mixed $cf     код=>значение
+     */
+     public function savecf($cf){
+         if(!is_array($cf)) {
+             $cf=[];
+         }
+        $this->cflist  = serialize($cf);
+     }
+     /**
+     * вернуть  значения кастомных  полей
+     * 
+     */
+     public function getcf(){
+        $cfv = []  ;
+        if(strlen($this->cflist)>0) {
+          $cfv=unserialize($this->cflist)   ;   
+        }
+        $options = \App\System::getOptions('common');
+        $cflist = $options['cflist'] ?? [];
+        $i=1;
+        $cat = Category::load($this->cat_id);
+        if($cat != null)   {
+            foreach($cat->cflist as $k=>$v){
+                $ls = new \App\DataItem();
+                $ls->code = $k;
+                $ls->name = $v;
+               
+              $cflist[$i++] = $ls;          
+                    
+            }
+        }
+        $i=1;
+        $ret=[];
+        foreach($cflist as $cf=>$f) {
+
+                  $it = new \App\DataItem()  ;
+                  $it->id= $i++;
+                  $it->code= $f->code;
+                  $it->name= $f->name;
+                  $it->val='';
+                  foreach($cfv as $cv=>$v) {
+                    if($f->code==$cv)  {    
+                       $it->val= $v;
+                    }
+                  }
+                  $ret[$it->code]=$it;
+             
+         
+        }  
+       
+        return $ret;
+     }
+   
+     /**
+     * возвращает ссылку  на  изображение
+     * 
+     * @param mixed $shop  для  онлайн каталога (не проверяется  доступ)
+     * @param mixed $t предпросмотр (thumbmil) если  есть
+     * @return mixed
+     */
+     public function getImageUrl($shop=false,$t=false){ 
+        
+        if ($this->image_id > 0){
+           if($shop) {
+               return "/loadshopimage.php?id=".$this->image_id . ($t ? '&t=t' : '');    
+           }   else {
+               return "/loadimage.php?id=".$this->image_id;           
+           }
+           
+        }   
+        if (strlen($this->imageurl)>0){
+           return $this->imageurl;
+        }   
+        return;    
+     } 
+     
+    /**
+    * аплоад  в БД изображения  по  url
+    * 
+    * @param mixed $url
+    * @param mixed $dothumb
+    */
+    public   function saveImage($url,$dothumb=true) {
+        $file = file_get_contents($url) ;
+        if(strlen($file)==0) {
+           return 0  ;
+        }
+        $tmp = tempnam(sys_get_temp_dir(), "import") ;
+        file_put_contents($tmp, $file) ;
+        if (filesize($tmp) > 1024*1024) {
+             
+             return 0;
+        }
+            
+        $imagedata = getimagesize($tmp);
+        if ($imagedata== false) {
+            return 0  ;
+
+        }
+        $image = new \App\Entity\Image();
+        $image->content = file_get_contents($tmp);
+        $image->mime = $imagedata['mime'];
+
+        if ($imagedata[0] != $imagedata[1]) {
+            $thumb = new \App\Thumb($tmp);
+            if ($imagedata[0] > $imagedata[1]) {
+                $thumb->cropFromCenter($imagedata[1], $imagedata[1]);
+            }
+            if ($imagedata[0] < $imagedata[1]) {
+                $thumb->cropFromCenter($imagedata[0], $imagedata[0]);
+            }
+
+
+            $image->content = $thumb->getImageAsString();
+  
+            $thumb->resize(512, 512);
+            if($dothumb) {
+               $image->thumb = $thumb->getImageAsString();
+               $thumb->resize(128, 128);
+               $this->thumb = "data:{$image->mime};base64," . base64_encode($thumb->getImageAsString());               
+            }   
+
+           
+        }
+
+
+        $image->save(); 
+        $this->image_id=$image->image_id ;
+        return $image->image_id;       
+    }
+     
+     
 }

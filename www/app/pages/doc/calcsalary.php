@@ -8,8 +8,10 @@ use App\Entity\Employee;
 use App\Entity\MoneyFund;
 use App\Entity\SalType;
 use App\Entity\EmpAcc;
+use App\Entity\TimeItem;
 use App\Helper as H;
 use App\System;
+use App\Entity\IOState;
 
 use Zippy\Html\Label;
 
@@ -69,22 +71,39 @@ class CalcSalary extends \App\Pages\Base
         $calcvar .= "var salarym = fa(emp.salarym)   \n" ;
         $calcvar .= "var salaryh = fa(emp.salaryh)   \n" ;
         $calcvar .= "var hours = fa(emp.hours)   \n" ;
+        $calcvar .= "var tasksum = fa(emp.tasksum)   \n" ;
         $calcvar .= "var days = fa(emp.days)   \n" ;
+        $calcvar .= "var hours_week = fa(emp.hours_week)   \n" ;
+        $calcvar .= "var hours_over = fa(emp.hours_over)   \n" ;
+        $calcvar .= "var days_week = fa(emp.days_week)   \n" ;
+        $calcvar .= "var days_vac = fa(emp.days_vac)   \n" ;
+        $calcvar .= "var days_sick = fa(emp.days_sick)   \n" ;
+        $calcvar .= "var days_bt = fa(emp.days_bt)   \n" ;
+     
+     
        
         // из  строки сотрудника  в переменные
         foreach($this->_stlist as $st) {
-         //   $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);
-
+         
             $calcvar .= "var v{$st->salcode} =  parseVal(emp['_c{$st->salcode}'] ) ;\n ";
 
         }
 
+        $calcinit = $calcvar;
+        $calcinit .= "\n\n";
+        $calcinit .= $opt['calcbase'];  //формулы начислений
+        $calcinit .= "\n\n";
+        $calcinit .= "emp._baseval=v".$opt['codebaseincom'];
+        $calcinit .= "\n\n";
+        
+  
         $calc = $calcvar;
         $calc .= "\n\n";
-        $calc .= $opt['calcbase'];  //формулы удержаний
+        $calc .= ("v".$opt['codebaseincom']."=emp._baseval" ) ;
         $calc .= "\n\n";
         $calc .= $opt['calc'];  //формулы удержаний
         $calc .= "\n\n";
+  
 
    
         // из  переменных в строку  сотрудника
@@ -93,10 +112,12 @@ class CalcSalary extends \App\Pages\Base
 
    
             $calc .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
+            $calcinit .= "emp['_c{$st->salcode}']  = parseVal( v{$st->salcode}) ;\n ";
       
         }
 
         $this->_tvars['calcs'] = $calc;
+        $this->_tvars['calcsinit'] = $calcinit;
     
 
 
@@ -116,6 +137,8 @@ class CalcSalary extends \App\Pages\Base
         $this->_doc->headerdata['daysmon'] = $post->doc->daysmon;
         $this->_doc->headerdata['year'] = $post->doc->year;
         $this->_doc->headerdata['month'] = $post->doc->month;
+        $this->_doc->headerdata['iostate'] = $post->doc->iostate;
+        $this->_doc->headerdata['department'] = $post->doc->department;
         $mlist = \App\Util::getMonth();
         $this->_doc->headerdata['monthname'] = $mlist[$post->doc->month] ;
 
@@ -144,10 +167,12 @@ class CalcSalary extends \App\Pages\Base
             foreach ($this->_stlist as $st) {
                 $c   = "_c".$st->salcode ;
                 $emp->{$c} = $e->{$c};
-                $emp->sellvalue = $e->sellvalue;
-            }
-
-
+              
+            }          
+             
+            $emp->_baseval = $e->_baseval;
+            $emp->_tasksum = $e->tasksum;
+          
             $this->_list[]= $emp;
         }
 
@@ -231,7 +256,6 @@ class CalcSalary extends \App\Pages\Base
         
         
         
-        
         $from =''.$post->year .'-'. $post->month .'-01' ;
         $from =  strtotime($from);
         $to =   strtotime('+1 month', $from) - 1 ;
@@ -246,6 +270,22 @@ class CalcSalary extends \App\Pages\Base
             $br = " and d.branch_id in ({$brids}) ";
         }
 
+       //сдельная
+       
+       $etasklist = []; 
+       $be="";
+       if (strlen($brids) > 0) {
+          $be = " and document_id in(select document_id from documents where branch_id in ({$brids}) )   ";
+       }  
+       
+       
+       $sql = "select coalesce( abs ( sum(amount)),0) as am,emp_id from  empacc_view  where  optype = 104 {$be} AND DATE(createdon) >= {$from}   AND DATE(createdon) <= " .$to . "  group by  emp_id   ";
+      
+       foreach($conn->Execute($sql) as $r){
+          $etasklist[$r['emp_id']]  =  $r['am'];
+       }
+      
+        //по  продажам
         $sqlitem = "
                   select   sum(0-e.quantity*e.outprice) as summa 
                       from entrylist_view  e
@@ -271,9 +311,9 @@ class CalcSalary extends \App\Pages\Base
 
         $ret=[];
         $ret['newdoc'] = $this->_doc->document_id == 0 ;
-        $ret['emps'] = array() ;
-
-        $ret['opt'] = array() ;
+        $ret['emps'] = [] ;
+  
+        $ret['opt'] = [];
         $ret['opt']['coderesult']  =  $opt['coderesult'];
         $ret['opt']['codebaseincom']  =  $opt['codebaseincom'];
 
@@ -296,26 +336,76 @@ class CalcSalary extends \App\Pages\Base
                $e['sellvalue'] = doubleval($emp->sellvalue)  ;
             }
 
-            $sql="select sum(tm) as tm, count(distinct dd) as dd   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm from timesheet where t_type=1  and  emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t   ";
+            
+          
+             $e['hours'] =0;
+             $e['hours_week'] =0;
+             $e['hours_over'] =0;
+             $e['days'] =0;
+             $e['days_week'] =0;
+             $e['days_vac'] =0;
+             $e['days_sick'] =0;
+             $e['days_bt'] =0;
+            
+            $sql="select sum(tm) as tm, count(distinct dd) as dd,t_type   from (select  date(t_start) as dd, (UNIX_TIMESTAMP(t_end)-UNIX_TIMESTAMP(t_start)  - t_break*60)   as  tm,t_type from timesheet where    emp_id = {$emp->employee_id} and  date(t_start)>=date({$from}) and  date( t_start)<= date( {$to} ) ) t  group by t_type ";
           
 
-            $t = $conn->GetRow($sql);
-            $e['hours']  = intval($t['tm']/3600);
-            $e['days']   = doubleval($t['dd']);
+            $rs = $conn->Execute($sql);
+            foreach($rs as $row) {
+               if($row['t_type']==TimeItem::TIME_WORK ) {
+                  $e['hours']  += intval($row['tm']/3600);
+                  $e['days']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_WN  ) {
+                  $e['hours_week']  += intval($row['tm']/3600);
+                  $e['days_week']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_OVER  ) {
+                  $e['hours_over']  += intval($row['tm']/3600);
+       
+               }
+               if($row['t_type']==TimeItem::TINE_HL  ) {
+                  $e['days_vac']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_ILL  ) {
+                  $e['days_sick']   += doubleval($row['dd']); 
+               }
+               if($row['t_type']==TimeItem::TINE_BT  ) {
+                  $e['days_bt']   += doubleval($row['dd']); 
+               }
+            }
+            
+            $e['tasksum'] = 0  ;
+            if(isset($etasklist[$e['id']])){
+               $e['tasksum']  =   $etasklist[$e['id']] ?? 0; 
+
+            }        
 
             $e['invalid'] = $emp->invalid == 1  ;
             $e['salarytype'] = $emp->ztype ;
             $e['salarym'] = $emp->zmon  ;
             $e['salaryh'] = $emp->zhour  ;
-
+            $e['department'] = $emp->department  ;
+            
+         
 
             foreach($this->_stlist as $st) {
                 $e['_c'.$st->salcode]  =  $emp->{'_c'.$st->salcode};
             }
-
+            $e['_baseval'] = $emp->_baseval  ??0 ;
+    
+            if(strlen($post->department ??'') >0)  {
+               if($e['department'] != $post->department )   {
+                   continue;
+               }
+            }
+    
             $ret['emps'][] = $e;
         }
 
+        
+ 
+        
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
     }
 
@@ -338,7 +428,14 @@ class CalcSalary extends \App\Pages\Base
         foreach($this->_stlist as $st) {
             $ret['stlist'][]  = array("salname"=>$st->salshortname,"salcode"=>'_c'.$st->salcode);
         }
-
+    
+        $pd = Employee::getDP() ;
+        $ret['deps'] = $pd['d'] ;
+        $ret['iostates'] = [] ; 
+        foreach(IOState::getTypeListSal()as $k=>$v) {
+            $ret['iostates'][]=['key'=>$k,'value'=>$v];
+        }    
+        
         $ret['doc'] = [] ;
         $ret['doc']['document_date']   =  date('Y-m-d', $this->_doc->document_date) ;
         $ret['doc']['document_number']   =   $this->_doc->document_number ;
@@ -347,6 +444,8 @@ class CalcSalary extends \App\Pages\Base
         $ret['doc']['daysmon']   =   $this->_doc->headerdata['daysmon'] ;
         $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
         $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;
+        $ret['doc']['iostate']   =   $this->_doc->headerdata['iostate'] ??0;
+        $ret['doc']['department']   =   $this->_doc->headerdata['department'] ??'';
 
 
         return json_encode($ret, JSON_UNESCAPED_UNICODE);

@@ -18,8 +18,17 @@ class IncomeMoney extends Document
         $this->payed = Pay::addPayment($this->document_id, $this->document_date, $this->amount, $this->headerdata['payment'], $this->notes);
    
 
+        if ($this->headerdata['detail'] == 1)  {    // оплата от покупателя
+             \App\Entity\IOState::addIOState($this->document_id,    $this->amount,  \App\Entity\IOState::TYPE_BASE_INCOME);
+        }  else   
+        if ($this->headerdata['detail'] == 2)  {    // возврат от поставщика
+             \App\Entity\IOState::addIOState($this->document_id,   $this->amount, \App\Entity\IOState::TYPE_BASE_OUTCOME, true);
+        } else {
+            \App\Entity\IOState::addIOState($this->document_id,   $this->amount, $this->headerdata['type']);
+            
+        }  
+            
 
-        \App\Entity\IOState::addIOState($this->document_id, $this->amount, $this->headerdata['type']);
 
          $this->DoBalans() ;
 
@@ -29,7 +38,7 @@ class IncomeMoney extends Document
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->headerdata["emp"];
             $ua->amount = $this->amount;
-            $ua->save();
+         //   $ua->save();  
 
         }
 
@@ -42,6 +51,7 @@ class IncomeMoney extends Document
         $pt = \App\Entity\IOState::getTypeList(1);
         $header = array(
             'amount'          => H::fa($this->amount),
+            'totalstr'        => \App\Util::money2str_ua($this->amount),
             'date'            => H::fd($this->document_date),
             "notes"           => nl2br($this->notes),
             "customer"        => $this->customer_id > 0 ? $this->customer_name : false,

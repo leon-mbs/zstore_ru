@@ -14,18 +14,36 @@
                 <div class="col-12 col-md-3">
 
                     <div class="form-group  ">
-                        <label for="store">Зi складу</label>
+                        <label for="store">Зi складу <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="store">
                             <option value="0">Не обрано</option>
                         </select>
                     </div>
+                     {{#storeemp}}
+                     <div class="form-group  ">
+                        <label for="storeemp">Зi спiвробiтника</label>
+                        <select class="form-control  " zippy="storeemp">
+                            <option value="0">Не обрано</option>
+                        </select>
+                        <small> Матерiально вiдповiдальна  особа</small>
+                    </div> 
+                      {{/storeemp}}                     
                     <div class="form-group  ">
-                        <label for="tostore">На склад</label>
+                        <label for="tostore">На склад <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="tostore">
                             <option value="0">Не обрано</option>
                         </select>
 
                     </div>
+            {{#storeemp}}
+                     <div class="form-group  ">
+                        <label for="tostoreemp">На спiвробiтника</label>
+                        <select class="form-control  " zippy="tostoreemp">
+                            <option value="0">Не обрано</option>
+                        </select>
+                        <small> Матерiально вiдповiдальна  особа</small>
+                    </div> 
+                      {{/storeemp}}                      
                     <div class="form-group  ">
                         <label for="notes">Примітка </label>
 
@@ -36,12 +54,12 @@
                 </div>
                   <div class="col-12 col-md-3">
                         <div class="form-group">
-                        <label for="document_number">Номер документа</label>
+                        <label for="document_number">Номер документа <small class="text-danger">*</small></label>
                         <input class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
-                        <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <label for="document_date"> Дата <small class="text-danger">*</small></label>
+                        <input class="form-control" type="text" zippy="document_date"  required >
                     </div>          
                 </div>
             </div>
@@ -64,22 +82,22 @@
                     <table class="table table-sm">
                         <tr>
                             <th>Назва</th>
+                            <th>Артикул</th>
                             <th>Од.</th>
-                            {{#usesnumber}}
-                            <th>Серія</th>
-
-                            {{/usesnumber}}
+                             <th>{{#usesnumber}}Серія {{/usesnumber}}</th>
+                 
                             <th width="40" class="text-right">Кіл.</th>
 
                             <th  ></th>
                         </tr>
                         <tr zippy="detail">
                             <td zippy="item"></td>
+                            <td zippy="item_code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
+                      
                             <td zippy="snumber"></td>
 
-                            {{/usesnumber}}
+                         
                             <td zippy="quantity" class="text-right"></td>
                             <td zippy="price" class="text-right"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
@@ -111,11 +129,12 @@
         
         <div class="row">
             <div class="col-12 col-md-4">
-                <h4>Введення товару </h4>
+               
                  <form zippy="editdetail">
+                  <h4>Введення товару </h4>
                 <div class="form-group">
                     <label for="edititem">Найменування</label>
-                    <input autofocus="on"  class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
+                    <input    class="form-control" zippy="edititem" placeholder="Почніть вводити... ">
                      <a zippy="openitemsel">Відкрити довідник</a>
                   <br>  Наявність: <span zippy="qtystock"></span>
 
@@ -139,7 +158,7 @@
                     <label for="editquantity">Кількість</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
-                           required="required" pattern="[0-9,\.]+"/>
+                            required  pattern="[0-9,\.]+"/>
 
                 </div>
 
@@ -166,7 +185,7 @@
 
                     <div class="form-group">
                         <label for="editsnitemname">Назва </label>
-                        <input  autofocus="on"   placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname" required="required"/>
+                        <input  autofocus="on"   placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname"  required />
                     </div>
                     <div class="form-group">
                         <label for="editsn">Серійні номери</label>

@@ -76,7 +76,7 @@
     <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
     
         {{^noshowpartion}}
 
@@ -107,8 +107,8 @@
 <tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
     {{^noshowpartion}}
 
-<td align="right" ><b>{{totnavar}}</b></b></td> 
-<td align="right" ><b>{{totnavarproc}}</b></b></td> 
+<td align="right" ><b>{{totnavar}}</b> </td> 
+<td align="right" ><b>{{totnavarproc}}</b> </td> 
 
     {{/noshowpartion}}
 
@@ -162,27 +162,36 @@
    <th style="border: solid black 1px">Найменування</th>
 
 
-    <th align="right" style="border: solid black 1px;width:60px;">Кіл.</th>
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
-    <th></th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">Прибуток</th>
+    <th align="right" style="border: solid black 1px; ">Приб.,%</th>
+   
     <th></th>
 </tr>
 {{#_detail}}
 <tr>
         <td align="right">{{docs}}</td>
+        <td align="right">{{name}}</td>
 
 
-    <td>{{name}}</td>
+ 
 
-
-    <td align="right">{{qty}}</td>
     <td align="right">{{summa}}</td>
-    <td></td>
+    <td align="right">{{navar}}</td>
+    <td align="right">{{navarproc}}</td>
+ 
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="3"  ></td><td align="right" ><b>{{totsumma}}</b></td> <td   > </td><td   > </td>  </tr>
+ <tr><td colspan="2"></td>
+ <td align="right" ><b>{{totsumma}}</b></td>
+   
 
+    <td align="right" ><b>{{totnavar}}</b></td> 
+    <td align="right" ><b>{{totnavarproc}}</b></td> 
+    <td></td>   
+    
+ 
 </table>
 {{/_type4}}
 
@@ -197,7 +206,7 @@
    <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
  
      {{^noshowpartion}}
 
@@ -249,7 +258,7 @@
   <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
       {{^noshowpartion}}
 
     <th align="right" style="border: solid black 1px">Прибуток</th>
@@ -301,7 +310,7 @@
    <th colspan="3" style="border: solid black 1px">Найменування</th>
 
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
      {{^noshowpartion}}
 
    <th align="right" style="border: solid black 1px">Прибуток</th>
@@ -329,7 +338,7 @@
     <td></td>
 </tr>
 {{/_detail}}
-<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td
+<tr><td colspan="4" ></td> <td align="right" ><b>{{totsumma}}</b></td>
      {{^noshowpartion}}
 
  <td align="right"   > <b>{{totnavar}}</b></td>
@@ -352,7 +361,7 @@
 
          <th align="right" style="border: solid black 1px">Кіл.</th>
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
       {{^noshowpartion}}
 
     <th align="right" style="border: solid black 1px">Прибуток</th>
@@ -403,7 +412,7 @@
 
           <th align="right" style="border: solid black 1px">Кіл.</th>
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На суму</th>
       {{^noshowpartion}}
 
   <th align="right" style="border: solid black 1px">Прибуток</th>
@@ -441,3 +450,54 @@
 
 </table>
 {{/_type12}}
+{{#_type13}}
+<tr style="font-size:larger; font-weight: bolder;">
+    <td align="center" colspan="5">
+        Продажі по постачальниках <br> <br>
+    </td>
+</tr>
+<tr style="font-weight: bolder;">
+
+    <th colspan="4" style="border: solid black 1px">Найменування</th>
+
+
+    <th align="right" style="border: solid black 1px; ">На суму</th>
+    
+        {{^noshowpartion}}
+
+    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Приб.,%</th>
+    {{/noshowpartion}}
+
+    <th></th>    
+</tr>
+{{#_detail}}
+<tr>
+   
+
+
+    <td colspan="4">{{name}}</td>
+
+
+    <td align="right">{{summa}}</td>
+    {{^noshowpartion}}
+    
+    <td align="right">{{navar}}</td>
+        <td align="right" >{{navarproc}}</td>
+    {{/noshowpartion}}
+    
+    <td></td>  
+</tr>
+{{/_detail}}
+<tr><td colspan="4"></td><td align="right" ><b>{{totsumma}}</b></td>
+    {{^noshowpartion}}
+
+<td align="right" ><b>{{totnavar}}</b> </td> 
+<td align="right" ><b>{{totnavarproc}}</b> </td> 
+
+    {{/noshowpartion}}
+
+</tr>
+
+</table>
+{{/_type13}}

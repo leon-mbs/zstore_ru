@@ -27,7 +27,7 @@ class OutcomeItem extends \App\Pages\Base
 {
     public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
     /**
     * @param mixed $docid     редактирование
@@ -39,9 +39,10 @@ class OutcomeItem extends \App\Pages\Base
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
         $bid = \App\System::getBranch();
-
+        $this->docform->add(new Label('amount'));
         $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+  
         $tostore = array();
         $conn = \ZDB\DB::getConnect();
         if ($this->_tvars["usebranch"] ) {
@@ -51,10 +52,9 @@ class OutcomeItem extends \App\Pages\Base
             }
         }
 
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(4)));
-
+      
         $this->docform->add(new DropDownChoice('tostore', $tostore, 0));
-
+    
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -84,9 +84,9 @@ class OutcomeItem extends \App\Pages\Base
             }
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
-            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
-
+            $this->docform->tostore->setValue($this->_doc->headerdata['tostore']??0);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']??0);
+       
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -100,6 +100,7 @@ class OutcomeItem extends \App\Pages\Base
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
+        $this->total();
     }
 
     public function detailOnRow($row) {
@@ -111,10 +112,13 @@ class OutcomeItem extends \App\Pages\Base
         $row->add(new Label('snumber', $item->snumber));
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
+        $row->add(new Label('sum', H::fa($item->sum)));
 
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
 
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        
+        $this->_doc->amount += $item->sum;
     }
 
     public function deleteOnClick($sender) {
@@ -125,7 +129,7 @@ class OutcomeItem extends \App\Pages\Base
         $rowid =  array_search($item, $this->_itemlist, true);
 
         $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
-        $this->docform->detail->Reload();
+        $this->total();
     }
 
     public function addrowOnClick($sender) {
@@ -173,6 +177,8 @@ class OutcomeItem extends \App\Pages\Base
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->quantity = $this->editdetail->editquantity->getText();
+        $item->sum = H::fa($item->quantity * $item->getPartion());
+        
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
             $this->setError("Потрібна партія виробника");
             return;
@@ -197,7 +203,7 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
-        $this->docform->detail->Reload();
+        $this->total();
 
         //очищаем  форму
         $this->editdetail->edititem->setKey(0);
@@ -222,11 +228,13 @@ class OutcomeItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
+
         $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
-
+        $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
+ 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -383,7 +391,7 @@ class OutcomeItem extends \App\Pages\Base
 
         $item_id = $sender->getKey();
         $item = Item::load($item_id);
-        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
+        $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue(),"",0,$this->docform->storeemp->getValue())));
 
 
     }
@@ -447,7 +455,13 @@ class OutcomeItem extends \App\Pages\Base
         if ($s instanceof Stock) {
             $item->price = $s->partion;
         }
-        $this->docform->detail->Reload();
+        $this->total();
     }
 
+    
+    private function total(){
+        $this->_doc->amount=0;
+        $this->docform->detail->Reload();
+        $this->docform->amount->setText(H::fa( $this->_doc->amount)) ;
+    }
 }

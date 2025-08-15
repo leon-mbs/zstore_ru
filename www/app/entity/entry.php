@@ -11,20 +11,21 @@ namespace App\Entity;
  */
 class Entry extends \ZCL\DB\Entity
 {
-    public const TAG_SELL = -1;   //продажа
-    public const TAG_BAY = -2;   //закупка
-    public const TAG_RSELL = -4;   //возврат  покупателя
-    public const TAG_RBAY = -8;   //возврат  поставщику
-    public const TAG_TOPROD = -16;   //списание в  производство
+    public const TAG_SELL     = -1;    //продажа
+    public const TAG_BAY      = -2;    //закупка
+    public const TAG_RSELL    = -4;    //возврат  покупателя
+    public const TAG_RBAY     = -8;    //возврат  поставщику
+    public const TAG_TOPROD   = -16;   //списание в  производство
     public const TAG_FROMPROD = -32;   //оприходование  с  производства
-    public const TAG_RESERV = -64;   //резервирование
+    public const TAG_RESERV   = -64;   //резервирование
+    public const TAG_MOVE     = -128;  //перемещение
 
 
 
     /**
      *
      *
-     * @param mixed $document Ссылка  на  документ
+     * @param mixed $document_id Ссылка  на  документ
      * @param mixed $amount Сумма.
      * @param mixed $quantity количество
      */
@@ -32,7 +33,7 @@ class Entry extends \ZCL\DB\Entity
         parent::__construct();
 
         $this->document_id = $document_id;
-        // $this->amount = $amount;
+        $this->amount = $amount;
 
         $this->quantity = $quantity;
         $this->tag = 0;
@@ -70,7 +71,6 @@ class Entry extends \ZCL\DB\Entity
      * неиспользуемые значения  заполняются  нулем
      *
      * @param mixed $date дата на  конец дня
-     * @param mixed $acc синтетичкеский счет
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
@@ -79,7 +79,7 @@ class Entry extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
-            $where = $where . "   date(document_date) <= " . $conn->DBDate($date);
+            $where = $where . "   document_date  <= " . $conn->DBDate($date);
         }
 
         if ($emp > 0) {
@@ -102,7 +102,6 @@ class Entry extends \ZCL\DB\Entity
      * неиспользуемые значения  заполняются  нулем
      *
      * @param mixed $date дата на  конец дня
-     * @param mixed $acc синтетичкеский счет
      * @param mixed $stock товар (партия)
      * @param mixed $customer контрашент
      * @param mixed $emp сотрудник
@@ -111,7 +110,7 @@ class Entry extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $where = "   1=1";
         if ($date > 0) {
-            $where = $where . " and  date(document_date) <= " . $conn->DBDate($date);
+            $where = $where . " and   document_date <= " . $conn->DBDate($date);
         }
 
         if ($emp > 0) {

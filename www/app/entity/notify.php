@@ -14,7 +14,7 @@ class Notify extends \ZCL\DB\Entity
     public const DELIV       = -3;  //журнал  доставок
     public const SYSTEM      = -4;  //система
     public const EVENT       = -5;  //напоминание о событии
-    public const CHAT        = -6;  //сообщение  в  чат
+  //  public const CHAT        = -6;  //сообщение  в  чат
     public const SUBSCRIBE   = -7;  //рассылка
     public const CRONTAB     = -8;  //планувальник
 
@@ -39,10 +39,10 @@ class Notify extends \ZCL\DB\Entity
 
         if ($this->user_id > 0) {
             $user = User::load($this->user_id);
-            if ($user->emailnotify == 1 && strlen($user->email) > 0) {
-                \App\Helper::sendLetter($user->email, $this->message, "Нове повідомлення");
+            if (  strlen($user->email ??'') > 0) {
+               // \App\Helper::sendLetter($user->email, $this->message, "Нове повідомлення");
             }
-            if ($user->botnotify == 1 && strlen($user->chat_id) > 0) {
+            if ( $user->usebotfornotify ==1  &&   strlen($user->chat_id) > 0) {
                 \App\Entity\Subscribe::sendBot($user->chat_id, $this->message);
             }
         }
