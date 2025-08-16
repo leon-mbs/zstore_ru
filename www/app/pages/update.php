@@ -42,11 +42,9 @@ class Update extends \App\Pages\Base
         $this->add(new  ClickLink('updatevendor',$this,'OnVendorUpdate')) ;
       
  
-        $this->_prev['6.14.1']='6.14.0';
-        $this->_prev['6.15.0']='6.14.1';
+      //  $this->_prev['6.15.0']='6.14.1';
         
-        $this->_sql['6.13.0']='update6130to6140.sql';
-        $this->_sql['6.14.0']='update6140to6150.sql';
+      //  $this->_sql['6.14.0']='update6140to6150.sql';
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -111,7 +109,7 @@ class Update extends \App\Pages\Base
         $this->_tvars['newver']  = $n  ;
         $this->_tvars['notes']  = $data['notes']   ;
         $this->_tvars['warn']  = ($data['warn'] ?? '') =='' ? false :  $data['warn'] ;
-        $this->_tvars['github']  = 'https://github.com/leon-mbs/zstore/releases/tag/' . $va   ;
+        $this->_tvars['github']  = 'https://github.com/leon-mbs/zstore_ru/releases/tag/' . $va   ;
      
         $this->_tvars['list']  = []   ;
         foreach($data['changelog'] as $item )  {
@@ -122,7 +120,7 @@ class Update extends \App\Pages\Base
         if(  ($na[0] == $ca[0] ) &&( $na[1] !=$ca[1]) )  {
              $va="{$na[0]}.{$na[1]}.0"; 
         }
-        $this->_tvars['archive']  = "https://zippy.com.ua/updates/update-{$va}.zip"   ;
+        $this->_tvars['archive']  = "https://ru.zippy.com.ua/updates/update-{$va}.zip"   ;
         
           
         //обновление  БД
@@ -131,9 +129,9 @@ class Update extends \App\Pages\Base
            
           $this->_tvars['showdb']  = true   ;
           if(isset($this->_sql[$this->_tvars['curversiondb']])) {
-            $sqlurl  = "https://zippy.com.ua/updates/". $this->_sql[$this->_tvars['curversiondb']] ;
+            $sqlurl  = "https://ru.zippy.com.ua/updates/". $this->_sql[$this->_tvars['curversiondb']] ;
           } else {
-            $sqlurl  = "https://zippy.com.ua/updates/". $data['sql'] ;
+            $sqlurl  = "https://ru.zippy.com.ua/updates/". $data['sql'] ;
               
           }
 
