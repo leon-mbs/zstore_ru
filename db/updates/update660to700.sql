@@ -65,7 +65,8 @@ CREATE TABLE custitems (
   details TEXT DEFAULT NULL,
   updatedon date NOT NULL,
   PRIMARY KEY (custitem_id),
-  KEY item_id (item_id)
+  KEY item_id (item_id) ,
+  KEY customer_id (customer_id)
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE  eqentry (
@@ -90,7 +91,18 @@ CREATE TABLE shop_articles (
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
 
 
-
+CREATE TABLE  substitems (
+  id bigint NOT NULL AUTO_INCREMENT,
+  itemname varchar(255) NOT NULL ,
+  origcode varchar(255) NOT NULL ,
+  origbrand varchar(255) DEFAULT NULL ,
+  substcode varchar(255) NOT NULL ,
+  substbrand varchar(255) DEFAULT NULL ,
+  customer_id int DEFAULT NULL,
+   
+  KEY (origcode) ,
+  PRIMARY KEY (id)
+) ENGINE = INNODB DEFAULT CHARSET = utf8 ;  
 
 ALTER TABLE paylist CHANGE paytype paytype mediumint NOT NULL;
 
@@ -132,12 +144,71 @@ ALTER TABLE store_stock ADD customer_id int(11) DEFAULT NULL;
 
  
 ALTER TABLE entrylist ADD createdon DATE DEFAULT NULL ;
+ALTER TABLE entrylist ADD cost decimal(11, 2) DEFAULT 0 ;
 
 ALTER TABLE roles ADD disabled  tinyint(1) DEFAULT 0;
-ALTER TABLE entrylist ADD cost decimal(11, 2) DEFAULT 0 ;
  
+ALTER TABLE empacc ADD notes varchar(255) DEFAULT NULL;
+ALTER TABLE contracts ADD state int(6) DEFAULT 0;
+ALTER TABLE files ADD user_id int  DEFAULT NULL;
 
 
+
+DROP VIEW if exists cust_acc_view;
+
+
+DROP VIEW if exists documents_view;
+ 
+CREATE VIEW documents_view
+AS
+SELECT
+  d.document_id AS document_id,
+  d.document_number AS document_number,
+  d.document_date AS document_date,
+  d.user_id AS user_id,
+  d.content AS content,
+  d.amount AS amount,
+  d.meta_id AS meta_id,
+  u.username AS username,
+  d.customer_id AS customer_id,
+  c.customer_name AS customer_name,
+  d.state AS state,
+  d.notes AS notes,
+  d.payamount AS payamount,
+  d.payed AS payed,
+  d.parent_id AS parent_id,
+  d.branch_id AS branch_id,
+  b.branch_name AS branch_name,
+    
+  case 
+    when d.state=9 then 1 
+    when d.state=15 then 3  
+    when d.state=22 then 15  
+    when d.state=18 then 20  
+    when d.state=14 then 30  
+    when d.state=16 then 40  
+    when d.state in(7,11,20) then 45  
+    when d.state =3  then 70  
+    when d.state = 21 then 75  
+ 
+    when d.state in(19,2) then 80  
+    when d.state = 8 then 90
+    when d.state = 1 then 100
+         
+    else 50 end  AS priority ,
+    
+  d.lastupdate AS lastupdate,
+  metadata.meta_name AS meta_name,
+  metadata.description AS meta_desc
+FROM documents d
+  LEFT JOIN users_view u
+    ON d.user_id = u.user_id
+  LEFT JOIN customers c
+    ON d.customer_id = c.customer_id
+  JOIN metadata
+    ON metadata.meta_id = d.meta_id
+  LEFT JOIN branches b
+    ON d.branch_id = b.branch_id ;
 
 DROP VIEW messages_view  ;
 
@@ -478,8 +549,49 @@ SELECT
     FROM `users`
     WHERE (`users`.`role_id` = `roles`.`role_id`)) AS `cnt`
 FROM `roles`; 
+ 
+ 
+DROP VIEW empacc_view ;
+
+CREATE VIEW empacc_view
+AS
+SELECT
+  e.ea_id AS ea_id,
+  e.emp_id AS emp_id,
+  e.document_id AS document_id,
+  e.optype AS optype,
+  case when e.notes is not null then e.notes else d.notes end AS notes,
+  e.amount AS amount,
+  COALESCE(e.createdon, d.document_date) AS createdon,
+  d.document_number AS document_number,
+  em.emp_name AS emp_name
+FROM ((empacc e
+  LEFT JOIN documents d
+    ON ((d.document_id = e.document_id)))
+  JOIN employees em
+    ON ((em.employee_id = e.emp_id))) ;
+
+DROP VIEW contracts_view ;    
     
-DROP VIEW if exists cust_acc_view;
+CREATE VIEW contracts_view
+AS
+SELECT
+  co.contract_id AS contract_id,
+  co.customer_id AS customer_id,
+ 
+  co.createdon AS createdon,
+  co.contract_number AS contract_number,
+  co.state AS state,
+ 
+  co.details AS details,
+  cu.customer_name AS customer_name
+
+FROM contracts co
+  JOIN customers cu
+    ON co.customer_id = cu.customer_id  ;    
+ 
+    
+
 
  
 
@@ -495,16 +607,14 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Виробництво', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Комісійні товари', 'ItemComission', 'Закупівлі', 0);
  
-                  
   
-  INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
- 
-  INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення мiж етапами', 'ProdMove', 'Виробництво', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення мiж етапами', 'ProdMove', 'Виробництво', 0);
 INSERT INTO metadata (  meta_type, description,   meta_name, menugroup,   disabled) VALUES( 1, 'Авансовий звiт', 'AdvanceRep', 'Каса та платежі',   0);
-  
-update  metadata set  description ='Програма лояльності' where  meta_name='Discounts';
-update  metadata set  description ='Отримані послуги' where  meta_name='IncomeService';
-update  metadata set  description ='Прибутки та видатки' where  meta_name='PayBalance';
+INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  2, 'Закриття дня', 'EndDay', 'Каса та платежі',     0);
+
+INSERT INTO metadata (meta_type, description, meta_name,  menugroup,   disabled) VALUES(  3, 'Замiни ТМЦ', 'SubstItems', 'Склад',     0);
+
  
   
   
