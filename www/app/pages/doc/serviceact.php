@@ -9,6 +9,7 @@ use App\Entity\Item;
 use App\Entity\Service;
 use App\Entity\Store;
 use App\Entity\MoneyFund;
+use App\System;
 use App\Helper as H;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\Form\AutocompleteTextInput;
@@ -72,6 +73,7 @@ class ServiceAct extends \App\Pages\Base
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
         
         $this->docform->add(new Label('custdisc'));
+        $this->docform->add(new Label('totalnds'));
 
         $this->docform->add(new Label('payamount', 0));
 
@@ -129,6 +131,7 @@ class ServiceAct extends \App\Pages\Base
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
             $this->docform->totaldisc->setText($this->_doc->headerdata['totaldisc']);
+            $this->docform->totalnds->setText($this->_doc->headerdata['nds']);
 
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
@@ -278,6 +281,8 @@ class ServiceAct extends \App\Pages\Base
         $this->editdetail->editprice->setText("");
         $this->editdetail->editsnumber->setText("");
         $this->docform->setVisible(false);
+        $this->wselitem->setVisible(false);
+              
         $this->_rowid = -1;
     }
 
@@ -287,6 +292,8 @@ class ServiceAct extends \App\Pages\Base
         $this->editserdetail->editserprice->setText("");
         $this->editserdetail->editserdesc->setText("");
         $this->docform->setVisible(false);
+        $this->wselitem->setVisible(false);
+              
         $this->_rowid = -1;
     }
 
@@ -302,6 +309,8 @@ class ServiceAct extends \App\Pages\Base
 
             $this->editdetail->edittovar->setKey($item->item_id);
             $this->editdetail->edittovar->setText($item->itemname);
+            $this->_rowid =  array_search($item, $this->_itemlist, true);
+            
         }
         if ($item instanceof Service) {
             $this->editserdetail->setVisible(true);
@@ -311,12 +320,12 @@ class ServiceAct extends \App\Pages\Base
             $this->editserdetail->editserprice->setText($item->price);
 
             $this->editserdetail->editservice->setValue($item->service_id);
+            $this->_rowid =  array_search($item, $this->_serlist, true);
 
         }
 
 
-        $this->_rowid =  array_search($item, $this->_itemlist, true);
-
+      
     }
 
     public function saverowOnClick($sender) {
@@ -334,15 +343,18 @@ class ServiceAct extends \App\Pages\Base
         $item = Item::load($id);
 
         $item->snumber = $this->editdetail->editsnumber->getText();
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->price = $this->editdetail->editprice->getDouble();
 
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
         if($item->pureprice > $item->price) {
             $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
         }
+        
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
+         
         if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
             
             if (strlen($item->snumber) == 0  ) {
@@ -418,16 +430,16 @@ class ServiceAct extends \App\Pages\Base
         }
         $id = $this->editserdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не обрано послугу");
             return;
         }
   
         $item = Service::load($id);
  
-        $item->quantity = $this->editserdetail->editserquantity->getText();
+        $item->quantity = $this->editserdetail->editserquantity->getDouble();
         $item->desc = $this->editserdetail->editserdesc->getText();
 
-        $price = $this->editserdetail->editserprice->getText();
+        $price = $this->editserdetail->editserprice->getDouble();
 
         $item->disc = '';
         $item->pureprice = $item->getPurePrice();
@@ -436,7 +448,8 @@ class ServiceAct extends \App\Pages\Base
         }
 
         $item->price = $price;
-
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
+ 
         if($this->_rowid == -1) {
             $found=false;
             
@@ -504,6 +517,7 @@ class ServiceAct extends \App\Pages\Base
 
  
         $this->_doc->headerdata['totaldisc'] = $this->docform->totaldisc->getText();
+        $this->_doc->headerdata['nds'] = $this->docform->totalnds->getText();
 
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
         $this->_doc->headerdata['gar'] = $this->docform->gar->getText();
@@ -568,7 +582,7 @@ class ServiceAct extends \App\Pages\Base
     }
  
     public function onTotaldisc($sender) {
-        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getText()));
+        $this->docform->totaldisc->setText(H::fa($this->docform->edittotaldisc->getDouble()));
         $this->calcPay() ;
     }
   
@@ -577,21 +591,36 @@ class ServiceAct extends \App\Pages\Base
      *
      */
     private function calcTotal() {
+         $nds = 0;
 
         $total = 0;
         foreach ($this->_serlist as $ser) {
             $ser->amount = H::fa($ser->price * $ser->quantity);
-
+            if($ser->pricenonds < $ser->price) {
+                $nds = $nds + doubleval($ser->price - $ser->pricenonds) * $ser->quantity;                
+            }
+    
             $total = $total + $ser->amount;
         }
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
-
+            if($item->pricenonds < $item->price) {
+                $nds = $nds + doubleval($item->price - $item->pricenonds) * $item->quantity;                
+            }
+    
             $total = $total + $item->amount;
         }
 
         $this->docform->total->setText(H::fa($total));
+        
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+      
+        if($nds>0) {
+            $this->docform->totalnds->setText(H::fa($nds));            
+        }        
  
     }
 
@@ -713,7 +742,7 @@ class ServiceAct extends \App\Pages\Base
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = "Нараховано бонусів {$bonus} ";
+                 //   $disctext = "Нараховано бонусів {$bonus} ";
                 }
             }
             $this->docform->phone->setText($cust->phone);
@@ -797,15 +826,7 @@ class ServiceAct extends \App\Pages\Base
         }
     }
 
-    public function getPriceByQty($args, $post=null) {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',', '.', $args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1]);
-
-
-        return $price;
-
-    }
+   
 
    
 }

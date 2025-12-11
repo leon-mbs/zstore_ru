@@ -12,7 +12,7 @@
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа <small class="text-danger">*</small></label>
-                        <input class="form-control" type="text" zippy="document_number"  required >
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
 
                     <div class="form-group  ">
@@ -53,11 +53,20 @@
 
 
                     </div>
+                     <div class="form-group  ">
+                        <label for="fop" data-label="fop"  >Вказати ФОПа</label>
+                        <select class="form-control" zippy="fop">
+                            <option value="0">Не обрано</option>
+                        </select>
+
+
+                    </div>  
+                                     
                 </div>
                 <div class="col-12 col-md-4  col-xl-3">
                     <div class="form-group">
                         <label for="document_date"> Дата <small class="text-danger">*</small></label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="document_date"  required >
+                        <input style="width:120px;" class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
 
                     <div class="form-group  ">
@@ -119,7 +128,7 @@
                             <th class="text-right">Кіл.</th>
                             <th class="text-right"><i class="fa fa-gift"></i>,%</th>
                             <th class="text-right">Ціна</th>
-
+                          
                             <th class="text-right">Сума</th>
                             <th  ></th>
                         </tr>
@@ -135,6 +144,7 @@
                             <td zippy="quantity" class="text-right"></td>
                             <td zippy="disc" class="text-right"></td>
                             <td zippy="price" class="text-right"></td>
+                            
 
                             <td zippy="amount" class="text-right"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp; <a zippy="delete"><i
@@ -152,6 +162,7 @@
                          
 
 
+                           
                             <td class="text-right"></td>
                             <td class="text-right"></td>
                             <td class="text-right">На суму:</td>
@@ -160,7 +171,7 @@
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
-                     
+                         {{#usends}} 
                          <tr style="font-weight: bolder;" >
 
                             <td></td>
@@ -174,6 +185,32 @@
 
 
                             <td class="text-right"></td>
+                           
+                            <td class="text-right"></td>
+                            <td class="text-right">В т.ч. ПДВ:</td>
+
+
+                            <td zippy="totalnds" class="text-right"></td>
+                            <td></td>
+                        </tr>
+                        {{/usends}} 
+
+               
+                        {{^usends}} 
+                         <tr style="font-weight: bolder;" >
+
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                   
+
+                            <td></td>
+                      
+
+
+                           
+                            <td class="text-right"></td>
                             <td class="text-right"></td>
                             <td class="text-right">Знижка:</td>
 
@@ -182,7 +219,7 @@
                             <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaltotaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
-                     
+                        {{/usends}} 
 
                
  
@@ -302,14 +339,14 @@
                     {{/usesnumber}}
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input  class="form-control qtyprice" type="text" zippy="editquantity"  required  pattern="[0-9,\.\s]+"
+                        <input  class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.\s]+"
                                style="width: 100px;">
 
                     </div>
 
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice"  required  pattern="[0-9,\.\s]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice"  required="on"  pattern="[0-9,\.\s]+"
                                style="width: 100px;">
 
                     </div>
@@ -338,7 +375,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input class="form-control " zippy="editcustname"  required />
+                        <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -411,7 +448,7 @@
                    var q = $('#editquantity').val()
                    
                    $('#submitrow').attr('disabled','disabled')                     
-                      callPageMethod('getPriceByQty',[id,q], null,(data)=> 
+                      callPM('getPriceByQty',[id,q], null,(data)=> 
                       {  
                                
                                if(parseVal(data)>0) {

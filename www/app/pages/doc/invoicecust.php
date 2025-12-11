@@ -165,6 +165,7 @@ class InvoiceCust extends \App\Pages\Base
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
         $row->add(new Label('msr', $item->msr));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -226,13 +227,14 @@ class InvoiceCust extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
         $item->custcode = $this->editdetail->editcustcode->getText();
         if ($item->price == 0) {
             $this->setWarn("Не вказана ціна");
         }
-
+        $item->pricends= $item->price + $item->price * $item->nds();
+ 
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
         } else {
@@ -380,12 +382,23 @@ class InvoiceCust extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
             $total = $total + $item->amount;
+            if($item->pricends > $item->price) {
+                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            }
         }
         $this->docform->total->setText(H::fa($total));
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+   
+        if($nds>0) {
+            $this->docform->nds->setText(H::fa($nds));            
+        }
     }
 
     private function CalcPay() {
@@ -404,19 +417,17 @@ class InvoiceCust extends \App\Pages\Base
     }
 
     public function onDisc($sender) {
-        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getDouble()));
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
 
     public function onNds($sender) {
-        $this->docform->nds->setText(H::fa($this->docform->editnds->getText()));
+        $this->docform->nds->setText(H::fa($this->docform->editnds->getDouble()));
         $this->CalcPay();
         $this->goAnkor("tankor");
     }
-
-
-
+ 
  
     /**
      * Валидация   формы
@@ -528,16 +539,14 @@ class InvoiceCust extends \App\Pages\Base
         $this->wselitem->setVisible(true);
         $this->wselitem->Reload();
     }
-    public function onSelectItem($item_id, $itemname, $price=null) {
+
+    public function onSelectItem($item_id, $itemname) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
         $item = Item::load($item_id);
 
-        if($price==null) {
-        //    $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
-
-        }
-        
+        $price = $item->getLastPartion(0, "", true,'GoodsReceipt');
+     
         $this->editdetail->editprice->setText(H::fa($price));
         
     }

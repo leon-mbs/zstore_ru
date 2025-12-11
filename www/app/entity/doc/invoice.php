@@ -32,6 +32,7 @@ class Invoice extends \App\Entity\Doc\Document
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
                               "price"      => H::fa($item->price),
+                              "pricenonds"      => H::fa($item->pricenonds),
                               "msr"        => $item->msr,
                               "amount"     => H::fa($item->quantity * $item->price)
               );
@@ -43,7 +44,7 @@ class Invoice extends \App\Entity\Doc\Document
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
-                        "firm_address"    => $firm['address'],
+                       
                         "logo"            => _BASEURL . $firm['logo'],
                         "islogo"          => strlen($firm['logo']) > 0,
                         "stamp"           => _BASEURL . $firm['stamp'],
@@ -52,13 +53,14 @@ class Invoice extends \App\Entity\Doc\Document
                         "issign"          => strlen($firm['sign']) > 0,
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "iscustaddress"    => false,
                         "phone"           => $this->headerdata["phone"],
                         "customer_print"  => $this->headerdata["customer_print"],
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
                         "isbank"          => (strlen($mf->bankacc??'') > 0 && strlen($mf->bank) > 0),
                         "iban"      => strlen($iban) > 0 ? $iban : false,
-                        "email"           => $this->headerdata["email"],
+                 
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
@@ -72,24 +74,48 @@ class Invoice extends \App\Entity\Doc\Document
             $header['customer_name'] = $this->headerdata["customer_print"];
         }
 
+ 
+        $header["nds"] = false;
         $header["phone"] = false;
-        $header["address"] = false;
+        $header["fphone"] = false;
+        $header["isfop"] = false;
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
         $cust = \App\Entity\Customer::load($this->customer_id);
 
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
         if (strlen($cust->phone) > 0) {
             $header["phone"] = $cust->phone;
         }
         if (strlen($cust->address) > 0) {
-            $header["address"] = $cust->address;
+            $header["iscustaddress"] = true;
+            $header["custaddress"] = $cust->address;
         }
+     
         if (strlen($cust->edrpou) > 0) {
             $header["edrpou"] = $cust->edrpou;
         }
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
+        }
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
+        }
+                                           
+        $header["address"] = $firm['address'];        
+        
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+            $header["fop_edrpou"] = $fop->edrpou ??'';
+            $header["address"] = $fop->address ??'';
         }
      
 
@@ -185,6 +211,16 @@ class Invoice extends \App\Entity\Doc\Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-             
+        $this->DoAcc();             
     }
+   public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+    
+         $this->DoAccPay('36'); 
+      
+                       
+    } 
+        
 }

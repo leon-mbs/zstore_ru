@@ -33,6 +33,7 @@ class RetCustIssue extends Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "msr"        => $item->msr,
                                   "price"      => H::fa($item->price),
+                                  "pricenonds"      => H::fa($item->pricenonds),
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
@@ -48,6 +49,7 @@ class RetCustIssue extends Document
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
+                        "nds"           =>   $this->getHD('nds',0) >0 ? H::fa($this->getHD('nds' )) : false,  
                         "payed"           => H::fa($this->headerdata["payed"])
         );
 
@@ -119,6 +121,21 @@ class RetCustIssue extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
+       $this->DoAcc();  
 
     }
+public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+    
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_RBAY) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'63', 0-$am,$this->document_id)  ; 
+         } 
+   
+         $this->DoAccPay('63',true);      
+ 
+ }    
+       
 }

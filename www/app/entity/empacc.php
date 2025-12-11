@@ -17,7 +17,7 @@ class EmpAcc extends \ZCL\DB\Entity
     public const  SALARY         = 3; //  начисления  зарплаты
     public const  SALARY_PAY     = 4; //  выплата  зарплаты
    
-    //забалансовые сумы
+    //забалансовые сумы (для статистики)
     public const  ADVANCE        = 101; // аванс
     public const  BONUS          = 102; // бонусы
     public const  FINE           = 103; // штрафы
@@ -67,7 +67,7 @@ class EmpAcc extends \ZCL\DB\Entity
         }
         
         foreach($conn->Execute($sql) as $r) {
-           $ret[]=  $r ;
+           $ret[$r['emp_id']] =  $r['am'] ;
         }
         return  $ret ;
     }
@@ -79,7 +79,7 @@ class EmpAcc extends \ZCL\DB\Entity
         $ret[self::OUTCOME_TO_MF]= 'Перерахування на раъунок';
         $ret[self::SALARY]= 'Нарахування зарплати';
         $ret[self::SALARY_PAY]= 'Виплата зарплати';
-        $ret[self::ADVANCE_ACC]= 'Авансовий звiт';
+        $ret[self::ADVANCE_ACC]= 'Пiдзвiт';
         $ret[self::ADVANCE]= 'Аванс';
         $ret[self::BONUS]= 'Бонус';
         $ret[self::FINE]= 'Штраф';

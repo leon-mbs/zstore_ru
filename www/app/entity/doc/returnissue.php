@@ -32,6 +32,7 @@ class ReturnIssue extends Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "price"      => H::fa($item->price),
                                   "msr"        => $item->msr,
+                                  "pricenonds"      => H::fa($item->pricenonds),
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
@@ -49,7 +50,11 @@ class ReturnIssue extends Document
                         "payamount"           => H::fa($this->payamount),
                         "payed"           => H::fa($this->headerdata['payed'])
         );
-
+        $header["nds"] = false;
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
+  
         $report = new \App\Report('doc/returnissue.tpl');
 
         $html = $report->generate($header);
@@ -111,13 +116,10 @@ class ReturnIssue extends Document
                     $ua->document_id = $this->document_id;
                     $ua->emp_id = $emp_id;
                     $ua->amount = 0-$b;
+                    $ua->notes = "Штраф " ;
                     $ua->save();
 
-                    $n = new \App\Entity\Notify();
-                    $n->user_id = \App\System::getUser()->user_id;;;
-                    $n->message = "Штраф { $b} ({$this->document_number})"    ;
-                    $n->sender_id =  \App\Entity\Notify::SYSTEM;
-                    $n->save();                  
+                                  
                 } 
                 
             }
@@ -161,5 +163,30 @@ class ReturnIssue extends Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
+      $this->DoAcc();          
+         
     }
+    
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+      //   parent::DoAcc()  ;
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+    
+         //сторно
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_RSELL) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('90',$a, 0-$am,$this->document_id)  ; 
+         }       
+     
+       
+        \App\Entity\AccEntry::addEntry('36', '70', 0-$this->payamount,$this->document_id)  ; 
+          
+        $this->DoAccPay('36',true);      
+          
+        if ($this->getHD('nds',0) > 0){
+             \App\Entity\AccEntry::addEntry('641','36',0-$this->getHD('nds' ),$this->document_id,0,\App\Entity\AccEntry::TAG_NDS )  ; 
+        } 
+  }
+    
 }

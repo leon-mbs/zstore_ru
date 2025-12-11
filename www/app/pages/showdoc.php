@@ -22,7 +22,7 @@ class ShowDoc extends \Zippy\Html\WebPage
 
         $doc = Document::load($docid);
         if ($doc == null) {
-            echo "Не задан  документ";
+           http_response_code(404);
             die;
         }
 
@@ -127,15 +127,8 @@ class ShowDoc extends \Zippy\Html\WebPage
             //$html = "<h4>Печатная форма  не  задана</h4>";
         }
 
-        if ($type == "metaie") { //to do экспорт  файлов  метаобьекта
-            $filename = $doc->meta_name . ".zip";
-
-            header("Content-type: application/zip");
-            header("Content-Disposition: attachment;Filename={$filename}");
-            header("Content-Transfer-Encoding: binary");
-
-            // echo $zip;
-        }
+ 
+        flush()  ;
         die;
     }
 

@@ -27,10 +27,12 @@
         <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
         <script src="/assets/js/summernote/lang/summernote-uk-UA.js" type="text/javascript"></script>
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
-        <script src="/assets/js/app.js?t=1"></script>     
+        <script src="/assets/js/app.js?t=2"></script>     
         <script src="/assets/js/vue/vue.min.js"></script>     
         <script src="/assets/js/vue/httpvueloader.js"></script>     
- 
+        
+
+
        
         <!-- Google Font 
         <link rel="stylesheet"               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
@@ -53,12 +55,12 @@
           var d = {{qtydigits}}
           var _v =  parseVal(v)
           
-          return   _v.toFixed(d) 
+          return   Number.parseFloat( _v.toFixed(d) )
          
-     }      
-      </script>
-      
-      
+     }  
+        
+     </script>
+
   
     </head>
     <body class="{{hidesidebar}} ">
@@ -885,11 +887,19 @@
 
                             </li>
                          
-                        
+                            <li class="nav-item  ">
+                                <a target="_blank" href="https://zippy.com.ua/contacts" class="nav-link">
+                                    <i class="nav-icon fas fa-phone-alt"></i>
+                                    <p>
+                                        Тех. пiдтримка 
+
+                                    </p>
+                                </a>
+                            </li>
                       
                             {{/isadmins}}
                           <li class="nav-item  ">
-                                <a target="_blank" href="https://ru.zippy.com.ua/zstoreusage" class="nav-link">
+                                <a target="_blank" href="https://zippy.com.ua/zstoreusage" class="nav-link">
                                     <i class="nav-icon fa fa-info-circle"></i>
                                     <p>
                                         Документація  
@@ -1026,12 +1036,15 @@
                             "showMethod": "fadeIn",
                             "hideMethod": "fadeOut"
                     };
-            $(function () {
+        
+            
+            $(document).ready(function (){
                 $('[data-toggle="popover"]').popover();
                 $('[data-toggle="tooltip"]').tooltip();
                 $('.select2').select2({theme:'bootstarp4'});
-  
-            });
+     
+            })              
+ 
             $(window).scroll(function () {
                 if ($(this).scrollTop() > 600) {
                 if ($('#upbutton').is(':hidden')) {
@@ -1048,16 +1061,14 @@
             
             
             function sendSendMsg( ){
-                var f = document.getElementById('sendmsgform')  ;
-                   
-                let formdata = new FormData(f);
+                
                
                 $('#modalsendmsg').modal('hide') 
                    
-                callPageMethod('sendMsg',null,formdata,(data)=> 
+                callPMForm('sendMsg',null,'sendmsgform',(data)=> 
                 {
                          
-                     toastr.success('Вiдправлено','',{'timeOut':'2000'})     
+                     toastr.success('Вiдправлено','',{timeOut:2000})     
                     
          
                 } )
@@ -1209,7 +1220,7 @@
         
         //инфо о  контрагенте
         function customerInfo(id){
-                callPageMethod('getCustomerInfo',[id],null,(data)=> 
+                callPM('getCustomerInfo',[id],null,(data)=> 
                 {
                     
                     $('#modalcinfo').modal('show')  
@@ -1222,7 +1233,7 @@
         
       //инфо о  ТМЦ
         function itemInfo(id){
-                callPageMethod('getItemInfo',[id],null,(data)=> 
+                callPM('getItemInfo',[id],null,(data)=> 
                 {
                     
                     $('#modalitinfo').modal('show')  
@@ -1235,7 +1246,7 @@
         
        //ТМЦ в закупку
        function addItemToCO(id,qty=0){
-                callPageMethod('addItemToCO',[id,qty],null,(data)=> 
+                callPM('addItemToCO',[id,qty],null,(data)=> 
                 {
                     
                       if(data=="") {
@@ -1250,7 +1261,7 @@
 
         function sendSMSCust(phone,code) {
             
-                callPageMethod('sendSMSCode',[phone,code],null,(data)=> 
+                callPM('sendSMSCode',[phone,code],null,(data)=> 
                 {
                     
                     
@@ -1265,6 +1276,68 @@
         }
  
  
+       //  обработчмк весов
+        {{#usescale}}
+            function callScale(callback) {
+                {{{scalescript}}}   
+            }
+     
+        {{/usescale}}
+ 
+
+      //  фискальный регистратор
+        {{#freg}}
+            function callFR(check,callback) {
+                {{{scriptfreg}}}   
+            }
+     
+            function fiscFR(docid) {
+                toastr.info("Відправка на фіскальний реєстратор","",{timeOut:2000}) 
+                
+                callPM('loadDocFR',[docid],null,(data)=> 
+                {
+                    
+                   callFR(data,(res)=>{
+                       
+                       if(isNonEmptyString(res.error)) {
+                           toastr.error(res.error,"",{timeOut:5000})
+                           callPM('saveDocFR',[docid]) ;
+                           return;
+                       }
+                       
+                       
+                        callPM('saveDocFR',[docid,res.fn],null,(data)=> 
+                        {
+                             $("#searchform").submit();
+                        } )
+                        
+                   })
+         
+                } )       
+                
+            }
+     
+        {{/freg}}
+  
+  
+    {{#smsscript}}
+    
+    function sendSMSCust(phone,sms ) {
+    
+           callSMSCust(phone,sms,(res)=>{
+              if(isNonEmptyString(res)) {
+                   toastr.error(res,"",{timeOut:5000})
+              }     
+              
+           })  
+    }   
+    function callSMSCust(phone,sms,callback) {
+              
+              
+                {{{smsscript}}}   
+    }   
+    
+    {{/smsscript}}
  
  {{#cron}}
  

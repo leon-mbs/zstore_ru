@@ -40,6 +40,7 @@ class ARMPos extends \App\Pages\Base
     private $_doc        = null;
     private $_rowid      = -1;
     private $_pt         = 0;
+    private $_fop        = 0;
     private $_store_id   = 0;
     private $_salesource = 0;
     private $_mfbeznal = 0;
@@ -68,6 +69,7 @@ class ARMPos extends \App\Pages\Base
         $filter = \App\Filter::getFilter("armpos");
         if ($filter->isEmpty()) {
             $filter->pos = 0;
+            $filter->fop = 0;
             $filter->store = H::getDefStore();
             $filter->pricetype = H::getDefPriceType();
             $filter->salesource =  strlen($ss) > 0 ? $ss : H::getDefSaleSource();
@@ -76,6 +78,7 @@ class ARMPos extends \App\Pages\Base
 
 
         }
+        $firm = H::getFirmData(  $this->branch_id);
         
         //обшие настройки
         $this->add(new Form('form1'));
@@ -87,12 +90,19 @@ class ARMPos extends \App\Pages\Base
         $this->form1->add(new DropDownChoice('salesource', H::getSaleSources(), $filter->salesource));
         $this->form1->add(new DropDownChoice('mfnal', \App\Entity\MoneyFund::getList(1), $filter->mfnal));
         $this->form1->add(new DropDownChoice('mfbeznal', \App\Entity\MoneyFund::getList(2), $filter->mfbeznal));
-
+        $fops=[];
+        foreach(($firm['fops']??[]) as $fop) {
+          $fops[$fop->id]=$fop->name ; 
+        }
+        $this->form1->add(new DropDownChoice('fop', $fops, $filter->fop))  ;
+        $this->_tvars['usefops']  = count($fops) > 0;
+   
         $this->form1->add(new SubmitButton('next1'))->onClick($this, 'next1docOnClick');
 
 
         $this->add(new Panel('checklistpan'))->setVisible(false);
         $this->checklistpan->add(new ClickLink('newcheck', $this, 'newdoc'));
+        $this->checklistpan->add(new ClickLink('newcheckback', $this, 'newcheckback'));
         $this->checklistpan->add(new DataView('checklist', new ArrayDataSource($this, '_doclist'), $this, 'onDocRow'));
         $this->checklistpan->add(new \Zippy\Html\DataList\Paginator('pag', $this->checklistpan->checklist));
         $this->checklistpan->checklist->setPageSize(H::getPG());
@@ -243,31 +253,28 @@ class ARMPos extends \App\Pages\Base
         $this->_tvars["colspan"] = 6; 
         if($common['usesnumber'] >0) {
             $this->_tvars["colspan"] = 7;
+            $this->_tvars["usesnumber"] = true;
+            $this->docpanel->navbar->tosimple->setVisible(false) ;
         }
         if($common['usesnumber'] ==2) {
             $this->_tvars["colspan"] = 8;
+            $this->_tvars["usesnumberdate"] = true;
         }
          
         if(H::getKeyVal('issimple_'.System::getUser()->user_id)=="tosimple"){
            $this->onModeOn($this->docpanel->navbar->tosimple); 
         }
-        $this->_tvars['scaleurl'] =  System::getUser()->scaleserver;
-        $this->_tvars['showscalebtn'] =  strlen($this->_tvars['scaleurl']) >0;
-          
+       
     }
 
     public function onModeOn($sender) {
         $this->_tvars['simplemode']  = $sender->id == 'tosimple';
         if($this->_tvars['simplemode'] == true) {
-            $this->_tvars['usesnumber']  = false;
+        
             $this->docpanel->form2->qtysm->setText("");
             $this->docpanel->form2->storeqtysm->setText("");
             
-        } else {
-            $options = System::getOptions('common');
-            $this->_tvars["usesnumber"] = $options['usesnumber'] == 1;
-
-        }
+        }  
         H::setKeyVal('issimple_'.System::getUser()->user_id,$sender->id);
     }
 
@@ -281,7 +288,15 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->editdetail->setVisible(false);
 
         $this->checklistpan->setVisible(true);
-        $this->checklistpan->statuspan->setVisible(true);
+        $this->checklistpan->statuspan->setVisible(false);
+        
+        $this->checklistpan->searchform->clean();
+        $c=$this->docpanel->form2->customer->getKey();
+        if($c > 0){
+            $this->checklistpan->searchform->searchcust->setKey($c) ;
+            $this->checklistpan->searchform->searchcust->setText($this->docpanel->form2->customer->getText()) ;
+        }
+        
         $this->updatechecklist(null);
     }
 
@@ -302,6 +317,7 @@ class ARMPos extends \App\Pages\Base
     public function next1docOnClick($sender) {
         $this->pos = \App\Entity\Pos::load($this->form1->pos->getValue());
 
+        $this->_fop = $this->form1->fop->getValue();
         $this->_store_id = $this->form1->store->getValue();
         $this->_salesource = $this->form1->salesource->getValue();
         $this->_pt = $this->form1->pricetype->getValue();
@@ -332,15 +348,23 @@ class ARMPos extends \App\Pages\Base
         if($this->pos->usefisc != 1) {
             $this->_tvars['fiscal']  = false;
         }
+        if($this->pos->usefreg != 1) {
+            $this->_tvars['freg']  = false;
+        } else {
+            $this->_tvars['scriptfreg']  = $this->pos->scriptfreg;
+        }
  
         $this->_tvars['fiscaltestmode']  = $this->pos->testing==1;
 
+         
+        
         $filter = \App\Filter::getFilter("armpos");
 
         $filter->pos = $this->form1->pos->getValue();
 
 
 
+        $filter->fop = $this->_fop;
         $filter->store = $this->_store_id;
         $filter->pricetype = $this->_pt;
         $filter->salesource = $this->_salesource;
@@ -359,6 +383,16 @@ class ARMPos extends \App\Pages\Base
         $this->newdoc(null);
     }
 
+    public function newcheckback($sender) {
+        $this->docpanel->setVisible(true);
+
+        $this->docpanel->form2->setVisible(true);
+ 
+        $this->checklistpan->setVisible(false);
+        $this->checklistpan->searchform->clean();
+      
+    }
+    
     public function newdoc($sender) {
         $this->docpanel->setVisible(true);
 
@@ -381,6 +415,12 @@ class ARMPos extends \App\Pages\Base
         $this->_doc->document_number = $this->_doc->nextNumber();
         
       
+        $frases = explode(PHP_EOL,  \App\System::getOption('common','checkslogan')  ) ;
+        if(count($frases) >0) {
+            $i=  rand(0, count($frases) -1)  ;
+            $this->_doc->headerdata['checkslogan']   =   $frases[$i];
+        }
+          
 
         $this->docpanel->form2->customer->setKey(0);
         $this->docpanel->form2->customer->setText('');
@@ -657,7 +697,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->navbar->setVisible(false);
         $this->_editrow =  false;
         
-        $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;
+      //  $this->addJavaScript("$(\"#edittovar\").focus()",true)  ;
     }
 
     public function addserOnClick($sender) {
@@ -1186,6 +1226,7 @@ class ARMPos extends \App\Pages\Base
             return;
         }
  
+        $this->_doc->headerdata['fop'] = $this->_fop;
         $this->_doc->headerdata['pos'] = $this->pos->pos_id;
         $this->_doc->headerdata['pos_name'] = $this->pos->pos_name;
         $this->_doc->headerdata['store'] = $this->_store_id;
@@ -1256,10 +1297,15 @@ class ARMPos extends \App\Pages\Base
             $this->_doc->updateStatus(Document::STATE_EXECUTED);
 
             if (H::fa($this->_doc->payamount) > H::fa($this->_doc->payed)) {
-                $this->_doc->updateStatus(Document::STATE_WP);
+                $this->_doc->updateStatus(Document::STATE_WP); 
             }            
             
 
+            if($this->pos->usefreg == 1) {
+                $this->_doc->headerdata["passfisc"] = 1;
+                $this->_doc->save();
+            }    
+                
             if($this->pos->usefisc == 1) {
                 if($this->docpanel->form3->passfisc->isChecked()) {
                     $this->_doc->headerdata["passfisc"]  = 1;
@@ -1361,7 +1407,9 @@ class ARMPos extends \App\Pages\Base
             $this->qrimg->setText($qr['qr'], true);
         }
   
-
+        if($this->pos->usefreg == 1   ) {
+           $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
+        } 
     }
 
     public function OnOpenShift($sender) {
@@ -1581,57 +1629,30 @@ class ARMPos extends \App\Pages\Base
         $row->add(new ClickLink('checkedit'))->onClick($this, "onEdit");
         $row->checkedit->setVisible($doc->state < 4);
 
-        $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn', "\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id)));
+        $row->add(new \Zippy\Html\Link\RedirectLink('checkreturn', "\\App\\Pages\\Doc\\ReturnIssue", array(0,$doc->document_id,$this->pos->pos_id)));
         $row->checkreturn->setVisible($doc->state > 4);
-        if ($doc->document_id == $this->_doc->document_id) {
-           // $row->setAttribute('class', 'table-success');
-        }
-
-
-        $row->add(new Label('rtlist'));
-        $t ="<table   style=\"font-size:smaller\"> " ;
-
-        $tlist=  $doc->unpackDetails('detaildata')  ;
-
-        foreach($tlist as $prod) {
-            $t .="<tr> " ;
-            $t .="<td style=\"padding:2px\" >{$prod->itemname} </td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fqty($prod->quantity) ."</td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
-
-            $t .="</tr> " ;                                                
-        }
-        $tlist=  $doc->unpackDetails('services')  ;
-
-        foreach($tlist as $prod) {
-            $t .="<tr> " ;
-            $t .="<td style=\"padding:2px\" >{$prod->service_name} </td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity) ."</td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->price) ."</td>" ;
-            $t .="<td style=\"padding:2px\" class=\"text-right\">". H::fa($prod->quantity * $prod->price) ."</td>" ;
-
-            $t .="</tr> " ;
-        }
-
-        $t .="</table> " ;
-
-        $row->rtlist->setText($t, true);
+        if($doc->meta_name=='ReturnIssue')   $row->checkreturn->setVisible(false);
+ 
         $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
-
+        $row->add(new Label('checkfr' ))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
+        $row->checkfr->setAttribute("onclick","fiscFR({$doc->document_id})")  ;
         if($doc->state <5) {
            $row->checkfisc->setVisible(false);
+           $row->checkfr->setVisible(false);
         }
         if($this->pos->usefisc != 1) {
            $row->checkfisc->setVisible(false);
         }
-
+        if($this->pos->usefreg != 1) {
+           $row->checkfr->setVisible(false);
+        }
+       
     }
 
     public function updatechecklist($sender) {
         $conn = \ZDB\DB::getConnect();
 
-        $where = "meta_name='PosCheck' and  document_date  >= " . $conn->DBDate(strtotime('-1 month'))    ;
+        $where = "(meta_name='PosCheck' ||  ( meta_name='ReturnIssue' and parent_id  in (select document_id from documents_view where meta_name='PosCheck' ) ) ) and  document_date  >= " . $conn->DBDate(strtotime('-14 day'))    ;
 
 
         if ($sender instanceof Form) {
@@ -1820,7 +1841,7 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->statuspan->setVisible(true);
 
         $this->checklistpan->statuspan->docview->setDoc($this->_doc);
-        $this->checklistpan->checklist->Reload(false);
+    //    $this->checklistpan->checklist->Reload(false);
         //      $this->updateStatusButtons();
         $this->goAnkor('dankor');
     }
@@ -1840,43 +1861,37 @@ class ARMPos extends \App\Pages\Base
         return $this->_pt;
     }
 
-    public function getPriceByQty($args, $post=null) {
-        $item = Item::load($args[0]) ;
-        $args[1] = str_replace(',', '.', $args[1]) ;
-        $price = $item->getActionPriceByQuantity($args[1]);
 
-        return  $price;
-
-    }
 
     public function checkPromo($args, $post=null) {
         $code = trim($args[0]) ;
         if($code=='')  {
-            return json_encode([], JSON_UNESCAPED_UNICODE);             
+            return $this->jsonOK();   
         }
         $r = \App\Entity\PromoCode::check($code,$this->docpanel->form2->customer->getKey())  ;
         if($r != ''){
-            return json_encode(array('error'=>$r), JSON_UNESCAPED_UNICODE);                
+            return $this->jsonError($r);   
         }
         $total=$this->_calcTotal();
         $p = \App\Entity\PromoCode::findByCode($code);
         $disc = doubleval($p->disc );
+        $discf = doubleval($p->discf );
         if($disc >0)  {
             $td = H::fa( $total * ($p->disc/100) );
             $ret=array('disc'=>$td) ;
-            return json_encode($ret, JSON_UNESCAPED_UNICODE);
-             
+         
+            return $this->jsonOK($ret);   
         }        
-        if($disc >0)  {
+        if($discf >0)  {
           
-            if($total < $disc)  {
-               $disc =  $total;
+            if($total < $discf)  {
+               $discf =  $total;
             }
-            $ret=array('disc'=>$disc) ;
-            return json_encode($ret, JSON_UNESCAPED_UNICODE);
-             
+            $ret=array('disc'=>$discf) ;
+            return $this->jsonOK($ret);
+              
         }        
-        return json_encode([], JSON_UNESCAPED_UNICODE);             
+        return $this->jsonOK();             
        
 
     }

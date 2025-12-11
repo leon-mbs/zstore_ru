@@ -16,12 +16,12 @@ class User extends \ZCL\DB\Entity
      */
     protected function init() {
         $this->userlogin = "Гость";
+        $this->rolename = "Гость";
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
         $this->defpaytype = 0;
         $this->defsalesource = 0;
-        $this->deffirm = 0;
         $this->hidesidebar = 0;
         $this->usebotfornotify = 0;
         $this->prturn = 0;
@@ -97,7 +97,7 @@ class User extends \ZCL\DB\Entity
             $options = array();
         }
 
-        $this->deffirm = (int)$options['deffirm'];
+
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
         $this->defpaytype = $options['defpaytype']??0;
@@ -105,10 +105,7 @@ class User extends \ZCL\DB\Entity
         $this->pagesize = $options['pagesize'] ??0;
         $this->phone = $options['phone']?? '';
         $this->viber = $options['viber']?? '';
-        $this->payname = $options['payname']?? '';
-        $this->address = $options['address']?? '';
-        $this->tin = $options['tin']?? '';
-
+     
         $this->darkmode = $options['darkmode']?? 0;
 
         $this->hidesidebar = (int)$options['hidesidebar'];
@@ -128,7 +125,8 @@ class User extends \ZCL\DB\Entity
         $this->mainpage = $options['mainpage']??'';
         $this->favs = $options['favs']?? '';
         $this->chat_id = $options['chat_id']?? '';
-        $this->scaleserver = $options['scaleserver']?? '';
+
+        $this->scalescript = base64_decode( $options['scalescript']?? '');
 
         parent::afterLoad();
     }
@@ -151,7 +149,7 @@ class User extends \ZCL\DB\Entity
         $options = array();
 
         $options['defstore'] = $this->defstore;
-        $options['deffirm'] = $this->deffirm;
+
 
         $options['defpaytype'] = $this->defpaytype;
         $options['defmf'] = $this->defmf;
@@ -176,13 +174,11 @@ class User extends \ZCL\DB\Entity
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;
-        $options['payname'] = $this->payname;
-        $options['address'] = $this->address;
-        $options['tin'] = $this->tin;
-       
+         
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
-        $options['scaleserver'] = $this->scaleserver   ;
+
+        $options['scalescript'] = base64_encode($this->scalescript )   ;
 
         $this->options = serialize($options);
 

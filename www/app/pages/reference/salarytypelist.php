@@ -38,6 +38,7 @@ class SalaryTypeList extends \App\Pages\Base
         $this->editform->add(new TextInput('editstname'));
         $this->editform->add(new TextInput('editshortname'));
         $this->editform->add(new TextInput('editcode'));
+        $this->editform->add(new DropDownChoice('editacc',[],0));
 
         $this->editform->add(new CheckBox('editdisabled'));
         $this->editform->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
@@ -54,10 +55,9 @@ class SalaryTypeList extends \App\Pages\Base
 
         $this->add(new Form('optform'));
         $this->optform->add(new DropDownChoice('optbaseincom', SalType::getList(), $opt['codebaseincom']??''));
-        $this->optform->add(new DropDownChoice('optadvance', SalType::getList(), $opt['codeadvance']??''));
+
+        $this->optform->add(new DropDownChoice('optall', SalType::getList(), $opt['codeall']??''));
         $this->optform->add(new DropDownChoice('optresult', SalType::getList(), $opt['coderesult']??''));
-        $this->optform->add(new DropDownChoice('optfine', SalType::getList(), $opt['codefine']??''));
-        $this->optform->add(new DropDownChoice('optbonus', SalType::getList(), $opt['codebonus']??''));
         $this->optform->add(new SubmitLink('saveopt'))->onClick($this, "onSaveOpt", true);
 
 
@@ -69,6 +69,7 @@ class SalaryTypeList extends \App\Pages\Base
         $row->add(new Label('stname', $item->salname));
         $row->add(new Label('shortname', $item->salshortname));
         $row->add(new Label('code', $item->salcode));
+        $row->add(new Label('acccode', $item->acccode ?? ''));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->setAttribute('style', $item->disabled == 1 ? 'color: #aaa' : null);
         
@@ -98,6 +99,7 @@ class SalaryTypeList extends \App\Pages\Base
         $this->editform->editshortname->setText($this->_st->salshortname);
         $this->editform->editdisabled->setChecked($this->_st->disabled);
         $this->editform->editcode->setText($this->_st->salcode);
+        $this->editform->editacc->setValue($this->_st->acccode ?? 0);
     }
 
     public function addOnClick($sender) {
@@ -118,6 +120,7 @@ class SalaryTypeList extends \App\Pages\Base
         $this->_st->salname = $this->editform->editstname->getText();
         $this->_st->salshortname = $this->editform->editshortname->getText();
         $this->_st->salcode = $this->editform->editcode->getText();
+        $this->_st->acccode = $this->editform->editacc->getValue();
         $this->_st->disabled = $this->editform->editdisabled->ischecked() ? 1 : 0;
 
         $code = intval($this->_st->salcode);
@@ -140,7 +143,8 @@ class SalaryTypeList extends \App\Pages\Base
 
         $sl = SalType::getList();
         $codebaseincom = $this->optform->optbaseincom->getValue();
-        $codeadvance = $this->optform->optadvance->getValue();
+
+        $codeall = $this->optform->optall->getValue();
         $coderesult = $this->optform->optresult->getValue();
 
         if($codebaseincom==0) {
@@ -150,11 +154,12 @@ class SalaryTypeList extends \App\Pages\Base
         
         $this->optform->optbaseincom->setOptionList($sl);
         $this->optform->optresult->setOptionList($sl);
-        $this->optform->optadvance->setOptionList($sl);
+        $this->optform->optall->setOptionList($sl);
+
         //восстанавливаем значение
         $this->optform->optbaseincom->setValue($codebaseincom);
         $this->optform->optresult->setValue($coderesult);
-        $this->optform->optadvance->setValue($codeadvance);
+        $this->optform->optresult->setValue($codeall);
 
 
     }
@@ -166,14 +171,20 @@ class SalaryTypeList extends \App\Pages\Base
 
     public function onSaveOpt($sender) {
         $opt = System::getOptions("salary");
-        $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
+
+        $opt['codeall'] = $this->optform->optall->getValue();
         $opt['coderesult'] = $this->optform->optresult->getValue();
-        $opt['codeadvance'] = $this->optform->optadvance->getValue();
-        $opt['codefine'] = $this->optform->optfine->getValue();
-        $opt['codebonus'] = $this->optform->optbonus->getValue();
+        $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
         if($opt['codebaseincom']==0) {
            $this->addAjaxResponse("toastr.error('Не вказано поле  основної зарплати')");
-           
+           return;
+        }
+        if($opt['coderesult']==0) {
+           $this->addAjaxResponse("toastr.error('Не вказано поле до видачi')");
+           return;
+        }
+        if($opt['codeall']==0) {
+           $this->addAjaxResponse("toastr.error('Не вказано поле всього нараховано')");
            return;
         }
         System::setOptions('salary', $opt);

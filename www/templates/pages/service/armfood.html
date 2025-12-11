@@ -33,8 +33,18 @@
 
 
         <form zippy="setupform">
-            <h3>АРМ касира</h3>
-
+        <div class="row">
+                <div class="col-auto">
+                      <h3>АРМ касира</h3>
+                    </div>
+                <div class="col-auto pt-2 lt-4">
+                     {{#isadmins}}
+                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
+                       {{/isadmins}}
+               </div>    
+             </div>    
+           
+        
             <div class="row">
                 <div class="col-12 col-md-6 col-xl-4">
                     <div class="form-group row ">
@@ -74,9 +84,7 @@
 
 
                     <div class="form-group   ">
-                       {{#isadmins}}
-                        <a   zippy="options" class="  mr-4"><i class="fa fa-cog"></i> Налаштування</a>
-                       {{/isadmins}}
+                      
                         <input type="submit" value="До замовлень >"   class="btn btn-success">
                     </div>
                 </div>
@@ -489,7 +497,9 @@
 
                         <div zippy="checktext"></div> 
                         <br>
+                         {{^freg}}
                         <a    zippy="btoprint"  class="btn  btn-info">Друк</a>&nbsp;&nbsp;&nbsp;
+                         {{/freg}}
                         <a zippy="bnewcheck"  class="btn  btn-success">Нове замовлення</a> &nbsp;&nbsp;&nbsp;
 
                     </div>
@@ -586,10 +596,13 @@
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
                         <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> Закрити</a></td>
                         <td ><a zippy="brrefuse" class="text-danger"> Анулювати</a></td>
-        {{#fiscal}}
-                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a></td>
+                    {{#fiscal}}
+                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a>
+                        </td>
                          {{/fiscal}}                        
-                        
+                   {{#freg}}
+                        <td  ><span style="cursor:pointer" zippy="checkfr" >Фiскалiзувати</span></td>
+                         {{/freg}}                        
                     </tr>
 
                 </table> 
@@ -621,7 +634,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Ім'я </label>
-                        <input class="form-control " zippy="editcustname"  required />
+                        <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -778,6 +791,7 @@
                             </div>
                             
                             <div class="col-12">
+                                <a zippy="cancelopt" class="btn btn-secondary"  >Скасувати</a>
                                 <button class="btn btn-success" type="submit">Зберегти</button>
                                
                             </div>
@@ -814,11 +828,10 @@
           
             function onNewOrder() {
                   
-                callPageMethod('getMessages',null,null,(data)=> 
+                callPM('getMessages',null,null,(answer)=> 
                 {
                  
-                    var  answer = JSON.parse(data)  
-                 
+                  
                     if (answer.cntorder > 0) {
                         $('#newordersalert').show();
                         $('#neworderscnt').text('Нових замовлень ' + answer.cntorder);
@@ -863,24 +876,27 @@
                      
                       callPM('checkPromo',[promodode], null,(data)=> 
                       {
-                         if(checkPMAnswer(data))   {
-
-                           $('#totaldisc').val(data.disc)                             
-                         }  else {
-                            $('#totaldisc').val('0')                                                          
-                            $('#promocode').val('')                                                          
-                         }
+                         
+                            $('#totaldisc').val(data.disc)                             
                           
-                      });             
+                          
+                      },
+                       (error)=>{
+                            $('#totaldisc').val('0')                                                          
+                            $('#promocode').val('')         
+                            toastr.error( error,'',{timeOut:8000} )          
+                       }
+                      
+                      );             
                 });     
              
           
        function updateReadyItems() {
         
-          callPageMethod('getProdItems',[],null,(data)=> 
+                  callPM('getProdItems',[],null,(itemlist)=> 
                   {
                            
-                     var itemlist= JSON.parse(data)  
+                 
                      if(itemlist.length >0) {
                          $("#ireadyp").show()
                          $("#ireadyc").text(itemlist.length)

@@ -48,7 +48,7 @@ class IncomeMoney extends Document
     public function generateReport() {
 
 
-        $pt = \App\Entity\IOState::getTypeList(1);
+        $pt = \App\Entity\IOState::getTypeListInM();
         $header = array(
             'amount'          => H::fa($this->amount),
             'totalstr'        => \App\Util::money2str_ua($this->amount),
@@ -115,5 +115,33 @@ class IncomeMoney extends Document
                 $b->save();
             }
         }
+          $this->DoAcc();
+ 
     }
+    
+ public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+      
+         $mf=  \App\Entity\MoneyFund::load($this->headerdata['payment']) ;
+         $n=  $mf->beznal ?'31':'30' ;
+         
+       
+         if ($this->headerdata['detail'] == 1)  {    // оплата от покупателя
+              $this->DoAccPay('36');
+         }  else   
+         if ($this->headerdata['detail'] == 2)  {    // возврат от поставщика
+              $this->DoAccPay('63',true);
+         } else {
+             if($this->headerdata['type']== \App\Entity\IOState::TYPE_FIN) {
+                \App\Entity\AccEntry::addEntry( '71', $n,  $this->amount,$this->document_id )  ; 
+             }
+             if($this->headerdata['type']== \App\Entity\IOState::TYPE_OTHER_INCOME) {
+                \App\Entity\AccEntry::addEntry( '71', $n,  $this->amount,$this->document_id )  ; 
+             }
+         } 
+            
+                         
+    } 
+       
 }

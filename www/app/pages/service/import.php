@@ -41,13 +41,14 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("store", Store::getList(), H::getDefStore()));
 
         $form->add(new \Zippy\Html\Form\File("filename"));
-        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M', 'N' => 'N', 'O' => 'O' );
+        $cols = array(0 => '-', 'A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D', 'E' => 'E', 'F' => 'F', 'G' => 'G', 'H' => 'H', 'I' => 'I', 'J' => 'J', 'K' => 'K', 'L' => 'L', 'M' => 'M', 'N' => 'N', 'O' => 'O','P' => 'P','Q' => 'Q' );
         $form->add(new DropDownChoice("colname", $cols,$sc['colname'] ?? 0));
         $form->add(new DropDownChoice("colcode", $cols,$sc['colcode'] ?? 0));
         $form->add(new DropDownChoice("colbarcode", $cols,$sc['colbarcode'] ?? 0));
         $form->add(new DropDownChoice("colcat", $cols,$sc['colcat'] ?? 0));
         $form->add(new DropDownChoice("colqty", $cols,$sc['colqty'] ?? 0));
         $form->add(new DropDownChoice("colcell", $cols,$sc['colcell'] ?? 0));
+        $form->add(new DropDownChoice("coluktz", $cols,$sc['coluktz'] ?? 0));
         $form->add(new DropDownChoice("colshortname", $cols,$sc['colshortname'] ?? 0));
         $form->add(new DropDownChoice("colimage", $cols,$sc['colimage'] ?? 0));
         $form->add(new DropDownChoice("colwar", $cols,$sc['colwar'] ?? 0));
@@ -180,6 +181,7 @@ class Import extends \App\Pages\Base
 
     public function onImport($sender) {
         $t = $this->iform->itype->getValue();
+        $this->_tvars['isstore']  = $t==1;
         $cmp = $this->iform->icompare->getValue();
         $store = $this->iform->store->getValue();
         $item_type = $this->iform->item_type->getValue();
@@ -198,6 +200,7 @@ class Import extends \App\Pages\Base
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
         $colcell = $this->iform->colcell->getValue();
+        $coluktz = $this->iform->coluktz->getValue();
         $colbrand = $this->iform->colbrand->getValue();
         $coldesc = $this->iform->coldesc->getValue();
         $colimage = $this->iform->colimage->getValue();
@@ -238,6 +241,7 @@ class Import extends \App\Pages\Base
         $save['colinprice']=$colinprice;
         $save['colmsr']=$colmsr;
         $save['colcell']=$colcell;
+        $save['coluktz']=$coluktz;
         $save['colbrand']=$colbrand;
         $save['coldesc']=$coldesc;
         $save['colimage']=$colimage;
@@ -305,6 +309,7 @@ class Import extends \App\Pages\Base
                     'colprice5'  => $row[$colprice5] ?? '',
                     'colbrand'   => $row[$colbrand] ?? '',
                     'colcell'    => $row[$colcell] ?? '',
+                    'coluktz'    => $row[$coluktz] ?? '',
                     'coldesc'    => $row[$coldesc] ?? ''
                 );
             }
@@ -315,17 +320,18 @@ class Import extends \App\Pages\Base
         $newitems = array();
         foreach ($data as $row) {
 
-            $price1 = str_replace(',', '.', trim($row[$colprice1] ?? ''));
-            $price2 = str_replace(',', '.', trim($row[$colprice2] ?? ''));
-            $price3 = str_replace(',', '.', trim($row[$colprice3] ?? ''));
-            $price4 = str_replace(',', '.', trim($row[$colprice4] ?? ''));
-            $price5 = str_replace(',', '.', trim($row[$colprice5] ?? ''));
+            $price1 =doubleval( str_replace(',', '.', trim($row[$colprice1] ?? ''))) ;
+            $price2 =doubleval( str_replace(',', '.', trim($row[$colprice2] ?? '')));
+            $price3 =doubleval( str_replace(',', '.', trim($row[$colprice3] ?? '')));
+            $price4 =doubleval( str_replace(',', '.', trim($row[$colprice4] ?? '')));
+            $price5 =doubleval( str_replace(',', '.', trim($row[$colprice5] ?? '')));
             
-            $itemcode = trim($row[$colcode] ?? '');
+            $itemcode = ''.trim($row[$colcode] ?? '');
             $brand = trim($row[$colbrand] ?? '');
             $itemname = trim($row[$colname] ?? '');
             $itembarcode = trim($row[$colbarcode] ?? '');
             $cell = trim($row[$colcell] ?? '');
+            $uktz = trim($row[$coluktz] ?? '');
             $msr = trim($row[$colmsr] ?? '');
             $desc = trim($row[$coldesc] ?? '');
             $catname = trim($row[$colcat] ?? '');
@@ -334,8 +340,8 @@ class Import extends \App\Pages\Base
             $notes = trim($row[$colnotes]);
             $shortname = trim($row[$colshortname] ?? '');
             $minqty = trim($row[$colminqty] ?? '');
-            $inprice = str_replace(',', '.', trim($row[$colinprice] ?? ''));
-            $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
+            $inprice = doubleval( str_replace(',', '.', trim($row[$colinprice] ?? '')) );
+            $qty = doubleval(str_replace(',', '.', trim($row[$colqty] ?? '')));
 
                
             
@@ -382,7 +388,8 @@ class Import extends \App\Pages\Base
             if($colbarcode !='0') $item->bar_code = $itembarcode;
             if($colmsr !='0')         $item->msr = $msr;
             if($colcell !='0')        $item->cell = $cell;
-            if($colbrand   !='0')       $item->manufacturer = $brand;
+            if($coluktz !='0')        $item->uktz = $uktz;
+            if($colbrand   !='0')     $item->manufacturer = $brand;
             if($coldesc !='0')        $item->description = $desc;
             if($colshortname !='0')   $item->shortname = $shortname;
             if($colwar !='0')    $item->warranty = $warranty;
@@ -394,11 +401,12 @@ class Import extends \App\Pages\Base
             if ($colprice3 !='0') $item->price3 = doubleval($price3) ;
             if ($colprice4 !='0') $item->price4 = doubleval($price4) ;
             if ($colprice5 !='0') $item->price5 = doubleval($price5) ;
+           
+            if($colinprice !='0')    $item->price = $inprice;
+            if($colminqty !='0')     $item->minqty = $minqty;
+            if($colqty !='0')        $item->quantity = $qty;
 
-            $item->price = $inprice >0 ? $inprice :0 ;
-            $item->quantity = $qty >0 ? $qty :0 ;
-            $item->minqty =  $minqty >0 ? $minqty :0;
- 
+           
 
             if ($cat_id > 0) {
                 $item->cat_id = $cat_id;
@@ -428,7 +436,7 @@ class Import extends \App\Pages\Base
 
 
         }
-        if (count($newitems) > 0) {
+        if (count($newitems) > 0 && $t==1) {
             $doc = \App\Entity\Doc\Document::create('IncomeItem');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {

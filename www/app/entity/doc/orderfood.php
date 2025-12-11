@@ -96,7 +96,7 @@ class OrderFood extends Document
 
             $detail[] = array(
                 "tovar_name" => $name,
-                "quantity"   => H::fqty($item->quantity),
+                "quantity"   => H::fqty($item->quantity,true),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
         }
@@ -133,7 +133,7 @@ class OrderFood extends Document
                         "phone"           => $firm["phone"],
                         "inn"             => strlen($firm["inn"]) >0 ? $firm["inn"] : false,
                         "tin"             => strlen($firm["tin"]) >0 ? $firm["tin"] : false,
-                        "checkslogan"     => $common["checkslogan"],
+                     
                         "customer_name"   => strlen($this->customer_name) > 0 ? $this->customer_name : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]??'') > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]??'') > 0 ? $this->headerdata["fiscalnumberpos"] : false,
@@ -150,6 +150,7 @@ class OrderFood extends Document
                         "totaldisc"         => H::fasell($this->headerdata["totaldisc"]),
                         "isdisc"          => $this->headerdata["totaldisc"] > 0,
                         "trans"          => strlen($this->headerdata["trans"]) > 0 ? $this->headerdata["trans"] : false,
+                        "checkslogan"          => strlen($this->headerdata["checkslogan"]??'') > 0 ? $this->headerdata["checkslogan"] : false,
                          "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
@@ -165,14 +166,7 @@ class OrderFood extends Document
         if($header['form1']  == true) {
            $header['payeq']  = false; 
         }
-        $frases = explode(PHP_EOL, $header['checkslogan']) ;
-        if(count($frases) >0) {
-            $i=  rand(0, count($frases) -1)  ;
-            $header['checkslogan']   =   $frases[$i];
-        }
-        if(strlen($header['checkslogan'] ??'') ==0) {
-            $header['checkslogan']  = false;
-        }
+   
         //промокод
         $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1  and coalesce(enddate,now()) >=now()  ','id desc') ;
         foreach($pc as $p) {
@@ -250,16 +244,16 @@ class OrderFood extends Document
                     $ua->document_id = $this->document_id;
                     $ua->emp_id = $emp_id;
                     $ua->amount = $b;
+                    $ua->notes = "Бонус " ;
+             
                     $ua->save();
                     
-                    $n = new \App\Entity\Notify();
-                    $n->user_id = \App\System::getUser()->user_id;;;
-                    $n->message = "Бонус " . $b  ;
-                    $n->sender_id =  \App\Entity\Notify::SYSTEM;
-                    $n->save();   
+                    
                 }
             }
         }
+       $this->DoAcc() ;    
+         
     }
 
     public function DoStore() {
@@ -379,6 +373,7 @@ class OrderFood extends Document
             $io->save();
 
       }          
+        $this->DoAcc() ;    
         
     }
 
@@ -426,6 +421,37 @@ class OrderFood extends Document
             $b->save();
         }
         
-        
+         $this->DoAcc() ;    
+       
     }
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+        
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+         
+      
+         
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('23',$a, $am,$this->document_id)  ; 
+         }   
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'23', $am,$this->document_id)  ; 
+         }   
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
+         }   
+
+
+  
+         \App\Entity\AccEntry::addEntry('36', '70', $this->payamount,$this->document_id)  ; 
+        
+         $this->DoAccPay('36');      
+
+         //отходы идут как  недоплученая  прибыл        
+  }
+     
 }

@@ -27,7 +27,7 @@ if (!is_array($_config)) {
     die("Invalid config file");
 }
 
-date_default_timezone_set($_config['common']['timezone'] ?? 'Europe/Kiev');
+date_default_timezone_set($_config['common']['timezone'] ?? 'Europe/Moscow');
 
 
 require_once _ROOT . 'vendor/autoload.php';
@@ -62,7 +62,7 @@ if (!file_exists(_ROOT . "upload")) {
 try {
     $conn = \ZDB\DB::getConnect();
 } catch(Throwable $e) {
-    echo 'Помилка з`єднання з БД. Деталi в папцi logs';
+    echo 'Ошибка  соединения с БД. Детально в  папке logs';
 
     $logger->error($e);
     die;
@@ -77,7 +77,7 @@ function app_autoload($className) {
         if (file_exists($file)) {
             require_once $file;
         } else {
-            die('Невiрний класс ' . $className);
+            die('Неверний класс ' . $className);
         }
     }
 }

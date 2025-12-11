@@ -32,15 +32,18 @@
 
                             <th> Скорочення</th>
                             <th> Код</th>
-                         
+                            {{#useacc}}
+                             <th>Бух. рахунок  </th>
+                            {{/useacc}}
                             <th> </th>
                         </tr>
                         <tr zippy="stlist">
                             <td zippy="stname"></td>
                             <td zippy="shortname"></td>
                             <td zippy="code"></td>
-                           
-              
+                            {{#useacc}}
+                             <td zippy="acccode"></td>
+                            {{/useacc}}
                             <td  ><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
                         </tr>
                     </table>
@@ -51,20 +54,29 @@
                 <form class="col-6 col-md-6 col-xl-4" zippy="editform">
                     <div class="form-group">
                         <label for="editstname">Найменування</label>
-                        <input autofocus="on"    required  class="form-control" zippy="editstname"/>
+                        <input autofocus="on"    required="on"  class="form-control" zippy="editstname"/>
                     </div>
                     <div class="form-group">
                         <label for="editshortname">Скорочене позначення</label>
-                        <input maxlength="10"  style="width:200px;"  required  class="form-control" zippy="editshortname"/>
+                        <input maxlength="10"  style="width:200px;"  required="on"  class="form-control" zippy="editshortname"/>
                         <small>До 10 символів. Використовується для заголовків таблиць у документах та звітах</small>
                     </div>
                     <div class="form-group">
                         <label for="editcode">Код                        </label>
-                        <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required  class="form-control" zippy="editcode"/>
-                        <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.
-                         </small>
+                        <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required="on"  class="form-control" zippy="editcode"/>
+                        <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.                         </small>
                     </div>
-
+                    {{#useacc}}
+                     <div class="form-group">
+                        <label for="editacc">Бух. рахунок                        </label>
+                        <select   class="form-control" zippy="editacc">
+                            <option value="0">Не вказано</option>
+                            <option value="641">Розрахунки за податками</option>
+                            <option value="65">Розрахунки за страхуванням</option>
+                        </select>
+                        <small> Тільки для утримань   </small>
+                    </div>
+                    {{/useacc}}
                  
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input">
@@ -123,6 +135,9 @@
        <b>days_vac</b> - днi вiдпустки <br>
        <b>days_sick</b> - лiкарнянi днi <br>
        <b>days_bt</b> - днi в вiдрядженнi <br>
+       <b>advance</b> - аванс <br>
+       <b>bonus</b> - премiї та бонуси <br>
+       <b>fine</b> - штрафи <br>
 
      
       
@@ -170,29 +185,19 @@
                 <small>Показуєтся  як  поле ручного вводу </small>
                <br> <small> <i class="fa fa-exclamation-triangle"></i> Інші поля тільки на  основі  формул  </small>
              </div> 
-             <div class="form-group">
-                <label for="optbonus">Бонуси та премії</label>
-                <select  class="form-control" zippy="optbonus" >
-                   <option value="0">Не вибрано</option>
-                </select>
-                <small>Сума нарахувань на  особовому  рахунку (на підставі офісних документів) </small>
-             </div> 
-             <div class="form-group">
-                <label for="optfine">Штрафи тп  вирахування</label>
-                <select  class="form-control" zippy="optfine" >
-                   <option value="0">Не вибрано</option>
-                </select>
-                <small>Сума вирахувань на особовому  рахунку (на підставі офісних документів) </small>
-             </div> 
-             <div class="form-group">
-                <label for="optadvance">Видані аванси</label>
-                <select  class="form-control" zippy="optadvance" >
-                   <option value="0">Не вибрано</option>
-                </select>
-                <small>Заповнюється виданими авансами за вказаний місяць</small>
-             </div> 
+     
      
       
+             <div class="form-group">
+                <label for="optall">Всього нараховано</label>
+                <select  class="form-control" zippy="optall" >
+                
+                </select>
+                <small>Обов'язкове поле, значення якого відноситься до  витрат . </small>
+                
+             </div> 
+     
+       
              <div class="form-group">
                 <label for="optresult">До видачi</label>
                 <select  class="form-control" zippy="optresult" >

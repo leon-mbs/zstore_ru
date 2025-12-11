@@ -363,10 +363,10 @@ class Helper
            // throw new \Exception('Розмір файлу більше 4M');
            return 0;
         }        
-        
+        $user=\App\System::getUser() ;
         $comment = $conn->qstr($comment);
         $filename = $conn->qstr($filename);
-        $sql = "insert  into files (item_id,filename,description,item_type,mime) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}') ";
+        $sql = "insert  into files (item_id,filename,description,item_type,mime,user_id) values ({$itemid},{$filename},{$comment},{$itemtype},'{$mime}',{$user->user_id}) ";
         $conn->Execute($sql);
         $id = $conn->Insert_ID();
 
@@ -391,6 +391,7 @@ class Helper
         foreach($rs as $row) {
             $item = new \App\DataItem();
             $item->file_id = $row['file_id'];
+            $item->user_id = $row['user_id'];
             $item->filename = $row['filename'];
             $item->description = $row['description'];
             $item->mime = $row['mime'];
@@ -593,9 +594,10 @@ class Helper
      * Форматирование количества
      *
      * @param mixed $qty
+     * @param mixed $check    убрать нули после  запятой (для печати в  чеках)
      * @return mixed
      */
-    public static function fqty($qty) {
+    public static function fqty($qty,$check=false) {
         if(strlen('' . $qty) == 0) {
             return '';
         }
@@ -607,7 +609,17 @@ class Helper
 
         $common = System::getOptions("common");
         if($common['qtydigits'] > 0) {
-            return number_format(doubleval($qty), $common['qtydigits'], '.', '');
+            
+           $r = number_format(doubleval($qty), $common['qtydigits'], '.', '');
+           if($check) {
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'0') ;
+             $r= rtrim($r,'.') ;
+             
+           }
+           return $r;
+           
         } else {
             return intval($qty);
         }
@@ -759,12 +771,7 @@ class Helper
                 $data['phone'] = $branch->phone;
             }
         }
-
-        $user = System::getUser() ;
-        if(strlen($user->payname ??'')>0)   $data['firm_name']  = $user->payname;
-        if(strlen($user->address ??'')>0)   $data['address']  = $user->address;
-        if(strlen($user->tin ??'')>0)   $data['tin']  = $user->tin;
-         
+      
         return $data;
     }
 
@@ -953,7 +960,20 @@ class Helper
 
     }
 
+    public static function exportCSV($csvfile,$filename) {
 
+        $size = filesize($csvfile);
+      
+        header('Content-Type: text/csv');
+        header('Content-Length: '.$size);
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        readfile($csvfile);
+        flush() ;
+        unlink($csvfile);
+        die;
+
+
+    }
     /**
      * Получение  данных с  таблицы ключ-значение
      *
@@ -1308,40 +1328,7 @@ class Helper
     }
 
 
-    /**
-     * проверка  новой версии
-     * @deprecated
-     */
-    public static function checkVer() {
-
-        $phpv = phpversion();
-        $conn = \ZDB\DB::getConnect();
-
-        $nocache = "?t=" . time() . "&s=" . Helper::getSalt() . '&phpv=' . $phpv . '_' . \App\System::CURR_VERSION;
-
-        $v = @file_get_contents("https://zippy.com.ua/checkver.php" . $nocache);
-        $v = @json_decode($v, true);
-        if(!is_array($v)) {
-            $v = @file_get_contents("https://zippy.com.ua/version.json" . $nocache);
-            $v = @json_decode($v, true);
-
-        }
-        if(strlen($v['version']) > 0) {
-            $c = str_replace("v", "", \App\System::CURR_VERSION);
-            $n = str_replace("v", "", $v['version']);
-
-            $ca = explode('.', $c);
-            $na = explode('.', $n);
-
-            if($na[0] > $ca[0] || $na[1] > $ca[1] || $na[2] > $ca[2]) {
-                return $v['version'];
-            }
-
-        }
-
-        return '';
-    }
-
+ 
     /**
      * выполняет перенос  данных на  новой  версии
      *
@@ -1509,27 +1496,33 @@ class Helper
                
             }  
         }
+         
             
-        $migration6150 = \App\Helper::getKeyVal('migration6150'); 
-        if($migration6150 != "done" && version_compare($vdb,'6.15.0')>=0  ) {
-        //    Helper::log("Міграція 6150");
+        $migration6180 = \App\Helper::getKeyVal('migration6180'); 
+        if($migration6180 != "done"  ) {
+            Helper::log("Міграція 6180");
          
-            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name='OrderFood' ") );
-            if($cnt > 0){
-               $common['usefood'] = 1;
-               System::setOptions("common",$common) ;
-            }
-            $cnt= intval($conn->GetOne("select count(*) from documents_view where state > 4 and meta_name in('ProdReceipt', 'ProdIssue') ") );
-            if($cnt > 0){
-               $common['useprod'] = 1;
-               System::setOptions("common",$common) ;
-            }
-            Session::getSession()->menu = [];     
-         
-            \App\Helper::setKeyVal('migration6150', "done");           
+            \App\Helper::setKeyVal('migration6180', "done");           
         
+            try {
        
-        }       
+                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
+                 $is=false;          
+                 foreach($w as $e){
+                     if($e['Key_name']=='parent_id'){
+                          $is=true;      
+                     }             
+                 }
+                 if($is==false) {
+                     $conn->Execute("ALTER TABLE documents ADD INDEX parent_id (parent_id) ");                     
+                 }
+
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }   
+          
     }
 
 

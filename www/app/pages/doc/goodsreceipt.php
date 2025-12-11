@@ -62,15 +62,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('outnumber'));
         $this->docform->add(new TextInput('basedoc'));
-        $this->docform->add(new CheckBox('spreaddelivery'));
-        $this->docform->add(new CheckBox('baydelivery'));
-        if($common['spreaddelivery'] ==1) {
-            $this->docform->spreaddelivery->setChecked(1)  ;
-        }
-        if($common['baydelivery'] ==1) {
-            $this->docform->baydelivery->setChecked(1)  ;
-        }
-        
+      
+      
         
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -98,7 +91,8 @@ class GoodsReceipt extends \App\Pages\Base
         $this->docform->add(new SubmitButton('bdisc'))->onClick($this, 'onDisc');
         $this->docform->add(new TextInput('editdelivery', "0"));
         $this->docform->add(new SubmitButton('bdelivery'))->onClick($this, 'onDelivery');
-
+        $this->docform->add(new DropDownChoice('editdeliverytype'))->setValue($common['deliverytype'] ?? 1);
+     
 
         $this->docform->add(new Label('nds', 0));
         $this->docform->add(new Label('disc', 0));
@@ -171,8 +165,6 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
 
             $this->docform->notes->setText($this->_doc->notes);
-            $this->docform->spreaddelivery->setChecked($this->_doc->headerdata['spreaddelivery']);
-            $this->docform->baydelivery->setChecked($this->_doc->headerdata['baydelivery']);
             $this->docform->basedoc->setText($this->_doc->basedoc);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->customer->setKey($this->_doc->customer_id);
@@ -186,6 +178,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->docform->editdisc->setText(H::fa($this->_doc->headerdata['disc']));
             $this->docform->delivery->setText(H::fa($this->_doc->headerdata['delivery']));
             $this->docform->editdelivery->setText(H::fa($this->_doc->headerdata['delivery']));
+            $this->docform->editdeliverytype->setValue( $this->_doc->headerdata['editdeliverytype']) ;
             $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
      
  
@@ -345,6 +338,7 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new Label('custcode', $item->custcode));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
+        $row->add(new Label('pricends', H::fa($item->pricends)));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
@@ -423,7 +417,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->editdetail->edititem->setKey($item->item_id);
             $this->editdetail->edititem->setText($item->itemname);
             
-            $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
+            $price = $item->getLastPartion($this->docform->store->getValue(), "", true,'GoodsReceipt');
             
             $this->editdetail->editprice->setText(H::fa($price));
             $this->editdetail->editsellprice->setText(H::fa($item->price1));
@@ -560,18 +554,18 @@ class GoodsReceipt extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
-        $sellprice = $this->editdetail->editsellprice->getText();
-        $sellprice2 = $this->editdetail->editsellprice2->getText();
-        if (strlen($sellprice) > 0) {
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
+        $sellprice = $this->editdetail->editsellprice->getDouble();
+        $sellprice2 = $this->editdetail->editsellprice2->getDouble();
+        if ( ($sellprice) > 0) {
             $olditem = Item::load($item->item_id);
             if ($olditem != null) {
                 $olditem->price1 = $sellprice;
                 $olditem->save();
             }
         }
-        if (strlen($sellprice2) > 0) {
+        if ( ($sellprice2) > 0) {
             $olditem = Item::load($item->item_id);
             if ($olditem != null) {
                 $olditem->price2 = $sellprice2;
@@ -585,6 +579,8 @@ class GoodsReceipt extends \App\Pages\Base
             $this->setWarn("Не вказана ціна");
         }
 
+        $item->pricends= $item->price + $item->price * $item->nds();
+        
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->sdate = $this->editdetail->editsdate->getDate();
 
@@ -680,8 +676,8 @@ class GoodsReceipt extends \App\Pages\Base
 
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
-        $this->_doc->headerdata['spreaddelivery'] = $this->docform->spreaddelivery->isChecked() ? 1 : 0;
-        $this->_doc->headerdata['baydelivery'] = $this->docform->baydelivery->isChecked() ? 1 : 0;
+        $this->_doc->headerdata['deliverytype'] = $this->docform->editdeliverytype->getValue() ;
+        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getText();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
         $this->_doc->headerdata['val'] = $this->docform->val->getValue();
@@ -689,7 +685,6 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['rate'] = $this->docform->rate->getText();
         $this->_doc->headerdata['nds'] = $this->docform->nds->getText();
         $this->_doc->headerdata['disc'] = $this->docform->disc->getText();
-        $this->_doc->headerdata['delivery'] = $this->docform->delivery->getText();
         $this->_doc->headerdata['outnumber'] = $this->docform->outnumber->getText();
         $this->_doc->headerdata['basedoc'] = $this->docform->basedoc->getText();
         $this->_doc->headerdata['comission'] = $this->docform->comission->isChecked() ? 1:0;
@@ -697,7 +692,7 @@ class GoodsReceipt extends \App\Pages\Base
         $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
 
 
-        $this->_doc->payamount = $this->docform->payamount->getText();
+        $this->_doc->payamount = doubleval($this->docform->payamount->getText());
         $this->_doc->headerdata['payamount'] = $this->_doc->payamount;
 
         $this->_doc->payed = doubleval( $this->docform->payed->getText());
@@ -827,18 +822,18 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getDouble()));
 
     }
 
     public function onDisc($sender) {
-        $this->docform->disc->setText(H::fa($this->docform->editdisc->getText()));
+        $this->docform->disc->setText(H::fa($this->docform->editdisc->getDouble()));
         $this->CalcPay();
 
     }
 
     public function onDelivery($sender) {
-        $this->docform->delivery->setText(H::fa($this->docform->editdelivery->getText()));
+        $this->docform->delivery->setText(H::fa($this->docform->editdelivery->getDouble()));
         $this->CalcPay();
 
     }
@@ -850,7 +845,7 @@ class GoodsReceipt extends \App\Pages\Base
     }
 
     public function onRate($sender) {
-        $this->docform->rate->setText($this->docform->editrate->getText());
+        $this->docform->rate->setText($this->docform->editrate->getDouble());
         $this->CalcPay();
 
     }
@@ -862,12 +857,25 @@ class GoodsReceipt extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        $nds = 0;
 
         foreach ($this->_itemlist as $item) {
             $item->amount = doubleval($item->price) * $item->quantity;
             $total = $total + $item->amount;
+            if($item->pricends > $item->price) {
+                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
+            }
+
         }
         $this->docform->total->setText(H::fa($total));
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+      
+        if($nds>0) {
+            $this->docform->nds->setText(H::fa($nds));            
+        }
+
     }
 
     private function CalcPay() {
@@ -880,10 +888,11 @@ class GoodsReceipt extends \App\Pages\Base
 
         $total = doubleval($total) + $nds - doubleval($disc)  ;
         
-        if($this->docform->baydelivery->isChecked() ==false) {
-           $total +=  $delivery;    //если патит  поставщик
+    
+        $dt =$this->docform->editdeliverytype->getValue();
+        if($dt==2 || $dt==3) {
+           $total += $delivery;    
         }
-        
         
 
         $this->docform->editpayamount->setText(H::fa($total));
@@ -1111,15 +1120,13 @@ class GoodsReceipt extends \App\Pages\Base
         $this->wselitem->Reload();
     }
 
-    public function onSelectItem($item_id, $itemname, $price=null) {
+    public function onSelectItem($item_id, $itemname ) {
         $this->editdetail->edititem->setKey($item_id);
         $this->editdetail->edititem->setText($itemname);
         $item = Item::load($item_id);
 
-        if($price==null) {
-        //    $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
+        $price = $item->getLastPartion($this->docform->store->getValue(), "", true,'GoodsReceipt');
 
-        }
         $this->editsnitem->editsnprice->setText(H::fa($price));
 
         $this->editdetail->editprice->setText(H::fa($price));
@@ -1165,7 +1172,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item = $sender->getOwner()->getDataItem();
 
 
-        $this->onSelectItem($item->item_id, $item->itemname, $item->price);
+        $this->onSelectItem($item->item_id, $item->itemname);
     }
 
     public function onOpenLast($sender) {

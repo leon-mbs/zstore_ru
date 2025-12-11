@@ -43,6 +43,7 @@ class GoodsIssue extends Document
                               "msr"        => $item->msr,
                               "disc"       => $item->disc,
                               "price"      => H::fa($item->price),
+                              "pricenonds"      => H::fa($item->pricenonds),
                               "amount"     => H::fa($item->quantity * $item->price)
             );
         }
@@ -75,6 +76,7 @@ class GoodsIssue extends Document
                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                          "stamp"           => _BASEURL . $firm['stamp'],
                         "isstamp"         => strlen($firm['stamp']) > 0,
+                       "iscustaddress"    => false,
 
                         "bank"            => $mf->bank ?? "",
                         "bankacc"         => $mf->bankacc ?? "",
@@ -89,45 +91,63 @@ class GoodsIssue extends Document
 
         $header["customer_name"] = $this->headerdata["customer_name"];
         $header["phone"] = false;
-        $header["address"] = false;
+        $header["fphone"] = false;   
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
+        $header["isfop"] = false;
         $header['isprep'] = ($this->headerdata["prepaid"] ??0 )> 0;
         $header['prepaid'] = H::fa($this->headerdata["prepaid"]??'');
-
+        $header["nds"] = false;
+   
         if ($this->customer_id > 0) {
             $cust = \App\Entity\Customer::load($this->customer_id);
             $header["customer_name"] = $cust->customer_name;
             if (strlen($cust->phone) > 0) {
                 $header["phone"] = $cust->phone;
             }
-            if (strlen($cust->address) > 0) {
-                $header["address"] = $cust->address;
-            }
+       
             if (strlen($cust->edrpou) > 0) {
                 $header["edrpou"] = $cust->edrpou;
             }
 
-
+            if (strlen($cust->address) > 0) {
+                $header["iscustaddress"] = true;
+                $header["custaddress"] = $cust->address;
+            }
         }
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-  
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
+        }  
 
         if (strlen($this->headerdata["customer_name"]) == 0) {
             $header["customer_name"] = false;
         }
-
-
+        $header["address"] = $firm['address'];        
+    
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+            $header["fop_edrpou"] = $fop->edrpou ??'';
+            $header["address"] = $fop->address ??'';            
+        }
         if ($this->headerdata["contract_id"] > 0) {
             $contract = \App\Entity\Contract::load($this->headerdata["contract_id"]);
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
         }
 
-
+        if ($this->getHD('nds',0) > 0) {
+            $header["nds"] = H::fa($this->getHD('nds' )) ;
+        }
+ 
 
         $report = new \App\Report('doc/goodsissue.tpl');
 
@@ -376,7 +396,41 @@ class GoodsIssue extends Document
             $b->createdon = strtotime($p['paydate']);
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
-        }        
+        }   
+   
+        $this->DoAcc();        
+              
     }
     
+    public   function DoAcc() {
+             if(\App\System::getOption("common",'useacc')!=1 ) return;
+             parent::DoAcc()  ;
+      
+             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
+             foreach($ia as $a=>$am){
+                 \App\Entity\AccEntry::addEntry( '23',$a, $am,$this->document_id)  ; 
+             }       
+             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+             foreach($ia as $a=>$am){
+                 \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
+             }       
+             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+             foreach($ia as $a=>$am){
+                 \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
+             }
+             
+             $this->DoAccPay('36');   
+             
+            if ($this->getHD('nds',0) > 0){
+               $date= $this->document_date;
+               if($this->parent_id > 0 ){  //первое  событиен
+                   foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
+                       $date = $pay->paydate;
+                       break;
+                   }
+               }             
+                \App\Entity\AccEntry::addEntry('641','36',$this->getHD('nds' ),$this->document_id,$date,\App\Entity\AccEntry::TAG_NDS )  ; 
+               
+            }    
+      }        
 }

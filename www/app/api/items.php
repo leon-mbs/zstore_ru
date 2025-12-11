@@ -139,7 +139,7 @@ class items extends JsonRPC
     // запись  ТМЦ.
     public function save($args) {
         if (strlen($args['item_code']) == 0) {
-            throw new \Exception("Не задано артикул");
+            throw new \Exception("Не задан   артикул");
         }
 
         $code = Item::qstr($args['item_code']);
@@ -175,7 +175,7 @@ class items extends JsonRPC
         }
 
         if (strlen($item->itemname) == 0) {
-            throw new \Exception("Не вказано назву");
+            throw new \Exception("Не задано название");
         }
         if (strlen( $args['imageurl'] ) > 0) {
 

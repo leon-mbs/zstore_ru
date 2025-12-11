@@ -80,7 +80,7 @@ class GoodsReceipt extends Document
             $header['isval'] = false;
         }
         $val = H::getValList();
-        $header['val'] = $val[$this->headerdata['val']];
+        $header['val'] = $val[$this->headerdata['val']]??'';
 
         $report = new \App\Report('doc/goodsreceipt.tpl');
 
@@ -111,7 +111,7 @@ class GoodsReceipt extends Document
 
 
 
-        if($this->headerdata['delivery'] > 0  &&    $this->headerdata['spreaddelivery'] ==1) {
+        if( $this->headerdata['deliverytype']   ==2  && $this->headerdata['delivery'] > 0) {
             $total = $total + $this->headerdata["delivery"];  // распределяем накладные  затраты  на  себестоимость
         }
 
@@ -136,7 +136,7 @@ class GoodsReceipt extends Document
 
             $sc = new Entry($this->document_id, $iprice * $item->quantity, $item->quantity);
             $sc->setStock($stock->stock_id);
-            // $sc->setExtCode($iprice); //Для АВС
+             
             $sc->setOutPrice($iprice);
             $sc->tag=Entry::TAG_BAY;
 
@@ -162,33 +162,22 @@ class GoodsReceipt extends Document
       
         $this->DoBalans() ;
 
-        if($this->headerdata['delivery'] > 0) {
-           if($this->headerdata['spreaddelivery']== 0) { //если  не  распределяем на  цену
-               \App\Entity\IOState::addIOState($this->document_id, 0 - $payed + $this->headerdata["delivery"], \App\Entity\IOState::TYPE_BASE_OUTCOME);
-               \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
-           }
-           if($this->headerdata['baydelivery']== 1) { //если платит  покупатель
-                $pay = new \App\Entity\Pay();
-                $pay->mf_id = $this->headerdata['payment'];
-                $pay->document_id = $this->document_id;
-                $pay->amount = 0-$this->headerdata['delivery'];
-                $pay->paytype = \App\Entity\Pay::PAY_DELIVERY;
-                $pay->paydate = time();
-                $pay->notes = 'Доставка';
-                $pay->user_id = \App\System::getUser()->user_id;
-                $pay->save();
-                \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata["delivery"], \App\Entity\IOState::TYPE_NAKL);
-                
-           }
-           
-            
-            
-        } else {
-            \App\Entity\IOState::addIOState($this->document_id, 0 - $payed, \App\Entity\IOState::TYPE_BASE_OUTCOME);
-        }
+         $io= $this->payamount;
+         $del = $this->headerdata['delivery'] * $rate;
+         if($del > 0) {
+           if($this->headerdata['deliverytype']  < 4 ) { 
+               \App\Entity\IOState::addIOState($this->document_id, 0- $del, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+           }  
+           if($this->headerdata['deliverytype'] ==2 || $this->headerdata['deliverytype'] == 4 ) { 
+               $io = $io - $del;   //вычитаем из общих расходов  (по оплате)
+           }  
+       
+        }  
 
-        
-        if(($common['ci_update'] ?? 0 )==1) {
+        \App\Entity\IOState::addIOState($this->document_id, 0 - $io, \App\Entity\IOState::TYPE_BASE_OUTCOME);
+       
+     
+        if(($common['ci_update'] ?? 0 )==1) { // обновление журнала  товары у поставщика
              foreach ($this->unpackDetails('detaildata') as $item) {
                  
                  $ci = \App\Entity\CustItem::getFirst("item_id={$item->item_id} and customer_id={$this->customer_id}") ;
@@ -208,6 +197,8 @@ class GoodsReceipt extends Document
              }
         }
 
+        $this->DoAcc();  
+        
         return true;
     }
 
@@ -222,9 +213,7 @@ class GoodsReceipt extends Document
         $list['GoodsReceipt'] = self::getDesc('GoodsReceipt');
         $list['ProdIssue'] = self::getDesc('ProdIssue');
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-        $list['MoveItem'] = self::getDesc('MoveItem');
   
-
         return $list;
     }
     /**
@@ -238,7 +227,7 @@ class GoodsReceipt extends Document
             return;
         }
    
-        //тмц
+        // к оплате
         if($this->payamount >0) {
             $b = new \App\Entity\CustAcc();
             $b->customer_id = $this->customer_id;
@@ -257,7 +246,67 @@ class GoodsReceipt extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
-        
+        $this->DoAcc();  
+      
     }
-}     
+    
+    
+   protected function onState($state, $oldstate) {
+        if($state == Document::STATE_EXECUTED  || $state == Document::STATE_PAYED) {
+
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id)->cast();
+                if($order->meta_name == 'OrderCust'  ) {
+                      $order = $order->cast() ;
+                      $order->updateStatus(Document::STATE_CLOSED);
+                      
+                }    
+            }
+      }
+   }
+   
+ public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+    
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'63', $am,$this->document_id)  ; 
+         } 
+   
+         $this->DoAccPay('63'); 
+               
+         if($this->headerdata['delivery'] > 0) {
+           if($this->headerdata['deliverytype']== 1) { 
+                \App\Entity\AccEntry::addEntry('941',  '23',   $this->headerdata['delivery'],$this->document_id )  ; 
+        
+           }
+           if($this->headerdata['deliverytype']== 2) { 
+                \App\Entity\AccEntry::addEntry(null,  '941',   $this->headerdata['delivery'],$this->document_id )  ; 
+        
+           }
+           
+        }  
+        
+        
+   
+        
+        if ($this->headerdata["disc"] > 0) {
+           \App\Entity\AccEntry::addEntry('63', '71',   $am,$this->document_id,$p->paydate)  ; 
+        }
+        if ($this->headerdata["nds"] > 0) {
+           //   если  предоплата то дата первого события
+           $date= $this->document_date;
+           if($this->parent_id >0){
+               foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
+                   $date = $pay->paydate;
+                   break;
+               }
+           }
+           \App\Entity\AccEntry::addEntry('63','641',    $this->headerdata["nds"],$this->document_id,$date,null,\App\Entity\AccEntry::TAG_NDS  )  ; 
+        }                    
+    } 
+    
+}
 

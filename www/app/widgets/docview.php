@@ -33,11 +33,10 @@ class DocView extends \Zippy\Html\PageFragment
 
     public function __construct($id) {
         parent::__construct($id);
-
+    
         $this->add(new Label('_docid_')) ;
         $this->add(new Label('_path_')) ;
-
-
+   
     }
 
     // Устанавливаем  документ  для  просмотра
@@ -53,6 +52,7 @@ class DocView extends \Zippy\Html\PageFragment
         }
         $this->_path_->setAttribute('path', $path);
 
+        $this->_p = $this->getPageOwner()  ;
 
     }
 
@@ -167,6 +167,16 @@ class DocView extends \Zippy\Html\PageFragment
         }
         $ret['reldocs'] = array();
 
+        
+        $ret["acclist"] =[]   ;
+        if($common["useacc"]==1) {
+           foreach( \App\Entity\AccEntry::find('document_id='.$doc->document_id,'id') as $acc) {
+              $ret["acclist"][]=['dt'=>$acc->accdt,'ct'=>$acc->accct,'am'=> H::fa($acc->amount)]  ; 
+           }
+        
+        }            
+        
+        
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
 
     }

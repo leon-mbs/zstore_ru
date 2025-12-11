@@ -43,12 +43,12 @@ class docs extends JsonRPC
             $doc = Document::getFirst(" document_number=   {$num1}   ");
         }
         if ($doc == null) {
-            throw new \Exception("Документ не  знайдено");
+            throw new \Exception("Документ не  найдено");
         }
    
         $status=intval($args['status']); 
         if(false== in_array($status,[5,7,18,9]) ) {
-            throw new \Exception("Недопустимий статус");
+            throw new \Exception("Недопустимый статус");
            
         }
         $doc->updateStatus($status);
@@ -63,7 +63,7 @@ class docs extends JsonRPC
             $doc = Document::getFirst(" document_number=   {$num1}   ");
         }
         if ($doc == null) {
-            throw new \Exception("Документ не  знайдено");
+            throw new \Exception("Документ не  найдено");
         }
 
         $user = \App\System::getUser();
@@ -73,7 +73,7 @@ class docs extends JsonRPC
         $n->sender_id = $user->user_id;
 
         $n->dateshow = time();
-        $n->message = "Запит на  видалення  документу {$doc->document_number}. Причина " . $args['reason'];
+        $n->message = "Запрос на  удаление  документа {$doc->document_number}. Причина " . $args['reason'];
         $n->save();
     }
     
@@ -179,7 +179,7 @@ class docs extends JsonRPC
         if ($args['store_id'] > 0) {
             $store = \App\Entity\Store::load($args['store_id']);
             if ($store == null) {
-                throw new \Exception('Не  вказано  склад');
+                throw new \Exception('Не  указан   склад');
             }
         }
         $doc = Document::create('ProdIssue');
@@ -195,7 +195,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception("Не вказано артикул");
+                    throw new \Exception("Не указан артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -206,15 +206,15 @@ class docs extends JsonRPC
 
                     $details[$item->item_id] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ с артикулом {$it['code']} не найден ");
 
                 }
             }
         } else {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы позиции");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы позиции");
         }
         $doc->packDetails('detaildata', $details);
 
@@ -243,7 +243,7 @@ class docs extends JsonRPC
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
             if ($c == null) {
-                throw new \Exception("Контрагент не знайдений");
+                throw new \Exception("Контрагент не найден");
             } else {
                 $doc->customer_id = $args['customer_id'];
             }
@@ -253,7 +253,7 @@ class docs extends JsonRPC
             if ($args['branch_id'] > 0) {
                 $doc->branch_id = $args['branch_id'];
             } else {
-                throw new \Exception("Не вказано філію");
+                throw new \Exception("Не указан филиал");
             }
         }
    
@@ -271,7 +271,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception("Не вказано артикул");
+                    throw new \Exception("Не указан артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -285,14 +285,14 @@ class docs extends JsonRPC
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ с артикулом {$it['code']} не найден ");
                 }
             }
         } else {
-            throw new \Exception("Не задані ТМЦ");
+            throw new \Exception("Не указаны ТМЦ");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані ТМЦ");
+            throw new \Exception("Не указаны ТМЦ");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -313,19 +313,19 @@ class docs extends JsonRPC
     public function createttn($args) {
 
         if (strlen($args['number']) == 0) {
-            throw new \Exception("Не вказано номер документа");  //не задан  номер
+            throw new \Exception("Не указан номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
         if ($doc != null) {
-            throw new \Exception("Документ з номером {$args['number']} вже існує");   //номер уже  существует
+            throw new \Exception("Документ с номером {$args['number']} уже  существует");   //номер уже  существует
         }
         $doc = Document::create('TTN');
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
             if ($c == null) {
-                throw new \Exception("Контрагент не знайдений");
+                throw new \Exception("Контрагент не найден");
             } else {
                 $doc->customer_id = $args['customer_id'];
                 $doc->headerdata['customer_name'] = $c->customer_name;
@@ -334,7 +334,7 @@ class docs extends JsonRPC
 
         $st = \App\Entity\Store::load($args['store_id']);
         if ($st == null) {
-            throw new \Exception("Склад не знайдений");
+            throw new \Exception("Склад не найден");
         } else {
             $doc->headerdata['store'] = $args['store_id'];
             $doc->headerdata['store_name'] = $st->storename;
@@ -356,7 +356,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception("Не заданий артикул");
+                    throw new \Exception("Не задан артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -369,15 +369,15 @@ class docs extends JsonRPC
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ с артикулом {$it['code']} не найден ");
 
                 }
             }
         } else {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы позиции");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы позиции");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -398,19 +398,19 @@ class docs extends JsonRPC
     public function goodsissue($args) {
 
         if (strlen($args['number']) == 0) {
-            throw new \Exception("Не вказано номер документа");  //не задан  номер
+            throw new \Exception("Не указан номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
         if ($doc != null) {
-            throw new \Exception("Документ з номером {$args['number']} вже існує");   //номер уже  существует
+            throw new \Exception("Документ с номером {$args['number']} уже  существует");   //номер уже  существует
         }
         $doc = Document::create('GoodsIssue');
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
             if ($c == null) {
-                throw new \Exception("Контрагент не знайдений");
+                throw new \Exception("Контрагент не найден");
             } else {
                 $doc->customer_id = $args['customer_id'];
                 $doc->headerdata['customer_name'] = $c->customer_name;
@@ -418,7 +418,7 @@ class docs extends JsonRPC
         }
         $st = \App\Entity\Store::load($args['store_id']);
         if ($st == null) {
-            throw new \Exception("Склад не знайдений");
+            throw new \Exception("Склад не найден");
         } else {
             $doc->headerdata['store'] = $args['store_id'];
             $doc->headerdata['store_name'] = $st->storename;
@@ -453,14 +453,14 @@ class docs extends JsonRPC
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ с артикулом {$it['code']} не найден ");
                 }
             }
         } else {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы позиции");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы позиции");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -487,19 +487,19 @@ class docs extends JsonRPC
     public function goodsreceipt($args) {
 
         if (strlen($args['number']) == 0) {
-            throw new \Exception("Не вказано номер документа");  //не задан  номер
+            throw new \Exception("Не задан номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
         if ($doc != null) {
-            throw new \Exception("Документ з номером {$args['number']} вже існує");   //номер уже  существует
+            throw new \Exception("Документ с номером {$args['number']} уже  существует");   //номер уже  существует
         }
         $doc = Document::create('GoodsReceipt');
 
         $c = \App\Entity\Customer::load($args['customer_id']);
         if ($c == null) {
-            throw new \Exception("Контрагент не знайдений");
+            throw new \Exception("Контрагент не найден");
         } else {
             $doc->customer_id = $args['customer_id'];
             $doc->headerdata['customer_name'] = $c->customer_name;
@@ -507,7 +507,7 @@ class docs extends JsonRPC
 
         $st = \App\Entity\Store::load($args['store_id']);
         if ($st == null) {
-            throw new \Exception("Склад не знайдений");
+            throw new \Exception("Склад не найден");
         } else {
             $doc->headerdata['store'] = $args['store_id'];
             $doc->headerdata['store_name'] = $st->storename;
@@ -544,15 +544,15 @@ class docs extends JsonRPC
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ с артикулом {$it['code']} не найден ");
 
                 }
             }
         } else {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы позиции");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы позиции");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -579,20 +579,20 @@ class docs extends JsonRPC
     public function incomeitem($args) {
 
         if (strlen($args['number']) == 0) {
-            throw new \Exception("Не вказано номер документа");  //не задан  номер
+            throw new \Exception("Не указан номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
         if ($doc != null) {
-            throw new \Exception("Документ з номером {$args['number']} вже існує");   //номер уже  существует
+            throw new \Exception("Документ с номером {$args['number']} уже  существует");   //номер уже  существует
         }
         $doc = Document::create('IncomeItem');
 
 
         $st = \App\Entity\Store::load($args['store_id']);
         if ($st == null) {
-            throw new \Exception("Склад не знайдений");
+            throw new \Exception("Склад не найден");
         } else {
             $doc->headerdata['store'] = $args['store_id'];
             $doc->headerdata['store_name'] = $st->storename;
@@ -612,7 +612,7 @@ class docs extends JsonRPC
         if (is_array($args['items']) && count($args['items']) > 0) {
             foreach ($args['items'] as $it) {
                 if (strlen($it['item_code']) == 0) {
-                    throw new \Exception("Не задано артикул");
+                    throw new \Exception("Не задан артикул");
                 }
                 $item = Item::getFirst("disabled<> 1 and item_code=" . Item::qstr($it['item_code']));
 
@@ -625,14 +625,14 @@ class docs extends JsonRPC
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->item_id] = $item;
                 } else {
-                    throw new \Exception("ТМЦ з артикулом {$it['code']} не знайдено ");
+                    throw new \Exception("ТМЦ с артикулом {$it['code']} не найден ");
                 }
             }
         } else {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы  позиции");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы  позиции");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -659,19 +659,19 @@ class docs extends JsonRPC
     public function serviceact($args) {
 
         if (strlen($args['number']) == 0) {
-            throw new \Exception("Не вказано номер документа");  //не задан  номер
+            throw new \Exception("Не указан номер документа");  //не задан  номер
         }
         $num1 = Document::qstr("%<apinumber>{$args['number']}</apinumber>%");
         $num2 = Document::qstr("%<apinumber><![CDATA[{$args['number']}]]></apinumber>%");
         $doc = Document::getFirst("  content   like  {$num1} or  content   like  {$num2}  ");
         if ($doc != null) {
-            throw new \Exception("Документ з номером {$args['number']} вже існує");   //номер уже  существует
+            throw new \Exception("Документ с номером {$args['number']} уже  существует");   //номер уже  существует
         }
         $doc = Document::create('ServiceAct');
         if ($args['customer_id'] > 0) {
             $c = \App\Entity\Customer::load($args['customer_id']);
             if ($c == null) {
-                throw new \Exception("Контрагент не знайдений");
+                throw new \Exception("Контрагент не найден");
             } else {
                 $doc->customer_id = $args['customer_id'];
                 $doc->headerdata['customer_name'] = $c->customer_name;
@@ -706,15 +706,15 @@ class docs extends JsonRPC
                     $total = $total + $item->quantity * $item->price;
                     $details[$item->service_id] = $item;
                 } else {
-                    throw new \Exception("Сервіс не знайдено ");
+                    throw new \Exception("Сервис не найден ");
 
                 }
             }
         } else {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы  позиции");
         }
         if (count($details) == 0) {
-            throw new \Exception("Не задані позиції");
+            throw new \Exception("Не заданы  позиции");
         }
         $doc->packDetails('detaildata', $details);
         if ($args['total'] > 0) {
@@ -744,12 +744,12 @@ class docs extends JsonRPC
         $mf = \App\Entity\MoneyFund::load( intval($args['mf'] ));
     
         if ($mf==null) {
-           throw new \Exception('Не вказано  касу');
+           throw new \Exception('Не указано  кассу');
         }
         
         $sum= doubleval($args['amount']) ;
         if ($sum==0) {
-           throw new \Exception('Не вказано  суму');
+           throw new \Exception('Не указано  сумму');
         }
         if($sum>0)  {
            $doc = Document::create('IncomeMoney');

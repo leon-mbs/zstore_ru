@@ -100,8 +100,9 @@ class CronTask extends \ZCL\DB\Entity
                 if($days >0) {
                     $conn->Execute("delete from custitems where  updatedon <  ". $conn->DBDate( strtotime("-{$days} day"))  ) ;
                     $conn->Execute("optimize table custitems ")   ;
+              
                 }
-
+             ;
                 
             }
             
@@ -112,9 +113,9 @@ class CronTask extends \ZCL\DB\Entity
 
                 //очищаем статистику
                 $dt = $conn->DBDate(strtotime('-12 month', time())) ;
-                $conn->Execute("delete  from stats  where category not in  in (4) and  dt < ". $dt) ;
+                $conn->Execute("delete  from stats  where category not in   (4) and  dt < ". $dt) ;
                 $conn->Execute(" OPTIMIZE TABLE stats  " ) ;
-
+                $conn->Execute("optimize table substitems ")   ;
               //  $conn->Execute(" OPTIMIZE TABLE store_stock  " ) ;
               
         

@@ -18,16 +18,17 @@ class CalcSalary extends Document
         $opt = System::getOptions("salary");
 
         $code     = "_c" . $opt['coderesult'];
-        $bonus    = "_c" . $opt['codebonus'];
-        $fine     = "_c" . $opt['codefine'];
-        $advance  = "_c" . $opt['codeadvance'];
+        $all      = "_c" . $opt['codeall'];
+     //   $bonus    = "_c" . $opt['codebonus'];
+     //   $fine     = "_c" . $opt['codefine'];
+     //   $advance  = "_c" . $opt['codeadvance'];
    
         $dt = new \App\DateTime(strtotime($this->headerdata["year"] . '-' . $this->headerdata["month"] . '-01'));
         $to = $dt->endOfMonth()->getTimestamp();
         if($this->document_date > $dt && $this->document_date < $to   ) {
             $to = $this->document_date;
         }
-
+         
         foreach ($this->unpackDetails('detaildata') as $emp) {
             $am = $emp->{$code};
           
@@ -38,6 +39,8 @@ class CalcSalary extends Document
             $eacc->amount = $am;
             $eacc->createdon = $to;
             $eacc->save();
+           
+            /*
            
             $am = $emp->{$advance};
             if($am > 0) {
@@ -86,9 +89,9 @@ class CalcSalary extends Document
                 $eacc->save();
           
             }
-             
+           */  
         }
-        \App\Entity\IOState::addIOState($this->document_id, 0 - $this->amount, $this->headerdata["iostate"] ??0 );
+        $this->DoAcc();  
         return true;
     }
 
@@ -142,5 +145,43 @@ class CalcSalary extends Document
     protected function getNumberTemplate() {
         return 'НЗ-000000';
     }
+    public   function DoAcc() {
+        if(\App\System::getOption("common",'useacc')!=1 ) return;
+        parent::DoAcc()  ;
+      
+        $opt = System::getOptions("salary");
 
+        $codeall      = "_c" . $opt['codeall'];
+  
+        $all=0;
+         
+        $accs=[];
+        
+        $st=\App\Entity\SalType::find("disabled<>1" );
+        foreach($st as $v){
+          if($v->acccode >0) $accs[$v->acccode]=0; 
+        }
+        foreach ($this->unpackDetails('detaildata') as $emp) {
+            $all += doubleval( $emp->{$codeall} );
+            foreach($st as $v){
+              if($v->acccode >0) {
+                 $code = "_c" . $v->salcode;
+                 $accs[$v->acccode] += doubleval( $emp->{$code}); 
+              }
+              
+            }      
+             
+        }
+        
+        
+        \App\Entity\AccEntry::addEntry( $this->getHD('acccode','91'),'66' ,$all,$this->document_id)  ; 
+        foreach($accs as $k=>$v)
+        {
+            if($v > 0) {
+               \App\Entity\AccEntry::addEntry( '66' ,$k ,$v,$this->document_id)  ; 
+            }
+        }
+                    
+                
+    }
 }

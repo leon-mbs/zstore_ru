@@ -11,11 +11,11 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа <small class="text-danger">*</small></label>
-                        <input class="form-control" type="text" zippy="document_number"  required >
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата <small class="text-danger">*</small></label>
-                        <input class="form-control" type="text" zippy="document_date"  required >
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                 
 
@@ -89,11 +89,14 @@
                         <input class="form-control" type="text" zippy="outnumber">
 
                     </div>
+                     {{^useval}} 
+                     {{^usends}} 
                     <div class="form-check">
                         <input zippy="comission" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="comission">Товари на комісію</label> 
                     </div>                 
-
+                     {{/usends}} 
+                     {{/useval}} 
                 </div>
                 <div class="col-12 col-md-3">
                    <div class="form-group  ">
@@ -143,6 +146,7 @@
  
                             <th class="text-right">Кіл.</th>
                             <th class="text-right">Ціна</th>
+                            <th class="text-right">  {{#usends}} Ціна з ПДВ {{/usends}}</th>
 
                             <th class="text-right">Сума</th>
 
@@ -160,6 +164,9 @@
                             <td class="text-right" zippy="quantity"></td>
 
                             <td zippy="price" class="text-right"></td>
+                            <td  class="text-right">
+                             {{#usends}} <span zippy="pricends"></span> {{/usends}}
+                            </td>
 
                             <td zippy="amount" class="text-right"></td>
 
@@ -168,27 +175,30 @@
                             </td>
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
-                            <td colspan="9" class="text-right">На суму:</td>
+                            <td colspan="10" class="text-right">На суму:</td>
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
                         {{^prepaid}}
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="nds" colspan="9" class="text-right">ПДВ:</td>
+                            <td data-label="nds" colspan="10" class="text-right">ПДВ:</td>
                             <td zippy="nds" class="text-right"></td>
-                            <td data-label="nds"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i
-                                        class="fa fa-edit"></i></a></td>
+                            <td data-label="nds">
+                             {{^usends}} 
+                                 <a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i class="fa fa-edit"></i></a> 
+                             {{/usends}}
+                                        </td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td data-label="disc" colspan="9" class="text-right">Знижка:</td>
+                            <td data-label="disc" colspan="10" class="text-right">Знижка:</td>
                             <td zippy="disc" class="text-right"></td>
                             <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                        {{/prepaid}}
                           <tr style="font-weight: bolder;">
-                            <td data-label="delivery" colspan="9" class="text-right">Доставка:</td>
+                            <td data-label="delivery" colspan="10" class="text-right">Доставка:</td>
                             <td zippy="delivery" class="text-right"></td>
                             <td data-label="delivery"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldelivery"><i    class="fa fa-edit"></i></a></td>
                         </tr>
@@ -196,21 +206,21 @@
  
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="payamount" colspan="9" class="text-right">Всього:</td>
+                            <td data-label="payamount" colspan="10" class="text-right">Всього:</td>
                             <td zippy="payamount" class="text-right"></td>
                             <td data-label="payamount"><a href="javascript:void(0);" data-toggle="modal"
                                                           data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
                      {{#prepaid}}
                        <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan="9" class="text-right">Передплата:</td>
+                            <td data-label="prepaid" colspan="10" class="text-right">Передплата:</td>
                             <td   class="text-right">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}
 
                         <tr style="font-weight: bolder;">
-                            <td data-label="payed" colspan="9" class="text-right">Внесено оплату:</td>
+                            <td data-label="payed" colspan="10" class="text-right">Внесено оплату:</td>
                             <td zippy="payed" class="text-right"></td>
                             <td data-label="payed"><a href="javascript:void(0);" data-toggle="modal"
                                                       data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
@@ -314,6 +324,15 @@
                             </button>
                         </div>
                         <div class="modal-body">
+                          <div class="form-group  ">
+                                <label for="editdeliverytype"  >Тип доставки</label>
+                                <select class="form-control" zippy="editdeliverytype">
+                                    <option value="1">Вiднести до загальних витрат</i> </option>
+                                    <option value="2">Розподiлити на собiвартiсть</i> </option>
+                                   <option value="3">Компенсувати постачальнику</option>
+                                    <option value="4">Оплата стороннiй службi </option>
+                                </select>
+                            </div>   
                             <div class="input-group  ">
                                 <input class="form-control qtyprice" type="text" zippy="editdelivery" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
@@ -321,14 +340,8 @@
 
                                 </div>
                             </div>
-                             <div class="form-check">
-                                <input zippy="spreaddelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="spreaddelivery">Розподiлити на  собiвартiсть</label>
-                            </div>                            
-                             <div class="form-check">
-                                <input zippy="baydelivery" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="baydelivery">Оплата покупцем</label>
-                            </div>                            
+                           
+                                                    
                         </div>
 
                     </div>
@@ -418,15 +431,15 @@
                     <div class="form-group row">
                         <label class="col-6 col-form-label" for="editquantity">Кількість</label>
                          <div class="col-6">
-                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;"/>
+                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required="on"                                pattern="[0-9,\.\s]+"                               style="width: 100px;"/>
                          </div>
                     </div>
 
 
                     <div class="form-group row">
-                        <label class="col-6 col-form-label" for="editprice">Ціна </label>
+                        <label class="col-6 col-form-label" for="editprice">Ціна {{#usends}} (без ПДВ) {{/usends}} </label>
                          <div class="col-6">
-                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                            <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required="on"                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
                          </div>
                     </div>
                     <div class="form-group row">
@@ -487,7 +500,7 @@
 
                     <div class="form-group">
                         <label for="editnewitemname">Назва </label>
-                        <input autofocus="on"   class="form-control " zippy="editnewitemname"  required />
+                        <input autofocus="on"   class="form-control " zippy="editnewitemname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editnewitemcode">Код</label>
@@ -539,7 +552,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Назва </label>
-                        <input autofocus="on"   class="form-control " zippy="editcustname"  required />
+                        <input autofocus="on"   class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -568,7 +581,7 @@
 
                     <div class="form-group">
                         <label for="editsnitemname">Назва </label>
-                        <input  autofocus="on"   placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname"  required />
+                        <input  autofocus="on"   placeholder="Почніть вводити..." class="form-control " zippy="editsnitemname"  required="on" />
                          <small>В довіднику номенклатури слід вказати що даний ТМЦ обліковується  за  серійним номером</small>
                        
                     </div>
@@ -580,7 +593,7 @@
           
                      <div class="form-group">
                         <label for="editsnprice">Ціна </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsnprice"  required                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsnprice"  required="on"                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
                     </div>
                     
                     <div class="form-group">

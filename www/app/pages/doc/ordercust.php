@@ -305,8 +305,8 @@ class OrderCust extends \App\Pages\Base
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
 
 
         if ($item->price == 0) {
@@ -413,7 +413,7 @@ class OrderCust extends \App\Pages\Base
     
         $this->editdetail->qtystock->setText(H::fqty($qty));
 
-        $price = $item->getLastPartion(0, "", true);
+        $price = $item->getLastPartion(0, "", true,'GoodsReceipt');
         $this->editdetail->editprice->setText(H::fa($price));
 
 

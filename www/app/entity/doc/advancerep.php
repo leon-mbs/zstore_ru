@@ -23,6 +23,7 @@ class AdvanceRep extends Document
             $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true,0,$this->headerdata['storeemp']??0);
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stockto->stock_id);
+            $sc->tag=Entry::TAG_BAY;
             $sc->save();
             $amount = $amount + $item->quantity * $item->price;
 
@@ -30,8 +31,8 @@ class AdvanceRep extends Document
         }
  
         
-        $examount=doubleval($this->headerdata['examount']);
-        $spentamount=doubleval($this->headerdata['spentamount']);
+        $examount=doubleval($this->headerdata['examount']);  //возврат
+        $spentamount=doubleval($this->headerdata['spentamount']); //потрачено
         
         if ($examount > 0) {
          
@@ -62,7 +63,7 @@ class AdvanceRep extends Document
  
             //авансовый    отчет
             $ua = new \App\Entity\EmpAcc();
-            $ua->optype = \App\Entity\EmpAcc::OUTCOME_TO_MF;
+            $ua->optype = \App\Entity\EmpAcc::ADVANCE_ACC;
             $ua->document_id = $this->document_id;
             $ua->emp_id = $this->headerdata["emp"];
             $ua->amount = $amount;
@@ -76,7 +77,8 @@ class AdvanceRep extends Document
                 $ua->save();
             }
         
-
+        $this->DoAcc();  
+   
         return true;
     }
 
@@ -133,9 +135,42 @@ class AdvanceRep extends Document
     protected function getNumberTemplate() {
         return 'АЗ-000000';
     }
-    public   function DoAcc() {
-        parent:: DoAcc() ;
-      
-    } 
+     
+  
  
+   public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+    
+       
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_BAY) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'372', $am,$this->document_id)  ; 
+         }   
+              
+         foreach(\App\Entity\IOState::find("document_id=".$this->document_id) as $is){
+             if($is->iotype==\App\Entity\IOState::TYPE_BASE_OUTCOME)  {
+                 //пойдет в  себестоимость
+             }
+ 
+             if($is->iotype==\App\Entity\IOState::TYPE_COMMON_OUTCOME)  {
+                 \App\Entity\AccEntry::addEntry( '91' ,'372',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_ADMIN_OUTCOME)  {
+                  \App\Entity\AccEntry::addEntry( '92' ,'372',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_SALE_OUTCOME)  {
+                   \App\Entity\AccEntry::addEntry( '93' ,'372',$is->amount,$this->document_id)  ; 
+             }
+             if($is->iotype==\App\Entity\IOState::TYPE_OTHER_OUTCOME)  {
+               \App\Entity\AccEntry::addEntry( '94' ,'372',$is->amount,$this->document_id)  ; 
+             }
+          
+         }
+
+         $this->DoAccPay('372');      
+         
+                         
+    } 
+  
 }

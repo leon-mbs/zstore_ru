@@ -353,7 +353,10 @@ class Document extends \ZCL\DB\Entity
             $conn->Execute("delete from custacc where document_id=" . $this->document_id);
             
             $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
-
+          
+            if( System::getOption("common",'useacc')==1) {
+                $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+            }
  
     }
 
@@ -477,8 +480,7 @@ class Document extends \ZCL\DB\Entity
         $oldstate = $this->state;
         $this->state = $state;
      
-
-        $this->priority = $this->getPriorytyByState($this->state) ;
+   //     $this->priority = $this->getPriorytyByState($this->state) ;
 
         $this->save();
 
@@ -488,7 +490,8 @@ class Document extends \ZCL\DB\Entity
             $doc = $this->cast();
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);
-                if($state >4 && true) {
+            
+                if($state >4 ) {
                    $doc->DoAcc();   
                 }
                 
@@ -515,41 +518,9 @@ class Document extends \ZCL\DB\Entity
     }
 
     public function getPriorytyByState($state) {
-        if($state == self::STATE_NEW) {
-            return 100;
-        }
+       
         if($state == self::STATE_CLOSED) {
             return 1;
-        }
-        if($state == self::STATE_EXECUTED) {
-            return 10;
-        }
-        if($state == self::STATE_FINISHED) {
-            return 20;
-        }
-        if($state == self::STATE_DELIVERED) {
-            return 30;
-        }
-        if($state == self::STATE_INPROCESS) {
-            return 50;
-        }
-        if($state == self::STATE_SHIFTED) {
-            return 40;
-        }
-        if($state == self::STATE_INSHIPMENT) {
-            return 50;
-        }
-        if($state == self::STATE_WA) {
-            return 90;
-        }
-        if($state == self::STATE_APPROVED) {
-            return 80;
-        }
-        if($state == self::STATE_CANCELED) {
-            return 70;
-        }
-        if($state == self::STATE_EDITED) {
-            return 80;
         }
         if($state == self::STATE_REFUSED) {
             return 3;
@@ -559,18 +530,53 @@ class Document extends \ZCL\DB\Entity
         }
         if($state == self::STATE_FAIL) {
             return 3;
-        }
-        if($state == self::STATE_READYTOSHIP) {
-            return 50;
-        }
-        if($state == self::STATE_WP) {
-            return 75;
+        }        
+        if($state == self::STATE_EXECUTED) {
+            return 10;
         }
         if($state == self::STATE_PAYED) {
             return 15;
+        }        
+        if($state == self::STATE_FINISHED) {
+            return 20;
         }
-
-        return 0;
+        if($state == self::STATE_DELIVERED) {
+            return 30;
+        }
+        if($state == self::STATE_SHIFTED) {
+            return 40;
+        }        
+        if($state == self::STATE_INPROCESS) {
+            return 50;
+        }
+  
+        if($state == self::STATE_INSHIPMENT) {
+            return 50;
+        }
+        if($state == self::STATE_READYTOSHIP) {
+            return 50;
+        }        
+        if($state == self::STATE_CANCELED) {
+            return 70;
+        }        
+        if($state == self::STATE_WP) {
+            return 75;
+        }  
+        if($state == self::STATE_APPROVED) {
+            return 80;
+        }
+     
+        if($state == self::STATE_EDITED) {
+            return 80;
+        }
+        if($state == self::STATE_WA) {
+            return 90;
+        }        
+       
+        if($state == self::STATE_NEW) {
+            return 100;
+        }
+        return 50;
     }
 
     /**
@@ -600,7 +606,7 @@ class Document extends \ZCL\DB\Entity
             case Document::STATE_WA:
                 return "Очікує затвердження";
             case Document::STATE_INSHIPMENT:
-                return "На доставці";
+                return "В доставці";
             case Document::STATE_FINISHED:
                 return "Виконаний";
             case Document::STATE_DELIVERED:
@@ -914,7 +920,21 @@ class Document extends \ZCL\DB\Entity
         return $conn->GetOne("select coalesce(sum(amount),0) from paylist_view where   document_id = {$this->document_id}  ");
     }
 
+    /**
+    * Кассир (для чеков)
+    * 
+    */
+    public function getCashier() {
 
+        $cname = \App\System::getUser()->username;
+        if(strlen($this->headerdata['cashier']) >0) {
+            $cname = $this->headerdata['cashier'];
+        } else {
+            $cname = $this->username;
+        }
+       
+        return $cname;
+    } 
     /* public function hasEntry() {
          $conn = \ZDB\DB::getConnect();
 
@@ -1150,23 +1170,37 @@ class Document extends \ZCL\DB\Entity
             return false;
         }
  
-   
+        $firm = Helper::getFirmData(  $this->branch_id);
+ 
         $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
         
       
         if($mf == null) {
             return false;
         }
- 
-        $payee= $mf->payname ??'' ;
-        $kod= $mf->code ??'' ;   
+        
+        $payee  =  $firm['firm_name'] ;//плательщик 
+        $tin =  $firm['tin']  ;//едрпоу 
+        
+        if(strlen($mf->payname ??'') > 0)  $payee  = $mf->payname;
+        if(strlen($mf->tin ??'') > 0) $tin  = $mf->tin;
+          
         $iban = $mf->iban??'';
-        if(strlen($kod)==0 || strlen($iban) == 0|| strlen($payee) == 0) {
+        if(  strlen($iban) == 0|| strlen($tin) == 0) {
             return false;
         }
 
          
         
+/*
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $tin = $fop->edrpou ??'';
+            $payee = $fop->name ??'';
+        }       
+*/
+
         $number = $this->document_number;
         if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
             $number  =    $this->headerdata['outnumber']  ;
@@ -1185,7 +1219,7 @@ class Document extends \ZCL\DB\Entity
         $url = $url .  $payee ."\n";
         $url = $url .  $iban."\n";
         $url = $url .  "UAH". \App\Helper::fa($payamount)."\n";
-        $url = $url .  $kod."\n\n\n";
+        $url = $url .  $tin."\n\n\n";
         $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
 
         $url = base64_encode($url);
@@ -1204,7 +1238,7 @@ class Document extends \ZCL\DB\Entity
           'link'=>"<a href=\"{$url}\">{$url}</a>"
         );
     }
-   
+     
 
     /**
     *    возвращает ссылку  на чек в  налоговой
@@ -1216,6 +1250,9 @@ class Document extends \ZCL\DB\Entity
         }
 
         if(strlen($this->headerdata["fiscalnumber"]??'')==0) {
+            return "";
+        }
+        if(strlen($this->headerdata["fiscalnumberpos"]??'')==0) {
             return "";
         }
 
@@ -1339,8 +1376,48 @@ class Document extends \ZCL\DB\Entity
  
     }
     
+    
+    /**
+    * бухгалтерские проводки
+    * 
+    */
     public   function DoAcc() {
-         
+       $conn = \ZDB\DB::getConnect();
+       $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+          
+            
     } 
+  
+    /**
+    * проводки  по касе
+    * 
+    * @param mixed $acc  корреспондирующий счет
+    * @param mixed $storno
+    */
+    protected   function DoAccPay($acc,$storno=false) {
+        foreach(\App\Entity\Pay::find("    mf_id >0 and document_id=".$this->document_id) as $p) {
+             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
+             $n=  $mf->beznal ?'31':'30' ;
+         
+             $am=$p->amount;  
+             if($p->paytype == \App\Entity\Pay::PAY_DELIVERY ){
+                \App\Entity\AccEntry::addEntry('941', $n,   $this->headerdata['delivery'],$this->document_id )  ; 
+                 continue;
+             }  
+             if($p->paytype == \App\Entity\Pay::PAY_BANK ){
+                \App\Entity\AccEntry::addEntry('949', $n,   $this->headerdata['delivery'],$this->document_id )  ; 
+                 continue;
+             }  
+             if($am>0) {
+                 \App\Entity\AccEntry::addEntry(  $n, $acc, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
+             } else {
+                 \App\Entity\AccEntry::addEntry($acc, $n, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
+               
+             }
+              
+        } 
+    }
+  
+ 
       
 }

@@ -95,16 +95,21 @@ class Item extends \ZCL\DB\Entity
         if (!is_array($this->brprice)) {
             $this->brprice = array();
         }
-
+    
         $id = \App\System::getBranch();
-        if ($id > 0 && is_array($this->brprice[$id]??null)) {
-            $this->price1 = $this->brprice[$id]['price1'];
-            $this->price2 = $this->brprice[$id]['price2'];
-            $this->price3 = $this->brprice[$id]['price3'];
-            $this->price4 = $this->brprice[$id]['price4'];
-            $this->price5 = $this->brprice[$id]['price5'];
+        if ($id > 0 ) {  
+            $branchprice = \App\System::getOption('common','branchprice');
+            if($branchprice==1  && is_array($this->brprice[$id]??null)) { 
+                $this->price1 = $this->brprice[$id]['price1'];
+                $this->price2 = $this->brprice[$id]['price2'];
+                $this->price3 = $this->brprice[$id]['price3'];
+                $this->price4 = $this->brprice[$id]['price4'];
+                $this->price5 = $this->brprice[$id]['price5'];   
+            }
+    
+            $this->cell   = $this->brprice[$id]['cell'] ?? $this->cell ;
         }
-
+       
         $this->actionqty1 = doubleval($xml->actionqty1[0]);
         $this->actionprice1 = doubleval($xml->actionprice1[0]);
         $this->actionqty2 = doubleval($xml->actionqty2[0]);
@@ -114,6 +119,9 @@ class Item extends \ZCL\DB\Entity
         $this->todate = intval($xml->todate[0]);
         $this->fromdate = intval($xml->fromdate[0]);
         $this->printqty = intval($xml->printqty[0]);
+      
+        $this->isnds = (int)$xml->isnds[0];
+        $this->nds = (string)$xml->nds[0];
 
        
         
@@ -128,16 +136,32 @@ class Item extends \ZCL\DB\Entity
         $this->shortname = str_replace("'","`",$this->shortname) ;
         $this->shortname = str_replace("\"","`",$this->shortname) ;
          
-        
+        $branchprice = \App\System::getOption('common','branchprice');
+       
         $fid = \App\System::getBranch();
-        if ($fid > 0) {
-            $this->brprice[$fid] = array('price1' => $this->price1, 'price2' => $this->price2, 'price3' => $this->price3, 'price4' => $this->price4, 'price5' => $this->price5);
+        if ($fid > 0 ) {
+           $a=[];
+           $a['cell'] = $this->cell;
+           if ( $branchprice==1) {
+              $a['price1'] = $this->price1;
+              $a['price2'] = $this->price2;
+              $a['price3'] = $this->price3;
+              $a['price4'] = $this->price4;
+              $a['price5'] = $this->price5;
+           
+              
+          
+            $this->brprice[$fid] =$a;   
+                                                     
             $prev = self::load($this->item_id); //востанавливаем  предыдущую цену
             $this->price1 = $prev->price1;
             $this->price2 = $prev->price2;
             $this->price3 = $prev->price3;
             $this->price4 = $prev->price4;
             $this->price5 = $prev->price5;
+            $this->cell = $prev->cell;
+         }
+            
         }
         $this->detail = "<detail>";
         //упаковываем  данные в detail
@@ -214,6 +238,8 @@ class Item extends \ZCL\DB\Entity
             $this->detail .= base64_encode(serialize($this->reclist));
             $this->detail .= "</reclist>";
         }
+        $this->detail .= "<isnds>{$this->isnds}</isnds>";
+        $this->detail .= "<nds>{$this->nds}</nds>";
 
 
         $this->detail .= "</detail>";
@@ -510,12 +536,20 @@ class Item extends \ZCL\DB\Entity
     }
 
 
-    //последняя  партия true по  приходу  false по расходу
-    public function getLastPartion($store = 0, $snumber = "", $in = true) {
+    /**
+    * последняя  партия
+    * 
+    * @param mixed $store       склад
+    * @param mixed $snumber     серийный  номер
+    * @param mixed $in          приход/расход
+    * @param mixed $doctype     брать с документа (например  'GoodsReceipt' или  '*' если для  любого) а не  складских  проводок
+    * @return mixed
+    */
+    public function getLastPartion($store = 0, $snumber = "", $in = true,$doctype="") {
         $conn = \ZDB\DB::getConnect();
         $q = $in == true ? "e.quantity >0" : "e.quantity < 0";
 
-        $sql = "  select coalesce(partion,0) as p  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
+        $sql = "  select document_id,coalesce(partion,0) as p  from  store_stock st join entrylist e  on st.stock_id = e.stock_id where {$q} and  st.partion>0 and    st.item_id = {$this->item_id}   ";
 
         if ($store > 0) {
             $sql = $sql . " and st.store_id=" . intval($store);
@@ -523,11 +557,25 @@ class Item extends \ZCL\DB\Entity
         if (strlen($snumber) > 0) {
             $sql .= "  and  st.snumber =  " . $conn->qstr($snumber);
         }
+        if (strlen($doctype) > 0 && $doctype != '*' ) {
+            $sql .= " and  document_id in (select document_id from documents_view where  meta_name= '{$doctype}'  )  " ;
+        }
+     
      
         $sql = $sql . " order  by  e.entry_id desc  "  ;
-
+         
         foreach($conn->Execute($sql) as $r) {
-           return doubleval($r['p']);            
+            if (strlen($doctype) == 0) {
+               return doubleval($r['p']);             
+            }         
+            
+            $doc = \App\Entity\Doc\Document::load($r['document_id']);
+            if($doc != null)  {
+                foreach ($doc->unpackDetails('detaildata') as $item) {
+                   return doubleval($item->price);             
+                    
+                }
+            }
         }
         
         return 0;
@@ -1012,9 +1060,9 @@ class Item extends \ZCL\DB\Entity
      }
      /**
      * вернуть  значения кастомных  полей
-     * 
+     *  $onlyval  только  созначениями
      */
-     public function getcf(){
+     public function getcf($onlyval=false){
         $cfv = []  ;
         if(strlen($this->cflist)>0) {
           $cfv=unserialize($this->cflist)   ;   
@@ -1029,7 +1077,7 @@ class Item extends \ZCL\DB\Entity
                 $ls->code = $k;
                 $ls->name = $v;
                
-              $cflist[$i++] = $ls;          
+                $cflist[$i++] = $ls;          
                     
             }
         }
@@ -1047,8 +1095,11 @@ class Item extends \ZCL\DB\Entity
                        $it->val= $v;
                     }
                   }
-                  $ret[$it->code]=$it;
-             
+              
+                  if($onlyval==false || strlen($it->val)>0) {
+                      $ret[$it->code] = $it;
+                  }
+                 
          
         }  
        
@@ -1133,5 +1184,35 @@ class Item extends \ZCL\DB\Entity
         return $image->image_id;       
     }
      
-     
+     /**
+    * коеффициоет НДС на  который  умножается  цена
+    * 
+    * @param mixed $revert   возвращает  обратную  величину (наприме  если   20% (0.2)  возвращает 16.67% (0.1667) )
+    */
+    public   function nds($revert = false) {
+        $nds = 0 ;
+      
+        if($this->isnds==2){
+           
+            $nds = doubleval($this->nds) / 100;
+            if ($revert) {
+                $nds = 1 - 100 / (100 + doubleval($this->nds));
+            }           
+        }
+        if($this->isnds==0){
+            
+           $cat= Category::load($this->cat_id); 
+           if($cat != null) {
+              $nds = doubleval($cat->nds) / 100;
+              if ($revert) {
+                  $nds = 1 - 100 / (100 + doubleval($cat->nds));
+              } 
+              
+           }
+        }
+        
+        return $nds;
+    }
+ 
+       
 }

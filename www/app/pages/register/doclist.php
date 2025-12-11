@@ -229,6 +229,13 @@ class DocList extends \App\Pages\Base
         } else {
             $list = "";
             foreach ($basedonlist as $doctype => $docname) {
+                
+                if($this->_tvars['usends'] != true) {
+                     if($doctype=='TaxInvoiceIncome') continue;
+                     if($doctype=='TaxInvoice') continue;
+                     if($doctype=='TaxInvoice2') continue;
+                }
+                
                 $list .= "<a  class=\"dropdown-item\" href=\"/index.php?p=App/Pages/Doc/" . $doctype . "&arg=/0/{$doc->document_id}\">{$docname}</a>";
             }
             $row->basedon->add(new Label('basedlist'))->setText($list, true);
@@ -252,8 +259,9 @@ class DocList extends \App\Pages\Base
         }
 
         if ($doc->document_id == ($this->_doc->document_id ?? null)) {
-            $row->setAttribute('class', 'table-success');
+        //    $row->setAttribute('class', 'table-success');
         }
+        $row->setAttribute('data-did', $doc->document_id);
         
         $row->add(new ClickLink('qr'))->onClick($this, 'QrOnClick', true);
         $row->qr->setVisible( (strlen($doc->headerdata['hash']??'') > 0 ) || strlen(  $doc->getFiscUrl()) > 0   ) ;
@@ -318,7 +326,7 @@ class DocList extends \App\Pages\Base
         $this->docview->setVisible(true);
         $this->docview->setDoc($this->_doc);
 
-        $this->doclist->Reload(false);
+       // $this->doclist->Reload(false);
         $this->goAnkor('dankor');
         $this->statusform->setVisible($this->_doc->state > 3);
         $this->statusform->bap->setVisible($ch==true && $this->_doc->state == Document::STATE_WA);
@@ -388,7 +396,7 @@ class DocList extends \App\Pages\Base
 
         }          
         
-        
+          $this->addJavaScript(" $(\"[data-did={$this->_doc->document_id}]\").addClass( 'table-success') ",true)  ;
     }
 
     //редактирование

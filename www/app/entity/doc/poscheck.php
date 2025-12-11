@@ -93,6 +93,15 @@ class POSCheck extends Document
             $mf = \App\Entity\MoneyFund::load($this->headerdata['payment']);
             $header['nal']  = $mf->beznal!=1;
         }
+        
+        if ( $this->getHD("fop",0)  > 0) {
+               
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->getHD("fop")] ;
+            $header["firm_name"] = $fop->name ??'';
+            $header["tin"] = $fop->edrpou ??'';
+        }        
+        
         $report = new \App\Report('doc/poscheck.tpl');
 
         $html = $report->generate($header);
@@ -110,7 +119,7 @@ class POSCheck extends Document
 
             $detail[] = array(
                 "tovar_name" => $name,
-                "quantity"   => H::fqty($item->quantity),
+                "quantity"   => H::fqty($item->quantity,true),
                 "price"   => H::fasell($item->price),
                 "amount"     => H::fasell($item->quantity * $item->price)
             );
@@ -119,7 +128,7 @@ class POSCheck extends Document
         foreach ($this->unpackDetails('services') as $ser) {
             $detail[] = array("no"         => $i++,
                               "tovar_name" => $ser->service_name,
-                              "quantity"   => H::fqty($ser->quantity),
+                              "quantity"   => H::fqty($ser->quantity,true),
                               "price"   => H::fasell($ser->price),
                               "amount"     => H::fasell($ser->quantity * $ser->price)
             );
@@ -163,7 +172,7 @@ class POSCheck extends Document
                         "phone"         => $firm["phone"],
                         "inn"           => strlen($firm["inn"]) >0 ? $firm["inn"] : false,
                         "tin"           => strlen($firm["tin"]) >0 ? $firm["tin"] : false,
-                        "checkslogan"   => $common["checkslogan"],
+                      
                         "customer_name" => strlen($this->headerdata["customer_name"]?? null) > 0 ? $this->headerdata["customer_name"] : false,
                         "fiscalnumber"  => strlen($this->headerdata["fiscalnumber"]?? null) > 0 ? $this->headerdata["fiscalnumber"] : false,
                         "fiscalnumberpos"  => strlen($this->headerdata["fiscalnumberpos"]?? null) > 0 ? $this->headerdata["fiscalnumberpos"] : false,
@@ -181,6 +190,7 @@ class POSCheck extends Document
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
+                        "checkslogan"          => strlen($this->headerdata["checkslogan"]??'') > 0 ? $this->headerdata["checkslogan"] : false,
                         "payeq"           => strlen($pos->payeq ) > 0 ? $pos->payeq : false,
                         "isdocqrcode"     =>  $common['printoutqrcode']==1,
                         "docqrcodeurl"     =>  $this->getQRCodeImage(true),
@@ -193,14 +203,7 @@ class POSCheck extends Document
             $header['tin'] = false;
         }
 
-        $frases = explode(PHP_EOL, $header['checkslogan']) ;
-        if(count($frases) >0) {
-            $i=  rand(0, count($frases) -1)  ;
-            $header['checkslogan']   =   $frases[$i];
-        }
-        if(strlen($header['checkslogan'] ??'') ==0) {
-            $header['checkslogan']  = false;
-        }
+     
 
         //промокод        
         $pc = \App\Entity\PromoCode::find('type=2 and disabled <> 1  and coalesce(enddate,now()) >=now()' ,'id desc') ;
@@ -218,7 +221,14 @@ class POSCheck extends Document
             $header['promo']  = false;
         }
         
-        
+        if ( $this->getHD("fop",0)  > 0) {
+               
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->getHD("fop")] ;
+            $header["firm_name"] = $fop->name ??'';
+            $header["tin"] = $fop->edrpou ??'';
+        }        
+         
         $header['form1']  = false;
         $header['form2']  = false;
         $header['form3']  = false;
@@ -412,17 +422,15 @@ class POSCheck extends Document
                 $ua->document_id = $this->document_id;
                 $ua->emp_id = $emp_id;
                 $ua->amount = $b;
+                $ua->notes = "Бонус ";
                 $ua->save();
              
-                $n = new \App\Entity\Notify();
-                $n->user_id = \App\System::getUser()->user_id;;;
-                $n->message = "Бонус " . $b  ;
-                $n->sender_id =  \App\Entity\Notify::SYSTEM;
-                $n->save(); 
+              
             }
         }
  
-        
+          $this->DoAcc() ;    
+     
         return true;
     }
 
@@ -473,7 +481,8 @@ class POSCheck extends Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-        
+        $this->DoAcc() ;    
+       
     }
 
     
@@ -508,5 +517,41 @@ class POSCheck extends Document
         }
     }
      
-    
+  public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+         $conn = \ZDB\DB::getConnect();
+
+       //тмц
+         
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('23',$a, $am,$this->document_id)  ; 
+         }   
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'23', $am,$this->document_id)  ; 
+         }   
+          
+         
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
+         }   
+          //услуги    
+         $sql="select   coalesce(abs(sum(quantity * cost )),0) as am   from entrylist_view   where service_id >0 and document_id={$this->document_id} and tag=   ".Entry::TAG_SELL;
+         $am=H::fa($conn->GetOne($sql));   
+         \App\Entity\AccEntry::addEntry('90','23', $am,$this->document_id)  ; 
+ 
+       
+         \App\Entity\AccEntry::addEntry('36', '70', $this->payamount,$this->document_id)  ; 
+        
+ 
+        
+         $this->DoAccPay('36');      
+        
+        
+                 
+  }
+       
 }

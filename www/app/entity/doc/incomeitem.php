@@ -23,6 +23,8 @@ class IncomeItem extends Document
             $stockto = Stock::getStock($this->headerdata['store'], $item->item_id, $item->price, $item->snumber, $item->sdate, true,0,$this->headerdata['storeemp']??0);
             $sc = new Entry($this->document_id, $item->quantity * $item->price, $item->quantity);
             $sc->setStock($stockto->stock_id);
+            $sc->tag=Entry::TAG_IN;
+         
             $sc->save();
             $amount = $amount + $item->quantity * $item->price;
 
@@ -30,6 +32,7 @@ class IncomeItem extends Document
 
         }
  
+        $this->DoAcc() ;
      
         return true;
     }
@@ -79,4 +82,14 @@ class IncomeItem extends Document
         return 'ОТ-000000';
     }
 
+    public   function DoAcc() {
+         if(\App\System::getOption("common",'useacc')!=1 ) return;
+         parent::DoAcc()  ;
+         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
+      
+         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_IN) ;
+         foreach($ia as $a=>$am){
+             \App\Entity\AccEntry::addEntry($a,'40', $am,$this->document_id)  ; 
+         }   
+    }    
 }

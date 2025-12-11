@@ -12,22 +12,22 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number"  required >
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="customer">Покупець</label>
                         <input placeholder="Почніть вводити..." class="form-control " zippy="customer"/>
 
                     </div>
-                    {{#fiscal}}
+                   
                     <div class="form-group  ">
-                        <label for="pos">POS термiнал</label>
+                        <label data-label="pos" for="pos">POS термiнал</label>
                         <select class="form-control  " zippy="pos">
                             <option value="0">Не обрано</option>
 
                         </select>
                     </div>
-                    {{/fiscal}}
+                     
                     <div class="form-group  ">
                         <label for="notes">Примітка </label>
 
@@ -40,7 +40,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date"  required >
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="store">На склад</label>
@@ -67,14 +67,14 @@
                             <th>Назва</th>
                             <th>Од.</th>
                            
-                            <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
-                        
+                           
                             
 
 
                             <th class="text-right">Кіл.</th>
                             <th class="text-right">Ціна</th>
-
+                            <th class="text-right">  {{#usends}} Ціна з ПДВ {{/usends}}</th>
+ 
                             <th class="text-right">Сума</th>
                             <th  ></th>
                         </tr>
@@ -89,7 +89,8 @@
 
                             <td zippy="quantity" class="text-right"></td>
                             <td zippy="price" class="text-right"></td>
-
+                            
+    
                             <td zippy="amount" class="text-right"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
@@ -104,6 +105,7 @@
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
+                           {{^usends}} 
                         <tr style="font-weight: bolder;">
 
                          
@@ -121,7 +123,20 @@
 
                             <td zippy="bonus" class="text-right"></td>
                             <td></td>
+                        </tr>  
+                           {{/usends}}                           
+                       {{#usends}} 
+                       <tr style="font-weight: bolder;">
+
+                         
+                            <td colspan="5" class="text-right">В т.ч. ПДВ:</td>
+                         
+
+                            <td zippy="totalnds" class="text-right"></td>
+                            <td></td>
                         </tr>                            
+                      {{/usends}} 
+                    
                        <tr style="font-weight: bolder;">
 
                          
@@ -192,13 +207,13 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Кількість</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required  pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Ціна </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice"  required  pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice"  required="on"  pattern="[0-9,\.]+"
                                style="width: 100px;">
 
                     </div>

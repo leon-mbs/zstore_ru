@@ -43,6 +43,8 @@ class Admin extends \App\Pages\Base
         $form->add(new CheckBox('usebranch',$options['usebranch']??0));
         $form->add(new CheckBox('usefood',$options['usefood']??0));
         $form->add(new CheckBox('useprod',$options['useprod']??0));
+        $form->add(new CheckBox('usends',$options['usends']??0));
+        $form->add(new CheckBox('useacc',$options['useacc']??0));
        
         $form->add(new SubmitButton('saveconfig'))->onClick($this, 'saveConfig');
           
@@ -88,6 +90,7 @@ class Admin extends \App\Pages\Base
         if($modules['ppo']==1) $fisctype=1;
         if($modules['checkbox']==1) $fisctype=2;
         if($modules['vkassa']==1) $fisctype=3;
+        if($modules['freg']==1) $fisctype=4;
         $this->modules->add(new DropDownChoice('modfisctype',[], $fisctype));
 
    
@@ -99,6 +102,8 @@ class Admin extends \App\Pages\Base
         $options['usebranch']  =  $this->configform->usebranch->isChecked() ? 1 : 0;
         $options['usefood']  =  $this->configform->usefood->isChecked() ? 1 : 0;
         $options['useprod']  =  $this->configform->useprod->isChecked() ? 1 : 0;
+        $options['usends']  =  $this->configform->usends->isChecked() ? 1 : 0;
+        $options['useacc']  =  $this->configform->useacc->isChecked() ? 1 : 0;
           
         $conn = \ZDB\DB::getConnect();
       
@@ -110,7 +115,7 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
      
-        $where = " where meta_name in('TaskList','Task','EmpTask','ProdReceipt','ProdReceipt','ProdIssue','ProdAreaList','ProdProcList','ProdStageList','ProdReturn','','','') or    menugroup= ".$conn->qstr('Виробництво');
+        $where = " where meta_name in('TaskList','Task','EmpTask','ProdReceipt','ProdReceipt','ProdIssue','ProdAreaList','ProdProcList','ProdStageList','ProdReturn','Prod','EmpTask' ) or    menugroup= ".$conn->qstr('Виробництво');
         if($options['useprod']==1) {
             $sql="update metadata set  disabled=0 ";
         }   else {
@@ -118,8 +123,24 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
         
-        
-        
+        $where = " where meta_name in('TaxInvoiceIncome','TaxInvoice2','TaxInvoice','TaxInvoiceList' )   " ;
+        if($options['usends']==1) {
+            $sql="update metadata set  disabled=0 ";
+        }   else {
+            $sql="update metadata set  disabled=1";
+        }
+        $conn->Execute($sql.$where);
+     
+        $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr('Бухоблiк');
+      
+        if($options['useacc']==1) {
+            $sql="update metadata set  disabled=0 ";
+        }   else {
+            $sql="update metadata set  disabled=1";
+        }
+        $conn->Execute($sql.$where);
+       
+         
         System::setOptions("common",$options) ;
         
         Session::getSession()->menu = [];       
@@ -222,7 +243,7 @@ class Admin extends \App\Pages\Base
            $this->checkdbanswer->setText('');
     
            $ver = str_replace('.','',System::REQUIRED_DB) ;        
-           $origtables =    file_get_contents("https://ru.zippy.com.ua/updates/{$ver}.db" ) ;  
+           $origtables =    file_get_contents("https://zippy.com.ua/updates/{$ver}.db" ) ;  
                             
            if(strlen($origtables) == 0 ) {
                $this->setError('Структура для '.System::REQUIRED_DB.' не завантажена') ;
@@ -298,6 +319,7 @@ class Admin extends \App\Pages\Base
         $modules['ppo']   = $fisctype == 1 ? 1:0;
         $modules['checkbox']   = $fisctype == 2 ? 1:0;
         $modules['vkassa']   = $fisctype == 3 ? 1:0;
+        $modules['freg']   = $fisctype == 4 ? 1:0;
  
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
