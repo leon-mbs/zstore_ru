@@ -9,23 +9,23 @@
 <ul class="nav nav-tabs">
   
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Форма для друку</a>
+    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Печатная форма</a>
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Пов'язанi документи <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Связанные документы <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Коментарi  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Коментартт  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tfiles"><i class="fa fa-paperclip"></i> Прикрiпленi файли <span   class="badge badge-pill badge-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tfiles"><i class="fa fa-paperclip"></i> Прикрепленные  файлы <span   class="badge badge-pill badge-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#thist"><i class="fa fa-calendar-alt"></i> Iсторiя змiн</a>
+    <a class="nav-link" data-toggle="tab" href="#thist"><i class="fa fa-calendar-alt"></i> История изменений</a>
   </li>
 <li class="nav-item" v-show="docdata.isscan">
-    <a class="nav-link" data-toggle="tab" href="#tscan"><i class="fa fa-image"></i> Скан оригiналу</a>
+    <a class="nav-link" data-toggle="tab" href="#tscan"><i class="fa fa-image"></i> Скан оригинала</a>
   </li>
  
 </ul>  
@@ -33,20 +33,19 @@
   
   <div class="tab-pane   show active" id="tprint"> 
        
-       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Друк"><i class="fa fa-print mr-2"></i> </a>
-       <a v-else  href="javascript:void(0)"   onclick="printform()" title="Друк"><i class="fa fa-print mr-2"></i></a>   
+       <a   v-if="docdata.usemobileprinter" :href="printmob" target="_blank"   title="Печать"><i class="fa fa-print mr-2"></i> </a>
+       <a v-else  href="javascript:void(0)"   onclick="printform()" title="Печать"><i class="fa fa-print mr-2"></i></a>   
     
         
-        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Експорт у Word"><i class="fa fa-file-word mr-2"></i>   </a>
-        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
-        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Експорт у PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
-        <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Вiдправка електронною поштою "> <i class="fa fa-envelope mr-2"></i>  </a>
-        <a v-show="docdata.exports.qrpay" v-on:click.prevent="qrpay"      title="QR код для  оплати "> <i class="fa fa-qrcode mr-2"></i>  </a>
-    
+        <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Экспорь в Word"><i class="fa fa-file-word mr-2"></i>   </a>
+        <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Экспорь в Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
+        <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Экспорь в PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
+        <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Отправка  по  e-mail "> <i class="fa fa-envelope mr-2"></i>  </a>
+       
         <span v-show="docdata.exports.pos">
        
        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Друк на чековому принтерi"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Друк на чековому принтерi"><i class="fas fa-cash-register mr-1"></i> </a>
+       <a v-else   onclick=" printpos()" title="Печать на чековый принтер"><i class="fas fa-cash-register mr-1"></i> </a>
          </span>            
        
        <br>
@@ -64,7 +63,7 @@
               <table class="table table-sm"   >
                 <tr>
                     <td colspan="2" v-show="docdata.pdoc_id>0">
-                       <b>Батькiвський документ:</b> <br> <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
+                       <b>Родительский документ:</b> <br> <a v-on:click="opendoc(docdata.pdoc_id)" href="javascript:void(0)"  >{{docdata.pdoc_name}}</a>
                     </td>
                 </tr>
                 <tr v-for="item   in  reldocs" >
@@ -76,14 +75,14 @@
             <hr>
             <form onsubmit="return  false"     >
 
-                <label for="addrel">Додати дочiрнiй документ:</label>
+                <label for="addrel">Добавить дочерний документ:</label>
                 <div style="width:200px" class="form-group">
-                    <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Почнiть вводити номер..."></typeahead>   
+                    <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Начните вводить номер..."></typeahead>   
 
                 </div>
 
                
-                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="Додати">
+                <input v-on:click="onadddoc" class="btn btn-success  " type="button" value="Добавить">
             </form>
       </div>
       </div>
@@ -107,11 +106,11 @@
                      <form id="msgform"  onsubmit="return  false"  >
        
                         <div class="form-group">
-                            <label for="addmsg"> Коментар: </label>
+                            <label for="addmsg"> Коментарий: </label>
                             <textarea  name="msgtext"  class="form-control" required="required"  
                                       style=" height:120px;"></textarea>
                         </div>
-                        <input v-on:click="onaddmsg" class="btn btn-success  " type="button" value="Додати">
+                        <input v-on:click="onaddmsg" class="btn btn-success  " type="button" value="Добавить">
                     </form>   
   </div>
   </div>
@@ -135,15 +134,15 @@
                      <form id="fileaddform" onsubmit="return  false"  enctype="multipart/form-data">
 
                         <div class="form-group">
-                            <label for="addfile"> Вибрати файл: </label>
+                            <label for="addfile"> Выбрать файл: </label>
                             <input name="addfile" class="form-control" type="file" required="required"  >
                         </div>
 
                         <div class="form-group">
-                            <label for="adddescfile"> Коментар </label>
+                            <label for="adddescfile"> Коментарий </label>
                             <input name="adddescfile" class="form-control" type="text"    >
                         </div>
-                        <input v-on:click="onaddfile" class="btn btn-success  " type="button" value="Додати">
+                        <input v-on:click="onaddfile" class="btn btn-success  " type="button" value="Добавить">
 
 
                     </form>   
@@ -154,13 +153,13 @@
              <div class="row" style="font-size:smaller">
 
                         <div class="col-auto  ">
-                            <h5>Iсторiя статусiв</h5>
+                            <h5>История статусов</h5>
                             <table class="table table-sm">
                              
                                 <tr>
                                     <th>Статус</th>
                                     <th>Дата</th>
-                                    <th>Змiнив</th>
+                                    <th>Изменил</th>
 
 
                                 </tr> 
@@ -175,11 +174,11 @@
                             </table>
                         </div>
                         <div class="col-auto  " v-show="docdata.paylist.length >0">
-                            <h5>Оплати</h5>
+                            <h5>Оплаты</h5>
                             <table class="table table-sm">
                                 <tr>
                                     <th>Дата</th>
-                                    <th>Рахунок</th>
+                                    <th>Счет</th>
                                     <th class="text-center">+</th>
                                     <th class="text-center">-</th>
                                   
@@ -202,12 +201,12 @@
                                 <tr>
                                     <th>ТМЦ</th>
                                     <th>Код</th>
-                                    <th class="text-right">Кiл.</th>
+                                    <th class="text-right">Кол.</th>
                                     
-                                    <th v-show="docdata.showpartion" class="text-right">Обл. цiна</th>
+                                    <th v-show="docdata.showpartion" class="text-right">Уч. цена</th>
                                   
-                                    <th class="text-right">Цiна</th>
-                                    <th class="text-right">Сума</th>
+                                    <th class="text-right">Цена</th>
+                                    <th class="text-right">Сумма</th>
 
                                 </tr>
                                 <tr v-for="item   in docdata.entrylist" >
@@ -224,27 +223,7 @@
                                 </tr>
                             </table>
                         </div>
-                    <div class="col-auto   " v-show="docdata.acclist.length >0">
-                            <h5>Бух. проводки</h5>
-                            <table class="table table-sm">
-                                 <tr>
-                                    <th>Дт</th>
-                                    <th>Кт</th>
-                        
-                                    <th class="text-right">Сума</th>
-
-                                </tr>
-                                <tr v-for="acc   in docdata.acclist" >
-                                    <td  >{{acc.dt}}</td>
-                                    <td  >{{acc.ct}}</td>
-                                    <td class="text-right "  >{{acc.am}}</td>
-                                    
-
-
-                                </tr>
-                            </table>
-                        </div>      
-                        
+                   
                     </div>
   </div>
   <div class="tab-pane  " id="tscan" v-show="docdata.isscan">
@@ -254,34 +233,7 @@
        
  
 </div>
-              <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered   ">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body  ">
-                          <table class="table table-sm">
-                          <tr><td align="center">
-                            <h5 >QR код для  оплати</h5>
-                           </td></tr>
-                          <tr><td align="center">
-                          <div class="mb-2"   v-html="docdata.qr.img" > </div>
-                          </td></tr>
-                          <tr><td align="center">
-                          <a  class="btn btn-info  "  :href="docdata.qr.url" >  Відкрити посилання        </a>
-
-                           <a class="btn btn-success   " v-on:click.prevent="copycb" title="Скопіювати в кліпборд" >Скопіювати </a>
-                          </td></tr> </table>
-                        </div>
-
-                    </div>
-                </div>
-            </div> 
+           
   
         </div>
         
@@ -449,18 +401,14 @@
                   
                } 
                ,
-               qrpay:function( ){
-                   
-                 $('#modalqr').modal('show')  
-                  
-               }   ,
+             
            
              copycb:function( ){
  
             
                 if(navigator.clipboard){
                     navigator.clipboard.writeText(this.docdata.qr.url);
-                }else alert('Ваш браузер не підтримує Clipboard'); 
+                }else alert('Ваш браузер не поддерживает Clipboard'); 
   
       
                   

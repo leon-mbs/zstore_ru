@@ -7,7 +7,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-xl  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Вибiр ТМЦ</h5>
+                            <h5 class="modal-title">Вибор ТМЦ</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -15,9 +15,9 @@
                         <div id="vitemlist" class="modal-body">    
                              <form   class="form-inline">
 
-                                <label for="wissearchkey">пошук</label>
+                                <label for="wissearchkey">поиск</label>
                                 <input v-on:keyup.enter="onSearch" v-model="wissearchkey" class="form-control mr-sm-2" type="text"  >
-                                <label for="wissearchcat">категорiя</label>
+                                <label for="wissearchcat">категория</label>
 
                                 <select v-model="wissearchcat" class="form-control mr-sm-2"  >
                                     <option value="0">Не задано</option>
@@ -31,7 +31,7 @@
             
                                 </datalist>
                                    <div class="form-check  mr-sm-2">
-                                     <label for="wissearchonstore" class="form-check-label">В наявностi </label> 
+                                     <label for="wissearchonstore" class="form-check-label">В наличии </label> 
                                      <input type="checkbox" v-model="wissearchonstore" id="wissearchonstore" class="form-check-input  mr-2"  >
                                   </div> 
 
@@ -40,7 +40,7 @@
                             </form>     
                             <table class="table table-sm table-hover">
                         <tr >
-                          <th    > Назва</th>
+                          <th    > Название</th>
                           <th    > Артикул </th>
                           <th    > Штрих-код</th>
                           <th    > Бренд</th>

@@ -57,7 +57,7 @@ class ItemSel extends \Zippy\Html\PageFragment
 
         $table = $this->witempan->add(new DataTable('witemselt', new WISDataSource($this ), true, true));
         $table->setPageSize(H::getPG());
-        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Назва", true, true, true));
+        $table->AddColumn(new \Zippy\Html\DataList\Column('itemname', "Название", true, true, true));
         $table->AddColumn(new \Zippy\Html\DataList\Column('item_code', "Артикул", true, true, false));
         $table->AddColumn(new \Zippy\Html\DataList\Column('bar_code', "Штрих-код", true, true, false));
         $table->AddColumn(new \Zippy\Html\DataList\Column('manufacturer', "Бренд", true, true, false));
@@ -84,7 +84,7 @@ class ItemSel extends \Zippy\Html\PageFragment
         $this->_pricetype = $pricetype;
         $this->_store = $store;
         if (strlen($this->_pricetype) > 0) {
-            $this->witempan->witemselt->AddColumn(new \Zippy\Html\DataList\Column('price', 'Цiна', true, true, false, "text-right", "text-right"));
+            $this->witempan->witemselt->AddColumn(new \Zippy\Html\DataList\Column('price', 'Цена', true, true, false, "text-right", "text-right"));
         }
     }
 

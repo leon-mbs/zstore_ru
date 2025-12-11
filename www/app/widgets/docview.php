@@ -95,18 +95,7 @@ class DocView extends \Zippy\Html\PageFragment
         $ret['exports']['pdf']   =  in_array(Document::EX_PDF, $exportlist) ;
         $ret['exports']['pos']   =  in_array(Document::EX_POS, $exportlist) ;
         $ret['exports']['email'] =  in_array(Document::EX_MAIL, $exportlist) ;
-        $ret['qr']['img'] = '';
-        $ret['qr']['url'] = '';
-
-
-        $qr = $doc->getQRPay() ;
-        $ret['exports']['qrpay'] =  is_array($qr);
-
-        if(is_array($qr)) {
-            $ret['qr']['img'] = $qr['qr'] ;
-
-            $ret['qr']['url'] = $qr['url'] ;
-        }
+      
 
         $ret['html'] = $html   ;
         $ret['htmlpos'] = $htmlpos   ;
@@ -168,13 +157,7 @@ class DocView extends \Zippy\Html\PageFragment
         $ret['reldocs'] = array();
 
         
-        $ret["acclist"] =[]   ;
-        if($common["useacc"]==1) {
-           foreach( \App\Entity\AccEntry::find('document_id='.$doc->document_id,'id') as $acc) {
-              $ret["acclist"][]=['dt'=>$acc->accdt,'ct'=>$acc->accct,'am'=> H::fa($acc->amount)]  ; 
-           }
-        
-        }            
+            
         
         
         return json_encode($ret, JSON_UNESCAPED_UNICODE);
@@ -302,9 +285,9 @@ class DocView extends \Zippy\Html\PageFragment
             
             $n = new \App\Entity\Notify();
             $n->user_id = $id;
-            $n->message = "<b>Новий коментар до документа:</b> {$doc->meta_desc} {$doc->document_number}  ";
+            $n->message = "<b>Новый коментарий к документу:</b> {$doc->meta_desc} {$doc->document_number}  ";
             $n->message .= "<br> {$msg->message} ";
-            $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$doc->document_id}\">Відповісти</a> ";
+            $n->message .= "<br>  <a href=\"/index.php?p=App/Pages/Register/DocList&arg={$doc->document_id}\">Ответить</a> ";
             $n->sender_id = $user->user_id;
             $n->save();
         }
