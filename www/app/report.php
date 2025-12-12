@@ -40,7 +40,7 @@ class Report
 
 
         if (strlen($template) == 0) {
-            return "Файл  форми друку " . $this->_template . " не знайдений";
+            return "Файл печатной формы " . $this->_template . " не найден";
         }
         $m = new \Mustache_Engine();
         $html = $m->render($template, $header);

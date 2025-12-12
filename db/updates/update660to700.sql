@@ -601,13 +601,15 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Управленческий баланс', 'Balance', '', 0);  
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Кафе', 'OutFood', 'Продажи', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Платежный календарь', 'PayTable', 'Касса и платежи', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Повернення з виробництва', 'ProdReturn', 'Производство', 1);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Комісійні товари', 'ItemComission', 'Закупки', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операції з ОЗ та  НМА', 'EQ', '', 0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемiщення мiж етапами', 'ProdMove', 'Производство', 1);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Авансовий звiт', 'AdvanceRep', 'Касса и платежи',   0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES(  2, 'Закриття дня', 'EndDay', 'Касса и платежи',     0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES(  3, 'Замiни ТМЦ', 'SubstItems', 'Склад',     0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Возврат с производства', 'ProdReturn', 'Производство', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Товары  на  коммисии', 'ItemComission', 'Закупки', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Касса и платежи', 0
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операции с ОС и НМА', 'EQ', '', 0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемещение  между этапами', 'ProdMove', 'Производство', 1);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Авансовый отчет', 'AdvanceRep', 'Касса и платежи',   0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES(  2, 'Закрытие дня', 'EndDay', 'Касса и платежи',     0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES(  3, 'Замены ТМЦ', 'SubstItems', 'Склад',     0);
+
 
 UPDATE metadata set menugroup ='Закупки' where meta_name='CustItems';
   

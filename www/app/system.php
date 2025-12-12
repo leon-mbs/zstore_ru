@@ -10,9 +10,9 @@ use App\Entity\User;
  */
 class System
 {
-    public const CURR_VERSION = "6.18.1";
-    public const PREV_VERSION = "6.17.2";
-    public const REQUIRED_DB  = "6.18.0";
+    public const CURR_VERSION = "7.0.0";
+    public const PREV_VERSION = "";
+    public const REQUIRED_DB  = "7.0.0";
    
 
     /**
@@ -252,7 +252,7 @@ class System
                 if ($user->userpass == "admin" || $user->userpass == '$2y$10$GsjC.thVpQAPMQMO6b4Ma.olbIFr2KMGFz12l5/wnmxI1PEqRDQf.') {
                     $n = new \App\Entity\Notify();
                     $n->user_id = $user->user_id;
-                    $n->message = "Змініть у профілі пароль за замовчуванням " ;
+                    $n->message = "Смените  в  профиле  пароль по умолчвнию " ;
                     $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                     $n->save();                 
@@ -261,7 +261,7 @@ class System
                 if(System::useCron() == false){
                     $n = new \App\Entity\Notify();
                     $n->user_id = $user->user_id;
-                    $n->message = "Планувальник вимкнено. Деякі  фонові завдання  не  будуть виконуватись " ;
+                    $n->message = "Планировщик выключен. Некоторые  фоновые задачи не  будут выполняться" ;
                     $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                     $n->save();                    
@@ -273,7 +273,7 @@ class System
             if (\App\Entity\Notify::isNotify(\App\Entity\Notify::SYSTEM)) {
                 $n = new \App\Entity\Notify();
                 $n->user_id = $user->user_id;
-                $n->message = "Є непрочитані системні повідомлення " ;
+                $n->message = "Есть непрочитанные систменые  уведомления " ;
                 $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                 $n->save();                 
@@ -290,7 +290,7 @@ class System
             if( $b==1 ){
                 $n = new \App\Entity\Notify();
                 $n->user_id = $user->user_id;
-                $n->message = "Доступна  нова  версія <b>{$data['version']}</b>. <a href=\"/index.php?p=App/Pages/Update\">Детальнішк</a>" ;
+                $n->message = "Доступна  новая  версия <b>{$data['version']}</b>. <a href=\"/index.php?p=App/Pages/Update\">Детальнее</a>" ;
                 $n->sender_id = \App\Entity\Notify::SYSTEM;
 
                 $n->save();              

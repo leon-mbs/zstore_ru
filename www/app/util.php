@@ -100,34 +100,32 @@ class Util
         }
         return $list;
     }
-
-    /**
-     * вовращает  список  месяцев
-     */
+  
     public static function getMonth() {
         $list = array();
-        $list[1] = "Січень";
-        $list[2] = "Лютий";
-        $list[3] = "Березень";
-        $list[4] = "Квітень";
-        $list[5] = "Травень";
-        $list[6] = "Червень";
-        $list[7] = "Липень";
-        $list[8] = "Серпень";
-        $list[9] = "Вересень";
-        $list[10] = "Жовтень";
-        $list[11] = "Листопад";
-        $list[12] = "Грудень";
+        $list[1] = "Январь";
+        $list[2] = "Февраль";
+        $list[3] = "Март";
+        $list[4] = "Апрель";;
+        $list[5] = "Май";
+        $list[6] = "Июнь";
+        $list[7] = "Июль";
+        $list[8] = "Август";
+        $list[9] = "Сентябрь";
+        $list[10] = "Октябрь";
+        $list[11] = "Ноябрь";
+        $list[12] = "Декабрь";
         return $list;
     }
 
+ 
+ 
 
+    public static function money2str($number) {
 
-
-    public static function money2str_ua($number) {
-
-        return mb_ucfirst( money2str_ua($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT) );
+        return money2str_ru($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
     }
+
 
     /**
      *     Преобразование  первого  символа   в   верхний  регистр
@@ -246,12 +244,86 @@ class Util
 }
 
 
-
 define('M2S_KOPS_DIGITS', 0x01);    // digital copecks
 define('M2S_KOPS_MANDATORY', 0x02);    // mandatory copecks
 define('M2S_KOPS_SHORT', 0x04);    // shorten copecks
+                                                      
+function money2str_rugr($money, $options = 0) {
+             
+    $money = preg_replace('/[\,\-\=]/', '.', $money);
 
- 
+    $numbers_m = array('', 'один', 'два', 'три', 'четыре', "пять", 'шесть', 'семь',
+        'восемь', "девять", 'десять', 'одиннадцать', 'двенадцать', 'тринадцать',
+        'четырнадцать', "пятнадцать", 'шестнадцать', 'семнадцать', 'восемьнадцать',
+        "девятнадцать", 'двадцать', 30  => 'тридцать', 40 => 'сорок', 50 => "пятьдесят",
+                                    60  => 'шестдесят', 70 => 'семьдесят', 80 => 'восемьдесят', 90 => "девяносто",
+                                    100 => 'сто', 200 => 'двести', 300 => 'триста', 400 => 'четыреста',
+                                    500 => "пятьсот", 600 => 'шестьсот', 700 => 'семьсот', 800 => 'восемьсот',
+                                    900 => "девятьсот");
+
+    $numbers_f = array('', 'одна', 'две');
+
+    $units_ru = array(
+        (($options & M2S_KOPS_SHORT) ? array('коп.', 'коп.', 'коп.') : array('копейка', 'копейки', 'копеек')),
+        array('гривна', 'гривны', 'гривен'),
+        array('тысяча', 'тысячи', 'тысяч'),
+        array('миллион', 'миллиона', 'миллионов')
+    );
+
+    $ret = '';
+
+// enumerating digit groups from left to right, from trillions to copecks
+// $i == 0 means we deal with copecks, $i == 1 for roubles,
+// $i == 2 for thousands etc.
+    for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
+
+// each group contais 3 digits, except copecks, containing of 2 digits
+        $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
+            dec_digits_group($money, -1, 2);
+
+// process the group if not empty
+        if ($grp != 0) {
+
+// digital copecks
+            if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
+                $ret .= sprintf('%02d', $grp) . ' ';
+                $dig = $grp;
+
+// the main case
+            } else {
+                for ($j = 2; $j >= 0; $j--) {
+                    $dig = dec_digits_group($grp, $j);
+                    if ($dig != 0) {
+
+// 10 to 19 is a special case
+                        if ($j == 1 && $dig == 1) {
+                            $dig = dec_digits_group($grp, 0, 2);
+                            $ret .= $numbers_m[$dig] . ' ';
+                            break;
+                        } // thousands and copecks are Feminine gender in Russian
+                        elseif (($i == 2 || $i == 0) && $j == 0 && ($dig == 1 || $dig == 2)) {
+                            $ret .= $numbers_f[$dig] . ' ';
+                        } // the main case
+                        else {
+                            $ret .= $numbers_m[(int)($dig * pow(10, $j))] . ' ';
+                        }
+                    }
+                }
+            }
+            $ret .= $units_ru[$i][sk_plural_form($dig)] . ' ';
+        } // roubles should be named in case of empty roubles group too
+        elseif ($i == 1 && $ret != '') {
+            $ret .= $units_ru[1][2] . ' ';
+        } // mandatory copecks
+        elseif ($i == 0 && ($options & M2S_KOPS_MANDATORY)) {
+            $ret .= (($options & M2S_KOPS_DIGITS) ? '00' : 'ноль') .
+                ' ' . $units_ru[0][2];
+        }
+    }
+
+    return trim($ret);
+}
+
 function money2str_ru($money, $options = 0) {
 
     $money = preg_replace('/[\,\-\=]/', '.', $money);
@@ -274,33 +346,32 @@ function money2str_ru($money, $options = 0) {
         array('миллион', 'миллиона', 'миллионов')
     );
 
-    $dig = '';
     $ret = '';
 
-    // enumerating digit groups from left to right, from trillions to copecks
-    // $i == 0 means we deal with copecks, $i == 1 for roubles,
-    // $i == 2 for thousands etc.
+// enumerating digit groups from left to right, from trillions to copecks
+// $i == 0 means we deal with copecks, $i == 1 for roubles,
+// $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
 
-        // each group contais 3 digits, except copecks, containing of 2 digits
+// each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-        // process the group if not empty
+// process the group if not empty
         if ($grp != 0) {
 
-            // digital copecks
+// digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-                // the main case
+// the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-                        // 10 to 19 is a special case
+// 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -353,30 +424,30 @@ function money2str_us($money, $options = 0) {
 
     $ret = '';
 
-    // enumerating digit groups from left to right, from trillions to copecks
-    // $i == 0 means we deal with copecks, $i == 1 for roubles,
-    // $i == 2 for thousands etc.
+// enumerating digit groups from left to right, from trillions to copecks
+// $i == 0 means we deal with copecks, $i == 1 for roubles,
+// $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
-        $dig='';
-        // each group contais 3 digits, except copecks, containing of 2 digits
+
+// each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-        // process the group if not empty
+// process the group if not empty
         if ($grp != 0) {
 
-            // digital copecks
+// digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-                // the main case
+// the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-                        // 10 to 19 is a special case
+// 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -406,7 +477,7 @@ function money2str_us($money, $options = 0) {
 }
 
 function money2str_eu($money, $options = 0) {
-    $dig='';
+
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
     $numbers_m = array('', 'один', 'два', 'три', 'четыре', "пять", 'шесть', 'семь',
@@ -429,30 +500,30 @@ function money2str_eu($money, $options = 0) {
 
     $ret = '';
 
-    // enumerating digit groups from left to right, from trillions to copecks
-    // $i == 0 means we deal with copecks, $i == 1 for roubles,
-    // $i == 2 for thousands etc.
+// enumerating digit groups from left to right, from trillions to copecks
+// $i == 0 means we deal with copecks, $i == 1 for roubles,
+// $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
 
-        // each group contais 3 digits, except copecks, containing of 2 digits
+// each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-        // process the group if not empty
+// process the group if not empty
         if ($grp != 0) {
 
-            // digital copecks
+// digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-                // the main case
+// the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-                        // 10 to 19 is a special case
+// 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -482,7 +553,7 @@ function money2str_eu($money, $options = 0) {
 }
 
 function money2str_ua($money, $options = 0) {
-    $dig ='';
+
     $money = preg_replace('/[\,\-\=]/', '.', $money);
 
     $numbers_m = array('', 'одна', 'двi', 'три', 'чотири', "п'ять", 'шiсть', 'сiм',
@@ -505,30 +576,30 @@ function money2str_ua($money, $options = 0) {
 
     $ret = '';
 
-    // enumerating digit groups from left to right, from trillions to copecks
-    // $i == 0 means we deal with copecks, $i == 1 for roubles,
-    // $i == 2 for thousands etc.
+// enumerating digit groups from left to right, from trillions to copecks
+// $i == 0 means we deal with copecks, $i == 1 for roubles,
+// $i == 2 for thousands etc.
     for ($i = sizeof($units_ru) - 1; $i >= 0; $i--) {
 
-        // each group contais 3 digits, except copecks, containing of 2 digits
+// each group contais 3 digits, except copecks, containing of 2 digits
         $grp = ($i != 0) ? dec_digits_group($money, $i - 1, 3) :
             dec_digits_group($money, -1, 2);
 
-        // process the group if not empty
+// process the group if not empty
         if ($grp != 0) {
 
-            // digital copecks
+// digital copecks
             if ($i == 0 && ($options & M2S_KOPS_DIGITS)) {
                 $ret .= sprintf('%02d', $grp) . ' ';
                 $dig = $grp;
 
-                // the main case
+// the main case
             } else {
                 for ($j = 2; $j >= 0; $j--) {
                     $dig = dec_digits_group($grp, $j);
                     if ($dig != 0) {
 
-                        // 10 to 19 is a special case
+// 10 to 19 is a special case
                         if ($j == 1 && $dig == 1) {
                             $dig = dec_digits_group($grp, 0, 2);
                             $ret .= $numbers_m[$dig] . ' ';
@@ -559,19 +630,17 @@ function money2str_ua($money, $options = 0) {
 
 // service function to select the group of digits
 function dec_digits_group($number, $power, $digits = 1) {
-
-    if (function_exists('gmp_init') && $power >0) {
-        return   gmp_intval(gmp_mod(gmp_div(intval($number), gmp_pow(10, intval($power) * intval($digits))), gmp_pow(10, (int)$digits)));
+                 
+    if (function_exists('gmp_init') && $power >0 ) {
+       return   gmp_intval( gmp_mod(gmp_div((int)$number, gmp_pow(10,(int) $power * $digits )), gmp_pow(10, (int)$digits )));
     }
- 
+    return    intval(   ( $number/pow(10, $power * $digits) ) % pow(10,    $digits) ) ;
     
-    return  intval(($number/pow(10, intval($power) * intval($digits))) % pow(10, $digits)) ;
-  
-   //  return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
+   // return (int)bcmod(bcdiv($number, bcpow(10, $power * $digits, 8)), bcpow(10, $digits, 8));
 }
 
 // service function to get plural form for the number
-function sk_plural_form($d) {
+function sk_plural_form($d) {    
     $d = $d % 100;
     if ($d > 20) {
         $d = $d % 10;

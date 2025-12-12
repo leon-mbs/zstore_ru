@@ -68,7 +68,7 @@ class Helper
         setcookie("remember", '', 0);
         System::setUser(new \App\Entity\User());
         $_SESSION['user_id'] = 0;
-        $_SESSION['userlogin'] = 'Гiсть';
+        $_SESSION['userlogin'] = 'Гость';
 
         Application::Redirect("\\App\\Pages\\UserLogin");
 
@@ -832,21 +832,16 @@ class Helper
      * @return mixed
      */
     public static function getValName($vn) {
-        if($vn == 'Гривня') {
-            return 'UAH';
-        }
-        if($vn == 'Долар') {
-            return 'USD';
-        }
-        if($vn == 'Євро') {
-            return 'EUR';
-        }
         if($vn == 'Рубль') {
             return 'RUB';
         }
-        if($vn == 'Лей') {
-            return 'MDL';
+        if($vn == 'Доллар') {
+            return 'USD';
         }
+        if($vn == 'Евро') {
+            return 'EUR';
+        }
+     
     }
 
     public static function exportXML($xml, $filename) {
@@ -1340,39 +1335,23 @@ class Helper
         $vdb=\App\System::getOptions('version',true ) ;
         $common=\App\System::getOptions('common' ) ;
      
-        $migrationbonus = \App\Helper::getKeyVal('migrationbonus'); 
-        if($migrationbonus != "done" &&version_compare($vdb,'6.11.0')>=0  )    {
-            Helper::log("Міграція бонус");
-            $conn->BeginTrans();
+       
+     
+            
+        $migration700 = \App\Helper::getKeyVal('migration700'); 
+        if($migration6180 != "done"  ) {
+            Helper::log("Миграция 700");
+         
+            \App\Helper::setKeyVal('migration700', "done");           
+        
             try {
                 $conn->Execute("delete from custacc where optype=1 ");
 
                 $conn->Execute("INSERT INTO custacc (amount,document_id,customer_id,optype,createdon) 
-                                  SELECT bonus,document_id, customer_id,1,paydate FROM paylist_view WHERE  paytype=1001 AND  customer_id IS NOT null;     ");
+                                  SELECT bonus,document_id, customer_id,1,paydate FROM paylist_view WHERE  paytype=1001 AND  customer_id IS NOT null      ");
 
-
-                \App\Helper::setKeyVal('migrationbonus', "done");
-                $conn->CommitTrans();
-
-            } catch(\Throwable $ee) {
-                
-                $conn->RollbackTrans();
-                System::setErrorMsg($ee->getMessage());
-                $logger->error($ee->getMessage());
-                return;
-            }
-
-
-        }
-
-
-        $migrationbalans = \App\Helper::getKeyVal('migrationbalans'); //6.11.2
-        if($migrationbalans != "done" && version_compare($vdb,'6.11.0')>=0) {
-            Helper::log("Міграція баланс");
-            //  + контрагента (active)  - наш кредитовый  долг
-            //  - контрагента (passive)  - наш дебетовый  долг
-            $conn->BeginTrans();
-            try {
+      
+      
                 $conn->Execute("delete from custacc where optype=2 or optype=3 ");
 
                 $sql = "SELECT
@@ -1414,40 +1393,11 @@ class Helper
                     if($b_passive > 0) {
                         $b_passive = 0 - $b_passive;
                         $conn->Execute("insert into custacc (customer_id,document_id,optype,amount) values ({$row['customer_id']},{$row['document_id']},2,{$b_passive})  ");
-                    }
-                    //  }
-
-
+                    }      
+      
+           
                 }
-
-                \App\Helper::setKeyVal('migrationbalans', "done");
-                $conn->CommitTrans();
-
-            } catch(\Throwable $ee) {
-              
-                $conn->RollbackTrans();
-                System::setErrorMsg($ee->getMessage());
-                $logger->error($ee->getMessage());
-                return;
-            }
-        }
-       
-        $migration6118 = \App\Helper::getKeyVal('migration6118'); 
-        if($migration6118 != "done"  ) {
-            Helper::log("Міграція 6118");
-         
-            \App\Helper::setKeyVal('migration6118', "done");           
-        
-            try {
-          
-                 
-                 $w=  $conn->GetOne("select count(*) from metadata where meta_name='SalaryList' ");
-                 if(intval($w)==0){
-                      $conn->Execute("INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Зарплата', 'SalaryList', 'Каса та платежі', 0) ");
-                 }
-              
-               
-       
+           
                  $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
                            
                  foreach($w as $e){
@@ -1455,27 +1405,10 @@ class Helper
                           $conn->Execute("ALTER TABLE documents DROP INDEX `unuqnumber` ");
                      }             
       
-                 }
-              
-                       
-            } catch(\Throwable $ee) {
-         
-                $logger->error($ee->getMessage());
-               
-            }           
+                 }           
            
-        }
-        
-        
-        $migration12 = \App\Helper::getKeyVal('migration12');  
-        if($migration12 != "done" && version_compare($vdb,'6.12.0')>=0) {
-            Helper::log("Міграція 12");
-         
-            \App\Helper::setKeyVal('migration12', "done");           
-         
-        
-            try {
-          
+           
+           
               foreach( \App\Entity\PromoCode::find("" ) as $p) {
                   $p->enddate = $p->dateto ; 
                   $p->save();
@@ -1487,35 +1420,7 @@ class Helper
                   $e->invnumber = $e->code ; 
                
                   $e->save();
-              }   
-                     
-                       
-            } catch(\Throwable $ee) {
-         
-                $logger->error($ee->getMessage());
-               
-            }  
-        }
-         
-            
-        $migration6180 = \App\Helper::getKeyVal('migration6180'); 
-        if($migration6180 != "done"  ) {
-            Helper::log("Міграція 6180");
-         
-            \App\Helper::setKeyVal('migration6180', "done");           
-        
-            try {
-       
-                 $w=  $conn->Execute("SHOW INDEXES FROM   documents ");
-                 $is=false;          
-                 foreach($w as $e){
-                     if($e['Key_name']=='parent_id'){
-                          $is=true;      
-                     }             
-                 }
-                 if($is==false) {
-                     $conn->Execute("ALTER TABLE documents ADD INDEX parent_id (parent_id) ");                     
-                 }
+              }      
 
             } catch(\Throwable $ee) {
                 $logger->error($ee->getMessage());
