@@ -25,7 +25,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет прав доступа  к  странице");
 
             App::RedirectError();
             return;
@@ -35,7 +35,7 @@ class Orders extends \App\Pages\Base
         $statuses = System::getSession()->statuses;
         if (is_array($statuses) == false) {
             $statuses = array();
-            $this->setWarn('Нажміть перевірити з`єднання  ');
+            $this->setWarn('Нажмите проверить соединение  ');
         }
 
         $defpaytype=intval($modules['ocpaytype']??2);
@@ -47,10 +47,10 @@ class Orders extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('status', $statuses, 0));
         $this->add(new Form('filter2'))->onSubmit($this, 'onImport');
         $pt=[];
-        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[1] = 'Оплата сразу (предоплата)';
         $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата в Чеку або ВН';
-        $pt[4] = 'Тiльки списати зi складу';
+        $pt[3] = 'Оплата в Чеке или РН';
+        $pt[4] = 'Только  списать со  склада';
           
         $this->filter2->add(new DropDownChoice('paytype',$pt, $defpaytype));
          
@@ -89,7 +89,7 @@ class Orders extends \App\Pages\Base
         }
         $data = json_decode($json, true);
         if (!isset($data)) {
-            $this->setError("Невірна відповідь");
+            $this->setError("Неверный ответ");
             \App\Helper::log($json);
             return;
         }
@@ -108,7 +108,7 @@ class Orders extends \App\Pages\Base
                 foreach ($ocorder['_products_'] as $product) {
                     $code = trim($product['sku']);
                     if ($code == "") {
-                        $this->setWarn("Не задано артикул товара {$product['name']} в замовленні номер " . $ocorder['order_id']);
+                        $this->setWarn("Не задан  артикул товара {$product['name']} в заказе номер " . $ocorder['order_id']);
                     }
                 }
 
@@ -175,7 +175,7 @@ class Orders extends \App\Pages\Base
                 $tovar = Item::getFirst('item_code=' . $code);
                 if ($tovar == null) {
 
-                    $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер ". $shoporder->order_id);
+                    $this->setWarn("Не найдено артикул товара {$product['name']} в заказе номер ". $shoporder->order_id);
                     continue;
                 }
                 $tovar->quantity = $product['quantity'];
@@ -219,7 +219,7 @@ class Orders extends \App\Pages\Base
             $neworder->notes = "OC номер: {$shoporder->order_id};";
 
             $neworder->headerdata['occlient'] = $shoporder->firstname . ' ' . $shoporder->lastname;
-            $neworder->notes .= " Клiєнт: " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+            $neworder->notes .= " Клиент: " . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
             if( $modules['ocinsertcust'] == 1  && strlen($shoporder->telephone ??'' )>0 ) {
                 $cust=null;
  
@@ -240,7 +240,7 @@ class Orders extends \App\Pages\Base
                     $cust->type = Customer::TYPE_BAYER;
                     $cust->phone = $phone;
                     $cust->email = $shoporder->email;
-                    $cust->comment = "Клiєнт OpenCart";
+                    $cust->comment = "Клиент OpenCart";
                     $cust->save();
                 }
                 
@@ -260,9 +260,9 @@ class Orders extends \App\Pages\Base
                 $neworder->notes .= " Тел: " . $shoporder->telephone . ";";
                 $neworder->headerdata['phone'] = $phone;            
             }
-            $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+            $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
             $neworder->notes .= " Оплата:" . $shoporder->payment_method . ";";
-            $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
+            $neworder->notes .= " Коментарий:" . $shoporder->comment . ";";
             
             $neworder->headerdata['ship_address']  = $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1  ;
             
@@ -287,7 +287,7 @@ class Orders extends \App\Pages\Base
 
             $i++;
         }
-        $this->setInfo("Імпортовано {$i} замовлень");
+        $this->setInfo("Импортовано {$i} заказов");
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -302,11 +302,11 @@ class Orders extends \App\Pages\Base
         
         
         if ($store == 0) {
-            $this->setError("Не задано склад");
+            $this->setError("Не задан  склад");
             return;
         }
         if ($kassa == 0) {
-            $this->setError("Не задано касу");
+            $this->setError("Не задана  касса");
             return;
         }
         $allowminus = \App\System::getOption("common", "allowminus");
@@ -324,14 +324,14 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder['order_id']);
+                        $this->setWarn("Не знайден артикул товара {$product['name']} в заказе номер " . $shoporder['order_id']);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
 
                     $qty = $tovar->getQuantity($store);
                     if ($qty < $tovar->quantity) {
-                        $this->setError("На складі всього ".\App\Helper::fqty($qty)." ТМЦ {$tovar->itemname}. Списання у мінус заборонено");
+                        $this->setError("На складе всего ".\App\Helper::fqty($qty)." ТМЦ {$tovar->itemname}. Списанние в минус запрещено");
                         return;
                     }
                 }
@@ -368,7 +368,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product['name']} в замовленні номер " . $shoporder['order_id']);
+                        $this->setWarn("Не знайден  артикул товара {$product['name']} в заказе номер " . $shoporder['order_id']);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -393,21 +393,21 @@ class Orders extends \App\Pages\Base
                 if ($shoporder->total > $totalpr) {
                     $neworder->headerdata['ship_amount'] = $shoporder->total - $totalpr;
                     $neworder->headerdata['delivery'] = Document::DEL_SELF;
-                    $neworder->headerdata['delivery_name'] = 'Самовивіз';
+                    $neworder->headerdata['delivery_name'] = 'Самовывоз';
                 }
 
                 $neworder->payamount = 0;
                 $neworder->payed = 0;
                 $neworder->notes = "OC номер:{$shoporder->order_id};";
-                $neworder->notes .= " Клiєнт:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
+                $neworder->notes .= " Клиент:" . $shoporder->firstname . ' ' . $shoporder->lastname . ";";
                 if (strlen($shoporder->email) > 0) {
                     $neworder->notes .= " Email:" . $shoporder->email . ";";
                 }
                 if (strlen($shoporder->telephone) > 0) {
                     $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
                 }
-                $neworder->notes .= " Адреса:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-                $neworder->notes .= " Коментар:" . $shoporder->comment . ";";
+                $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
+                $neworder->notes .= " Коментарий:" . $shoporder->comment . ";";
                 $neworder->save();
                 $neworder->updateStatus(Document::STATE_NEW);
                 $neworder->updateStatus(Document::STATE_EXECUTED);
@@ -430,7 +430,7 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $this->setInfo("Імпортовано {$i} замовлень");
+        $this->setInfo("Импортовано {$i} заказов");
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -465,7 +465,7 @@ class Orders extends \App\Pages\Base
         $st = $this->updateform->estatus->getValue();
         if ($st == 0) {
 
-            $this->setError('Не обрано статус');
+            $this->setError('Не указан статус');
             return;
         }
         $elist = array();
@@ -477,7 +477,7 @@ class Orders extends \App\Pages\Base
         }
         if (count($elist) == 0) {
 
-            $this->setError('Не обрано ордер');
+            $this->setError('Не указан заказ');
             return;
         }
         $data = json_encode($elist);
@@ -503,7 +503,7 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $this->setSuccess("Оновлено ".count($elist)." замовлень");
+        $this->setSuccess("Обновлено ".count($elist)." заказов");
 
         foreach ($this->_eorders as $order) {
             if ($order->ch == false) {

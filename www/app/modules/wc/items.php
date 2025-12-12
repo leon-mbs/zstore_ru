@@ -25,7 +25,7 @@ class Items extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет права доступа к странице");
 
             App::RedirectError();
             return;
@@ -138,7 +138,7 @@ class Items extends \App\Pages\Base
             );
         }
         if (count($elist) == 0) {
-            $this->setError('Не обрано товар');
+            $this->setError('Не  выбран товар');
             return;
         }
 
@@ -152,7 +152,7 @@ class Items extends \App\Pages\Base
             return;
         }
 
-        $this->setSuccess("Експортовано ".count($elist)." товарів");
+        $this->setSuccess("Экспортировано ".count($elist)." товаров");
 
         //обновляем таблицу
         $this->filterOnSubmit($this->filter);
@@ -247,7 +247,7 @@ class Items extends \App\Pages\Base
             }
         }
 
-        $this->setSuccess("Оновлено {$cnt} товарів");
+        $this->setSuccess("Обновлено {$cnt} товаров");
     }
 
     //обновление цен в  магазине
@@ -332,7 +332,7 @@ class Items extends \App\Pages\Base
 
         }
 
-        $this->setSuccess("Оновлено {$cnt} товарів");
+        $this->setSuccess("Обновлено {$cnt} товаров");
     }
 
     //импорт товара с  магазина
@@ -482,7 +482,7 @@ class Items extends \App\Pages\Base
             }
         }
 
-        $this->setSuccess("Завантажено {$i} товарів");
+        $this->setSuccess("Загружено {$i} товаров");
     }
 
 }

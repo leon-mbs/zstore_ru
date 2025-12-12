@@ -24,7 +24,7 @@ class Items extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет прав доступа  к  странице");
 
             App::RedirectError();
             return;
@@ -33,7 +33,7 @@ class Items extends \App\Pages\Base
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
+            $this->setWarn('Выполните соединение на  странице настроек');
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -84,7 +84,7 @@ class Items extends \App\Pages\Base
         $data = json_decode($json, true);
         if (!isset($data)) {
 
-            $this->setError("Невірна відповідь");
+            $this->setError("Неверный ответ");
             \App\Helper::log($json);
             return;
         }
@@ -151,7 +151,7 @@ class Items extends \App\Pages\Base
         }
         if (count($elist) == 0) {
 
-            $this->setError('Не обрано товар');
+            $this->setError('Не выбран товар');
             return;
         }
         $data = json_encode($elist);
@@ -178,7 +178,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess("Експортовано ".count($elist)." товарів");
+        $this->setSuccess("Экспортировано ".count($elist)." товаров");
 
         //обновляем таблицу
         $this->filterOnSubmit(null);
@@ -220,7 +220,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('Оновлено');
+        $this->setSuccess('Обновлено');
     }
 
     public function onUpdatePrice($sender) {
@@ -258,7 +258,7 @@ class Items extends \App\Pages\Base
             $this->setErrorTopPage($data['error']);
             return;
         }
-        $this->setSuccess('Оновлено');
+        $this->setSuccess('Обновлено');
     }
 
     public function importOnSubmit($sender) {
@@ -268,7 +268,7 @@ class Items extends \App\Pages\Base
         $cats = System::getSession()->cats;
         if (is_array($cats) == false) {
             $cats = array();
-            $this->setWarn('Виконайте з`єднання на сторінці налаштувань');
+            $this->setWarn('Выполните соединение на  странице настроек');
             return;
         }
 
@@ -378,7 +378,7 @@ class Items extends \App\Pages\Base
             $i++;
         }
 
-        $this->setSuccess("Завантажено {$i} товарів");
+        $this->setSuccess("Загружено {$i} товарів");
     }
 
 }

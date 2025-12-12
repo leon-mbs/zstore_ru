@@ -1,25 +1,24 @@
 <html>
-    <head>
-    </head>
+  
     <body>
         <div class="row">
             <div class="col-12 col-xl-10   ">
 
-                <h3>Імпорт замовлень</h3>
-                <a zippy="checkconn"><i class="fa   fa-sync"></i> Перевiрити  з'єднання</a>
+                <h3>Импорт заказов</h3>
+                <a zippy="checkconn"><i class="fa   fa-sync"></i> Проверить соединение</a>
  
 
                 <div class="card">
                     <form zippy="filter" class="form-inline ">
 
-  <label for="eistatus">Статус в магазині </label>
+  <label for="eistatus">Статус в магазине </label>
                         <select class="form-control  mr-2" zippy="eistatus">
 
                         </select>
 
                     
                         <input onclick="       document.getElementById('dialogwait').showModal() " type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Завантажити">
+                               value="Загрузить">
                        
                        
                     </form>
@@ -33,9 +32,9 @@
                         <th>Номер</th>
                         <th>Дата</th>
 
-                        <th>Клієнт</th>
+                        <th>Клиент</th>
                         <th class="text-right">Сума</th>
-                        <th> Коментар</th>
+                        <th> Коментарий</th>
 
 
                     </tr>
@@ -54,15 +53,15 @@
 
                 </table>
                 <div class="card">
-                    <a zippy="importbtn" class="  btn btn-outline-success  ">Імпортувати</a>
+                    <a zippy="importbtn" class="  btn btn-outline-success  ">Импортировать</a>
 
                 </div>
             </div>
             <div class="col-12 col-xl-10    ">
 
-                <h3>Експорт статусів в магазин</h3>
+                <h3>Экспорт статусов в магазин</h3>
                 <div class="card">
-                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Оновити</a>
+                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Обновить</a>
 
                 </div>
                 <form zippy="updateform">
@@ -73,8 +72,8 @@
                             <th>WC Номер</th>
                             <th>Дата</th>
 
-                            <th>Клієнт</th>
-                            <th class="text-right">Сума</th>
+                            <th>Клиент</th>
+                            <th class="text-right">Сумма</th>
                             <th>Статус</th>
 
 
@@ -97,7 +96,7 @@
 
                     <div class="ml-2 form-group row  ">
                          <div class="col-auto">
-                            <label for="estatus">Статус в магазині </label>
+                            <label for="estatus">Статус в магазине </label>
                          </div>
                          <div class="col-auto">
                         <select class="form-control  mr-2" zippy="estatus">
@@ -107,7 +106,7 @@
 
                          <div class="col-auto">
                         <input onclick=" document.getElementById('dialogwait').showModal() " type="submit" class="  btn btn-outline-success  "
-                               value="Відправити">
+                               value="Отправить">
 
                          </div>
 

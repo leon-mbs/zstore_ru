@@ -26,7 +26,7 @@ class Orders extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет праа доступа  к  странице");
 
             App::RedirectError();
             return;
@@ -44,7 +44,7 @@ class Orders extends \App\Pages\Base
         $this->add(new ClickLink('refreshbtn'))->onClick($this, 'onRefresh');
         $this->add(new Form('updateform'))->onSubmit($this, 'exportOnSubmit');
         $this->updateform->add(new DataView('orderslist', new ArrayDataSource(new Prop($this, '_eorders')), $this, 'expRow'));
-        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Виконаний', 'shipped' => 'Доставлений', 'cancelled' => 'Скасований'), 'completed'));
+        $this->updateform->add(new DropDownChoice('estatus', array('completed' => 'Выполнен', 'shipped' => 'Доставлен', 'cancelled' => 'Отменен'), 'completed'));
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
           
     }
@@ -114,7 +114,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайдено артикул товара {$product->name} в замовленні номер " .  $wcorder->order_id);
+                        $this->setWarn("Не найден артикул товара {$product->name} в заказе номер " .  $wcorder->order_id);
                         continue;
                     }
                     $tovar->quantity = $product->quantity;
@@ -147,14 +147,14 @@ class Orders extends \App\Pages\Base
 
                 $neworder->document_date = time();
                 $neworder->notes = "WC номер:{$wcorder->id};";
-                $neworder->notes .= " Клієнт: " . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
-                $neworder->notes .= " Адреса доставки:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
-                $neworder->notes .= " Адреса платіжна:" . $wcorder->billing->city . ' ' . $wcorder->billing->address_1 . ";";
+                $neworder->notes .= " Клиента: " . trim($wcorder->shipping->last_name . ' ' . $wcorder->shipping->first_name).";";
+                $neworder->notes .= " Адрес доставки:" . $wcorder->shipping->city . ' ' . $wcorder->shipping->address_1 . ";";
+                $neworder->notes .= " Адрес для платежа:" . $wcorder->billing->city . ' ' . $wcorder->billing->address_1 . ";";
    
                 if (strlen($wcorder->billing->phone) > 0) {
                     $neworder->notes .= " Тел:" . $wcorder->billing->phone . ";";
                 }
-                $neworder->notes .= " Комментар:" . $wcorder->customer_note . ";";
+                $neworder->notes .= " Комментарий:" . $wcorder->customer_note . ";";
 
                 $this->_neworders[$wcorder->id] = $neworder;
             }
@@ -210,7 +210,7 @@ class Orders extends \App\Pages\Base
 
         }
 
-        $this->setInfo("Імпортовано ".count($this->_neworders)." замовлень");
+        $this->setInfo("Импортировано ".count($this->_neworders)." заказов");
 
 
         $this->_neworders = array();
@@ -248,7 +248,7 @@ class Orders extends \App\Pages\Base
             $elist[] = $order;
         }
         if (count($elist) == 0) {
-            $this->setError('Не обрано ордер');
+            $this->setError('Не выбран заказ');
             return;
         }
 
@@ -270,7 +270,7 @@ class Orders extends \App\Pages\Base
             $order->save();
         }
 
-        $this->setSuccess("Оновлено ".count($elist)." замовлень");
+        $this->setSuccess("Обновлено ".count($elist)." заказов");
 
 
         $this->_eorders = Document::find("meta_name='Order' and content like '%<wcorderback>0</wcorderback>%' and state <> " . Document::STATE_NEW);

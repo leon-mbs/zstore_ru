@@ -15,8 +15,8 @@ class Helper
         $modules = \App\System::getOptions("modules");
 
         $site = $modules['wcsite'];
-        $keyc = $modules['wckeyc'];    //ck_a36c9d5d8ef70a34001b6a44bc245a7665ca77e7
-        $keys = $modules['wckeys'];    //cs_12b03012d9db469b45b1fc82e329a3bc995f3e36
+        $keyc = $modules['wckeyc'];   
+        $keys = $modules['wckeys'];   
         $api = $modules['wcapi'];
         //  $ssl = $modules['wcssl'];
 
@@ -69,7 +69,7 @@ class Helper
         }
 
 
-        System::setSuccessMsg("Успішне з`єднання");
+        System::setSuccessMsg("Соединение  успешно");
 
 
     }

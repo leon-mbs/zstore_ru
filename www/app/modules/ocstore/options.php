@@ -17,7 +17,7 @@ class Options extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'ocstore') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет прав доступа  к  странице");
 
             App::RedirectError();
             return;
@@ -41,10 +41,10 @@ class Options extends \App\Pages\Base
         $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['ocstoreid']??0));
       
         $pt=[];
-        $pt[1] = 'Оплата зразу (передплата)';
+        $pt[1] = 'Оплата сразу (предоплата)';
         $pt[2] = 'Постоплата';
-        $pt[3] = 'Оплата в Чеку або ВН';
-        $pt[4] = 'Тiльки списати зi складу';
+        $pt[3] = 'Оплата в Чеке или РН';
+        $pt[4] = 'Только  списать  со  склада';
       
         $form->add(new DropDownChoice('defpaytype',$pt, $modules['ocpaytype']??0));
 
@@ -70,23 +70,23 @@ class Options extends \App\Pages\Base
 
         if (strlen($pricetype) < 2) {
 
-            $this->setError('Не вказано тип ціни');
+            $this->setError('Не указан тип цены');
             return;
         }
 
         if ( $paytype==0) {
 
-            $this->setError('Не вказано тип оплати');
+            $this->setError('Не указан тип оплаты');
             return;
         }
         if ( $paytype==1 && $mf==0) {
 
-            $this->setError('Не вказано касу');
+            $this->setError('Не указана касса');
             return;
         }
         if ( $paytype==4 && $store==0) {
 
-            $this->setError('Не вказано склад');
+            $this->setError('Не указан склад');
             return;
         }
 
@@ -113,7 +113,7 @@ class Options extends \App\Pages\Base
         System::setOptions("modules", $modules);
 
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
 
         \App\Modules\OCStore\Helper::connect();
 
@@ -121,4 +121,4 @@ class Options extends \App\Pages\Base
     }
 
 }
-//2Ru8ToJTb4ZoH8qgk1oh64mSRVC2chloDDSeD2SMY8g1n1JJ8dlXGUwF06FZl2qUmrQF0H8Kru7gSpW7O4kHRd2zX2wUGUUqBd2joQQbS0cP8frArUFxgNBCBppRUjlbZqbhaAhBaIPQUA24ykK7DjjsVKALcaYXr6RqmPCcmAEvHqMRwE088O00hx8F2ANoUrxCVHifygaTh4K2bdXCkVTVefiaDdeEaBCsAIW4ctrXZmLhtUUF8kmFdvVnXeTh
+ 
