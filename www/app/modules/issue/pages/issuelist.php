@@ -40,7 +40,7 @@ class IssueList extends \App\Pages\Base
 
         $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->rolename == 'admins');
         if (!$allow) {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет права  доступа  к странице");
             App::RedirectError();
             return;
         }
@@ -216,7 +216,7 @@ class IssueList extends \App\Pages\Base
 
         $issue->save();
         if ($post->id==0) {
-            $issue->addStatusLog("Створення завдання");
+            $issue->addStatusLog("Создано задание");
         }
         return "";
     }
@@ -236,17 +236,17 @@ class IssueList extends \App\Pages\Base
         if($issue->priority != $post->priority) {
             $issue->priority = $post->priority;
             $prlist = Issue::getPriorityList() ;
-            $desc="Пріоритет змінено на  <b>" . $prlist[$issue->priority] . "</b>" ;
+            $desc="Приоритет изменен  на  <b>" . $prlist[$issue->priority] . "</b>" ;
         }
 
         if($issue->user_id != $post->user_id) {
             $issue->user_id = $post->user_id;
             $user = \App\Entity\User::load($issue->user_id) ;
-            $desc="Завдання переведено на  <b>" . $user->username . "</b>";
+            $desc="Задание переведено на  <b>" . $user->username . "</b>";
             
             $n = new \App\Entity\Notify();
             $n->user_id = $user->user_id;
-            $n->message =  " На вас переведено завдання  #{$issue->issue_id} {$issue->issue_name} ";
+            $n->message =  " На вас переведено задание  #{$issue->issue_id} {$issue->issue_name} ";
             $n->sender_id = \App\Entity\Notify::SYSTEM;
             $n->save();
             
@@ -350,8 +350,8 @@ class IssueList extends \App\Pages\Base
             }
             $n = new \App\Entity\Notify();
             $n->user_id = $u;
-            $n->message =  "Коментар до завдання  #{$issue->issue_id} {$issue->issue_name} ";
-            $n->message .= "<br>  <a href=\"/issue/{$issue->issue_id}/{$issue->project_id}/#msgankor\">Відповісти</a> ";
+            $n->message =  "Коментарий к задаче  #{$issue->issue_id} {$issue->issue_name} ";
+            $n->message .= "<br>  <a href=\"/issue/{$issue->issue_id}/{$issue->project_id}/#msgankor\">Ответить</a> ";
             $n->sender_id = System::getUser()->user_id;
             $n->save();
         }

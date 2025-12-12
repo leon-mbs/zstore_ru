@@ -32,7 +32,7 @@ class ProjectList extends \App\Pages\Base
 
         $allow = (strpos($this->_user->modules, 'issue') !== false || $this->_user->rolename == 'admins');
         if (!$allow) {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет права доступа к странице");
             App::RedirectError();
             return;
         }

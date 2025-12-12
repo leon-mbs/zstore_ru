@@ -1,7 +1,7 @@
 <html>
 
     <head>
-      <title> Перелік завдань   </title>
+      <title> Задачи   </title>
 
     </head>
 
@@ -12,7 +12,7 @@
         <div class="row"  id="vapp" >
   
             <div class="col-12  ">
-                <h3>Перелік завдань </h3>
+                <h3>Задачи </h3>
                 <div class="card">
 
 
@@ -21,38 +21,38 @@
                                              
                         <label for="searchstatus">Статус </label>
                         <select v-model="searchstatus"  class="form-control mr-sm-2  " >
-                            <option value="0">Відкриті</option>                           
+                            <option value="0">Открытые</option>                           
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
                           </option> 
                         </select>
-                        <label for="searchemp">виконавець </label>
+                        <label for="searchemp">исполнитель </label>
                         <select v-model="searchemp"   class="form-control mr-sm-2  "  >
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбран</option>
                            <option v-for="option in emps" :value="option.key">
                               {{ option.value }}
                           </option> 
                         </select>
                         <label for="searchproject"> проект </label>
                         <select v-model="searchproject"   class="form-control mr-sm-2  "  >
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбран</option>
                            <option v-for="option in projects" :value="option.key">
                               {{ option.value }}
                           </option> 
                         </select>
 
-                       <label for="searchproject"> сортувати </label>
+                       <label for="searchproject"> сортировка </label>
                         <select v-model="searchsort"   class="form-control mr-sm-2  "  >
-                            <option value="0">За пріоритетом</option>
+                            <option value="0">За приоритетом</option>
                             <option value="1">За номером</option>
-                            <option value="2">За оновленням</option>
+                            <option value="2">За обновлением</option>
                         </select>
 
                         <input v-on:click.prevent="onfilter" type="button" class="mr-2  btn btn-outline-success  " value="ОК">
                     </form>
                 </div>
 
-                <a v-on:click.prevent="addnew" class="btn btn-sm btn-outline-success">Нове завдання</a>
+                <a v-on:click.prevent="addnew" class="btn btn-sm btn-outline-success">Новая  задача</a>
 
             </div>
     
@@ -90,34 +90,34 @@
                     <div class="col-12 col-md-7  ">
 
                         <h4 >{{title}}</h4>
-                        <span  >Автор <b>{{creator}}</b>  Створено  <b>{{createdon}}</b> Оновлено <b>{{updateddon}}</b></span>
+                        <span  >Автор <b>{{creator}}</b>  Создано  <b>{{createdon}}</b> Обновлено <b>{{updateddon}}</b></span>
                         <details class="mt-2 mb-2">
                            <summary><b>Опис</b></summary>
                             {{desc}}   
                         </details>  
                         
-                        <a v-on:click.prevent="edit"  class="text-info  "><i class="fa fa-edit"></i> Редагувати</a>&nbsp;&nbsp;
-                        <a v-on:click.prevent="del" class="text-danger"><i class="fa fa-trash"></i> Вилучити</a>
+                        <a v-on:click.prevent="edit"  class="text-info  "><i class="fa fa-edit"></i> Редактипрвать</a>&nbsp;&nbsp;
+                        <a v-on:click.prevent="del" class="text-danger"><i class="fa fa-trash"></i> Удалить</a>
                         <hr>
                         <form class="form-inline" id="fileaddform" enctype="multipart/form-data">
 
-                            <label> Вибрати файл: </label>
+                            <label> Выбрать файл: </label>
 
                             <input name="pfile" class="form-control mr-2" type="file"  >
 
-                            <input v-on:click.prevent="onfile" class="btn btn-info  " type="button" value="Додати:">
+                            <input v-on:click.prevent="onfile" class="btn btn-info  " type="button" value="Добавить:">
 
                         </form>
                     <div v-for="f in filelist"  style="float:left">
 
                         <i class="fa fa-paperclip"></i> <a :href="f.url" target="_blank">{{f.filename}}</a>
-                        &nbsp;<a v-show="f.candel" v-on:click.prevent="delfile(f.file_id)"   class="text-danger  text-bold" title="Вилучити">x</a>&nbsp;&nbsp;
+                        &nbsp;<a v-show="f.candel" v-on:click.prevent="delfile(f.file_id)"   class="text-danger  text-bold" title="Удалить">x</a>&nbsp;&nbsp;
 
                     </div>
 
 
                         <hr>
-                        <h5>Коментарі</h5>
+                        <h5>Коментарии</h5>
                         <table style="width:400px" class="table table-sm">
                             <tr v-for="msg in msglist">
                             <td>
@@ -132,7 +132,7 @@
                         
                        
                         <form    >
-                            <label> Коментар: </label>
+                            <label> Коментарий: </label>
                             <div class="form-group">
                                 <textarea class="form-control" v-model="msg"
                                           style="width:400px;height:120px;"></textarea>
@@ -140,7 +140,7 @@
                             <div class="form-group">
                                
                                <details>
-                        <summary>Повiдомити</summary>
+                        <summary>Уведомить</summary>
                       
                                 <div v-for="user in editemps">
                                   <input type="checkbox" :id="user.key" :value="user" v-model="selectedUsers">
@@ -151,7 +151,7 @@
                             </div>
                          
                             <div class="form-group">
-                                <input  v-on:click.prevent="onmsg" class="btn btn-success  " type="button" value="Додати">
+                                <input  v-on:click.prevent="onmsg" class="btn btn-success  " type="button" value="Добавить">
                             </div>
                         </form>
 
@@ -187,7 +187,7 @@
 
                             </div>
                             <div class="form-group  ">
-                                <label for="stpr">Пріоритет </label>
+                                <label for="stpr">Приоритет </label>
 
 
                                 <select v-on:change="onstatus" class="form-control   " v-model="stpr">
@@ -202,7 +202,7 @@
 
                         </form>
                         <details>
-                        <summary>Iсторiя</summary>
+                        <summary>История</summary>
                         <table class=" table table-sm">
                             <tr v-for="h in hist"  >
                                 <td> {{h.time}}  {{h.user}}  
@@ -227,17 +227,17 @@
             <div  v-show="editissue != -1" class="col-12 col-md-8 col-xl-4">
                 <form id="fval">
                     <div class="form-group">
-                        <label for="edittitle">Назва</label>
+                        <label for="edittitle">Название</label>
                         <input type="text" required="required" class="form-control" v-model="edittitle">
                     </div>
                     <div class="form-group">
-                        <label for="editdesc">Опис</label>
+                        <label for="editdesc">Описание</label>
                         <textarea style="height:100px;" class="form-control" v-model="editdesc"></textarea>
                     </div>
                     <div v-show="editissue==0" class="form-group">
                         <label for="editproj">Проект </label>
                         <select v-on:change="onprchanged"   class="form-control    " v-model="editproj" style="width:200px">
-                        <option value="0">Не обрано</option>
+                        <option value="0">Не выбран</option>
                            <option v-for="option in projects" :value="option.key">
                               {{ option.value }}
                           </option> 
@@ -245,7 +245,7 @@
                         </select>
                     </div>
                     <div  v-show="editissue==0"  class="form-group">
-                        <label for="editpr">Пріоритет </label>
+                        <label for="editpr">Приоритет </label>
                         <select class="form-control    " v-model="editpr" style="width:200px">
                                   <option v-for="option in prlist" :value="option.key">
                                       {{ option.value }}
@@ -255,9 +255,9 @@
                         </select>
                     </div>
                     <div  v-show="editissue==0"  class="form-group">
-                        <label for="editemp">Виконавець </label>
+                        <label for="editemp">Исполнитель </label>
                         <select class="form-control     " v-model="editemp" style="width:200px">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбран</option>
                            <option v-for="option in editemps" :value="option.key">
                               {{ option.value }}
                           </option> 
@@ -266,7 +266,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="edithours">Планований час, годин</label>
+                        <label for="edithours">Запоанирование время, годин</label>
 
                         <input pattern="[0-9]+" style="width:60px" v-model="edithours"   type="text" class="form-control qtyprice">
 
@@ -274,8 +274,8 @@
 
 
                     <div class="form-group">
-                        <a  v-on:click.prevent="cancel" class="btn btn-outline-secondary">Скасувати</a>&nbsp;
-                        <input  v-on:click.prevent="save" type="button" class="btn btn-outline-primary" value="Зберегти">
+                        <a  v-on:click.prevent="cancel" class="btn btn-outline-secondary">Отменить</a>&nbsp;
+                        <input  v-on:click.prevent="save" type="button" class="btn btn-outline-primary" value="Сохранить">
                     </div>
                 </form>
 
@@ -417,12 +417,12 @@
  
                     
                    if(this.editproj==0) {
-                        toastr.error("Проект не обрано!" )
+                        toastr.error("Проект не выбран!" )
                         return;
                    }
                     
                    if(this.editemp==0) {
-                        toastr.error("Виконавця не обрано!" )
+                        toastr.error("Исполнитель не выбран!" )
                         return;
                    }
               
@@ -468,7 +468,7 @@
                
                 } ,  
                 del:function ( ){
-                  if( confirm("Видалити завдання?")==false )  return
+                  if( confirm("Удалить  задание?")==false )  return
                    
                   callPageMethod('del',[this.issue], null,(data)=> 
                   {
@@ -631,7 +631,7 @@
          
                 $('#editdesc').summernote({
                     height: 200,
-                    lang: 'uk-UA',
+                    lang: 'ru-RU',
 
                     callbacks: {
                

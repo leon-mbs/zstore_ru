@@ -33,7 +33,7 @@ class TimeSheet extends \App\Pages\Base
 
         $allow = (strpos($user->modules, 'issue') !== false || $user->rolename == 'admins');
         if (!$allow) {
-            $this->setError("Немає права доступу до сторінки");
+            $this->setError("Нет права доступа  кстранице");
             App::RedirectError();
             return;
         }
@@ -284,7 +284,7 @@ class TimeSheet extends \App\Pages\Base
         $time->user_id = $post->user_id;
         if ($time->user_id == 0) {
 
-            return json_encode("Не обрано співробітника", JSON_UNESCAPED_UNICODE);
+            return json_encode("Не указан сотрудник", JSON_UNESCAPED_UNICODE);
         }
 
 
@@ -292,7 +292,7 @@ class TimeSheet extends \App\Pages\Base
 
         if ($time->duration == 0) {
 
-            return "Не вказано час";
+            return "Не указано время";
         }
 
 

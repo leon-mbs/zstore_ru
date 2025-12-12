@@ -90,14 +90,14 @@ class Issue extends \ZCL\DB\Entity
 
     public static function getStatusList() {
         $list = array();
-        $list[self::STATUS_NEW] = "Нове";
-        $list[self::STATUS_INPROCESS] = "В роботі";
-        $list[self::STATUS_QA] = "На перевірці";
-        $list[self::STATUS_REOPENED] = "Перевідкрите";
-        $list[self::STATUS_RETURNED] =  "Повернене на доопрацювання";
-        $list[self::STATUS_WA] = "На затвердженні";
-        $list[self::STATUS_SHIFTED] = "Відкладене";
-        $list[self::STATUS_CLOSED] = "Закрите";
+        $list[self::STATUS_NEW] = "Новая";
+        $list[self::STATUS_INPROCESS] = "В работе";
+        $list[self::STATUS_QA] = "На проверке";
+        $list[self::STATUS_REOPENED] = "Переоткрыта";
+        $list[self::STATUS_RETURNED] =  "Возвращена на  доработку";
+        $list[self::STATUS_WA] = "На утверждении";
+        $list[self::STATUS_SHIFTED] = "Отложена";
+        $list[self::STATUS_CLOSED] = "Закрыиа";
 
         return $list;
     }
@@ -107,9 +107,9 @@ class Issue extends \ZCL\DB\Entity
 
 
 
-        $list[self::PRIORITY_HIGH] = "Високий";
-        $list[self::PRIORITY_NORMAL] = "Нормальний";
-        $list[self::PRIORITY_LOW] = "Низький";
+        $list[self::PRIORITY_HIGH] = "Высокий";
+        $list[self::PRIORITY_NORMAL] = "Нормальный";
+        $list[self::PRIORITY_LOW] = "Низкий";
         return $list;
     }
 

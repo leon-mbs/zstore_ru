@@ -1,7 +1,7 @@
 <html>
 
     <head>
-       <title> База знань   </title>
+       <title> База знаний   </title>
     </head>
 
     <body>
@@ -21,11 +21,11 @@
        <div class="row">
          <div class="col-md-4 col-12">
                    <div class=" mb-1" style="height:30px;">
-                       <a v-on:click.prevent="onNewNode"    v-show="selectedNode != null"  class="btn btn-primary btn-sm mr-2"             ><i class="fa fa-plus-circle"></i> Новий вузол</a>
-                       <a v-on:click.prevent="onEditNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Редагувати вузол" class=" mr-2" ><i  class="fa fa-edit"></i></a>
-                       <a v-on:click.prevent="onCutNode"    v-show="selectedNode != null && selectedNode.pid > 0" title="Вирізати" class=" mr-2"><i class="fa fa-cut"></i></a>
-                       <a v-on:click.prevent="onPasteNode"  v-show="selectedNode != null && selectedNode.pid > 0 && cpn != null" title="Вставити" class=" mr-2"><i class="fa fa-paste"></i></a>
-                       <a v-on:click.prevent="onDeleteNode" v-show="selectedNode != null && selectedNode.pid > 0" title="Видалити" class=" mr-2"><i class="fa fa-trash"></i></a>
+                       <a v-on:click.prevent="onNewNode"    v-show="selectedNode != null"  class="btn btn-primary btn-sm mr-2"             ><i class="fa fa-plus-circle"></i> Новый узел</a>
+                       <a v-on:click.prevent="onEditNode"   v-show="selectedNode != null && selectedNode.pid > 0" title="Редактировать" class=" mr-2" ><i  class="fa fa-edit"></i></a>
+                       <a v-on:click.prevent="onCutNode"    v-show="selectedNode != null && selectedNode.pid > 0" title="Вирезать" class=" mr-2"><i class="fa fa-cut"></i></a>
+                       <a v-on:click.prevent="onPasteNode"  v-show="selectedNode != null && selectedNode.pid > 0 && cpn != null" title="Вставить" class=" mr-2"><i class="fa fa-paste"></i></a>
+                       <a v-on:click.prevent="onDeleteNode" v-show="selectedNode != null && selectedNode.pid > 0" title="Удалить" class=" mr-2"><i class="fa fa-trash"></i></a>
 
                     </div>
                     <div id="tree"  ></div>
@@ -36,14 +36,14 @@
              <div class="row">
                <div class="col-md-5 col-12">
                     <div class=" mb-1" style="height:30px;">
-                            <a v-on:click.prevent="onNewTopic()" v-show="selectedNode != null" class="btn btn-primary btn-sm   " title="Новий топік"  ><i  class="fa fa-plus"></i></a> 
-                            <a v-on:click.prevent="onEditTopic()" v-show="selectedTopic != null && selectedTopic.canedit==true && selectedTopic.islink==false" title="Редагувати"  class="btn btn-sm btn-info  "><i class="fa fa-edit"></i></a>
-                            <a v-on:click.prevent="onCutTopic"   v-show="selectedTopic != null &&   selectedTopic.candelcut==true  && selectedTopic.islink==false" title="Вирізати"  class="btn btn-sm btn-info   "><i class="fa fa-cut"></i></a>
-                            <a v-on:click.prevent="onCopyTopic"  v-show="selectedTopic != null && selectedTopic.islink!=true  && selectedTopic.islink==false" title="Копіювати для вставки як копію "  class="btn btn-sm btn-info  "><i class="fa fa-copy"></i></a>
-                            <a v-on:click.prevent="onCopyLinkTopic" v-show="selectedTopic != null && selectedTopic.islink!=true  && selectedTopic.islink==false" title="Копіювати для вставки  як лінк"  class="btn btn-sm btn-info  "><i       class="fa fa-share"></i></a>
-                            <a v-on:click.prevent="onPasteTopic" v-show="clipboard.topic != null " title="Вставити"  class="btn btn-sm btn-info  "><i class="fa fa-paste"></i></a>
-                            <a v-bind:href="extlink" v-show="selectedTopic != null && selectedTopic.ispublic && selectedTopic.isowner  && selectedTopic.islink==false" title="Зовнішнє посилання"  target="_blank" class="btn btn-sm btn-info  "><i       class="fa      fa-link"></i></a>
-                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null && selectedTopic.candelcut==true" title="Видалити"  class="ml-2 btn btn-sm btn-danger  "><i class="fa fa-trash"></i></a>
+                            <a v-on:click.prevent="onNewTopic()" v-show="selectedNode != null" class="btn btn-primary btn-sm   " title="Новый топик"  ><i  class="fa fa-plus"></i></a> 
+                            <a v-on:click.prevent="onEditTopic()" v-show="selectedTopic != null && selectedTopic.canedit==true && selectedTopic.islink==false" title="Редактировать"  class="btn btn-sm btn-info  "><i class="fa fa-edit"></i></a>
+                            <a v-on:click.prevent="onCutTopic"   v-show="selectedTopic != null &&   selectedTopic.candelcut==true  && selectedTopic.islink==false" title="Вырезать"  class="btn btn-sm btn-info   "><i class="fa fa-cut"></i></a>
+                            <a v-on:click.prevent="onCopyTopic"  v-show="selectedTopic != null && selectedTopic.islink!=true  && selectedTopic.islink==false" title="Копировать для вставки  как  копии "  class="btn btn-sm btn-info  "><i class="fa fa-copy"></i></a>
+                            <a v-on:click.prevent="onCopyLinkTopic" v-show="selectedTopic != null && selectedTopic.islink!=true  && selectedTopic.islink==false" title="Копировать лоя вставки  как  линк"  class="btn btn-sm btn-info  "><i       class="fa fa-share"></i></a>
+                            <a v-on:click.prevent="onPasteTopic" v-show="clipboard.topic != null " title="Вставить"  class="btn btn-sm btn-info  "><i class="fa fa-paste"></i></a>
+                            <a v-bind:href="extlink" v-show="selectedTopic != null && selectedTopic.ispublic && selectedTopic.isowner  && selectedTopic.islink==false" title="Внешняя ссылка"  target="_blank" class="btn btn-sm btn-info  "><i       class="fa      fa-link"></i></a>
+                            <a v-on:click.prevent="onDelTopic" v-show="selectedTopic != null && selectedTopic.candelcut==true" title="Удалить"  class="ml-2 btn btn-sm btn-danger  "><i class="fa fa-trash"></i></a>
                             <a v-on:click.prevent="onUsers" v-show="selectedTopic != null && selectedTopic.canacc==true  && selectedTopic.islink==false" title="Доступ"  class="ml-4 btn btn-sm btn-success  "><i class="fa fa-users"></i></a>
                            </div>           
                    <table class="table table-sm table-hover">
@@ -75,12 +75,12 @@
 
                             <table class="table table-sm">
                                 <tr>
-                                    <td style="width:20px;"><i title="Теги" class="fa fa-tags"  style="font-weight:                                        bolder;font-size:16px;"></i>
+                                    <td style="width:20px;"><i title="Тэги" class="fa fa-tags"  style="font-weight:          bolder;font-size:16px;"></i>
                                     </td>
                                     <td><a v-on:click.prevent="onTag(tag)" v-for="tag in topicTags" class="mr-2"  >{{tag}}</a></td>
 
                                     <td style="width:20px;">
-                                        <i title="Прикріплені файли" class="fa           fa-paperclip"      style="font-weight:   bolder;font-size:16px;"></i>
+                                        <i title="Прикрепленные  файлы" class="fa           fa-paperclip"      style="font-weight:   bolder;font-size:16px;"></i>
                                     </td>
                                     <td>
                                         <div v-for="f in topicFiles"  style="display:inline;;margin:2px;">
@@ -112,19 +112,19 @@
                             <form class="form-inline"  >
 
                                 <div class="form-group">
-                                    <label for="skeyword">Пошук </label>
+                                    <label for="skeyword">Поиск </label>
                                     <input  v-model="searchText"   class="form-control mr-2" >
                                     <div class="form-check">
                                         <input  v-model="searchTitle"  type="checkbox" class="form-check-input">
-                                        <label class="form-check-label mr-2" for="planned">тільки в заголовках</label>
+                                        <label class="form-check-label mr-2" for="planned">только в заголовках</label>
                                     </div>
                                     <select v-model="searchType"  class="form-control mr-2">
                                         <option value="1">Фраза</option>
-                                        <option value="2">Комбінація слів</option>
+                                        <option value="2">Комбинация слов</option>
                                     </select>
 
-                                    <button v-on:click.prevent="onSearch"  type="button" class="btn btn-primary   mr-2"><i                                        class="fa fa-search"></i></button>                     
-                                    <a v-on:click.prevent="onSearchFav" title="Знайти обрані" ><i class="fa fa-star" style="color:brown"></i></a>
+                                    <button v-on:click.prevent="onSearch"  type="button" class="btn btn-primary   mr-2"><i      class="fa fa-search"></i></button>                     
+                                    <a v-on:click.prevent="onSearchFav" title="Нвйти выбранные" ><i class="fa fa-star" style="color:brown"></i></a>
                                 </div>
                             </form>
                         </div>
@@ -152,16 +152,16 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="editnodetitle">Назва вузла</label>
+                                <label for="editnodetitle">Низвание  узла</label>
                                 <input v-model="nameNode"  id="editnodetitle" required="required"   class="form-control" type="text">
                             </div>
                             <div class="form-check">
                                 <input v-model="publicNode"  id="editnodepublic" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editnodepublic">Публiчний</label>
+                                <label class="form-check-label" for="editnodepublic">Публичный</label>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button v-on:click.prevent="onSaveNode"  type="button" class="btn  btn-primary">Зберегти </button>
+                            <button v-on:click.prevent="onSaveNode"  type="button" class="btn  btn-primary">Сохранить </button>
                         </div>
                     </form>
                 </div>
@@ -186,7 +186,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button v-on:click.prevent="onSaveFile()" type="button" class="btn btn-primary">Зберегти
+                            <button v-on:click.prevent="onSaveFile()" type="button" class="btn btn-primary">Сохранить
                             </button>
                         </div>
                     </form>
@@ -211,15 +211,15 @@
                                 <input id="edittitle" v-model="editTitle" type="text"  class="form-control"  >
                             </div>
                             <div class="form-group">
-                                <label for="editdetail">Змiст </label>
+                                <label for="editdetail">Содержание </label>
                                 <div id="editdetail" class="form-control"  ></div>
                             </div>
                             <div class="form-check">
                                 <input v-model="isPublic"  id="edittopicpublic" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="edittopicpublic">Публiчний</label>
+                                <label class="form-check-label" for="edittopicpublic">Публичный</label>
                             </div> 
                               <div class="form-group">
-                                <label id="edittags_label" for="edittags">Теги</label>
+                                <label id="edittags_label" for="edittags">Тэги</label>
                                  <div id="edittags"  ></div>  
                                 
                             </div>
@@ -227,7 +227,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button v-on:click.prevent="onSaveTopic()"  type="button" class="btn  btn-primary">Зберегти </button>
+                            <button v-on:click.prevent="onSaveTopic()"  type="button" class="btn  btn-primary">Сохранить </button>
                         </div>
                     </form> 
                 </div>
@@ -243,18 +243,18 @@
                     <form id="usersform"   >
                              
                         <div   class="modal-header">
-                            <h5 v-show="selectedTopic != null && selectedTopic.ispublic==false" class="modal-title">Право  перегляду</h5>
-                            <h5 v-show="selectedTopic != null && selectedTopic.ispublic==true" class="modal-title">Право  редагування</h5>
+                            <h5 v-show="selectedTopic != null && selectedTopic.ispublic==false" class="modal-title">Право  просмотра</h5>
+                            <h5 v-show="selectedTopic != null && selectedTopic.ispublic==true" class="modal-title">Право  редактирования</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span      aria-hidden="true">&times;</span></button>
                         </div>
                         
                         <div class="input-group  ">
                               <select v-model="selectedUser">  
-                                  <option value="0">Не вибраний</option>
+                                  <option value="0">Не выбран</option>
                                   <option v-for="u in allUsers"  v-bind:value="u.id"  >{{u.name}}</option>
                               </select>  
                              <div class="input-group-append">
-                                 <a v-on:click.prevent="onaddUser( )" title="Додати  " class="btn btn-success"   >+</a>
+                                 <a v-on:click.prevent="onaddUser( )" title="Добавить  " class="btn btn-success"   >+</a>
                             </div>                    
                         </div>  
                          
@@ -266,7 +266,7 @@
                          </table>
                           
                         <div class="modal-footer">
-                            <button v-on:click.prevent="onSaveUsers()" type="button" class="btn btn-primary">Зберегти                            </button>
+                            <button v-on:click.prevent="onSaveUsers()" type="button" class="btn btn-primary">Сохранить                            </button>
                         </div>
                     </form>
                 </div>
@@ -651,7 +651,7 @@
                this.cpn = null
             }   ,
             onDeleteNode:function(){
-                 if(confirm("Видалити вузол")){
+                 if(confirm("Удалить узел")){
                      this.opTree(["delete",this.selectedNode.id])                           
     
                  }         
@@ -786,7 +786,7 @@
 
             $('#editdetail').summernote({
                 height: 400,
-                lang: 'uk-UA',
+                lang: 'ro-RU',
 
                 callbacks: {
           

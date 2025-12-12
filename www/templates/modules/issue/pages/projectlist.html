@@ -1,6 +1,6 @@
 <html>
     <head>
-    <title> Проекти   </title>
+    <title> Проекты   </title>
 
     </head>
 
@@ -13,21 +13,21 @@
     
         <div class="row"  id="vapp" >
             <div v-show="this.mode=='list'" class="col-12   ">
-                <h2>Проекти</h2>
+                <h2>Проекты</h2>
                 <div class="card  ">
                     <form   class="form-inline ">
                         <input  v-model="searchtext" placeholder="Пошук..." class="form-control mr-2" type="text"  >
 
                         <label for="searchstate">статус </label>
                         <select v-model="searchstate" class="form-control  mr-2   "  >
-                            <option value="0">Відкриті</option>
+                            <option value="0">Открытые</option>
                            <option v-for="option in stlist" :value="option.key">
                               {{ option.value }}
                           </option>                            
                         </select>
-                        <label for="searchcust">замовник </label>
+                        <label for="searchcust">заказчик </label>
                         <select v-model="searchcust" class="form-control     "  >
-                           <option value="0">Не обрано</option>
+                           <option value="0">Не выбран</option>
                 
                            <option v-for="option in custlist" :value="option.key">
                               {{ option.value }}
@@ -41,13 +41,13 @@
                 </div>
             </div>
             <div v-show="this.mode=='list'" class="col-12 col-md-10 col-xl-8 ">
-                <a  v-on:click.prevent="add()"  class="btn btn-primary  ">Новий проект</a>
+                <a  v-on:click.prevent="add()"  class="btn btn-primary  ">Новый проект</a>
                 <table class="table table-bordered  table-sm">
                     <tr>
-                        <th>Назва</th>
-                        <th>Замовник</th>
+                        <th>Название</th>
+                        <th>Заказчик</th>
                         <th>Статус</th>
-                        <th colspan="3" class="text-center">Завдання</th>
+                        <th colspan="3" class="text-center">Задачи</th>
 
                         <th></th>
                         <th></th>
@@ -88,18 +88,18 @@
                                 <input v-model="editname" id="editname" name="editname" class="form-control" type="text"    >
                             </div>
                             <div class="form-group">
-                                <label for="editcust"> Замовник </label>
-                                <typeahead   v-model="editcust"     ref="cust"  :onquery="ontext"   placeholder="Почнiть вводити ..."></typeahead>   
+                                <label for="editcust"> Заказчик </label>
+                                <typeahead   v-model="editcust"     ref="cust"  :onquery="ontext"   placeholder="Начните вводить... ..."></typeahead>   
 
                             </div>
                             <div class="form-group">
-                                <label for="editdesc"> Опис </label>
+                                <label for="editdesc"> Описание </label>
                                 <div  id="editdesc" class="form-control mr-2"  ></div>
                             </div>
                         </div>
                         <div class="col-12 col-md-4  col-xl-4">
                             <div class="form-group">
-                                <label> Перелік учасникiв </label>
+                                <label> Перечень  участников </label>
                               
                                 <div v-for="user in users">
                                   <input type="checkbox" :id="user.key" :value="user" v-model="selectedUsers">
@@ -112,8 +112,8 @@
                         <div class="col-12 col-md-4  col-xl-4">
 
                             <div class="form-group">
-                                <input v-on:click.prevent="onback"  type="button" value="Скасувати" class="btn btn-outline-secondary ">
-                                <input v-on:click.prevent="onsave" type="button" value="Зберегти" class="btn btn-primary ml-2 "> 
+                                <input v-on:click.prevent="onback"  type="button" value="Отменить" class="btn btn-outline-secondary ">
+                                <input v-on:click.prevent="onsave" type="button" value="Сохранить" class="btn btn-primary ml-2 "> 
                             </div>
 
                         </div>
@@ -122,9 +122,9 @@
             </div>            
            <div v-show="this.mode=='show'" class="col-12 col-md-8 col-xl-6">
                 <h4>{{title}} </h4>
-                <a href="javascript:void(0)"   v-on:click.prevent="onback" ><i class="fa fa-arrow-circle-left" ></i> До переліку</a>
-                &nbsp; &nbsp; <a id="optasks"  ><i class="fa fa-list"></i>  До переліку завдань</a>
-                &nbsp; &nbsp; <a id="optasknew"  ><i class="fa fa-plus"></i> Створити завдання</a>
+                <a href="javascript:void(0)"   v-on:click.prevent="onback" ><i class="fa fa-arrow-circle-left" ></i> К списку</a>
+                &nbsp; &nbsp; <a id="optasks"  ><i class="fa fa-list"></i>  К задачам</a>
+                &nbsp; &nbsp; <a id="optasknew"  ><i class="fa fa-plus"></i> Новая  задача</a>
 
                 <form  class="form-inline ">
                         <label for="stlist">Статус </label>
@@ -140,24 +140,24 @@
 
                 <form id="fileaddform" class="form-inline mb-1"  enctype="multipart/form-data">
                        
-                        <label> Вибрати файл: </label>
+                        <label> Выбрать файл: </label>
 
                         <input name="pfile" class="form-control mr-2" type="file" >
 
-                        <input  v-on:click.prevent="onfile" class="btn btn-outline-info  " type="button" value="Додати">
+                        <input  v-on:click.prevent="onfile" class="btn btn-outline-info  " type="button" value="Добавить">
 
                     </form>
 
                     <div v-for="f in filelist"  style="float:left">
 
                         <i class="fa fa-paperclip"></i> <a :href="f.url" target="_blank">{{f.filename}}</a>
-                        &nbsp;<a v-show="f.candel" v-on:click.prevent="delfile(f.file_id)" href="javascript:void(0)"   class="text-danger  text-bold" title="Вилучити">x</a>&nbsp;&nbsp;
+                        &nbsp;<a v-show="f.candel" v-on:click.prevent="delfile(f.file_id)" href="javascript:void(0)"   class="text-danger  text-bold" title="Удалить">x</a>&nbsp;&nbsp;
 
                     </div>
 
 
                     <hr>
-                    <h4>Коментарі</h4>
+                    <h4>Коментарии</h4>
                     <table style="width:400px" class="table table-sm">
                         <tr v-for="msg in msglist" >
                             <td>
@@ -166,23 +166,23 @@
                                 <br><span  >{{msg.data}}</span>
 
                             </td>
-                            <td valign="top"><a v-show="msg.candel" v-on:click.prevent="delmsg(msg.message_id)"   title="Вилучити" href="javascript:void(0)"  class="text-danger text-bold">x</a></td>
+                            <td valign="top"><a v-show="msg.candel" v-on:click.prevent="delmsg(msg.message_id)"   title="Удалить" href="javascript:void(0)"  class="text-danger text-bold">x</a></td>
                         </tr>
                     </table>
                     
 
                     <form >
-                        <label> Коментар: </label>
+                        <label> Коментарий: </label>
                         <div class="form-group">
                             <textarea v-model="msg" class="form-control"  style="width:400px;height:120px;"></textarea>
                         </div>
-                        <input   v-on:click.prevent="onmsg"  class="btn btn-outline-success  " type="button" value="Додати">
+                        <input   v-on:click.prevent="onmsg"  class="btn btn-outline-success  " type="button" value="Добавить">
                     </form>
  
                          
           </div>
            <div v-show="this.mode=='show'" class="col-12 col-md-8 col-xl-6">
-                <h4>Опис</h4>
+                <h4>Описание</h4>
                 <p v-html="desc"></p>
           </div>
         </div>
@@ -238,7 +238,7 @@
         methods: {
             del:function( project_id,name){    
                 
-               if(confirm("Видалити  проект '"+name+"'?"))
+               if(confirm("Удалить  проект '"+name+"'?"))
                {                
                   callPageMethod('del',[project_id], null,(data)=> 
                   {                                
@@ -325,7 +325,7 @@
             onsave:function(  ){    
                   if(this.editname==""){
 
-                     toastr.error("Не введено назву")
+                     toastr.error("Не введено название")
                       return;
                   }
                   var data = new  FormData();
@@ -475,7 +475,7 @@
 
                 $('#editdesc').summernote({
                     height: 400,
-                    lang: 'uk-UA',
+                    lang: 'ru-RU',
 
                     callbacks: {
           

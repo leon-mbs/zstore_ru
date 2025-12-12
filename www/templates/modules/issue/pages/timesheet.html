@@ -1,7 +1,7 @@
 <html>
 
     <head>
-    <title> Облiк часу  по  задачах  </title>
+    <title> Учет  времени по  задачам  </title>
 
     </head>
 
@@ -13,26 +13,26 @@
  
 
 
-                <h3>Облiк часу  по  задачах</h3>
+                <h3>Учет  времени по  задачам</h3>
                 <div class="card">
                     <form zippy="filter" class="form-inline ">
 
                         <label for="from">З </label>
-                        <input v-model="from" type="date" class="form-control mr-sm-2  "  style="width:110px">
+                        <input v-model="from" type="date" class="form-control mr-sm-2  "  style="width:120px">
 
 
                         <label for="to"> по </label>
-                        <input v-model="to" type="date" class="form-control mr-sm-2 " style="width:110px" >
-                        <label   for="searchemp">виконавець </label>
+                        <input v-model="to" type="date" class="form-control mr-sm-2 " style="width:120px" >
+                        <label   for="searchemp">исполнитель </label>
                         <select v-model="user_id" class="form-control  mr-2  " >
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбран</option>
                             <option v-for="u in users" :value="u.key">{{u.value}}</option>
                          
                             
                         </select> 
                         <label for="searchproject"> проект </label>
                         <select v-model="project_id" class="form-control mr-2" zippy="searchproject">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбран</option>
                             <option v-for="p in projects" :value="p.key">{{p.value}}</option>
                         </select>
                         <input   v-on:click.prevent="onFilter" type="button" class="  btn btn-success  " value="ОК">
@@ -45,7 +45,7 @@
                    <ul class="nav nav-tabs">
                   
                        <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#ttable">Облiк часу</a>
+                        <a class="nav-link active" data-toggle="tab" href="#ttable">Учет часу</a>
                       </li>
                       
                        <li class="nav-item">
@@ -57,19 +57,19 @@
                     <div class="tab-pane  show active "  id="ttable"> 
                       <div class="col-12 col-md-8 col-xl-10">       
                
-                       <a v-on:click.prevent="add"  class="btn btn-info mt-2 mb-3">Додати</a>
+                       <a v-on:click.prevent="add"  class="btn btn-info mt-2 mb-3">Добавить</a>
 
           <table class="table   table-sm table-hover">
                                 <tr>
 
                                     <th>Дата</th>
-                                    <th>Час</th>
+                                    <th>Время</th>
 
-                                    <th>Виконавець</th>
-                                    <th>Завдання</th>
+                                    <th>Тсполнитель</th>
+                                    <th>Задача</th>
 
                                     <th>Проект</th>
-                                    <th>Коментар</th>
+                                    <th>Коментарий</th>
 
                                     <th ></th>
 
@@ -126,14 +126,14 @@
  
       <div class="modal-body">
 
-                    <h4 v-show="edited>0">Редагування</h4>
-                    <h4 v-show="edited==0">Новий запис</h4>    
+                    <h4 v-show="edited>0">Редактирование</h4>
+                    <h4 v-show="edited==0">Новая  запись</h4>    
                 <form zippy="editform">
                     <div class="form-group  "  v-show="isadmin">
-                        <label   for="edituser">виконавець </label>
+                        <label   for="edituser">исполнитель </label>
                         <select v-model="edituser" class="form-control    " >
 
-                                <option value="0">Не обрано</option>
+                                <option value="0">Не выбран</option>
                         <option v-for="u in editusers" :value="u.key">{{u.value}}</option>
                          
                             
@@ -142,15 +142,15 @@
                     <div class="form-group  ">
                         <label for="editproject">Проект</label>
                         <select   v-model="editproject" class="form-control  "  >
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбран</option>
                              <option v-for="p in editprojects" :value="p.key">{{p.value}}</option>
                                              
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="editissue">Завдання</label>
+                        <label for="editissue">Задача</label>
                         <select v-model="editissue" class="form-control   "  >
-                                   <option value="0">Не обрано</option>
+                                   <option value="0">Не выбрана</option>
                       <option v-for="i in editissues" :value="i.key">{{i.value}}</option>
                       
                         </select>
@@ -160,11 +160,11 @@
                          <input v-model="editdate" type="date"  class="form-control" >
                     </div>
                     <div class="form-group  ">
-                        <label for="edittime">Годин</label>
+                        <label for="edittime">Часов</label>
                         <input v-model="edittime" required="required" pattern="[0-9,\.]+" style="width:100px;" zippy="ehours" class="form-control qtyprice">
                     </div>
                     <div class="form-group  ">
-                        <label for="editnotes">Коментар</label>
+                        <label for="editnotes">Коментарий</label>
                         <input v-model="editnotes" class="form-control">
                     </div>
              
@@ -172,8 +172,8 @@
                 </form>
                  </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Скасувати</button>
-                <button v-on:click.prevent="save" type="button" class="btn btn-primary">Зберегти</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
+                <button v-on:click.prevent="save" type="button" class="btn btn-primary">Сохранить</button>
               </div>
             </div>
           </div>
