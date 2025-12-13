@@ -26,7 +26,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет права доступа  к  странице");
             App::RedirectError();
             return;
         }
@@ -61,11 +61,7 @@ class Options extends \App\Pages\Base
         $this->shop->add(new DropDownChoice('defstore',\App\Entity\Store::getList(),  0));
     
 
-
-        $this->add(new Form('pay'))->onSubmit($this, 'savePayOnClick');
-        $this->pay->add(new DropDownChoice('mfqr',\App\Entity\MoneyFund::getList(2), 0 )) ;
-     
-
+       
 
 
          if (!is_array($shop)) {
@@ -103,26 +99,11 @@ class Options extends \App\Pages\Base
         $this->shop->phone->setText($shop['phone']);
         $this->shop->pagesize->setText($shop['pagesize'] ?? 25);
 
-        $this->pay->mfqr->setValue($shop['mf_id']??0);
-  
-
-
-
-    }
-
-    public function savePayOnClick($sender) {
-        $shop = System::getOptions("shop");
-        if (!is_array($shop)) {
-            $shop = array();
-        }
-   
-        $shop['mf_id'] =  intval($sender->mfqr->getValue());
-       
      
-        System::setOptions("shop", $shop);
-        $this->setSuccess('Збережено');
 
     }
+
+  
 
     
     public function saveShopOnClick($sender) {
@@ -154,7 +135,7 @@ class Options extends \App\Pages\Base
         $shop['noshowempty'] = $this->shop->noshowempty->isChecked() ? 1 : 0;
 
         if(intval($shop['defbranch'])==0 &&  $this->_tvars["usebranch"]==true) {
-            $this->setError('Не вказана філія');
+            $this->setError('Не указан филиал');
             return;
         }
         
@@ -164,7 +145,7 @@ class Options extends \App\Pages\Base
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Невірний формат');
+                $this->setError('Неверный формат');
                 return;
             }
 
@@ -176,7 +157,7 @@ class Options extends \App\Pages\Base
             $shop['logo'] = "/upload/" . $name;
         }
         System::setOptions("shop", $shop);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
 
 

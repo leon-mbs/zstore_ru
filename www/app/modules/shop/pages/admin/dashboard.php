@@ -27,7 +27,7 @@ class Dashboard extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет права доступа  к  странице");
             App::RedirectError();
             return;
         }

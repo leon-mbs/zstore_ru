@@ -42,7 +42,7 @@ class RecList extends \App\Pages\Base
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет права доступа  к  странице");
             App::RedirectError();
             return;
         }
@@ -180,7 +180,7 @@ class RecList extends \App\Pages\Base
         $form = $this->recpanel->itemeditform;
         $item_id = $form->edititem->getValue();
         if($item_id==0) {
-            $this->setError('Не введений  товар') ;
+            $this->setError('Не введен товар') ;
             return;
         }
 
@@ -210,7 +210,7 @@ class RecList extends \App\Pages\Base
 
     public function OnAddRec($sender) {
         if(count($this->_reclist)>3) {
-            $this->setWarn('Не більше чотирьох ')  ;
+            $this->setWarn('Не более четырех ')  ;
             return;
         }
         $id = $this->recpanel->itemeditform->editrec->getKey();

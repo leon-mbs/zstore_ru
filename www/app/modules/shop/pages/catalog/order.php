@@ -44,9 +44,8 @@ class Order extends Base
 
 
         $form = $this->add(new Form('orderform'));
-        $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1)))->onChange($this, 'OnDelivery');
-        $form->add(new DropDownChoice('paytype', array(), 2)) ;
-
+        $form->add(new DropDownChoice('delivery', Document::getDeliveryTypes( )))->onChange($this, 'OnDelivery');
+        
 
         if ($this->_tvars["isfood"]) {
             $form->delivery->setValue(Document::DEL_BOY);
@@ -73,10 +72,6 @@ class Order extends Base
             $form->firstname->setText( strlen( $c->firstname ??'') >0 ? $c->firstname : $c->customer_name )  ;
             $form->lastname->setText($c->lastname)  ;
         }
-
-        $form->add(new AutocompleteTextInput('baycity'))->onText($this, 'onTextBayCity');
-        $form->baycity->onChange($this, 'onBayCity');
-        $form->add(new AutocompleteTextInput('baypoint'))->onText($this, 'onTextBayPoint');;
       
         $this->OnDelivery($form->delivery);
 

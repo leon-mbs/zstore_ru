@@ -57,15 +57,8 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["comparecnt"] = false;
         $this->_tvars["phone"] = strlen($shop["phone"]) > 0 ? $shop["phone"] : false;
 
-        $this->_tvars["usepayment"] =  false ;
-        $this->_tvars["qr"] = ($shop["mf_id"]??0) > 0 ;
-        if($this->_tvars["qr"]) {
-           $this->_tvars["usepayment"] = true ;            
-        }
-        
-        
-        $this->_tvars["np"] = ($modules['np']??0) == 1;
-
+     
+     
         $this->add(new \Zippy\Html\Form\Form('searchform'));
         $this->searchform->add(new \Zippy\Html\Form\AutocompleteTextInput('searchitem'))->onText($this, 'onSearch');
         $this->searchform->searchitem->onChange($this, 'onSelect');
@@ -91,8 +84,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["logo"] = $this->op['logo'];
         }
 
-        $this->_tvars["np"] = $modules['np'] == 1 && $this->op['ordertype'] != 2;
-
+      
         if ($this->op['ordertype'] == 1) {
             $this->_tvars["delivery"] = false;
         }

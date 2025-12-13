@@ -33,7 +33,7 @@ class ProductList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("Немає права доступу до сторінки");
+            System::setErrorMsg("Нет права доступа  к  странице");
             App::RedirectError();
             return;
         }
@@ -41,7 +41,7 @@ class ProductList extends \App\Pages\Base
         $this->op = System::getOptions("shop");
         if (strlen($this->op['defcust']) == 0 || strlen($this->op['defpricetype']) == 0) {
 
-            $this->setWarn('Не виконано всі необхідні налаштування магазина. Перейдіть на сторінку налаштувань');
+            $this->setWarn('Не выполнены  необходимые настройки. Перейдите на страницу настроек ');
         }
 
 
@@ -55,8 +55,8 @@ class ProductList extends \App\Pages\Base
 
         $fc = new Category();
         $fc->cat_id = 0;
-        $fc->cat_name = "Всі категорії";
-        $fc->full_name = "Всі категорії";
+        $fc->cat_name = "Все категории";
+        $fc->full_name = "Все категории";
 
         $first = array($fc);
 
@@ -225,19 +225,19 @@ class ProductList extends \App\Pages\Base
         
             if (filesize($file["tmp_name"])  > 1024*1024) {
 
-                    $this->setError('Розмір файлу більше 1M');
+                    $this->setError('Размер файла больше 1M');
                     return;
             }            
          
             $imagedata = getimagesize($file["tmp_name"]);
 
             if (preg_match('/(gif|png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Невірний формат');
+                $this->setError('Неверный формат');
                 return;
             }
 
             if ($imagedata[0] * $imagedata[1] > 10000000) {
-                $this->setError('Занадто великий розмір зображення');
+                $this->setError('Слишком большое изображение');
                 return;
             }
 
@@ -379,12 +379,12 @@ class AttributeComponent extends \Zippy\Html\CustomComponent implements \Zippy\I
 
     public function getContent($attributes) {
         $ret = "<td>{$this->productattribute->attributename}</td><td>";
-        $nodata = "Немає даних";
+        $nodata = "Нет данных";
         $sel = '';
         //'Есть/Нет'
         if ($this->productattribute->attributetype == 1) {
-            $yes = "Є";
-            $no = "Немає";
+            $yes = "Есть";
+            $no = "Нет";
 
             $s1 = ($this->productattribute->value == -1 || strlen($this->productattribute->value) == 0) ? 'selected="on"' : '';
             $s2 = $this->productattribute->value == '0' ? 'selected="on"' : '';
