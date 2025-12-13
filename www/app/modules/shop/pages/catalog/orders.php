@@ -100,7 +100,7 @@ class Orders extends Base
         $product->price = $product->getPrice() ;
 
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
-        $this->setSuccess("Товар доданий до кошика");
+        $this->setSuccess("Товар добавлен в  корзину");
 
         $this->resetURL();
 

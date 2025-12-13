@@ -279,7 +279,7 @@ class Catalog extends Base
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
 
-        $this->setSuccess("Товар доданий до кошика");
+        $this->setSuccess("Товар добавлен в  корзину");
 
         $this->resetURL();
     }
@@ -348,7 +348,7 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
                 $checked = ' checked="on"';
             }
 
-            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"0\"  {$checked} /> Нема ";
+            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"0\"  {$checked} /> Нет ";
             $ret .= "</div>";
         }
         //'Число'

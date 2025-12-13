@@ -60,13 +60,13 @@ class UserProfile extends Base
         $this->c->lastname = $sender->lastname->getText();
         $this->c->customer_name = $this->c->firstname.' '.$this->c->lastname;
         if (strlen($this->c->phone) > 0 && strlen($this->c->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длина номера телефона должна быть ".\App\Helper::PhoneL()." цифр");
             return;
         }
         if (!$this->isError()) {
 
             $this->c->save();
-            $this->setSuccess('Збережено');
+            $this->setSuccess('Сохранено');
 
         }
     }
@@ -78,14 +78,14 @@ class UserProfile extends Base
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('Введіть пароль');
+            $this->setError('Введите пароль');
         } else {
             if ($confirm == '') {
-                $this->setError('Підтвердіть пароль');
+                $this->setError('Подтвердите пароль');
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('Невірне підтвердження');
+                    $this->setError('Неверное подтверждение');
                 }
             }
         }

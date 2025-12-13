@@ -3,14 +3,14 @@
     <body>
         <div class="row"  >
             <div class="col-12 col-md-8   ">
-                <h3 class="mt-2 mb-3">Оформлення замовлення</h3>
+                <h3 class="mt-2 mb-3">Оформление заказа</h3>
                 <form zippy="listform" method="post">
                     <table class="table table-bordered" style="border-bottom: none;">
                         <tr>
                             <th style="width:64px">&nbsp;</th>
-                            <th>Найменування</th>
-                            <th>Кiл.</th>
-                            <th style="text-align: right;">Цiна</th>
+                            <th>Наименование</th>
+                            <th>Кол.</th>
+                            <th style="text-align: right;">Цена</th>
 
                             <th></th>
                         </tr>
@@ -25,14 +25,14 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td style="text-align: right;"><span data-label="disc">Знижка:</span></td>
+                            <td style="text-align: right;"><span data-label="disc">Скидка:</span></td>
                             <td style="text-align: right;"><span zippy="disc"></span></td>
 
                             <td></td>
                         </tr>                        <tr>
                             <td></td>
                             <td></td>
-                            <td style="text-align: right;"><b>Всього на суму:</b></td>
+                            <td style="text-align: right;"><b>Всього на сумму:</b></td>
                             <td style="text-align: right;"><b><span zippy="summa"></span></b></td>
 
                             <td></td>
@@ -50,14 +50,14 @@
               <div class="col-12 col-md-8 col-lg-6    col-xl-4  ">
                     <div class="form-group  row">
                        
-                     <label class="col-5 col-form-label" for="firstname" >Iм'я (Назва для  компанiй) </label>
+                     <label class="col-5 col-form-label" for="firstname" >Имя (Название для  компаний) </label>
                       <div class="col-7">
                          <input required="required" zippy="firstname" class="form-control">
                       </div>
                     </div>
                    <div class="form-group  row">
                        
-                     <label class="col-5 col-form-label" for="lastname" > Прiзвище</label>
+                     <label class="col-5 col-form-label" for="lastname" > Фамилия</label>
                       <div class="col-7">
                          <input   zippy="lastname" class="form-control">
                       </div>
@@ -90,7 +90,7 @@
                       
                        <div class="col-7">
                        <select class="form-control" zippy="delivery">
-                            <option value="0">Обрати</option>
+                            <option value="0">Выбрать</option>
                         </select>
                       </div>
                     </div>
@@ -98,7 +98,7 @@
 
                     <div class="form-group  row">
              
-                        <label class="col-3 col-form-label" data-label="address" for="address"  >Адреса</label>
+                        <label class="col-3 col-form-label" data-label="address" for="address"  >Адрес</label>
                       
                         <div class="col-9">
                           <textarea style="height:100px" zippy="address" class="form-control"></textarea>
@@ -106,7 +106,7 @@
                     </div>
                       <div class="form-group  row">
                       
-                      <label class="col-3 col-form-label" for="deltime" >Час доставки</label>
+                      <label class="col-3 col-form-label" for="deltime" >Время доставки</label>
                        
                        <div class="col-9">
                            <div class="input-group">
@@ -119,7 +119,7 @@
 
                     <div class="form-group  row">
                     
-                          <label class="col-3 col-form-label" for="notes" >Коментар </label>
+                          <label class="col-3 col-form-label" for="notes" >Комментарий </label>
                        
                           <div class="col-9">
                               <textarea zippy="notes" class="form-control"></textarea>
@@ -131,7 +131,7 @@
               
             
             <div class="form-group col-12">
-                <input type="submit" class="btn btn-primary" value="Вiдправити">
+                <input type="submit" class="btn btn-primary" value="Отправить">
             </div>
         
             

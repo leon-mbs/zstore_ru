@@ -75,7 +75,7 @@ class ProductView extends Base
 
         $this->add(new Label('description', $product->getDescription(), true));
         $this->add(new TextInput('rated'))->setText($product->getRating());
-        $this->add(new Label('comments', "Відгуків (".intval($product->comments).") "));
+        $this->add(new Label('comments', "Отзывов (".intval($product->comments).") "));
 
         $list = Helper::getAttributeValuesByProduct($product, false);
         $this->add(new \Zippy\Html\DataList\DataView('attributelist', new \Zippy\Html\DataList\ArrayDataSource($list), $this, 'OnAddAttributeRow'))->Reload();
@@ -98,16 +98,16 @@ class ProductView extends Base
         $this->commentlist->Reload();
 
         if ($product->disabled == 1 || $product->noshop == 1) {
-            $this->onstore = 'Знято з продажу';
+            $this->onstore = 'Снято с  продажи';
             $this->buy->setVisible(false);
         } else {
 
             if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
                 $this->onstore->setText('В наявності');
-                $this->buy->setValue('Купити');
+                $this->buy->setValue('Купить');
             } else {
-                $this->onstore->setText('Під замовлення');
-                $this->buy->setValue('Замовити');
+                $this->onstore->setText('Под заказ');
+                $this->buy->setValue('Заказать');
             }
         }
 
@@ -202,7 +202,7 @@ class ProductView extends Base
         $product->quantity = 1;
         \App\Modules\Shop\Basket::getBasket()->addProduct($product);
 
-        $this->setSuccess("Товар доданий до кошика");
+        $this->setSuccess("Товар добавлен  в  корзину");
         $this->resetURL();
         //  App::RedirectURI('/pcat/' . $product->cat_id);
     }
@@ -213,7 +213,7 @@ class ProductView extends Base
         $comparelist = \App\Modules\Shop\CompareList::getCompareList();
         if (false == $comparelist->addProduct($product)) {
 
-            $this->setWarn('Додавати можна тільки товари з однакової категорії');
+            $this->setWarn('Добавлять можно только  товары одной категории');
             return;
         }
         // App::RedirectURI('/pcat/'.$product->group_id)  ;
@@ -226,7 +226,7 @@ class ProductView extends Base
         $capchacode = $this->formcomment->capcha->getCode();
         $this->formcomment->capchacode->setText('');
         if (strlen($entercode) == 0 || $entercode != $capchacode) {
-            $this->setError("Невірний код капчі");
+            $this->setError("Неверный код капчи");
 
             return;
         }
@@ -262,7 +262,7 @@ class ProductView extends Base
     public function OnAddCommentRow(\Zippy\Html\DataList\DataRow $datarow) {
         $item = $datarow->getDataItem();
         if ($item->moderated == 1) {
-            $item->comment = "Скасовано модератором";
+            $item->comment = "Отменено модератором";
         }
         $datarow->add(new Label("nick", $item->author));
         $datarow->add(new Label("comment", $item->comment));
@@ -294,7 +294,7 @@ class ProductView extends Base
         $product->comments = $conn->GetOne("select count(*) from shop_prod_comments where  item_id ={$this->item_id} and moderated <> 1");
         $product->save();
         $this->rated->setText($product->rating);
-        $this->comments->setText("Вiгукiв({$product->comments})");
+        $this->comments->setText("Отзывов({$product->comments})");
     }
 
     public function imglistOnRow($row) {

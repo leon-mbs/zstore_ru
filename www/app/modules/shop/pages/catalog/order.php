@@ -88,9 +88,7 @@ class Order extends Base
             $this->orderform->address->setVisible(true);
         }
         
-        $this->orderform->baycity->setVisible($dt  == Document::DEL_NP ) ;
-        $this->orderform->baypoint->setVisible($dt == Document::DEL_NP ) ;
-        
+       
     }
 
     public function OnUpdate($sender) {
@@ -103,7 +101,7 @@ class Order extends Base
 
             if (!is_numeric($product->quantity)) {
 
-                $this->setWarn('Невірна кількість');
+                $this->setWarn('Неверное количество');
                 break;
             }
 
@@ -164,35 +162,30 @@ class Order extends Base
         $firstname = trim($this->orderform->firstname->getText());
         $lastname = trim($this->orderform->lastname->getText());
         $delivery = $this->orderform->delivery->getValue();
-        $paytype = intval($this->orderform->paytype->getValue());
+
         $address = $this->orderform->address->getValue();
 
         if ($delivery == 0) {
 
-            $this->setError("Виберіть тип доставки");
+            $this->setError("Виберите тип доставки");
             return;
         }
         if (($delivery == 2 || $delivery == 3) && strlen($address) == 0) {
 
-            $this->setError("Введіть адресу");
+            $this->setError("Введите адрес");
             return;
         }
     
-        if ($paytype == 0) {
-
-            $this->setError("Виберіть оплату");
-            return;
-        }
-
+       
 
 
         if (strlen($phone) != \App\Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длинв номера телефона должна быть ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         if ($this->_tvars["isfood"] && $time < (time() + 1800)) {
-            $this->setError("Невірний час доставки");
+            $this->setError("Неверное  время доставки");
             return;
         }
         $conn = \ZDB\DB::getConnect();
@@ -245,7 +238,7 @@ class Order extends Base
                 'ship_address'  => $address,
                 'ship_name'     => trim($firstname.' '.$lastname),
                 'shoporder'     => 1,
-                'paytype'       => $paytype,
+             
                 'totaldisc'     => $this->disc,
                 'total'         => $amount
             );
@@ -288,11 +281,7 @@ class Order extends Base
             if($shop['defmf']>0) {
                 $order->headerdata['payment'] = $shop['defmf'];
             }
-            if ($paytype == 1) {
-
-               $order->headerdata['payment'] = $shop['mf_id'];
-         
-            }
+           
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
             $order->payamount = $amount - $this->disc;
@@ -305,20 +294,9 @@ class Order extends Base
             }
 
 
-           $order->headerdata['baycity'] = $this->orderform->baycity->getKey();
-           $order->headerdata['baycityname'] = $this->orderform->baycity->getText();
-           $order->headerdata['baypoint'] = $this->orderform->baypoint->getKey();
-           $order->headerdata['baypointname'] = $this->orderform->baypoint->getText();
-           $order->headerdata['npaddressfull'] ='';
+            $order->headerdata['npaddressfull'] ='';
         
-            if(strlen($order->headerdata['baycity'])>1) {
-               $order->headerdata['npaddressfull']  .= (' '. $this->orderform->baycity->getText() );   
-            }
-            if(strlen($order->headerdata['baypoint'])>1) {
-               $order->headerdata['npaddressfull']  .= (' '. $this->orderform->baypoint->getText() );   
-            }
-              
-            
+      
             
             $order->save();
 
@@ -361,7 +339,7 @@ class Order extends Base
 
         $number = preg_replace('/[^0-9]/', '', $order->document_number);
 
-        System::setSuccessMsg("Створено замовлення номер " . $number) ;
+        System::setSuccessMsg("Создан заказ номер " . $number) ;
 
         
         setcookie("shop_fn",$firstname) ;
@@ -370,11 +348,7 @@ class Order extends Base
         setcookie("shop_email",$email) ;
         
         
-        if($paytype == 1) {
-
-            App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\OrderPay", array($order->document_id)) ;
-            return;
-        }
+     
         App::Redirect("App\\Modules\\Shop\\Pages\\Catalog\\Main") ;
 
 
