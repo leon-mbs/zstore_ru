@@ -109,7 +109,7 @@ class Options extends \App\Pages\Base
         $this->business->add(new CheckBox('allowminusmf'));
         $this->business->add(new CheckBox('noallowfiz'));
         $this->business->add(new CheckBox('useval'));
-        $this->business->add(new CheckBox('printoutqrcode'));
+        $this->business->add(new CheckBox('usefr'));
         $this->business->add(new CheckBox('storeemp'));
         $this->business->add(new CheckBox('usescanner'));
         $this->business->add(new CheckBox('usescale'));
@@ -137,7 +137,7 @@ class Options extends \App\Pages\Base
         $this->business->allowminusmf->setChecked($common['allowminusmf']);
         $this->business->noallowfiz->setChecked($common['noallowfiz']);
         $this->business->useval->setChecked($common['useval']);
-        $this->business->printoutqrcode->setChecked($common['printoutqrcode']);
+        $this->business->usefr->setChecked($common['usefr']);
 
         $this->business->usesnumber->setValue($common['usesnumber']??0);
         $this->business->usescanner->setChecked($common['usescanner']);
@@ -349,7 +349,7 @@ class Options extends \App\Pages\Base
 
         $common['checkslogan'] = trim($this->business->checkslogan->getText());
         $common['actualdate'] = $this->business->actualdate->getDate();
-        $common['printoutqrcode'] = $this->business->printoutqrcode->isChecked() ? 1 : 0;
+        $common['usefr'] = $this->business->usefr->isChecked() ? 1 : 0;
         $common['usescanner'] = $this->business->usescanner->isChecked() ? 1 : 0;
         $common['usescale'] = $this->business->usescale->isChecked() ? 1 : 0;
  

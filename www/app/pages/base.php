@@ -44,7 +44,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["usefood"] = $options['usefood'] == 1;
         $this->_tvars["useprod"] = $options['useprod'] == 1;
         $this->_tvars["usends"] = $options['usends'] == 1;
-        $this->_tvars["useacc"] = $options['useacc'] == 1;
+        $this->_tvars["usefr"] = $options['usefr'] == 1;
         $this->_tvars["useval"] = $options['useval'] == 1 && $options['usends'] != 1;
         $this->_tvars["noupdate"] = $options['noupdate'] == 1;
         $this->_tvars["usecattree"] = $options['usecattree'] == 1;
@@ -139,18 +139,7 @@ class Base extends \Zippy\Html\WebPage
         $this->_tvars["note"] = $modules['note'] == 1;
         $this->_tvars["issue"] = $modules['issue'] == 1;
 
-        $this->_tvars["ppo"] = $modules['ppo'] == 1;
-        $this->_tvars["np"] = $modules['np'] == 1;
-        $this->_tvars["promua"] = $modules['promua'] == 1;
-        $this->_tvars["checkbox"] = $modules['checkbox'] == 1;
-        $this->_tvars["vkassa"] = $modules['vkassa'] == 1;
-        $this->_tvars["vdoc"] = $modules['vdoc'] == 1;
-        $this->_tvars["freg"] = $modules['freg'] == 1;
-       
-
-
-        //  $printer = System::getOptions('printer');
-
+   
         $this->_tvars["psurl"] =  $user->pserver ;
         $this->_tvars["printserver"] = $user->prtype == 1;
         $this->_tvars["psurllabel"] =  $user->pserverlabel ;
@@ -180,40 +169,15 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["woocomerce"] = false;
         }
 
-        if (strpos(System::getUser()->modules ?? '', 'ppo') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["ppo"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'np') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["np"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'promua') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["promua"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'checkbox') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["checkbox"] = false;
-        }
-        if (strpos(System::getUser()->modules ?? '', 'vkassa') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["vkassa"] = false;
-        }
      
-        if (strpos(System::getUser()->modules ?? '', 'vdoc') === false && System::getUser()->rolename != 'admins') {
-            $this->_tvars["vdoc"] = false;
-        }
-       
 
-        $this->_tvars["fiscal"] = $this->_tvars["checkbox"] || $this->_tvars["ppo"] || $this->_tvars["vkassa"] ;
-
+    
         if ($this->_tvars["shop"] ||
             $this->_tvars["ocstore"] ||
             $this->_tvars["woocomerce"] ||
             $this->_tvars["note"] ||
-            $this->_tvars["issue"] ||
-            $this->_tvars["promua"] ||
-            $this->_tvars["ppo"] ||
-  
-         
-            $this->_tvars["vdoc"] ||
-            $this->_tvars["np"]
+            $this->_tvars["issue"]   
+             
         ) {
             $this->_tvars["showmodmenu"] = true;
         } else {
@@ -547,7 +511,7 @@ class Base extends \Zippy\Html\WebPage
             $d = \App\Entity\Doc\Document::load($e->document_id ??0)  ;
 
             if($d == null) {
-                return "По  даному  ТМЦ  закупок не  було";
+                return "По  данному  ТМЦ  закупок не  было";
             }
             $price = $e->partion;
             $quantity = $e->quantity;
@@ -971,11 +935,11 @@ class Base extends \Zippy\Html\WebPage
             $info['discount']  = $c->getDiscount()  ;
             $info['bonus']  = $c->getBonus()  ;
             if (doubleval($info['discount']) > 0) {
-                $info['disctext'] =  "Постійна знижка {$info['discount']}%";
+                $info['disctext'] =  "Постояннпя скидка {$info['discount']}%";
                 $info['bonus'] =0;
             } else {
                 if ($info['bonus'] > 0) {
-                    $info['disctext'] = "Нараховано бонусів " . $info['bonus'];
+                    $info['disctext'] = "Насчитано  бонусов " . $info['bonus'];
                 }
             }
 

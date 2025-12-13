@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Планувальник  </title>
+        <title>  Планировщик  </title>
 
     </head>
 
@@ -8,14 +8,14 @@
  
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6"  >
-                <h3>Планувальник               </h3>
-              <small>Для відправки  email та  підписок  за  роскладом слід використовувати зовнішній мененджер   
+                <h3>Планировщик               </h3>
+              <small>Для отправки  email и подписок за расписанием следует использовать внешний менеджер   
                     <br>   
-                   Адреса {{{url}}}   <a href="https://zippy.com.ua/zstoreusage#cron">Детальніше...</a>  </small>
+                   Адрес  {{{url}}}   <a href="https://ru.zippy.com.ua/zstoreusage#cron">Детальнее...</a>  </small>
                 
                 <table class="ctable mb-2">
                       <tr>
-                      <td>Активовано</td> 
+                      <td>Активирован</td> 
                       <td>
                           <a  zippy="ton" ><i class="fa fa-toggle-on text-success"></i></a>
                           <a  zippy="toff"><i class="fa fa-toggle-off"></i></a> 
@@ -23,13 +23,13 @@
                       <td>  </td> 
                     </tr>
                     <tr>
-                      <td>Останнiй запуск</td> 
+                      <td>Последний запуск запуск</td> 
                       <td> {{lasttime}} </td> 
-                      <td>  <a href="javascript:void(0);" onclick="startcron()" >Перезапустити</a> </td> 
+                      <td>  <a href="javascript:void(0);" onclick="startcron()" >Перезапустить</a> </td> 
                     </tr>
                 </table>
-                 <h5>Черга завдань</h5>
-                 <a zippy="update" >Оновити</a>
+                 <h5>Очередь заданий</h5>
+                 <a zippy="update" >Оновить</a>
                 <table class="table table-sm mt-2  ">
                     <tr  zippy="nlist">
 
@@ -38,8 +38,8 @@
 
                        
                         <td>
-                        <a title="Запустити" zippy="nexec"><i class="fa fa-cog"></i></a>   &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a title="Видалити" zippy="ndel"><i class="fa fa-trash"></i></a> 
+                        <a title="Запустить" zippy="nexec"><i class="fa fa-cog"></i></a>   &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a title="Удалить" zippy="ndel"><i class="fa fa-trash"></i></a> 
                             </td>
 
 
@@ -57,7 +57,7 @@
 <script>
 
    function check_delall() {
-       return confirm("Очистити?")
+       return confirm("Очистиить?")
    }  
    
    function startcron() {

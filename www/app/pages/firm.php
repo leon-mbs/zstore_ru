@@ -42,17 +42,12 @@ class Firm extends \App\Pages\Base
         $this->firmform->add(new TextInput('phone',$firm['phone']));
         $this->firmform->add(new TextInput('address',$firm['address']));
         $this->firmform->add(new TextInput('city',$firm['city']??''));
-        $this->firmform->add(new TextInput('vdoc',$firm['vdoc']));
-      
+       
         $this->firmform->add(new TextInput('sign',$firm['sign']));
         $this->firmform->add(new TextInput('stamp',$firm['stamp']));
         $this->firmform->add(new TextInput('logo',$firm['logo']));
 
-        $this->firmform->add(new TextInput('koatuu',$firm['koatuu']));
-        $this->firmform->add(new TextInput('kopfg',$firm['kopfg']));
-        $this->firmform->add(new TextInput('kodu',$firm['kodu']));
-        $this->firmform->add(new TextInput('gni',$firm['gni']));
-        $this->firmform->add(new TextInput('kved',$firm['kved']));
+     
         $this->firmform->add(new CheckBox('isjur',$firm['isjur']));
       
         $this->_fops  = $firm['fops']??[];
@@ -74,18 +69,12 @@ class Firm extends \App\Pages\Base
         $firm['phone'] = $this->firmform->phone->getText();
         $firm['address'] = $this->firmform->address->getText();
         $firm['city'] = $this->firmform->city->getText();
-        $firm['vdoc'] = $this->firmform->vdoc->getText();
-  
+        
         $firm['sign'] = $this->firmform->sign->getText();
         $firm['stamp'] = $this->firmform->stamp->getText();
         $firm['logo'] = $this->firmform->logo->getText();
 
-        $firm['koatuu'] = $this->firmform->koatuu->getText();
-        $firm['kopfg'] = $this->firmform->kopfg->getText();
-        $firm['gni'] = $this->firmform->gni->getText();
-        $firm['kved'] = $this->firmform->kved->getText();
-        $firm['kodu'] = $this->firmform->kodu->getText();
-        $firm['isjur'] = $this->firmform->isjur->isChecked() ? 1:0;
+       $firm['isjur'] = $this->firmform->isjur->isChecked() ? 1:0;
       
         $firm['logo'] = $this->firmform->logo->getText();
         $firm['stamp'] = $this->firmform->stamp->getText();
@@ -96,7 +85,7 @@ class Firm extends \App\Pages\Base
          
         System::setOptions("firm", $firm);
       
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
      
     } 
    

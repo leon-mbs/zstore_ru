@@ -23,7 +23,7 @@ class MenuList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
+            System::setErrorMsg('К странице  имеет доступ  только  администратор');
             App::RedirectError();
             return  ;
         }
@@ -118,16 +118,16 @@ class MenuList extends \App\Pages\Base
                 $title = 'Документ';
                 break;
             case 2:
-                $title = 'Звіт';
+                $title = 'Отчет';
                 break;
             case 3:
                 $title = 'Журнал';
                 break;
             case 4:
-                $title = 'Довідник';
+                $title = 'Справочник';
                 break;
             case 5:
-                $title = 'Сервісна сторінка';
+                $title = 'Сервисная страница';
                 break;
         }
 

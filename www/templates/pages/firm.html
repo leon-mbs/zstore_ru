@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title>  Данi компанiї  </title>
+        <title>  Данные компании  </title>
 
     </head>
 
@@ -9,7 +9,7 @@
         <div class="row">
              
          <div class="col-12   ">
-                <h5>Данi компанiї</h5>
+                <h5>Данные компании</h5>
            </div>
          <div class="col-12   ">           
            <form zippy="firmform">  
@@ -17,7 +17,7 @@
                <div class="col-12 col-md-4 col-xl-3 ">
                        
                             <div class="form-group">
-                                <label for="firm_name">Назва</label>
+                                <label for="firm_name">Название</label>
                                 <input  required="on"  class="form-control" zippy="firm_name"/>
                             </div>
 
@@ -27,28 +27,22 @@
                                 <input class="form-control" type="text" zippy="phone">
                             </div>
                             <div class="form-group">
-                                <label for="address">Адреса </label>
+                                <label for="address">Адрес  </label>
                                 <input class="form-control" type="text" zippy="address">
                             </div>  
                          <div class="form-group">
-                                <label for="city">Мiсто </label>
+                                <label for="city">Город </label>
                                 <input class="form-control" type="text" zippy="city">
                             </div>  
                        
                          <div class="form-check">
                             <input     zippy="isjur" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="isjur">Юридична особа (ТОВ) </label>
+                            <label class="form-check-label" for="isjur">Юридическое  лицо </label>
                            
                         </div>  
                          
  
-
-                 {{#vdoc}}
-                     <div class="form-group">
-                        <label for="vdoc">Токен Вчасно.EDO</label>
-                        <input type="text" zippy="vdoc" class="form-control" />
-                    </div> 
-                      {{/vdoc}}           
+                        
                   </div>   
                     
               <div class="col-12 col-md-4 col-xl-3 "   >
@@ -57,90 +51,55 @@
                            
                            
                             <div class="form-group row">
-                                <label class="col-3 col-form-label" for="tin">ЄДРПОУ </label>
+                                <label class="col-3 col-form-label" for="tin">ОКПО </label>
                                <div class="col-6">
                                  <input class="form-control" type="text" zippy="tin">
                               </div>
                             </div>
                             <div class="form-group row">
-                                 <label class="col-3 col-form-label" for="inn">IПН </label>
+                                 <label class="col-3 col-form-label" for="inn">ИНН </label>
                               <div class="col-6">
                                  <input class="form-control" type="text" zippy="inn">
-                                  <small>Якщо платник ПДВ</small>
+                                 
                               </div>
                                
                             </div> 
-                            <div class="form-group row">
-                                <label class="col-3 col-form-label" for="koatuu">КОАТУУ</label>
-                               <div class="col-6">
-                                    <input class="form-control " type="number" zippy="koatuu">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-3 col-form-label" for="kopfg">КОПФГ</label>
-                               <div class="col-6">
-                                <input class="form-control " type="number" zippy="kopfg">
-                              </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-3 col-form-label" for="kodu">КОДУ</label>
-                                 <div class="col-6">
-                                   <input class="form-control " type="number" zippy="kodu">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-3 col-form-label" for="kved">КВЕД</label>
-                                  <div class="col-6">
-                                   <input class="form-control " zippy="kved">
-                                </div>
-                            </div>
-                            {{#hideblock}}
-                            <div class="form-group row">
-                                <label class="col-3 col-form-label" for="gni">Код ДПІ</label>
-                               <div class="col-6">
-                                 <input class="form-control " type="number" zippy="gni">
-                               </div>
-                            </div>
-                              {{/hideblock}}
-
-                        </div>   
-                          
-              <div class="col-12 col-md-3 col-xl-2 "   >
+                       
+             
                 <div class="form-group">
                         <label for="logo">Логотип </label>
                         <input class="form-control" type="text" zippy="logo">
-                        <small class="form-text text-muted">Шлях до файлу логотипа вiдносно кореня сайту. Наприклад,
-                            '/upload/logo.png'</small>
+                        <small class="form-text text-muted">Путь к  файлу  относительно  корня  сайта. Например, '/upload/logo.png'</small>
                     </div>
                     <div class="form-group">
-                        <label for="stamp">Печатка </label>
+                        <label for="stamp">Печать </label>
                         <input class="form-control" type="text" zippy="stamp">
-                        <small class="form-text text-muted">Шлях до файла зображення вiдносно кореня сайту. </small>
+                        <small class="form-text text-muted">Путь к  файлу  относительно  корня  сайта. </small>
                     </div>
                     <div class="form-group">
-                        <label for="sign">Пiдпис (факсимiле) </label>
+                        <label for="sign">Подпись (факсимиле) </label>
                         <input class="form-control" type="text" zippy="sign">
-                        <small class="form-text text-muted">Шлях до зображення вiдносно кореня сайту. </small>
+                        <small class="form-text text-muted">Путь к  файлу  относительно  корня  сайта. </small>
                     </div>                          
                   </div>      
 
            <div class="col-12 col-md-3 col-xl-4 "   >
-                    <b>Альтернативнi данi</b>  <br>                     
-                    <small>Для вибору в продажних документах вiд рiзних ФОПiв</small> 
+                    <b>Альтернативные данные</b>  <br>                     
+                    <small>Для выбора в продажных документах от разных ИП</small> 
                     <table class="ctable">                      
-                      <tr><td>Назва, тел.</td><td>ЄДРПОУ</td><td>Адреса</td><td></td></tr>
+                      <tr><td>Название, тел.</td><td>ОКПО</td><td>Адрес </td><td></td></tr>
                       <tr zippy="fopslist"><td><input required="on" class="form-control "   zippy="fopname"></td>
                       <td> <input  required="on" style="width:150px" class="form-control "   zippy="fopedrpou"></td>
                       <td> <input  required="on"  class="form-control "   zippy="fopaddress"></td>
                       <td><a zippy="delfop"><i class="fa fa-trash"></i></a></td></tr>
                     </table>  
-                     <button zippy="addfop" class="btn btn-success btn-sm" type="submit">Додати</button>
+                     <button zippy="addfop" class="btn btn-success btn-sm" type="submit">Добавить</button>
                                              
                   </div>      
    
                      <div class="col-12 text-center   ">                                             
                            
-                               <button zippy="save" class="btn btn-success" type="submit">Зберегти</button>
+                               <button zippy="save" class="btn btn-success" type="submit">Сохранить</button>
                               
                          </div>                        
                    </div>                        

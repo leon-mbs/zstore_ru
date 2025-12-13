@@ -61,19 +61,19 @@ class NotifyList extends \App\Pages\Base
 
         }
         if ($notify->sender_id == Notify::SYSTEM) {
-            $row->sender->setText("Системне повідомлення");
+            $row->sender->setText("Системное  уведомление");
             $row->sendericon->setAttribute('class', 'fa fa-cog');
         }
         if ($notify->sender_id == Notify::EVENT) {
-            $row->sender->setText("Нагадування про подію");
+            $row->sender->setText("Напоминиане о событии");
             $row->sendericon->setAttribute('class', 'fa fa-calendar');
         }
         if ($notify->sender_id == Notify::SUBSCRIBE) {
-            $row->sender->setText("Розсилка");
+            $row->sender->setText("Розсылка");
             $row->sendericon->setAttribute('class', 'fa fa-envelope');
         }
         if ($notify->sender_id == Notify::CRONTAB) {
-            $row->sender->setText("Планувальник");
+            $row->sender->setText("Планировщик");
             $row->sendericon->setAttribute('class', 'fa fa-clock');
         }
 
@@ -113,17 +113,17 @@ class NotifyList extends \App\Pages\Base
         $n->sender_id = System::getUser()->user_id;
         
         if($n->user_id==0) {
-            $this->setError('Не вказано отримувача')  ;
+            $this->setError('Не указан получатель')  ;
             return;
         }
         if(strlen($n->message)==0) {
-            $this->setError('Не введено текст')  ;
+            $this->setError('Не введен текст')  ;
             return;
         }
         
         
         $n->save();  
-        $this->setSUccess('Відправлено')  ;
+        $this->setSUccess('Отправлено')  ;
         $sender->msgtext->setText('')       ;     
         $sender->msguser->setValue(0)       ;     
     }

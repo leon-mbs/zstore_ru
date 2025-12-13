@@ -16,7 +16,7 @@
                <div class="small-box bg-info">
                   <div class="inner">
                     <h4>{{biorders}}</h4>
-                    <p>Замовлень</p>
+                    <p>Заказов</p>
                   </div>
              </div>
             </div>
@@ -24,7 +24,7 @@
                <div class="small-box bg-info">
                   <div class="inner">
                     <h4>{{biitemscnt}}</h4>
-                    <p>ТМЦ   (на суму)</p>
+                    <p>ТМЦ   (на сумму)</p>
                   </div>
              </div>
             </div>
@@ -32,7 +32,7 @@
                <div class="small-box bg-info">
                   <div class="inner">
                     <h4>{{binal}}</h4>
-                    <p>Готiвка</p>
+                    <p>Наличные</p>
                   </div>
              </div>
             </div>
@@ -40,7 +40,7 @@
                <div class="small-box bg-info">
                   <div class="inner">
                     <h4>{{bibeznal}}</h4>
-                    <p>Безготiвка</p>
+                    <p>Безнал</p>
                   </div>
              </div>
             </div>
@@ -48,7 +48,7 @@
                <div class="small-box bg-info">
                   <div class="inner">
                     <h4>{{bicredit}}</h4>
-                    <p>Кред. борг</p>
+                    <p>Кред. долг</p>
                   </div>
              </div>
             </div>
@@ -57,7 +57,7 @@
                <div class="small-box bg-info">
                   <div class="inner">
                     <h4>{{bidebet}}</h4>
-                    <p>Деб. борг</p>
+                    <p>Деб. долг</p>
                   </div>
              </div>
             </div>
@@ -110,17 +110,17 @@
 
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Останні документи</h4>
-                        <small>Нещодавно змiненi документи</small>
-                        <br><a zippy="rdcsv">Експорт у Excel</a>
+                        <h4>Последние документы</h4>
+                        <small>Недавно измененные документы</small>
+                        <br><a zippy="rdcsv">Экспорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                 <th>Номер</th>
                                 <th>Тип</th>
                                 <th>Статус</th>
-                                <th class="text-right">Сума</th>
-                                <th>Змiнив</th>
-                                <th>Змiнено</th>
+                                <th class="text-right">Сумма</th>
+                                <th>Изменил</th>
+                                <th>Изменено</th>
                                 
 
                             </tr>
@@ -142,15 +142,15 @@
            
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Мої документи</h4>
-                        <small>Документи, створені поточним користувачем</small>
+                        <h4>Мои документы</h4>
+                        <small>Документы, созданные текущим пользоваталем</small>
                         <br><a zippy="mdcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                                 <th>Номер</th>
                                 <th>Тип</th>
                                 <th>Дата</th>
-                                <th class="text-right">Сума</th>
+                                <th class="text-right">Сумма</th>
 
                             </tr>
                             <tr zippy="mdoclist">
@@ -174,19 +174,19 @@
          
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Критична кiлькiсть </h4>
-                        <small>Товари для яких задана мiнiмальна кiлькiсть на складi та актуальна кiлькiсть менше заданої</small>
-                        <br><a zippy="mqcsv">Експорт у Excel</a>
+                        <h4>Критическое  количество </h4>
+                        <small>Товары для которых задано минимальное  количество и наличие меньше минимального</small>
+                        <br><a zippy="mqcsv">Экспорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
                               
                            
                                 <th>Товар</th>
                                 <th>Код</th>
-                                <th>Поставив</th>
+                                <th>Поставил</th>
 
                                 <th class="text-right">Факт</th>
-                                <th class="text-right">Мiн.</th>
+                                <th class="text-right">Мин.</th>
                             </tr>
                             <tr zippy="mqlist">
                                
@@ -206,16 +206,16 @@
             {{#usesnumberdate}}
                    <div   class="card ">
                     <div   class="card-body">
-                        <h4>Простроченi товари</h4>
-                        <small>Товари для котрих закiнчився термін придатностi</small>
+                        <h4>Просроченi товары</h4>
+                        <small>Товары для которых закончился  срок  годности</small>
                         <br><a zippy="sdcsv">Експорт у Excel</a>
                         <table class="table   table-sm">
                             <tr>
 
                                 <th>Склад</th>
                                 <th>Товар</th>
-                                <th>Серiя</th>
-                                <th>Придатний до</th>
+                                <th>Серия</th>
+                                <th>Годен до</th>
                                 <th class="text-right">Кiл.</th>
                             </tr>
                             <tr zippy="sdlist" >
@@ -243,7 +243,7 @@
  
  
      <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart'], 'language': 'uk'});
+      google.charts.load('current', {'packages':['corechart'], 'language': 'ru'});
       google.charts.setOnLoadCallback(drawChart);
 
       
@@ -270,7 +270,7 @@
         
         
         var psoptions = {
-          title: 'Структура видаткiв за дванадцять мiсяцiв' ,
+          title: 'Структура расходов за год' ,
           sliceVisibilityThreshold: 0.025,         
           backgroundColor: {
             "fill":bgcolor 
@@ -299,16 +299,16 @@
   
      
       var pcdata = new google.visualization.DataTable();
-      pcdata.addColumn('string', 'Мiсяць');
-      pcdata.addColumn('number', 'Прибутки');
-      pcdata.addColumn('number', 'Видатки');
+      pcdata.addColumn('string', 'Месяц');
+      pcdata.addColumn('number', 'Доходы');
+      pcdata.addColumn('number', 'Расходы');
 
       pcdata.addRows(
           {{{pc}}}
       );
 
       var pcoptions = {
-        title: 'Прибутки та видатки',
+        title: 'Доходы и расходы',
         legend:{
             position:"bottom"
         }  ,
@@ -349,9 +349,9 @@
           
          
         var tsdata = new google.visualization.DataTable();
-      tsdata.addColumn('string', 'Мiсяць');
-      tsdata.addColumn('number', 'Послуги');
-      tsdata.addColumn('number', 'Товари');
+      tsdata.addColumn('string', 'Месяц');
+      tsdata.addColumn('number', 'Услуги');
+      tsdata.addColumn('number', 'Товары');
 
       tsdata.addRows( 
        {{{ts}}}
@@ -360,7 +360,7 @@
         
         
         var tsoptions = {
-          title: 'Реалiзацiя',
+          title: 'Реализация',
           curveType: 'function',
           legend: { position: 'bottom' } ,
           chartArea : {

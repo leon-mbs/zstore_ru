@@ -26,7 +26,7 @@ class BranchList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
+            System::setErrorMsg('К странице имеет доступ только администратор');
             \App\Application::RedirectError();
             return  ;
         }
@@ -106,7 +106,7 @@ class BranchList extends \App\Pages\Base
 
         $this->_branch->branch_name = $this->branchdetail->editbranchname->getText();
         if ($this->_branch->branch_name == '') {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
 
@@ -139,7 +139,7 @@ class BranchList extends \App\Pages\Base
     public function moveOnClick($sender) {
         $id= intval($this->branchtable->formmove->selmove->getValue()); 
         if($id==0) {
-            $this->setError('Не вибрана  фiлiя');
+            $this->setError('Не выбран филиал ');
             return;    
         }
         $conn = \ZDB\DB::getConnect();
@@ -158,7 +158,7 @@ class BranchList extends \App\Pages\Base
             
             $conn->CommitTrans();
             
-            $this->setSuccess('Виконано');
+            $this->setSuccess('Выполнено');
   
         } catch(\Throwable $ee) {
             global $logger;

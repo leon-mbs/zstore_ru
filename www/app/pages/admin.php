@@ -30,7 +30,7 @@ class Admin extends \App\Pages\Base
         parent::__construct();
        
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
+            System::setErrorMsg('К странице имеет доступ  только  алминистратор');
             \App\Application::RedirectError();
             return  ;
         }  
@@ -44,8 +44,7 @@ class Admin extends \App\Pages\Base
         $form->add(new CheckBox('usefood',$options['usefood']??0));
         $form->add(new CheckBox('useprod',$options['useprod']??0));
         $form->add(new CheckBox('usends',$options['usends']??0));
-        $form->add(new CheckBox('useacc',$options['useacc']??0));
-       
+        
         $form->add(new SubmitButton('saveconfig'))->onClick($this, 'saveConfig');
           
         $form = $this->add(new Form('optionsform'));
@@ -79,21 +78,8 @@ class Admin extends \App\Pages\Base
         $this->modules->add(new CheckBox('modnote', $modules['note']));
         $this->modules->add(new CheckBox('modissue', $modules['issue']));
         $this->modules->add(new CheckBox('modwoocomerce', $modules['woocomerce']));
-        $this->modules->add(new CheckBox('modnp', $modules['np']));
-        $this->modules->add(new CheckBox('modpromua', $modules['promua']));
-
-        $this->modules->add(new CheckBox('modvdoc', $modules['vdoc']));
-
-//    
-        
-        $fisctype=0;
-        if($modules['ppo']==1) $fisctype=1;
-        if($modules['checkbox']==1) $fisctype=2;
-        if($modules['vkassa']==1) $fisctype=3;
-        if($modules['freg']==1) $fisctype=4;
-        $this->modules->add(new DropDownChoice('modfisctype',[], $fisctype));
-
-   
+       
+      
     }   
 
     
@@ -103,8 +89,7 @@ class Admin extends \App\Pages\Base
         $options['usefood']  =  $this->configform->usefood->isChecked() ? 1 : 0;
         $options['useprod']  =  $this->configform->useprod->isChecked() ? 1 : 0;
         $options['usends']  =  $this->configform->usends->isChecked() ? 1 : 0;
-        $options['useacc']  =  $this->configform->useacc->isChecked() ? 1 : 0;
-          
+           
         $conn = \ZDB\DB::getConnect();
       
         $where = " where meta_name in( 'ARMFood','DeliveryList','ArmProdFood','OutFood') or    menugroup= ".$conn->qstr('Кафе');
@@ -131,21 +116,13 @@ class Admin extends \App\Pages\Base
         }
         $conn->Execute($sql.$where);
      
-        $where = " where meta_name in( 'AccountList','AccountEntryList','AccountActivity','ManualEntry','ObSaldo','Shahmatka','FinReportSmall','FinResult') or  menugroup= ".$conn->qstr('Бухоблiк');
-      
-        if($options['useacc']==1) {
-            $sql="update metadata set  disabled=0 ";
-        }   else {
-            $sql="update metadata set  disabled=1";
-        }
-        $conn->Execute($sql.$where);
        
          
         System::setOptions("common",$options) ;
         
         Session::getSession()->menu = [];       
         
-        $this->setSuccess('Збережено')  ;  
+        $this->setSuccess('Сохранено')  ;  
         App::Redirect("\\App\\Pages\\Admin");
               
     }
@@ -161,7 +138,7 @@ class Admin extends \App\Pages\Base
         System::setOptions("common",$options) ;
         Session::getSession()->menu = [];       
         
-        $this->setSuccess('Збережено')  ; 
+        $this->setSuccess('Сохранено')  ; 
         App::Redirect("\\App\\Pages\\Admin");               
     }
     public function sendEmail($sender) {
@@ -210,11 +187,11 @@ class Admin extends \App\Pages\Base
      
         $doc =  \App\Entity\doc\Document::getFirst("document_number=".$dn);
         if($doc==null){
-            $this->setError("Документ не знвйдено")  ;
+            $this->setError("Документ не найден")  ;
             return;
         }
         if($doc->state <5){
-            $this->setError("Документ не проведений")  ;
+            $this->setError("Документ не проведен")  ;
             return;
         }
         $conn->BeginTrans();
@@ -233,7 +210,7 @@ class Admin extends \App\Pages\Base
 
             return;
         }
-        $this->setSuccess("Документ скасoвано")  ;
+        $this->setSuccess("Документ отменен")  ;
          
     }        
 
@@ -246,7 +223,7 @@ class Admin extends \App\Pages\Base
            $origtables =    file_get_contents("https://zippy.com.ua/updates/{$ver}.db" ) ;  
                             
            if(strlen($origtables) == 0 ) {
-               $this->setError('Структура для '.System::REQUIRED_DB.' не завантажена') ;
+               $this->setError('Структура для '.System::REQUIRED_DB.' не загружена') ;
                return; 
            }  
         
@@ -274,7 +251,7 @@ class Admin extends \App\Pages\Base
            
            foreach($origtables as $i=>$o)  {
               if( !is_array($tables[$i] ?? null) ){
-                 $answer .= "Таблиця {$i} не знайдена<br>"; 
+                 $answer .= "Таблица {$i} не найдена<br>"; 
               } 
            }
        
@@ -287,7 +264,7 @@ class Admin extends \App\Pages\Base
                foreach($origtables[$i] as $c)  {
                  
                   if( !in_array($c,$cc)  ){
-                     $answer .= "Поле {$c} в {$i} не знайдено<br>"; 
+                     $answer .= "Поле {$c} в {$i} не найдено<br>"; 
                   } 
                }
            }
@@ -305,22 +282,12 @@ class Admin extends \App\Pages\Base
         $modules['ocstore'] = $sender->modocstore->isChecked() ? 1 : 0;
         $modules['shop'] = $sender->modshop->isChecked() ? 1 : 0;
         $modules['woocomerce'] = $sender->modwoocomerce->isChecked() ? 1 : 0;
-        $modules['np'] = $sender->modnp->isChecked() ? 1 : 0;
-        $modules['promua'] = $sender->modpromua->isChecked() ? 1 : 0;
-
-        $modules['vdoc'] = $sender->modvdoc->isChecked() ? 1 : 0;
-
+     
         $modules['issue'] = $sender->modissue->isChecked() ? 1 : 0;
         $modules['note'] = $sender->modnote->isChecked() ? 1 : 0;
 
  
-        $fisctype = (int)$sender->modfisctype->getValue();
-   
-        $modules['ppo']   = $fisctype == 1 ? 1:0;
-        $modules['checkbox']   = $fisctype == 2 ? 1:0;
-        $modules['vkassa']   = $fisctype == 3 ? 1:0;
-        $modules['freg']   = $fisctype == 4 ? 1:0;
- 
+       
         System::setOptions("modules", $modules);
         $this->setSuccess('Збережено');
         App::Redirect("\\App\\Pages\\Admin");
