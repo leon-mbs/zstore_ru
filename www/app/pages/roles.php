@@ -60,15 +60,7 @@ class Roles extends \App\Pages\Base
         $this->editpan->editform->add(new CheckBox('editwoocomerce'));
         $this->editpan->editform->add(new CheckBox('editnote'));
         $this->editpan->editform->add(new CheckBox('editissue'));
-        $this->editpan->editform->add(new CheckBox('editppo'));
-        $this->editpan->editform->add(new CheckBox('editnp'));
-        $this->editpan->editform->add(new CheckBox('editpu'));
-
-        $this->editpan->editform->add(new CheckBox('editcb'));
-        $this->editpan->editform->add(new CheckBox('editvk'));
-  
-        $this->editpan->editform->add(new CheckBox('editvdoc'));
-
+        
 
         $this->editpan->editform->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
 
@@ -164,26 +156,8 @@ class Roles extends \App\Pages\Base
         if (strpos($this->role->modules, 'issue') !== false) {
             $this->editpan->editform->editissue->setChecked(true);
         }
-        if (strpos($this->role->modules, 'ppo') !== false) {
-            $this->editpan->editform->editppo->setChecked(true);
-        }
-        if (strpos($this->role->modules, 'np') !== false) {
-            $this->editpan->editform->editnp->setChecked(true);
-        }
-        if (strpos($this->role->modules, 'promua') !== false) {
-            $this->editpan->editform->editpu->setChecked(true);
-        }
-        if (strpos($this->role->modules, 'checkbox') !== false) {
-            $this->editpan->editform->editcb->setChecked(true);
-        }
-        if (strpos($this->role->modules, 'vkassa') !== false) {
-            $this->editpan->editform->editvk->setChecked(true);
-        }
-    
-        if (strpos($this->role->modules, 'vdoc') !== false) {
-            $this->editpan->editform->editvdoc->setChecked(true);
-        }
-        
+      
+   
     }
 
     public function savenameOnClick($sender) {
@@ -289,26 +263,9 @@ class Roles extends \App\Pages\Base
         if ($this->editpan->editform->editissue->isChecked()) {
             $modules = $modules . ',issue';
         }
-        if ($this->editpan->editform->editppo->isChecked()) {
-            $modules = $modules . ',ppo';
-        }
-        if ($this->editpan->editform->editnp->isChecked()) {
-            $modules = $modules . ',np';
-        }
-        if ($this->editpan->editform->editpu->isChecked()) {
-            $modules = $modules . ',promua';
-        }
-        if ($this->editpan->editform->editcb->isChecked()) {
-            $modules = $modules . ',checkbox';
-        }
-        if ($this->editpan->editform->editvk->isChecked()) {
-            $modules = $modules . ',vkassa';
-        }
-     
-        if ($this->editpan->editform->editvdoc->isChecked()) {
-            $modules = $modules . ',vdoc';
-        }
     
+   
+   
 
         $this->role->modules = trim($modules, ',');
 
