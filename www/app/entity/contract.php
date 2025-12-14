@@ -45,7 +45,7 @@ class Contract extends \ZCL\DB\Entity
 
         $docs = $this->getDocs();
         if (count($docs) > 0) {
-            return "Є документи з цим договором";
+            return "Имеются  документы  с этим договором";
         }
         return "";
     }
@@ -135,11 +135,11 @@ class Contract extends \ZCL\DB\Entity
 
     public  static function getStates() {
         $ret=[];
-        $ret[Contract::STATE_NEW]='Новий';
-        $ret[Contract::STATE_NEGOTIATE]='Перемовини';
-        $ret[Contract::STATE_SHIFTED]='Вiдкдалений';
-        $ret[Contract::STATE_INWORK]='В роботi';
-        $ret[Contract::STATE_CLODED]='Закритий';
+        $ret[Contract::STATE_NEW]='Новый';
+        $ret[Contract::STATE_NEGOTIATE]='Переговоры';
+        $ret[Contract::STATE_SHIFTED]='отложен';
+        $ret[Contract::STATE_INWORK]='В работе';
+        $ret[Contract::STATE_CLODED]='Закоыт';
         
         return  $ret;
     }

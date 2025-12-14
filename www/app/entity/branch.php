@@ -47,24 +47,24 @@ class Branch extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  documents where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "На філію є посилання у документах";
+            return "Филиал  используется документами";
         }
 
         $sql = "  select count(*)  from  stores where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Філія використовується у складах";
+            return "Филиал  используется складами";
         }
 
         $sql = "  select count(*)  from  mfund where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Філія використовується у грошових рахунках";
+            return "Филиал  используется денежными  счетами";
         }
         $sql = "  select count(*)  from  employees where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Філія використовується у співробітниках";
+            return "Филиал  используется сотрудниками";
         }
 
         return "";

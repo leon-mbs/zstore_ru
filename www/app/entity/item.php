@@ -955,10 +955,10 @@ class Item extends \ZCL\DB\Entity
         $list = array();
 
         $list[Item::TYPE_TOVAR] = "Товар";
-        $list[Item::TYPE_MAT] = "Матеріали та комплектуючі";
-        $list[Item::TYPE_MBP] = "МБП (малоцінка)";
-        $list[Item::TYPE_PROD] = "Готова продукція";
-        $list[Item::TYPE_HALFPROD] = "Напівфабрикати";
+        $list[Item::TYPE_MAT] = "Материалы и комплектующие";
+        $list[Item::TYPE_MBP] = "МБП (малоценка)";
+        $list[Item::TYPE_PROD] = "Готовач продукция";
+        $list[Item::TYPE_HALFPROD] = "Полуфабрикаты";
 
         return $list;
     }
@@ -1000,7 +1000,7 @@ class Item extends \ZCL\DB\Entity
             $price = $this->getLastPartion() ;
         }
         if($price==0) {
-            \App\System::setWarnMsg("Для {$this->itemname} не  вирахувано собївартїсть") ;
+            \App\System::setWarnMsg("Для {$this->itemname} не  рассчитана себестоимость") ;
         }
         return $price;
     }

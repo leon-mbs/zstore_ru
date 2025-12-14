@@ -64,7 +64,7 @@ class Pos extends \ZCL\DB\Entity
 
 
         if($cnt >0) {
-            return "Термiнал вже використаний в чеках";
+            return "Терминал уже используется в чеках";
         }
      
 

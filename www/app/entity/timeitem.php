@@ -35,14 +35,14 @@ class TimeItem extends \ZCL\DB\Entity
 
     public static function getTypeTime() {
         $list = array();
-        $list[self::TIME_WORK] = 'Робочий час';
-        $list[self::TINE_OVER] = 'Переробка';
-        $list[self::TINE_WN] = 'Вихідні, нічна зміна';
+        $list[self::TIME_WORK] = 'Рабочее  время';
+        $list[self::TINE_OVER] = 'Переработка';
+        $list[self::TINE_WN] = 'Выходные ночная смена';
         // $list[self::TINE_FREE] = 'Отгул';
-        $list[self::TINE_HL] = 'Відпустка';
-        $list[self::TINE_ILL] = 'Лікарняний';
-        $list[self::TINE_BT] = 'Відрядження';
-        $list[self::TINE_OTHER] = 'Інше';
+        $list[self::TINE_HL] = 'Отпуск';
+        $list[self::TINE_ILL] = 'Больничный';
+        $list[self::TINE_BT] = 'Командировка';
+        $list[self::TINE_OTHER] = 'Прочее';
 
         return $list;
     }
@@ -50,13 +50,13 @@ class TimeItem extends \ZCL\DB\Entity
     public function isValid() {
 
         if (($this->t_end - $this->t_start) < 300) {
-            return "Невірний інтервал";
+            return "Неверный интервал";
         }
         if (($this->t_end - $this->t_start) > (24 * 3600 - 300)) {
-            return "Невірний інтервал";
+            return "Неверный интервал";
         }
         if (($this->t_end - $this->t_start) <= $this->t_break) {
-            return "Невірний інтервал";
+            return "Неверный интервал";
         }
         $conn = \ZDB\DB::getConnect();
         $t_start = $conn->DBTimeStamp($this->t_start);
@@ -67,7 +67,7 @@ class TimeItem extends \ZCL\DB\Entity
         $cnt1 = $conn->GetOne($sql);
 
         if ($cnt > $cnt1) {
-            return "Інтервал перетинається з існуючим";
+            return "Интервал пересекается  с  существующим";
         }
 
         return "";

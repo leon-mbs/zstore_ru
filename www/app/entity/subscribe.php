@@ -89,9 +89,9 @@ class Subscribe extends \ZCL\DB\Entity
     //типы  подписок 
     public static function getEventList() {
         $list = array();
-        $list[self::EVENT_DOCSTATE] = "Зміна статусу документа";
-        $list[self::EVENT_NEWCUST]  = "Новий контрагент";
-        $list[self::EVENT_ENDDAY]   = "Кінець робочого дня";
+        $list[self::EVENT_DOCSTATE] = "Смена статуса документа";
+        $list[self::EVENT_NEWCUST]  = "Новый контрагент";
+        $list[self::EVENT_ENDDAY]   = "Конец рабочего дня";
 
 
         return $list;
@@ -163,15 +163,15 @@ class Subscribe extends \ZCL\DB\Entity
 
         $list = array();
         if($et==self::EVENT_DOCSTATE) {
-           $list[self::RSV_DOCAUTHOR] = "Автор документу";
-           $list[self::RSV_DOCRESP] = "Відповідальний за документ";
-           $list[self::RSV_CUSTOMER] = "Контрагент документу";
+           $list[self::RSV_DOCAUTHOR] = "Автор документа";
+           $list[self::RSV_DOCRESP] = "Ответственный за документ";
+           $list[self::RSV_CUSTOMER] = "Контрагент документа";
         }
         if($et==self::EVENT_NEWCUST) {
            $list[self::RSV_CUSTOMER] = "Контрагент";
         }
-        $list[self::RSV_SYSTEM] = "Системний лог";
-        $list[self::RSV_USER] = "Користувач системи";
+        $list[self::RSV_SYSTEM] = "Системный лог";
+        $list[self::RSV_USER] = "Пользователь системы";
         $list[self::RSV_WH] = "Web Hook";
         $list[self::RSV_EMAIL] = "E-mail";
        
@@ -431,7 +431,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Помилка розмітки";
+            return "Ошибка разметки";
         }        
     }
  /**
@@ -494,7 +494,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Помилка розмітки";
+            return "Ошибка разметки";
         }        
     }
    
@@ -549,28 +549,28 @@ class Subscribe extends \ZCL\DB\Entity
             }
 
             if ($mf->beznal == 1) {
-                $header['nal'] = "Безготівка";
+                $header['nal'] = "Безнал";
             } else {
-                $header['nal'] = "Готівка";
+                $header['nal'] = "Наличные";
             }
         } else {
             if ($doc->payamount > 0 && $doc->headerdata['payed'] == 0) {
                 $header['mf'] = "Постоплата (кредит)";
             }
             if ($doc->payamount == 0) {
-                $header['mf'] = "Передоплата";
+                $header['mf'] = "Предоплата";
             }
         }
         if($doc->meta_name == 'POSCheck') {
 
             if(doubleval($doc->headerdata['payedcard']) ==0 &&  $doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
-                $header['nal'] = "Готівка";
+                $header['nal'] = "Наличные";
                 $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
                 $header['mf'] = $mf->mf_name;
 
             }
             if(doubleval($doc->headerdata['payed']) ==0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
-                $header['nal'] = "Безготівка";
+                $header['nal'] = "Безнал";
                 $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
                 $header['mf'] = $mfb->mf_name;
                 if(strlen($mfb->bank)>0) {
@@ -589,7 +589,7 @@ class Subscribe extends \ZCL\DB\Entity
                 }
 
 
-                $header['nal'] = "Комбінована";
+                $header['nal'] = "Комбинированая";
             }
 
         }
@@ -600,7 +600,7 @@ class Subscribe extends \ZCL\DB\Entity
             $header['mf'] = "Постоплата (кредит)";
         }
         if ($payed == 0 && $doc->payamount == 0) {
-            $header['mf'] = "Передоплата";
+            $header['mf'] = "Предоплата";
         }
         if ($payed > 0) {
             $header['payed'] = \App\Helper::fa($payed);
@@ -632,10 +632,7 @@ class Subscribe extends \ZCL\DB\Entity
         }
         $header['docview'] = _BASEURL . 'doclist/' . $doc->document_id;
 
-        $qr=$doc->getQRPay() ;
-        if(is_array($qr)) {
-            $header['payurl']   = $qr['url']  ;
-        }
+       
 
         if($doc->meta_name == 'Order') {
            $header['orderno'] = $doc->document_number;
@@ -647,7 +644,7 @@ class Subscribe extends \ZCL\DB\Entity
         if($doc->parent_id >0)  {
             $basedoc=\App\Entity\Doc\Document::load($doc->parent_id)->cast();
             if($basedoc->meta_name == 'POSCheck') {
-               $header['taxurl'] = $basedoc->getFiscUrl();
+               
                if($basedoc->parent_id >0)   {
                    $basebasedoc=\App\Entity\Doc\Document::load($basedoc->parent_id)->cast();
                    if($basebasedoc->meta_name == 'Order') { //если  чек  на основании заказа
@@ -691,7 +688,7 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Помилка розмітки";
+            return "Ошибка разметки";
         }
     }
 

@@ -39,17 +39,17 @@ class EqEntry extends \ZCL\DB\Entity
     public static function getOpList(){
         
         $list=[];
-        $list[self::OP_INCOME] = 'Ввод в експлуатацію' ;
-        $list[self::OP_OUTCOME] = 'Виведення з експлуатації' ;
-        $list[self::OP_AMOR] = 'Нарахування амортизвції' ;
-        $list[self::OP_REPAIR] = 'Ремонт та відновлення' ;
-        $list[self::OP_MOVE] = 'Переміщення між вир. ділянками ' ;
+        $list[self::OP_INCOME] = 'Ввод в эксплуатацию' ;
+        $list[self::OP_OUTCOME] = 'Вывод с  эксплуатации' ;
+        $list[self::OP_AMOR] = 'Начисление амортизации' ;
+        $list[self::OP_REPAIR] = 'Ремонт и восстановление' ;
+        $list[self::OP_MOVE] = 'Перемещение  между участками ' ;
         $list[self::OP_BUY] = 'Закупка' ;
-        $list[self::OP_PROD] = 'Оприходування з виробництва' ;
-        $list[self::OP_STORE] = 'Оприходування зі складу' ;
+        $list[self::OP_PROD] = 'Оприходование  с  производства' ;
+        $list[self::OP_STORE] = 'Оприходование со  склада' ;
         $list[self::OP_SELL] = 'Продажа' ;
-        $list[self::OP_TOSTORE] = 'Оприходування на склад' ;
-        $list[self::OP_LOST] = 'Списання' ;
+        $list[self::OP_TOSTORE] = 'Оприходование на склад' ;
+        $list[self::OP_LOST] = 'Списание' ;
         
         return $list ;
    }   

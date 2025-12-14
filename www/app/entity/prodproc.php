@@ -112,19 +112,19 @@ class ProdProc extends \ZCL\DB\Entity
 
         switch($state) {
             case ProdProc::STATE_NEW:
-                return "Новий";
+                return "Новый";
             case ProdProc::STATE_INPROCESS:
-                return "Виконується";
+                return "Выполнется";
             case ProdProc::STATE_STOPPED:
-                return "Припинено";
+                return "Приостановлен";
             case ProdProc::STATE_FINISHED:
-                return "Виконаний";
+                return "Выполнен";
             case ProdProc::STATE_CANCELED:
-                return "Скасовано";
+                return "Отменен";
 
 
             default:
-                return "Невідомий статус";
+                return "Неизвестный  статус";
         }
     }
 

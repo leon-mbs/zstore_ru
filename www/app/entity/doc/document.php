@@ -118,16 +118,16 @@ class Document extends \ZCL\DB\Entity
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$this->document_date) {
-            throw new \Exception("Не можна змінювати документ старший " .date('Y-m-d', $da));
+            throw new \Exception("нельзя изменять документ старший " .date('Y-m-d', $da));
         }
 
         $fn = intval(mb_substr($this->document_number,0,1) );
         if($fn >0) {
-            throw new \Exception("Номер документу має починатись з букви ");
+            throw new \Exception("Номер документа должен наинаться  с буквы ");
         }
 
         if (false == $this->checkUniqueNumber()) {
-            System::setWarnMsg('Не унікальний номер документа');
+            System::setWarnMsg('Не уникальный номер документа');
         }
 
         if ($this->parent_id > 0) {
@@ -192,7 +192,7 @@ class Document extends \ZCL\DB\Entity
         $xml = @simplexml_load_string($xml) ;
         if($xml==false) {
 
-            $logger->error("Документ " . $this->document_number . " Невірний  контент");
+            $logger->error("Документ " . $this->document_number . " Неверный  контент");
             return;
         }
 
@@ -354,9 +354,7 @@ class Document extends \ZCL\DB\Entity
             
             $conn->Execute("delete from eqentry where document_id=" . $this->document_id);
           
-            if( System::getOption("common",'useacc')==1) {
-                $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
-            }
+         
  
     }
 
@@ -370,7 +368,7 @@ class Document extends \ZCL\DB\Entity
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$this->document_date) {
-            return  "Не можна відміняти документ старший " .date('Y-m-d', $da);
+            return  "Нельхя отменять документ старший " .date('Y-m-d', $da);
         }
 
         return "";
@@ -589,67 +587,67 @@ class Document extends \ZCL\DB\Entity
 
         switch($state) {
             case Document::STATE_NEW:
-                return "Новий";
+                return "Новый";
             case Document::STATE_EDITED:
-                return "Відредагований";
+                return "Отредактирован";
             case Document::STATE_CANCELED:
-                return "Скасований";
+                return "Отменен";
             case Document::STATE_EXECUTED:
-                return "Проведений";
+                return "Проведен";
             case Document::STATE_CLOSED:
-                return "Закритий";
+                return "Закрыт";
             case Document::STATE_APPROVED:
-                return "Затверджений";
+                return "Утвержден";
             case Document::STATE_DELETED:
-                return "Видалений";
+                return "Удален";
 
             case Document::STATE_WA:
-                return "Очікує затвердження";
+                return "Ожидает утверждения";
             case Document::STATE_INSHIPMENT:
-                return "В доставці";
+                return "В доставке";
             case Document::STATE_FINISHED:
-                return "Виконаний";
+                return "Выполнен";
             case Document::STATE_DELIVERED:
-                return "Доставлений";
+                return "Доставлен";
             case Document::STATE_REFUSED:
-                return "Відхилений";
+                return "Отклонен";
             case Document::STATE_SHIFTED:
-                return "Відкладений";
+                return "Отложен";
             case Document::STATE_FAIL:
-                return "Анульований";
+                return "Аннулирован";
             case Document::STATE_INPROCESS:
-                return "Виконується";
+                return "Выполняется";
             case Document::STATE_READYTOSHIP:
-                return "Готовий до відправки";
+                return "Готов к отправке";
             case Document::STATE_WP:
-                return "Очікує оплату";
+                return "Ожидает оплату";
             case Document::STATE_PAYED:
-                return "Оплачений";
+                return "Оплачен";
 
             default:
-                return "Невідомий статус";
+                return "Неизвестный статус";
         }
     }
 
     public static function getStateList() {
         $list = array();
-        $list[Document::STATE_NEW] = "Новий";
-        $list[Document::STATE_EDITED] = "Відредагований";
-        $list[Document::STATE_CANCELED] = "Скасований";
-        $list[Document::STATE_EXECUTED] = "Проведений";
-        $list[Document::STATE_CLOSED] = "Закритий";
-        $list[Document::STATE_APPROVED] = "Готовий до виконання";
-        $list[Document::STATE_WA] =       "Очікує затвердження";
-        $list[Document::STATE_INSHIPMENT] = "На доставці";
-        $list[Document::STATE_FINISHED] = "Виконаний";
-        $list[Document::STATE_DELIVERED] = "Доставлений";
-        $list[Document::STATE_REFUSED] = "Відхилений";
-        $list[Document::STATE_SHIFTED] = "Відкладений";
-        $list[Document::STATE_FAIL] = "Анульований";
-        $list[Document::STATE_INPROCESS] = "Виконується";
-        $list[Document::STATE_READYTOSHIP] = "Готовий до відправки";
-        $list[Document::STATE_WP] = "Очікує оплату";
-        $list[Document::STATE_PAYED] = "Оплачений";
+        $list[Document::STATE_NEW] = "Новый";
+        $list[Document::STATE_EDITED] = "Отредактирован";
+        $list[Document::STATE_CANCELED] = "Отменен";
+        $list[Document::STATE_EXECUTED] = "Проведен";
+        $list[Document::STATE_CLOSED] = "Закрыт";
+        $list[Document::STATE_APPROVED] = "Готов к выполнению";
+        $list[Document::STATE_WA] =       "Ожидает утверждения";
+        $list[Document::STATE_INSHIPMENT] = "В доставке";
+        $list[Document::STATE_FINISHED] = "Выполнен";
+        $list[Document::STATE_DELIVERED] = "Доставлен";
+        $list[Document::STATE_REFUSED] = "Отклонен";
+        $list[Document::STATE_SHIFTED] = "Отложен";
+        $list[Document::STATE_FAIL] = "Аннулирован";
+        $list[Document::STATE_INPROCESS] = "Выполняется";
+        $list[Document::STATE_READYTOSHIP] = "Готов к отправке";
+        $list[Document::STATE_WP] = "Ожидает оплату";
+        $list[Document::STATE_PAYED] = "Оплачен";
 
         return $list;
     }
@@ -660,17 +658,17 @@ class Document extends \ZCL\DB\Entity
     */
     public static function getStateListMan() {
         $list = array();
-        $list[Document::STATE_CLOSED] = "Закритий";
-        $list[Document::STATE_INSHIPMENT] = "На доставці";
-        $list[Document::STATE_FINISHED] = "Виконаний";
-        $list[Document::STATE_DELIVERED] = "Доставлений";
-        $list[Document::STATE_EXECUTED] = "Проведений";
+        $list[Document::STATE_CLOSED] = "Закрыт";
+        $list[Document::STATE_INSHIPMENT] = "В доставке";
+        $list[Document::STATE_FINISHED] = "Выполнен";
+        $list[Document::STATE_DELIVERED] = "Доставлен";
+        $list[Document::STATE_EXECUTED] = "Проведен";
 
-        $list[Document::STATE_SHIFTED] = "Відкладений";
-        $list[Document::STATE_FAIL] = "Анульований";
-        $list[Document::STATE_INPROCESS] = "Виконується";
-        $list[Document::STATE_READYTOSHIP] = "Готовий до відправлення";
-        $list[Document::STATE_WP] = "Очікує оплату";
+        $list[Document::STATE_SHIFTED] = "Отложен";
+        $list[Document::STATE_FAIL] = "Аннулирован";
+        $list[Document::STATE_INPROCESS] = "Выполняется";
+        $list[Document::STATE_READYTOSHIP] = "Готов к отправке";
+        $list[Document::STATE_WP] = "Ожидает оплату";
 
         return $list;
     }
@@ -805,7 +803,7 @@ class Document extends \ZCL\DB\Entity
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::SYSTEM;
 
-            $n->message = "Користувач ".System::getUser()->username." видалив раніше проведений документ " .$this->document_number  ;
+            $n->message = "Подьзователь ".System::getUser()->username." удалил опнее проведенный  документ " .$this->document_number  ;
             $n->save();
         }
     }
@@ -835,7 +833,7 @@ class Document extends \ZCL\DB\Entity
                 $n->user_id = $user_id;
                 $n->sender_id = \App\Entity\Notify::SYSTEM;
                 $n->dateshow = time();
-                $n->message = "Ви призначені виконавцем документу {$this->document_number} " ;
+                $n->message = "Вы назначены исполнителем документа {$this->document_number} " ;
          
                 $n->save();            
         }
@@ -993,16 +991,11 @@ class Document extends \ZCL\DB\Entity
      */
     public static function getDeliveryTypes($np = false) {
         $list = array();
-        $list[self::DEL_SELF] = 'Самовивіз';
-        $list[self::DEL_BOY] = 'Кур`єр';
-        if ($np == true) {
-            $list[self::DEL_NP] = 'Нова пошта';
-        }
-
-        $list[self::DEL_UP] = 'Укр. пошта';
-        $list[self::DEL_MEEST] = 'Meest';
-        $list[self::DEL_ROZ] = 'Rozetka';
-        $list[self::DEL_SERVICE] = 'Iнша служба доставки';
+        $list[self::DEL_SELF] = 'Самлвывоз';
+        $list[self::DEL_BOY] = 'Курьер';
+       
+    
+        $list[self::DEL_SERVICE] = 'Служба доставки';
 
         return $list;
     }
@@ -1057,7 +1050,7 @@ class Document extends \ZCL\DB\Entity
             if ($mail->send() === false) {
                 System::setErrorMsg($mail->ErrorInfo);
             } else {
-                System::setSuccessMsg('E-mail відправлено');
+                System::setSuccessMsg('E-mail отправлен');
             }
         } catch(\Exception $e) {
             System::setErrorMsg($e->getMessage());
@@ -1127,146 +1120,10 @@ class Document extends \ZCL\DB\Entity
         return $img;
     }
 
-    /**
-     * возвращает  тэг <img> со QR кодом ссылки на  сайт налоговой
-     *
-     */
-    protected function getQRCodeImage($text=false) {
-
-        $print = System::getOption('common', 'printoutqrcode');
-        if ($print == 0) {
-            return '';
-        }
-        $url =$this->getFiscUrl();
-        
-        if($text) {
-            if(strlen($url)==0) {
-                return false;
-            }
-            return $url;
-        }
-        if(strlen($url)==0) {
-            return '';
-        }
-
-        $dataUri = \App\Util::generateQR($url, 200, 5)  ;
-        $img = "<img style=\"width:80%\"  src=\"{$dataUri}\"  />";
-
-        return $img;
-    }
-
-    /**
-    * put your comment there...
-    *
-      * @return mixed
-    */
-    public function getQRPay() {
-
-        if(in_array($this->meta_name, ['GoodsIssue','Invoice','Order','POSCheck'])  ==  false) {
-            return false;
-        }
-        //оплачен
-        if( $this->payamount > 0 &&  $this->payamount <=  $this->payed  ) {
-            return false;
-        }
- 
-        $firm = Helper::getFirmData(  $this->branch_id);
- 
-        $mf=\App\Entity\MoneyFund::load($this->getHD('payment'));
-        
-      
-        if($mf == null) {
-            return false;
-        }
-        
-        $payee  =  $firm['firm_name'] ;//плательщик 
-        $tin =  $firm['tin']  ;//едрпоу 
-        
-        if(strlen($mf->payname ??'') > 0)  $payee  = $mf->payname;
-        if(strlen($mf->tin ??'') > 0) $tin  = $mf->tin;
-          
-        $iban = $mf->iban??'';
-        if(  strlen($iban) == 0|| strlen($tin) == 0) {
-            return false;
-        }
-
-         
-        
-/*
-        if ( ($this->headerdata["fop"] ??0) > 0) {
-            $fops=$firm['fops']??[];
-            $fop = $fops[$this->headerdata["fop"]] ;
-            $tin = $fop->edrpou ??'';
-            $payee = $fop->name ??'';
-        }       
-*/
-
-        $number = $this->document_number;
-        if(strlen($this->headerdata['outnumber'] ?? '') > 0) {
-            $number  =    $this->headerdata['outnumber']  ;
-        }
-
-        $payamount=$this->payamount;
-        if(($this->headerdata['payedcard'] ??0) > 0) {
-            $payamount =  $this->headerdata['payedcard'] ;
-        }
-
-    
- 
-        
- 
-        $url = "BCD\n002\n1\nUCT\n\n";
-        $url = $url .  $payee ."\n";
-        $url = $url .  $iban."\n";
-        $url = $url .  "UAH". \App\Helper::fa($payamount)."\n";
-        $url = $url .  $tin."\n\n\n";
-        $url = $url .  $this->meta_desc ." ".$number." від ".  \App\Helper::fd($this->document_date) ."\n\n";
-
-        $url = base64_encode($url);
-        $url = str_replace("+", "-", $url) ;
-        $url = str_replace("/", "_", $url) ;
-        $url = str_replace("=", "", $url) ;
-
-        $url = "https://bank.gov.ua/qr/".$url;
-
-        $dataUri = \App\Util::generateQR($url, 240, 10)  ;
-        $img = "<img style=\"width:260px\"  src=\"{$dataUri}\"  />";
-
-        return array('qr'=>$img,
-          'url'=>$url,
-//         
-          'link'=>"<a href=\"{$url}\">{$url}</a>"
-        );
-    }
-     
-
-    /**
-    *    возвращает ссылку  на чек в  налоговой
-    *    https://cabinet.tax.gov.ua/cashregs/check?fn=4000191957&id=165093488&date=20220105&time=132430&sum=840
-    */
-    public function getFiscUrl() {
-        if(strlen($this->headerdata["tax_url"]??'')>0) {
-            return $this->headerdata["tax_url"];
-        }
-
-        if(strlen($this->headerdata["fiscalnumber"]??'')==0) {
-            return "";
-        }
-        if(strlen($this->headerdata["fiscalnumberpos"]??'')==0) {
-            return "";
-        }
-
-        $pos = \App\Entity\Pos::load($this->headerdata['pos']);
-
-        $url = "https://cabinet.tax.gov.ua/cashregs/check?" ;
-        $url .=  "fn=". $pos->fiscalnumber ;
-        $url .=  "&id=". $this->headerdata["fiscalnumber"] ;
-        $url .=   $this->headerdata["fiscdts"] ;
-        $url .=  "&sm=". number_format($this->payamount, 2, '.', '') ;
-
-        return $url;
-    }
   
+   
+
+   
   
     public function getID() {
         return $this->document_id;
@@ -1377,47 +1234,7 @@ class Document extends \ZCL\DB\Entity
     }
     
     
-    /**
-    * бухгалтерские проводки
-    * 
-    */
-    public   function DoAcc() {
-       $conn = \ZDB\DB::getConnect();
-       $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
-          
-            
-    } 
-  
-    /**
-    * проводки  по касе
-    * 
-    * @param mixed $acc  корреспондирующий счет
-    * @param mixed $storno
-    */
-    protected   function DoAccPay($acc,$storno=false) {
-        foreach(\App\Entity\Pay::find("    mf_id >0 and document_id=".$this->document_id) as $p) {
-             $mf=  \App\Entity\MoneyFund::load($p->mf_id) ;
-             $n=  $mf->beznal ?'31':'30' ;
-         
-             $am=$p->amount;  
-             if($p->paytype == \App\Entity\Pay::PAY_DELIVERY ){
-                \App\Entity\AccEntry::addEntry('941', $n,   $this->headerdata['delivery'],$this->document_id )  ; 
-                 continue;
-             }  
-             if($p->paytype == \App\Entity\Pay::PAY_BANK ){
-                \App\Entity\AccEntry::addEntry('949', $n,   $this->headerdata['delivery'],$this->document_id )  ; 
-                 continue;
-             }  
-             if($am>0) {
-                 \App\Entity\AccEntry::addEntry(  $n, $acc, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
-             } else {
-                 \App\Entity\AccEntry::addEntry($acc, $n, $storno?0-$am:$am,$this->document_id,$p->paydate)  ; 
-               
-             }
-              
-        } 
-    }
-  
+   
  
       
 }
