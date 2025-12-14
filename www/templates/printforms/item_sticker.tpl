@@ -9,9 +9,9 @@
                 <td colspan="3"  >Код {{code}}</td>
             </tr>
             <tr  >
-                <td  >Вага</td>
-                <td  >Ціна</td>
-                <td style="font-size:18px" ><b> Сума</b></td>
+                <td  >Вес</td>
+                <td  >Цена</td>
+                <td style="font-size:18px" ><b> Сумма</b></td>
             </tr>
             <tr  >
                 <td  >{{qty}}</td>

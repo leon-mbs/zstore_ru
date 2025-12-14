@@ -1,7 +1,7 @@
-<text>Замовлення {{document_number}}</text>
+<text>Заказ {{document_number}}</text>
  <row>
-  <col   length="12" >Час {{time}}</col>
-  <col   length="10" >Стіл {{table}}</col>
+  <col   length="12" >Время {{time}}</col>
+  <col   length="10" >Стол {{table}}</col>
 </row>
 
 {{#detail}}

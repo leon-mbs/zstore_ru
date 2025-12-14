@@ -1,10 +1,10 @@
  <table class="table  table-sm">
    <tr><th colspan="2">{{name}}</th></tr>
    <tr><td>Тел.</td><td>{{phone}}</td></tr>
-   <tr><td>ЄДРПОУ</td><td>{{edrpou}}</td></tr>
+   <tr><td>ОКПО</td><td>{{edrpou}}</td></tr>
    {{#smscode}} 
-   <tr><td colspan="2">   СМС код &nbsp;&nbsp;<b>{{smscode}}   </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a {{{click}}} href="javascript:void(0);return false;">Відправити</a>   
-   <br><small> Відправка коду на телефон для перевірки номеру   </small>
+   <tr><td colspan="2">   СМС код &nbsp;&nbsp;<b>{{smscode}}   </b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a {{{click}}} href="javascript:void(0);return false;">Отправить</a>   
+   <br><small> Отправка  кода на телефон для проверки номера   </small>
    </td></tr>
   {{/smscode}}
    
@@ -18,28 +18,28 @@
      <tr><td>Телеграм</td><td>{{{telega}}}</td></tr>
    {{/telega}}  
    {{#address}}   
-     <tr><td>Адреса</td><td>{{address}}</td></tr>
+     <tr><td>Адрес </td><td>{{address}}</td></tr>
    {{/address}}   
       
    {{#bonus}}
-   <tr><td>Бонуси</td><td>   {{bonus}}</td></tr>
+   <tr><td>Бонусы</td><td>   {{bonus}}</td></tr>
    {{/bonus}}
   {{#dolg}}
-   <tr><td>Борг  </td><td>   {{dolg}} <small>(+дебет -кредит)</small></td></tr>
+   <tr><td>Долг  </td><td>   {{dolg}} <small>(+дебет -кредит)</small></td></tr>
    {{/dolg}}
   {{#disc}}
-   <tr><td>Постійна знижка</td><td>   {{disc}}</td></tr>
+   <tr><td>Постоянная скидка</td><td>   {{disc}}</td></tr>
 
    {{/disc}}
-   <tr><td>Покупок на  суму</td><td>   {{sumall}}</td></tr>
+   <tr><td>Покупок на  сумму</td><td>   {{sumall}}</td></tr>
    
    {{#comment}}   
-   <tr><td colspan="2">Примітка: {{comment}}</td></tr>
+   <tr><td colspan="2">Примечание: {{comment}}</td></tr>
    {{/comment}}    
    
    {{#last}}
-     <tr><td colspan="2"> Останній документ: {{last}} від {{lastdate}} на суму  {{lastsum}}. Статус {{laststatus}}</td></tr>
-     <tr><td colspan="2"> Останні товари: </td></tr>
+     <tr><td colspan="2"> Последний документ: {{last}} от {{lastdate}} на сумму  {{lastsum}}. Статус {{laststatus}}</td></tr>
+     <tr><td colspan="2"> Последние товары: </td></tr>
      <tr><td colspan="2"> 
          <table      style="font-size:smaller">
             {{#goods}}

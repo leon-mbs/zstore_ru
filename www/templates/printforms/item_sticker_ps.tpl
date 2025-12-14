@@ -4,8 +4,8 @@
 <text>{{name}}</text>
 <font bold="false">a</font> 
 <text>Код {{code}}</text>
-<text>Вага {{qty}} Ціна {{price}} </text>
-<text bold="true">Всього {{sum}}  </text>
+<text>Вес {{qty}} Цена {{price}} </text>
+<text bold="true">Всего {{sum}}  </text>
  
 <align>center</align>
  
