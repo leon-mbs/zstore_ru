@@ -32,7 +32,7 @@ class Options extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратори');
+            System::setErrorMsg('К страницы  имеют доступ только  администраторы');
             App::RedirectError();
             return  ;
         }
@@ -85,15 +85,15 @@ class Options extends \App\Pages\Base
 
         $pt = array(
             "0" => "По факту",
-            "1" => "Передплата",
-            "2" => "Післяплата"
+            "1" => "Предоплата",
+            "2" => "Постоплата"
         );
         $this->business->add(new DropDownChoice('paytypein', $pt, "1"));
         $this->business->add(new DropDownChoice('paytypeout', $pt, "1"));
         $st = array(
-            "1" => "За серіями (партіями) виробника",
-            "2" => "За серіями та датою придатності",
-            "3" => "За серійними номерами  виробів"
+            "1" => "За сериями (партиями) произволителя",
+            "2" => "За сериями и сроком годности",
+            "3" => "За серийными номерами изделий"
         );
         
         $this->business->add(new DropDownChoice('usesnumber',$st));
@@ -156,7 +156,7 @@ class Options extends \App\Pages\Base
         //валюты
 
         $this->add(new Form('valform'));
-        $this->valform->add(new SubmitLink('loadrate', $this, 'onValCource'));
+
         $this->valform->add(new SubmitLink('valadd', $this, 'onValAdd'));
         $this->valform->add(new SubmitButton('saveval'))->onClick($this, 'saveValOnClick');
 
@@ -215,7 +215,7 @@ class Options extends \App\Pages\Base
 
   
         $this->api->add(new TextInput('aexp'));
-        $this->api->add(new DropDownChoice('atype', array('1' => "Авторизація з JWT (Bearer)", '2' => "Basic авторизація", '3' => "Автоматична авторизація"), 1))->onChange($this, 'onApiType');
+        $this->api->add(new DropDownChoice('atype', array('1' => "Авторизация з JWT (Bearer)", '2' => "Basic авторизация", '3' => "Автоматическая авторизация"), 1))->onChange($this, 'onApiType');
         $api = System::getOptions("api",true);
         if (!is_array($api)) {
             $api = array('exp' => 60, 'key' => 'qwerty', 'atype' => 1);
@@ -232,36 +232,23 @@ class Options extends \App\Pages\Base
         $this->sms->add(new SubmitButton('smssubmit'))->onClick($this, 'saveSMSOnClick');
         $this->sms->add(new SubmitButton('smstest'))->onClick($this, 'testSMSOnClick');
  
-        $this->sms->add(new TextInput('smsclubtoken'));
-        $this->sms->add(new TextInput('smsclublogin'));
-        $this->sms->add(new TextInput('smsclubpass'));
-        $this->sms->add(new TextInput('smscluban'));
-        $this->sms->add(new TextInput('smsclubvan'));
+      
         $this->sms->add(new TextInput('smssemytoken'));
         $this->sms->add(new TextInput('smssemydevid'));
         $this->sms->add(new TextInput('smstestphone'));
         $this->sms->add(new TextInput('smstesttext'));
-        $this->sms->add(new TextInput('flysmslogin'));
-        $this->sms->add(new TextInput('flysmspass'));
-        $this->sms->add(new TextInput('flysmsan'));
+    
 
         $this->sms->add(new TextArea('smscustscript'));
         $this->sms->add(new DropDownChoice('smscustlang', array('js' => "JavaScript",  'php' => "PHP"), 'js')) ;
 
-        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",  '2' => "SMSClub",   '3' => 'SMS-Fly', '4' => 'Кастомний скрипт'), 0))->onChange($this, 'onSMSType');
+        $this->sms->add(new DropDownChoice('smstype', array('1' => "SemySMS",    '4' => 'Кастомный скрипт'), 0))->onChange($this, 'onSMSType');
        
         $sms = System::getOptions("sms",true);
 
         $this->sms->smssemytoken->setText($sms['smssemytoken']);
         $this->sms->smssemydevid->setText($sms['smssemydevid']);
-        $this->sms->flysmslogin->setText($sms['flysmslogin']);
-        $this->sms->flysmspass->setText($sms['flysmspass']);
-        $this->sms->flysmsan->setText($sms['flysmsan']);
-        $this->sms->smsclubtoken->setText($sms['smsclubtoken']);
-        $this->sms->smsclublogin->setText($sms['smsclublogin']);
-        $this->sms->smsclubpass->setText($sms['smsclubpass']);
-        $this->sms->smscluban->setText($sms['smscluban']);
-        $this->sms->smsclubvan->setText($sms['smsclubvan']);
+ 
 
         $this->sms->smscustlang->setValue($sms['smscustlang']);
         $this->sms->smscustscript->setText( base64_decode($sms['smscustscript'] ));
@@ -319,7 +306,7 @@ class Options extends \App\Pages\Base
         System::setOptions("common", $common);
 
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
 
         App::Redirect("\\App\\Pages\\Options");
 
@@ -361,7 +348,7 @@ class Options extends \App\Pages\Base
         System::setOptions("common", $common);
         $this->_tvars["useval"] = $common['useval'] == 1;
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
 
         App::Redirect("\\App\\Pages\\Options");
 
@@ -391,7 +378,7 @@ class Options extends \App\Pages\Base
         $res = $bot->doGet('deleteWebhook') ;
         $res = $bot->doGet('setWebhook', array('url'=>$url)) ;
         if($res['error_code'] == 404) {
-            $this->setError("Невірний токен") ;
+            $this->setError("Неверный токен") ;
             return;
         }
         if($res['ok'] != true) {
@@ -402,7 +389,7 @@ class Options extends \App\Pages\Base
         H::log("set hook ".$url);
 
         System::setOptions("common", $common);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
 
     }
 
@@ -420,7 +407,7 @@ class Options extends \App\Pages\Base
         $printer['pbarcode'] = $this->printer->pbarcode->isChecked() ? 1 : 0;
         $printer['pqrcode'] = $this->printer->pqrcode->isChecked() ? 1 : 0;
         System::setOptions("printer", $printer);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
 
     public function onApiType($sender) {
@@ -438,7 +425,7 @@ class Options extends \App\Pages\Base
         $api['atype'] = $this->api->atype->getValue();
 
         System::setOptions("api", $api);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
 
     public function onSMSType($sender) {
@@ -446,16 +433,7 @@ class Options extends \App\Pages\Base
         $this->sms->smssemytoken->setVisible($type == 1);
         $this->sms->smssemydevid->setVisible($type == 1);
    
-        $this->sms->smsclubtoken->setVisible($type == 2);
-        $this->sms->smsclublogin->setVisible($type == 2);
-        $this->sms->smsclubpass->setVisible($type == 2);
-        $this->sms->smscluban->setVisible($type == 2);
-        $this->sms->smsclubvan->setVisible($type == 2);
      
-        $this->sms->flysmslogin->setVisible($type == 3);
-        $this->sms->flysmspass->setVisible($type == 3);
-        $this->sms->flysmsan->setVisible($type == 3);
-
      
         $this->sms->smscustlang->setVisible($type == 4);
         $this->sms->smscustscript->setVisible($type == 4);
@@ -471,21 +449,13 @@ class Options extends \App\Pages\Base
         $sms = array();
         $sms['smstype'] = $this->sms->smstype->getValue();
 
-        $sms['smsclubtoken'] = $this->sms->smsclubtoken->getText();
-        $sms['smsclublogin'] = $this->sms->smsclublogin->getText();
-        $sms['smsclubpass'] = $this->sms->smsclubpass->getText();
-        $sms['smscluban'] = $this->sms->smscluban->getText();
-        $sms['smsclubvan'] = $this->sms->smsclubvan->getText();
         $sms['smssemytoken'] = $this->sms->smssemytoken->getText();
         $sms['smssemydevid'] = $this->sms->smssemydevid->getText();
-        $sms['flysmslogin'] = $this->sms->flysmslogin->getText();
-        $sms['flysmspass'] = $this->sms->flysmspass->getText();
-        $sms['flysmsan'] = $this->sms->flysmsan->getText();
         $sms['smscustlang'] = $this->sms->smscustlang->getValue();
         $sms['smscustscript'] = base64_encode($this->sms->smscustscript->getText() );
 
         System::setOptions("sms", $sms);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
 
     public function testSMSOnClick($sender) {
@@ -532,7 +502,7 @@ class Options extends \App\Pages\Base
         System::setOptions("common", $common);
 
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
 
     public function onValRow($row) {
@@ -544,29 +514,7 @@ class Options extends \App\Pages\Base
 
     }
 
-    public function onValCource($sender) {
-        $xml=@simplexml_load_string(file_get_contents("https://bank.gov.ua/NBU_Exchange/exchange?date=".date("d.m.Y")  ) ) ;
-        if($xml==false) return;
-        $vl = $this->_vallist;
-        $this->_vallist=[];
-        foreach($xml->children() as $row){
-            $code=(string)$row->CurrencyCodeL[0];
-            $amount=doubleval($row->Amount[0]);
-            $unit=doubleval($row->Units[0]);
-            $rate=   @number_format($amount/$unit, 3, '.', '')  ;
-            foreach($vl as $v){
-               if($v->code == $code ) {
-                  $v->rate  = $rate;
-               }
-               $this->_vallist[$v->id]=$v;
-            }
-        }
-        
-        $this->valform->vallist->Reload();
-        $this->goAnkor('valform') ;
-        
-    }
-
+  
     public function onValDel($sender) {
         $val = $sender->getOwner()->getDataItem() ;
         $this->_vallist = array_diff_key($this->_vallist, array($val->id => $this->_vallist[$val->id]));
@@ -596,7 +544,7 @@ class Options extends \App\Pages\Base
         $val['valprice'] = $this->valform->valprice->isChecked() ? 1 : 0;
 
         System::setOptions("val", $val);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
 
  

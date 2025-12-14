@@ -27,7 +27,7 @@ class Roles extends \App\Pages\Base
         parent::__construct();
 
         if (System::getUser()->userlogin != 'admin') {
-            $this->setError("До сторінки має доступ тільки користувач admin");
+            $this->setError("К странице  имеет доступ  только admin");
             App::RedirectError();
             return  ;
         }
@@ -379,16 +379,16 @@ class Roles extends \App\Pages\Base
                 $title = 'Документ';
                 break;
             case 2:
-                $title = 'Звіт';
+                $title = 'Отчет';
                 break;
             case 3:
                 $title = 'Журнал';
                 break;
             case 4:
-                $title = 'Довідник';
+                $title = 'Справочник';
                 break;
             case 5:
-                $title = 'Сервісна сторінка';
+                $title = 'Сервисная страница';
                 break;
         }
         $item->editacc = false;
@@ -441,19 +441,19 @@ class Roles extends \App\Pages\Base
                 $title = 'Документ';
                 break;
             case 2:
-                $title = 'Звіт';
+                $title = 'Отчет';
                 break;
             case 3:
                 $title = 'Журнал';
                 break;
             case 4:
-                $title = 'Довідник';
+                $title = 'Справочник';
                 break;
             case 5:
-                $title = 'Сервісна сторінка';
+                $title = 'Сервисная страница';
                 break;
             case 6:
-                $title = "Сторінка модуля";
+                $title = "Страница модуля";
                 break;
         }
         $smartmenu = @explode(',', $this->role->smartmenu);

@@ -774,50 +774,7 @@ class Subscribe extends \ZCL\DB\Entity
         $sms = System::getOptions("sms");
 
 
-        if ($sms['smstype'] == 2) {  // sms club
-
-
-            $url = 'https://im.smsclub.mobi/vibers/send';
-
-            $data = json_encode([
-                'phones' => array($phone),
-                'message' => $text,
-                'sender' => $sms['smsclubvan']
-            ]);
-
-            $ch = curl_init();
-
-            curl_setopt_array($ch, [
-                CURLOPT_URL => $url,
-                CURLOPT_POSTFIELDS => $data,
-                CURLOPT_POST => true,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_USERPWD => $sms['smsclublogin'] . ':' . $sms['smsclubpass'],
-                CURLOPT_HTTPHEADER => [
-                    'Content-Type: application/json'
-                ]
-            ]);
-
-
-            $response = curl_exec($ch);
-
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-
-            $encoded = json_decode($response, true);
-            curl_close($ch);
-
-
-            if ($httpcode > 200) {
-                return "code ".$httpcode . ' ' .$response;
-            }
-
-            return  ""  ;
-
-
-
-        }
+        
     }
 
     public static function sendNotify($user_id, $text) {
@@ -883,90 +840,7 @@ class Subscribe extends \ZCL\DB\Entity
                 }
             }
 
-            if ($sms['smstype'] == 2) {  // sms club
-
-
-                $url = 'https://im.smsclub.mobi/sms/send';
-
-                $data = json_encode([
-                    'phone' => array($phone),
-                    'message' => $text,
-                    'src_addr' => $sms['smscluban']
-                ]);
-
-                $ch = curl_init();
-
-                curl_setopt_array($ch, [
-                    CURLOPT_URL => $url,
-                    CURLOPT_POSTFIELDS => $data,
-                    CURLOPT_POST => true,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => false,
-                    CURLOPT_HTTPHEADER => [
-                        'Authorization: Bearer ' . $sms['smsclubtoken'],
-                        'Content-Type: application/json'
-                    ]
-                ]);
-
-
-                $response = curl_exec($ch);
-
-                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-
-                $encoded = json_decode($response, true);
-                curl_close($ch);
-
-                if ($httpcode >200) {
-                    H::logerror("code ".$httpcode) ;
-                    H::logerror($response) ;
-                    return "Error. See logs";
-                }
-
-                return  ""  ;
-            }
-
-            if ($sms['smstype'] == 3) {  //sms  fly
-
-                $an = '';
-                if (strlen($sms['flysmsan']) > 0) {
-                    $an = "source=\"{$sms['flysmsan']}\"";
-                }
-
-
-                $lifetime = 4; // срок жизни сообщения 4 часа
-
-                $myXML = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
-                $myXML .= "<request>" . "\n";
-                $myXML .= "<operation>SENDSMS</operation>" . "\n";
-                $myXML .= '        <message   lifetime="' . $lifetime . '" ' . $an . ' >' . "\n";
-                $myXML .= "        <body>" . $text . "</body>" . "\n";
-                $myXML .= "        <recipient>" . $phone . "</recipient>" . "\n";
-                $myXML .= "</message>" . "\n";
-                $myXML .= "</request>";
-
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_USERPWD, $sms['flysmslogin'] . ':' . $sms['flysmspass']);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_URL, 'https://sms-fly.com/api/api.php');
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Accept: text/xml"));
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $myXML);
-                $response = curl_exec($ch);
-
-                if (curl_errno($ch) > 0) {
-
-                    return 'Curl error: ' . curl_error($ch);
-                }
-                curl_close($ch);
-                if (strpos($response, 'ACCEPT') > 0) {
-                    return '';
-                }
-
-                return $response;
-            }
-            
+          
             if ($sms['smstype'] == 4) { //кастомный код
                 $text = str_replace("'","`",$text) ;
                 $text = str_replace("\"","`",$text) ;

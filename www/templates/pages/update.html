@@ -1,32 +1,32 @@
 <html>
   <head>
-     <title>  Оновлення програми  </title>
+     <title>  Обновление программы  </title>
  
 </head>
 <body>
  <div class="row">
         
     <div class="col-12 col-lg-10 col-xl-6 ml-2"   >
-        <h2>Оновлення</h2>
+        <h2>Обновление программы</h2>
   
            <div class="row  mb-4  ">
             
              <div class="col-12  "  >
-             <span>  Поточна версiя програми <b>{{curversion}}</b>. </span>
+             <span>  Текущая версия программы <b>{{curversion}}</b>. </span>
              {{#actual}}
-             &nbsp; <span> Версiя   актуальна</span>
+             &nbsp; <span> Версия   актуальна</span>
              {{/actual}}       
             </div>
             <div class="col-12  "  >
-                Поточна версiя БД <b>{{curversiondb}}</b> 
+                Текущая версия БД <b>{{curversiondb}}</b> 
                &nbsp;  <span class="text-danger"> {{{reqversion}}} </span>
                  {{#actualdb}}
-                  <span>Версія   актуальна</span>
+                  <span>Версия   актуальна</span>
                  {{/actualdb}}    
             </div>
             
           <div class="col-12  "  >
-                Поточна версiя PHP <b> {{oldphpv}}</b> 
+                Текущая версия PHP <b> {{phpv}}</b> 
                    
             </div>
             
@@ -37,27 +37,15 @@
          {{#tooold}}
        <div class="col-12 col-xl-8 mb-4">
          <small>
-        <i class="fa fa-exclamation-triangle text-danger" ></i>   Якщо пропущено кiлька оновлень може знадобитись ручне  оновлення.
-            Для цього перейдіть на  <a href="https://ru.zippy.com.ua/update">історію оновлень </a> 
-            і виконайте послідовне оновлення структури база данних у відповідності з інструкціями, починаючи з поточної версії.
-            Виконайте  повне  оновлення  з    <a class="link" href="https://ru.zippy.com.ua/download/fullzstore.zip"> архiву</a> (крім config.php). 
-            {{#oldphp}}
-            <br> Оскільки поточна  версія PHP застаріла, папку vendor необхідно  <a class="link" href="https://ru.zippy.com.ua/download/vendor74.zip"> зкачати  </a> окремо 
-             {{/oldphp}}
+        <i class="fa fa-exclamation-triangle text-danger" ></i>   Если пропушено несколько  версий может понадобится  ручное  обновление.
+            Для этого перейдите на  <a href="https://ru.zippy.com.ua/update">тстория обновлений </a> 
+            и выполните  посдледовательное  обновление  структуры базы данных в соответствии с  инятрукциями, начиная с  текущей версии.
+            Выполните  полное обновление  с    <a class="link" href="https://ru.zippy.com.ua/download/fullzstore.zip"> архива</a> (кроме config.php). 
+           
           </small>
      </div>  
          {{/tooold}}
-         {{#oldphp}}
-  <div class="col-12  mt-2">
-            
-     <i class="fa fa-exclamation-circle text-warning"></i> 
-       Поточна версія PHP на вашому сервері застарiла. 
-       Пiдтримка версiй менших 8.1.0 з часом буде припинена.  
-       <br> Рекомендується  оновити до 8.1+
-       <br>
-       <br>
-       </div> 
-         {{/oldphp}} 
+        
          
 
  
@@ -67,8 +55,8 @@
       <div class="col-12  ">
 
   
-     <i class="fa fa-info-circle text-info"></i> <h5 style="display:inline">    Доступна  версія <b>{{newver}}</b></h5>
-         <br><br><b>Перелік змін</b>
+     <i class="fa fa-info-circle text-info"></i> <h5 style="display:inline">    Доступна  версия <b>{{newver}}</b></h5>
+         <br><br><b>Перечень изменений</b>
            <p>
           <ul style=" line-height: 1.4em;"  >
             {{#list}}
@@ -83,19 +71,19 @@
           <i class="fa fa-exclamation-triangle"></i> {{warn}}
           <br>
           {{/warn}}
-        <small>    <a href="https://ru.zippy.com.ua/update">Детальніше...</a>  </small>                  
+        <small>    <a href="https://ru.zippy.com.ua/update">Детальнее...</a>  </small>                  
           
       
-           <br><br><a zippy="updatefile"><i class="fa fa-download"></i> <b>Оновити файли автоматично</b></a>
+           <br><br><a zippy="updatefile"><i class="fa fa-download"></i> <b>Обновить файлы  автоматически</b></a>
 
-           <br> <br>Для оновлення вручну завантажити <a href="{{archive}}" >архів</a>  або  перейти на  <a href="{{github}}">GitHib</a>
+           <br> <br>Для обновления вручную скачать <a href="{{archive}}" >архив</a>  или  перейти на  <a href="{{github}}">GitHib</a>
             
            <br><small><i class="fa fa-exclamation-triangle"></i>  
-                У випадку помилки оновити вручну  з  архіву
+                В  случае ошибки обновить вручную  з  архіву
            </small> 
             {{#showdb}}  
             <br><small><i class="fa fa-exclamation-triangle"></i>  
-                Бажано  оновити спочатку  структуру БД 
+                Желательно обновить сначала  структуру БД 
            </small>       
             {{/showdb}}  
            
@@ -113,16 +101,16 @@
   
      <div class="col-12 mt-2 ">  
 
-           <b>Оновлення структури бази данних</b>
+           <b>Обновление  структуры  базы данных</b>
            <br><small><i class="fa fa-exclamation-triangle"></i>  
-               Перед оновленням рекомендується зробити бакап БД.
-                Користувачі "коробкових" версій можуть просто скопіювати або заархівувати папку із сервером
-                (Попередньо його потрібно зупинити).
-               
+              Перед обновлением рекомендуется произвести бакап БД. 
+                Пользователи "коробочных" версий могут просто скопировать или заархивировать папку с сервером 
+                (Предварительно его нужно остановить).
+                               
            </small>
      
-           <br><br><a zippy="updatesql"><i class="fa fa-download"></i>  <b>Оновити структуру БД автоматично</b></a>
-           <br>Завантажити  <a href="{{sqlurl}}" >sql скрипт</a>  для ручного оновлення
+           <br><br><a zippy="updatesql"><i class="fa fa-download"></i>  <b>Обновить структуру БД автоматически</b></a>
+           <br>Загрузить  <a href="{{sqlurl}}" >sql скрипт</a>  для ручного обновления
                     
            <br><br>
    </div>  
@@ -132,17 +120,17 @@
        <div class="col-12  mt-2">
           {{#reinstall}}    
         <i class="fa fa-redo"></i> <a zippy="reload"><b>Повторити оновлення </b>  </a> 
-        <br><small>Повторити оновлення коду, наприклад пiсля виходу виправлення (хотфiксу)</small>
+        <br><small>Повторить обновления файлов.  Например  после  оперативного исправоления ошибки (хотфикса)</small>
            {{/reinstall}}    
           {{#rollback}}
         <br>  <br> 
-        <i class="fa fa-undo"></i> <a zippy="rollback"><b>Вiдкотити код до попередньої версії </b> </a> 
-        <br><small>На  випадок  виникнення проблем  пiсля оновлення</small>
+        <i class="fa fa-undo"></i> <a zippy="rollback"><b>Откатить код  к  предыдущей версии </b> </a> 
+        <br><small>На случай проблем  после  обновления</small>
           {{/rollback}}        
          {{^oldphp}}
         <br>  <br> 
-         <a zippy="updatevendor"><i class="fa fa-download"></i> <b>Оновити папку  vendor</b> </a> 
-        <br><small>Якщо були оновленi стороннi бiблiотеки</small>
+         <a zippy="updatevendor"><i class="fa fa-download"></i> <b>Обновить папку  vendor</b> </a> 
+        <br><small>Если были обновлены  сторонние  библиотеки</small>
           {{/oldphp}}        
      </div>  
                    
@@ -169,10 +157,10 @@
            return confirm("Вiдкотити версію?")
         } 
         function check_reload(ele){
-           return confirm("Повторити оновлення?")
+           return confirm("Повторить обновление?")
         } 
         function check_updatevendor(ele){
-            var b = confirm("Оновити vendor?")
+            var b = confirm("Обновить vendor?")
             if(b==true) {     
               document.getElementById('dialogwait').showModal()
               return true; 

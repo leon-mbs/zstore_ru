@@ -142,8 +142,7 @@ class OrderFood extends Document
                         "form1"           => $this->headerdata["paytype"]==1,
                         "form2"           => $this->headerdata["paytype"]==2,
                         
-                        "payeq"           => (strlen($pos->payeq ) > 0   && $this->headerdata["paytype"]==2) ? $pos->payeq : false,
-                      
+                        
                         "time"            => H::fdt($this->headerdata["time"],true),
                         "document_number" => $this->document_number,
                         "payed"           => H::fasell($this->headerdata['payed']),

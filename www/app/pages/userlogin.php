@@ -56,7 +56,7 @@ class UserLogin extends \Zippy\Html\WebPage
             $entercode = $sender->capchacode->getText();
             $capchacode = $sender->capcha->getCode();
             if (strlen($entercode) == 0 || $entercode != $capchacode) {
-                $this->setError("Невірний код капчі");
+                $this->setError("Неверный код капчи");
                 $this->counter();
 
                 return;
@@ -64,11 +64,11 @@ class UserLogin extends \Zippy\Html\WebPage
         }
         if ($login == '') {
 
-            $this->setError('Введіть логін');
+            $this->setError('Введите логин');
         } else {
             if ($password == '') {
 
-                $this->setError('Введіть пароль');
+                $this->setError('Введите пароль');
             }
         }
 
@@ -106,7 +106,7 @@ class UserLogin extends \Zippy\Html\WebPage
                 return;
             } else {
 
-                $this->setError('Невірний логін або пароль');
+                $this->setError('Неверный логин или пароль');
 
                 $this->counter();
             }
@@ -132,7 +132,7 @@ class UserLogin extends \Zippy\Html\WebPage
     private function counter() {
         $this->cntlogin++;
         if ($this->cntlogin == 5) {
-            $msg = "Багато невдалих авторизацій";
+            $msg = "Много неудачных авторизаций";
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
@@ -142,7 +142,7 @@ class UserLogin extends \Zippy\Html\WebPage
             \App\Entity\Notify::toAdmin($msg) ;
 
 
-            $this->setError('Багато невдалих авторизацій. Адміністратору системи відправлено повідомлення');
+            $this->setError('Много неудачных авторизаций. Уведомлен  администратор системы');
             $this->loginform->setVisible(false);
 
         }

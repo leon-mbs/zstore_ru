@@ -1,38 +1,29 @@
 <html>
  <head>
-        <title> Довідник кас (POS терміналів)    </title>
+        <title> Справочник  касс (POS терминалов)    </title>
 
     </head>
 
     <body>
         <div class="row">
-             {{^loadkey}}
+            
                <div class="col-12 col-md-6 col-xl-4">
-             {{/loadkey}}
-             {{#loadkey}}
-               <div class="col-12   col-xl-10">
-             {{/loadkey}}
+       
                 <div zippy="postable">
-                    <h3>Довідник кас (POS терміналів) </h3>
+                    <h3>Справочник  касс (POS терминалов) </h3>
                     <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
                     <table class="table table-bordered   table-sm"  >
                         <tr>
                             <th>ID</th>
-                            <th>Назва</th>
+                            <th>Название</th>
                             {{#usebranch}}
-                            <th>Філія</th>
+                            <th>Филиал</th>
                             {{/usebranch}}
                             <th></th>
                             <th></th>
                             <th></th>
                              
-    {{#loadkey}}
-                            <th  > </th>
-                            <th  >Власник сертифiкату</th>
-                            <th  >Iдентифiкатор ключа</th>
-                            
-                            
-                            {{/loadkey}}   
+   
                         </tr>
                         <tr zippy="poslist">
                             <td zippy="pos_id"></td>
@@ -41,21 +32,13 @@
                             <td zippy="branch_name"></td>
                             {{/usebranch}}
                             <td zippy="comment"></td>
-                            <td  ><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> </td>
-                            <td  > <a zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
+                            <td  ><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> </td>
+                            <td  > <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
 
-      {{#loadkey}}
-                            <td  >&nbsp;&nbsp;
-                               <a  zippy="ppo" title="Завантажити ключ і сертифікат" ><i class="fa fa-key"></i></a>
-                            </td>
-                            <td zippy="ppoowner"> </td>
-                            <td zippy="ppokeyid"> </td>
-                            {{/loadkey}}    
+   
                          </tr>
                     </table>
-                          {{#loadkey}}    <small>Iдентифiкатор ключа має бути прописаний в податковiй</small>       {{/loadkey}}     
- 
-
+                      
                 </div>
                </div>
               </div>      
@@ -64,7 +47,7 @@
                         <div class="col-6 col-md-4 col-xl-3">
 
                             <div class="form-group">
-                                <label for="editpos_name">Назва, номер</label>
+                                <label for="editpos_name">Название, номер</label>
                                 <input  required="on"  class="form-control" zippy="editpos_name"/>
                             </div>
                       
@@ -72,34 +55,30 @@
                             <div class="form-group">
                                 <label for="editbranch">Філія</label>
                                 <select class="form-control" zippy="editbranch">
-                                    <option value="0">Не обрано </option>
+                                    <option value="0">Не выбрана </option>
                                 </select>
                             </div>
                             {{/usebranch}}
 
                             <div class="form-group">
-                                <label for="editpointname"> Назва торгової точки</label>
+                                <label for="editpointname"> Название торговой точки</label>
                                 <input class="form-control" zippy="editpointname"/>
-                                <small>Використовується в чеках та фiскалiзацiї</small>
+                                <small>Для печати в чеках  </small>
 
                             </div>
 
 
                             <div class="form-group">
-                                <label for="editaddress"> Адреса</label>
+                                <label for="editaddress"> Адрес</label>
                                 <input class="form-control" zippy="editaddress"/>
-                                <small>Використовується в чеках та фiскалiзацiї</small>
+                                <small>Для печати в чеках</small>
 
                             </div>
-                             <div class="form-group">
-                                <label for="editpayeq"> Засоби оплати</label>
-                                <input class="form-control" zippy="editpayeq"/>
-                                <small>Для друку в чеку</small>
-                            </div>
+                           
 
 
                             <div class="form-group">
-                                <label for="editcomment">Коментар</label>
+                                <label for="editcomment">Примечание</label>
                                 <textarea class="form-control" zippy="editcomment">
                                 </textarea>
                             </div>
@@ -107,96 +86,13 @@
                         </div>
                          <div class="col-6 col-md-4 col-xl-3">
                             
-                            {{#fiscal}}
+                      
                             
-                                <div class="form-check">
-                                    <input zippy="editusefisc" type="checkbox" class="form-check-input">
-                                    <label class="form-check-label text-bold" for="editusefisc">Використовувати фiскалізацiю</label>
-                                    <br><small>Чеки з цього термiналу будуть вiдправлятись в ДПI</small>
+                       
                                  
-                            </div>
-                            {{/fiscal}}
-                            
-                            {{#ppo}}
-                           
-                            <div class="form-check">
-                                <input zippy="edittesting" type="checkbox" class="form-check-input">
-                                <label class="form-check-label text-bold" for="edittesting">Тестовий режим</label>
-                                <br><small>Чеки будуть вiдправлятись в ДПI, але не фiскалiзуватимуться</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="editfirmname"  >Власник ключа ЕЦП</label>
-                                <input class="form-control" type="text" zippy="editfirmname">
-                                <br><small> Якщо відрізняється від назви компанії</small>
-                            </div>                    
-                             <div class="form-group row">
-                                    <label  class="col-6 col-form-label"  for="edittin"  >ЄДРПОУ</label>
-                                   <div class="col-6 col">
-                                      <input class="form-control" type="text" zippy="edittin">
-                                  </div>             
-                                   <small> Якщо відрізняється від ЄДРПОУ компанії</small>
-                            </div>             
-                            <div class="form-group row">
-                                    <label  class="col-6 col-form-label"  for="editipn" data-label="editpayname">IПН</label>
-                                     <div class="col-6 col">
-                                       <input class="form-control" type="text" zippy="editipn">
-                                    </div>    
-                                     <small> Якщо платник ПДВ i якщо відрізняється від IПН компанії</small>
-                            </div>             
-                            <div class="form-group row">
-                                <label class="col-6 col-form-label"  for="editfisc">Фiскальний номер</label>
-                                 <div class="col-6 col">
-                                   <input class="form-control" zippy="editfisc"/>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-6 col-form-label" for="editposinner"> Локальний номер</label>
-                                 <div class="col-6 col">
-                                    <input class="form-control" zippy="editposinner"/>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-6 col-form-label" for="editfiscalnumber"> Наступний ФС документа</label>
-                                 <div class="col-6 col">
-                                     <input class="form-control" zippy="editfiscalnumber"/>
-                                </div>
-                            </div>
-                            {{/ppo}}
-                            {{#checkbox}}
-                             <div class="form-group">
-                                <label for="editcbkey"> Лiцензiйний ключ CheckBox</label>
-                                <input class="form-control" zippy="editcbkey"/>
-                            </div>
-                             <div class="form-group">
-                                <label for="editcbpin"> ПIН код касира</label>
-                                <input class="form-control" zippy="editcbpin"/>
-                            </div>
-                           
-                            {{/checkbox}}          
-                            {{#vkassa}}
-                             <div class="form-group">
-                                <label for="editvktoken"> Токен ВчасноКаса</label>
-                                <input class="form-control" zippy="editvktoken"/>
-                            </div>
-                     
-                           
-                            {{/vkassa}}          
-                            {{#fiscal}}
-                           <div class="form-group">
-                                <label for="editautoshift">Автоматично закривати зміну в</label>
-                                <select zippy="editautoshift" class="form-control  ">
-                                    <option value="0">Не закривати</option>
-                                    <option value="19">19:00</option>
-                                    <option value="20">20:00</option>
-                                    <option value="21">21:00</option>
-                                    <option value="22">22:00</option>
-                                    <option value="23">23:00</option>
-                                </select>
-                            </div>
-                            <small>Має бути активований  <a target="_blank" href="https://ru.zippy.com.ua/zstoreusage#cron" >планувальник</a> </small>
-                            {{/fiscal}}                            
+                                   
                    
-                            {{#freg}}
+                            {{#usefr}}
                                 <div class="form-check">
                                     <input zippy="editusefreg" type="checkbox" class="form-check-input">
                                     <label class="form-check-label text-bold" for="editusefreg">Використовувати фіскальний реєстратор</label>
@@ -208,72 +104,24 @@
                                     <textarea style="height:500px" class="form-control" zippy="editscriptfreg">
                                     </textarea>
                                 </div>    
-                            {{/freg}}
+                            {{/usefr}}
                                
                          </div>
                     
                  <div class="col-12">
-                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-secondary mr-4 ">
-                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  "> 
+                                <input zippy="cancel" type="button" value="Отменить" class="btn btn-secondary mr-4 ">
+                                <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  "> 
                             </div>
                 </div>                            
                 </form>
               
                 
-          <div class="row">
-            
-            <form class="col-6 col-md-6  col-xl-4" zippy="keyform" enctype="multipart/form-data">
-                <h5>Завантаження ключа та сертифiкату</h5>
-            <small>Опис роботи з ключами <a  target="_blank" href="https://ru.zippy.com.ua/ext#id6">тут</a> </small>
-                  
-            
-                             
-                <div class="form-group">
-                    <label for="password">Пароль </label>
-                    <input  required="on"  class="form-control" type="password" zippy="password">
-                    <small>Пароль не буде записаний в системi</small>
-                </div>
-                <div class="form-group">
-                    <label for="keyfile">Файл ключа </label>
-                    <input class="form-control" type="file" zippy="keyfile">
-                  
-                </div>
-                <div class="form-group">
-                    <label for="certfile">Файл сертифiкату </label>
-                    <input class="form-control" type="file" zippy="certfile">
-   <small>Для jks ключiв (ПриватБанк) необов'язково</small>                      
-                </div>
-               <div class="form-check">
-                   <input zippy="loadsert" type="checkbox" class="form-check-input">
-                   <label class="form-check-label" for="loadsert"> Завантажити сертифiкат</label>
-                  <br> <small>Завантажити з АЦСК якщо нема  файлу з сертифiкатом</small>
-               </div>                              
-
              
-             
-
-                <div class="form-check">
-                   <input zippy="outher" type="checkbox" class="form-check-input">
-                   <label class="form-check-label" for="outher">Використати зовнiшнiй сервер</label>
-                  <br> <small>Якщо помилка з таймаутом (завантаження  може  зайняти кілька хвилин)</small>
-               </div>                              
-                 
-              <div class="form-group">
-                <input zippy="cancelppo" type="button" value="До переліку" class="btn btn-outline-primary mr-1 ">
-                <input zippy="send" type="button" value="Завантажити" class="btn btn-primary  mr-2 ">
-                
-                <input zippy="delppo" type="button" value="Видалити" class="btn btn-outline-danger  ">  
-      
-               </div>  
-            </form>
-            
-            </div>
-                
            
     
       <script>
             function check_delete() {
-                return confirm("Видалити термiнал?")
+                return confirm("Удалить?")
             }
             function check_send(){
             

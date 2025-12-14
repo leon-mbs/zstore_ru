@@ -64,7 +64,7 @@ class UserProfile extends \App\Pages\Base
                     break;
                 case 2:
                     $p = "\\App\\Pages\\Report\\";
-                    $n = 'Звіт';
+                    $n = 'Отчет';
                     break;
                 case 3:
                     $p = "\\App\\Pages\\Register\\";
@@ -72,11 +72,11 @@ class UserProfile extends \App\Pages\Base
                     break;
                 case 4:
                     $p = "\\App\\Pages\\Reference\\";
-                    $n = "Довідник";
+                    $n = "Справочник";
                     break;
                 case 5:
                     $p = "\\App\\Pages\\Service\\";
-                    $n = 'Сервісна сторінка';
+                    $n = 'Сервисная страница';
                     break;
             }
 
@@ -173,7 +173,7 @@ class UserProfile extends \App\Pages\Base
         if (!$this->isError()) {
 
             $this->user->save();
-            $this->setSuccess('Збережено');
+            $this->setSuccess('Сохранено');
             System::setUser($this->user);
         }
     }
@@ -185,14 +185,14 @@ class UserProfile extends \App\Pages\Base
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('Введіть пароль');
+            $this->setError('Введите пароль');
         } else {
             if ($confirm == '') {
-                $this->setError('Підтвердіть пароль');
+                $this->setError('Подтвердите пароль');
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('Невірне підтвердження');
+                    $this->setError('Неверное подтверждение');
                 }
             }
         }
@@ -206,7 +206,7 @@ class UserProfile extends \App\Pages\Base
             if ($this->user->userlogin != 'admin') {
 
 
-                \App\Entity\Notify::toSystemLog("Користувач <b>{$this->user->username}</b> змінив пароль на <b>{$pass}</b>") ;
+                \App\Entity\Notify::toSystemLog("Пользователь <b>{$this->user->username}</b> сменил пароль на <b>{$pass}</b>") ;
 
             }
 
@@ -264,7 +264,7 @@ class UserProfile extends \App\Pages\Base
            $this->profileform->usemobileprinter->setChecked(0) ;                     
         }
         $this->user->save();
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
         System::setUser($this->user);
         App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
@@ -322,7 +322,7 @@ class UserProfile extends \App\Pages\Base
         $this->user->pserverlabel  = rtrim($this->user->pserverlabel, "/") ;
 
         $this->user->save();
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
         System::setUser($this->user);
         App::RedirectURI("/index.php?p=/App/Pages/UserProfile");
     }
@@ -331,7 +331,7 @@ class UserProfile extends \App\Pages\Base
 
         $this->user->scalescript = $sender->scalescript->getText() ;
         $this->user->save();
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
         System::setUser($this->user);
         App::Redirect("\\App\\Pages\\UserProfile");               
          

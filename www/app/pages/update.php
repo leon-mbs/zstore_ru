@@ -43,11 +43,8 @@ class Update extends \App\Pages\Base
       
  
         
-        $this->_sql['6.13.0']='update6130to6140.sql';
-        $this->_sql['6.14.0']='update6140to6150.sql';
-        $this->_sql['6.15.0']='update6150to6160.sql';
-        $this->_sql['6.16.0']='update6160to6170.sql';
-        $this->_sql['6.17.0']='update6170to6180.sql';
+   
+        $this->_sql['7.0.0']='update700to710.sql';
  
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
@@ -65,7 +62,7 @@ class Update extends \App\Pages\Base
     
          
         if(!is_array($data)){
-            $this->setErrorTopPage('Помилка завантаження version.json') ;
+            $this->setErrorTopPage('Ошибка загрузки version.json') ;
             return  ;
         }
    
@@ -102,7 +99,7 @@ class Update extends \App\Pages\Base
         $this->_tvars['newver']  = $n  ;
         $this->_tvars['notes']  = $data['notes']   ;
         $this->_tvars['warn']  = ($data['warn'] ?? '') =='' ? false :  $data['warn'] ;
-        $this->_tvars['github']  = 'https://github.com/leon-mbs/zstore/releases/tag/' . $va   ;
+        $this->_tvars['github']  = 'https://github.com/leon-mbs/zstore_ru/releases/tag/' . $va   ;
      
         $this->_tvars['list']  = []   ;
         foreach($data['changelog'] as $item )  {
@@ -113,7 +110,7 @@ class Update extends \App\Pages\Base
         if(  ($na[0] == $ca[0] ) &&( $na[1] !=$ca[1]) )  {
              $va="{$na[0]}.{$na[1]}.0"; 
         }
-        $this->_tvars['archive']  = "https://zippy.com.ua/updates/update-{$va}.zip"   ;
+        $this->_tvars['archive']  = "https://ru.zippy.com.ua/updates/update-{$va}.zip"   ;
         
           
         //обновление  БД
@@ -128,14 +125,14 @@ class Update extends \App\Pages\Base
            
               $this->_tvars['showdb']  = true   ;
               if(isset($this->_sql[$this->_tvars['curversiondb']])) {
-                $sqlurl  = "https://zippy.com.ua/updates/". $this->_sql[$this->_tvars['curversiondb']] ;
+                $sqlurl  = "https://ru.zippy.com.ua/updates/". $this->_sql[$this->_tvars['curversiondb']] ;
               } else {
-                $sqlurl  = "https://zippy.com.ua/updates/". $data['sql'] ;
+                $sqlurl  = "https://ru.zippy.com.ua/updates/". $data['sql'] ;
                   
               }
 
               $this->_tvars['sqlurl']  =  $sqlurl  ;
-              $this->_tvars['reqversion']  = " Версiя БД має  бути <b>{$requireddb}!</b>";                
+              $this->_tvars['reqversion']  = " Версия БД должна  быть <b>{$requireddb}!</b>";                
               $this->_tvars['actualdb'] = false;  
            
         }  
@@ -154,15 +151,10 @@ class Update extends \App\Pages\Base
              $this->_tvars['rollback']  = false;
              $this->_tvars['reinstall']  = false;
          } 
-          $phpv =   phpversion()  ;
-          $this->_tvars['oldphpv']  = $phpv;    
-        
- 
-          $b= version_compare("8.1.0" , $phpv);
-          if($b==1)   {
-              $this->_tvars['oldphp']  = true; 
-                        
-          }          
+         
+         $phpv =   phpversion()  ;
+         $this->_tvars['phpv']  = $phpv;    
+                      
        
          \App\Session::getSession()->migrationcheck = false; 
     }   
@@ -172,7 +164,7 @@ class Update extends \App\Pages\Base
     
         try {
             if (!is_writeable( _ROOT .'app/')) {
-                $this->setError('Нема  права  запису');
+                $this->setError('Нет права  записи');
                 return;        
             }
 
@@ -185,7 +177,7 @@ class Update extends \App\Pages\Base
             @file_put_contents($archive, file_get_contents($this->_tvars['archive'] )) ;
          
             if(filesize($archive)==0) {
-                $this->setError('Помилка завантаження файлу');
+                $this->setError('Ошибка загрузки файла');
                 return;        
             }
 
@@ -197,11 +189,11 @@ class Update extends \App\Pages\Base
                 $zip->close();
 
            }  else {
-                $this->setError('Помилка  архіву');
+                $this->setError('Ошибка  архива');
                 return;        
                
            }
-           $this->setSuccess('Файли оновлені')  ;
+           $this->setSuccess('Файлы обновлены')  ;
            App::RedirectURI("/index.php?p=/App/Pages/Update");
 
          
@@ -218,7 +210,7 @@ class Update extends \App\Pages\Base
     
         try {
             if (!is_writeable( _ROOT .'vendor/')) {
-                $this->setError('Нема  права  запису');
+                $this->setError('Нет права  записи');
                 return;        
             }
 
@@ -226,19 +218,14 @@ class Update extends \App\Pages\Base
              
             @unlink($archive) ;
     
-            $phpv =   phpversion()  ;
-            $b= version_compare( $phpv, "8.1.0" );
-            if($b==1) {
-                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor81.zip")) ;
-            }   else {
-                @file_put_contents($archive, file_get_contents( "https://zippy.com.ua/download/vendor74.zip")) ;
-            }
- 
+   
+            @file_put_contents($archive, file_get_contents( "https://ru.zippy.com.ua/download/vendor81.zip")) ;
+        
      
             
               if(filesize($archive)==0) {
   
-                $this->setError('Помилка завантаження файлу');
+                $this->setError('Ошибка загрузки файла');
                 return;        
             }
         
@@ -253,11 +240,11 @@ class Update extends \App\Pages\Base
                 $zip->close();
 
            }  else {
-                $this->setError('Помилка  архіву');
+                $this->setError('Ошибка  архива');
                 return;        
                
            }
-           $this->setSuccess('Файли оновлені')  ;
+           $this->setSuccess('Файлы обновлены')  ;
            App::RedirectURI("/index.php?p=/App/Pages/Update");
 
          
@@ -275,7 +262,7 @@ class Update extends \App\Pages\Base
   
        $sql= file_get_contents($this->_tvars['sqlurl'] )  ;
        if(strlen($sql)==0) {
-           $this->setError('Не знайдено  файл оновлення')  ;
+           $this->setError('Не найден  файл обновления')  ;
            return;
        }
        
@@ -310,7 +297,7 @@ class Update extends \App\Pages\Base
   
  
 
-         $this->setSuccess('БД оновлена')  ;
+         $this->setSuccess('БД обновлена')  ;
          App::RedirectURI("/index.php?p=/App/Pages/Update");
          
          
@@ -328,7 +315,7 @@ class Update extends \App\Pages\Base
     
         try {
             if (!is_writeable( _ROOT .'app/')) {
-                $this->setError('Нема  права  запису');
+                $this->setError('Нет права записи');
                 return;        
             }
 
@@ -342,7 +329,7 @@ class Update extends \App\Pages\Base
             @file_put_contents($archive, file_get_contents($path)) ;
          
             if(filesize($archive)==0) {
-                $this->setError('Помилка завантаження файлу');
+                $this->setError('Ошибка загрузки файла');
                 return;        
             }
          
@@ -354,11 +341,11 @@ class Update extends \App\Pages\Base
                 $zip->close();
 
            }  else {
-                $this->setError('Помилка  архіву');
+                $this->setError('Ошибка  архива');
                 return;        
                
            }
-           $this->setSuccess('Файли оновлені')  ;
+           $this->setSuccess('Файлы обновлены')  ;
            App::RedirectURI("/index.php?p=/App/Pages/Update");
 
          

@@ -59,7 +59,7 @@ class Users extends \App\Pages\Base
     public function onAdd($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
+            $this->setError("Пользователями  могут управоять только участники роли admins  ");
 
             return;
         }
@@ -76,7 +76,7 @@ class Users extends \App\Pages\Base
     public function onEdit($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
+            $this->setError("Пользователями  могут управоять только участники роли admins  ");
 
             return;
         }
@@ -116,7 +116,7 @@ class Users extends \App\Pages\Base
         $user = User::getByLogin($this->user->userlogin);
         if ($user instanceof User) {
             if ($user->user_id != $this->user->user_id) {
-                $this->setError('Неунікальний логін');
+                $this->setError('Неуникальный логин');
 
                 return;
             }
@@ -126,14 +126,14 @@ class Users extends \App\Pages\Base
             if ($user instanceof User) {
                 if ($user->user_id != $this->user->user_id) {
 
-                    $this->setError('Неунікальний e-mail');
+                    $this->setError('Неуникальный e-mail');
                     return;
                 }
             }
         }
         $this->user->role_id = $this->editpan->editform->editrole->getValue();
         if($this->user->role_id==0) {
-            $this->setError('Не вказана роль');
+            $this->setError('Не указана роль');
             return;
         }
         $this->user->onlymy = $this->editpan->editform->editonlymy->isChecked() ? 1 : 0;
@@ -146,7 +146,7 @@ class Users extends \App\Pages\Base
         }
         if ($this->user->user_id == 0 && strlen($pass) == 0) {
 
-            $this->setError("Введіть пароль");
+            $this->setError("Введите пароль");
             return;
         }
         if($this->user->disabled ==1) {
@@ -178,7 +178,7 @@ class Users extends \App\Pages\Base
     public function OnRemove($sender) {
 
         if (System::getUser()->rolename !== 'admins') {
-            $this->setError("Користувачами можуть управляти тільки користувачі з роллю admins  ");
+            $this->setError("Пользователями  могут управоять только участники роли admins  ");
 
             return;
         }

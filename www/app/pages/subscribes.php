@@ -27,7 +27,7 @@ class Subscribes extends \App\Pages\Base
         parent::__construct();
 
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
+            System::setErrorMsg("К странице  имеют доступ пользователи роли admins  ");
             \App\Application::RedirectError();
             return  ;
         }
@@ -257,49 +257,49 @@ class Subscribes extends \App\Pages\Base
             return;
         }
         if ($this->_sub->reciever_type ==  0) {
-            $this->setError("Не вказано отримувача ");
+            $this->setError("Не задан получатель ");
             return;
         }
         if ($this->_sub->msg_type ==  0) {
-            $this->setError("Не вказано тип повiдомлення ");
+            $this->setError("Не задан тип сообщения ");
             return;
         }
         if ($this->_sub->reciever_type == Subscribe::RSV_USER && $this->_sub->user_id == 0) {
-            $this->setError("Не вказано користувача");
+            $this->setError("Не задан пользователь");
             return;
         }
         if ($this->_sub->sub_type == Subscribe::EVENT_DOCSTATE && $this->_sub->doctype == 0) {
-            $this->setError("Не вказано тип жокументу");
+            $this->setError("Не задан тип документа");
             return;
         }
         if ($this->_sub->sub_type == Subscribe::EVENT_DOCSTATE && $this->_sub->state == 0) {
-            $this->setError("Не вказано статус жокументу");
+            $this->setError("Не задан статус документа");
             return;
         }
 
         if ($this->_sub->reciever_type != Subscribe::RSV_WH ) {
             if (strlen($this->_sub->msgtext) == 0) {
-                $this->setError("Не вказано текст повідомлення");
+                $this->setError("Не задан текст сообщения");
                 return;
             }
           
         }   
         
         if ($this->_sub->reciever_type == Subscribe::RSV_WH && strlen($this->_sub->url) == 0) {
-            $this->setError("Не вказано URL");
+            $this->setError("Не задан URL");
             return;
         }
         if ($this->_sub->reciever_type == Subscribe::RSV_TG && strlen($this->_sub->chat_id) == 0) {
-            $this->setError("Не вказано ID телеграм чату");
+            $this->setError("Не задан ID телеграм чата");
             return;
         }
         
         if ($this->_sub->reciever_type == Subscribe::RSV_EMAIL && strlen($this->_sub->email) == 0) {
-            $this->setError("Не вказано e-mail");
+            $this->setError("Не задан e-mail");
             return;
         }
         if ($this->_sub->msg_type == Subscribe::MSG_EMAIL && strlen($this->_sub->msgsubject) == 0) {
-            $this->setError("Не вказано тему");
+            $this->setError("Не задана тема");
             return;
         }
        
