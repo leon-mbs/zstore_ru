@@ -201,7 +201,7 @@ class TTN extends Document
                         $itemp->quantity = $required * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception("На складі всього ".$itemp->getQuantity($this->headerdata['store']) ." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                            throw new \Exception("На складе всего ".$itemp->getQuantity($this->headerdata['store']) ." ТМЦ {$itemp->itemname}. Списание  в  минус запрещено");
 
                         }
                      
@@ -225,7 +225,7 @@ class TTN extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception('Не рассчатана сеьестоимость готовой продукции '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -237,7 +237,7 @@ class TTN extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception("На складі всього ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception("На складе всего ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списание в  минус запрещено");
             }
 
             //продажа
@@ -255,7 +255,7 @@ class TTN extends Document
  
         
         $this->DoBalans() ;
-        $this->DoAcc();  
+          
    
         return true;
     }
@@ -384,24 +384,6 @@ class TTN extends Document
             }
              
     }
-    public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-         parent::DoAcc()  ;
-  
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry( '23',$a, $am,$this->document_id)  ; 
-         }       
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
-         }       
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
-         }
-         
-             
-  }
+ 
 
 }

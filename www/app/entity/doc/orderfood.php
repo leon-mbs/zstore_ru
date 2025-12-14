@@ -283,7 +283,7 @@ class OrderFood extends Document
                         }
                         $itemp->quantity = $required * $part->qty;
                         if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                            throw new \Exception("Наскладе всего ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списание в  минус запрещено");
 
                         }
 
@@ -316,7 +316,7 @@ class OrderFood extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception('Не рассчитана себестоимость готовой продукции '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -329,7 +329,7 @@ class OrderFood extends Document
 
 
             if ($item->checkMinus($item->quantity, $this->headerdata['store']) == false) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception("На складе всего ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списание в  минус запрещено");
             }
 
             $k = 1;   //учитываем  скидку
@@ -423,34 +423,5 @@ class OrderFood extends Document
          $this->DoAcc() ;    
        
     }
-    public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-        
-         $conn = \ZDB\DB::getConnect();
-         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
-         
-      
-         
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry('23',$a, $am,$this->document_id)  ; 
-         }   
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry($a,'23', $am,$this->document_id)  ; 
-         }   
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
-         }   
-
-
-  
-         \App\Entity\AccEntry::addEntry('36', '70', $this->payamount,$this->document_id)  ; 
-        
-         $this->DoAccPay('36');      
-
-         //отходы идут как  недоплученая  прибыл        
-  }
      
 }

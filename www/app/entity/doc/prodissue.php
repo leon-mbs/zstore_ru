@@ -95,7 +95,7 @@ class ProdIssue extends Document
             $io->save();
        }
        
-       $this->DoAcc();        
+               
         
        return true;
     }
@@ -111,14 +111,5 @@ class ProdIssue extends Document
 
         return $list;
     }
-    public   function DoAcc() {
-             if(\App\System::getOption("common",'useacc')!=1 ) return;
-             parent::DoAcc()  ;
-      
-             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
-             foreach($ia as $a=>$am){
-                 \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
-             }       
-  
-    }  
+     
 }

@@ -83,7 +83,7 @@ class ProdReceipt extends Document
                         }
                     $itemp->quantity = $item->quantity * $part->qty;
                     if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                        throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                        throw new \Exception("На складе всего ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списание в  минус запрещено");
                     }                    
                     $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
@@ -150,7 +150,7 @@ class ProdReceipt extends Document
            
         } 
      
-        $this->DoAcc();          
+                  
            
         return true;
     }
@@ -168,14 +168,5 @@ class ProdReceipt extends Document
 
         return $list;
     }
-  public   function DoAcc() {
-             if(\App\System::getOption("common",'useacc')!=1 ) return;
-             parent::DoAcc()  ;
-      
-             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
-             foreach($ia as $a=>$am){
-                 \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
-             }            
-  
-    }
+   
 }

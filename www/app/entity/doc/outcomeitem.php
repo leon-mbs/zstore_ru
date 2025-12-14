@@ -87,15 +87,6 @@ class OutcomeItem extends Document
         $list['IncomeItem'] = self::getDesc('IncomeItem');
         return $list;
     }
-    public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-         parent::DoAcc()  ;
-         $conn->Execute("delete from acc_entry where document_id=" . $this->document_id);
-      
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_OUT) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry('97',$a, $am,$this->document_id)  ; 
-         }   
-    }
+  
 }
  

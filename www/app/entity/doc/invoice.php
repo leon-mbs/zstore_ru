@@ -151,7 +151,7 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     protected function getNumberTemplate() {
-        return 'РО-000000';
+        return 'СФ-000000';
     }
 
     public function getRelationBased() {
@@ -211,16 +211,8 @@ class Invoice extends \App\Entity\Doc\Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-        $this->DoAcc();             
+                     
     }
-   public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-         parent::DoAcc()  ;
-    
-    
-         $this->DoAccPay('36'); 
-      
-                       
-    } 
+  
         
 }

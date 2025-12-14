@@ -191,7 +191,7 @@ class GoodsIssue extends Document
                         $itemp->quantity = $required * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                            throw new \Exception("На складе всего ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списание  в минус запрещено");
                         }
                     
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -212,7 +212,7 @@ class GoodsIssue extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception('Не рассчатана сеьестоимость готовой продукции '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -224,7 +224,7 @@ class GoodsIssue extends Document
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception("На складе всего ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списание в  минус запрещено");
 
             }
 
@@ -266,7 +266,7 @@ class GoodsIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВН-000000';
+        return 'РН-000000';
     }
 
     public function generatePosReport($ps=false) {
@@ -398,39 +398,9 @@ class GoodsIssue extends Document
             $b->save();
         }   
    
-        $this->DoAcc();        
+                
               
     }
     
-    public   function DoAcc() {
-             if(\App\System::getOption("common",'useacc')!=1 ) return;
-             parent::DoAcc()  ;
-      
-             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
-             foreach($ia as $a=>$am){
-                 \App\Entity\AccEntry::addEntry( '23',$a, $am,$this->document_id)  ; 
-             }       
-             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
-             foreach($ia as $a=>$am){
-                 \App\Entity\AccEntry::addEntry( $a,'23', $am,$this->document_id)  ; 
-             }       
-             $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
-             foreach($ia as $a=>$am){
-                 \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
-             }
-             
-             $this->DoAccPay('36');   
-             
-            if ($this->getHD('nds',0) > 0){
-               $date= $this->document_date;
-               if($this->parent_id > 0 ){  //первое  событиен
-                   foreach(\App\Entity\Pay::find("document_id=".$this->parent_id) as $p) {
-                       $date = $pay->paydate;
-                       break;
-                   }
-               }             
-                \App\Entity\AccEntry::addEntry('641','36',$this->getHD('nds' ),$this->document_id,$date,\App\Entity\AccEntry::TAG_NDS )  ; 
-               
-            }    
-      }        
+       
 }

@@ -90,7 +90,7 @@ class RetCustIssue extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'ВП-000000';
+        return 'ВН-000000';
     }
     /**
     * @override
@@ -121,21 +121,9 @@ class RetCustIssue extends Document
             $b->optype = \App\Entity\CustAcc::SELLER;
             $b->save();
         }
-       $this->DoAcc();  
+         
 
     }
-public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-         parent::DoAcc()  ;
     
-    
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_RBAY) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry($a,'63', 0-$am,$this->document_id)  ; 
-         } 
-   
-         $this->DoAccPay('63',true);      
- 
- }    
        
 }

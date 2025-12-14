@@ -198,7 +198,7 @@ class Order extends \App\Entity\Doc\Document
                         $itemp->quantity = $required * $part->qty;
 
                         if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                            throw new \Exception("На складе всего ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списание в  минус запрещено");
                         }
 
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
@@ -218,7 +218,7 @@ class Order extends \App\Entity\Doc\Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception('Не рассчатана сеьестоимость готовой продукции '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -233,7 +233,7 @@ class Order extends \App\Entity\Doc\Document
         
         
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store']) && $this->headerdata['store'] >0 ) {
-                throw new \Exception("На складі всього ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception("На складе всего ".H::fqty($item->getQuantity($this->headerdata['store']))." ТМЦ {$item->itemname}. Списание в  минус запрещено");
 
             }
  
@@ -345,13 +345,5 @@ class Order extends \App\Entity\Doc\Document
          return $notsendqty;
     }    
     
-    public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-         parent::DoAcc()  ;
-     
-     
-         $this->DoAccPay('36');      
-
-        
-    }       
+          
 }

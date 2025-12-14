@@ -81,7 +81,7 @@ class InvoiceCust extends Document
     }
 
     protected function getNumberTemplate() {
-        return 'РВ-000000';
+        return 'СВ-000000';
     }
 
     public function getRelationBased() {
@@ -110,14 +110,8 @@ class InvoiceCust extends Document
             $b->save();
         }
 
-        $this->DoAcc();  
+          
   
     }
-   public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-         parent::DoAcc()  ;
-    
-    
-         $this->DoAccPay('63'); 
-   }    
+      
 }

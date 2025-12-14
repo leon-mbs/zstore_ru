@@ -353,7 +353,7 @@ class POSCheck extends Document
                         $itemp->quantity = $required * $part->qty;
 
                         if ($itemp->checkMinus($itemp->quantity, $this->headerdata['store']) == false) {
-                            throw new \Exception("На складі всього ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списання у мінус заборонено");
+                            throw new \Exception("На складе всего ".H::fqty($itemp->getQuantity($this->headerdata['store']))." ТМЦ {$itemp->itemname}. Списание в  минус запрещено");
 
                         }
                        
@@ -375,7 +375,7 @@ class POSCheck extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception('Не розраховано собівартість готової продукції '. $item->itemname);
+                    throw new \Exception('Не рассчитана сеьестоимость готовой продукции '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
@@ -388,7 +388,7 @@ class POSCheck extends Document
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
 
-                throw new \Exception("На складі всього ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                throw new \Exception("На скоале всего ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списание в  минус запрещено");
 
             }
 
@@ -517,41 +517,5 @@ class POSCheck extends Document
         }
     }
      
-  public   function DoAcc() {
-         if(\App\System::getOption("common",'useacc')!=1 ) return;
-         parent::DoAcc()  ;
-         $conn = \ZDB\DB::getConnect();
-
-       //тмц
-         
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_TOPROD) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry('23',$a, $am,$this->document_id)  ; 
-         }   
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_FROMPROD) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry($a,'23', $am,$this->document_id)  ; 
-         }   
-          
-         
-         $ia=\App\Entity\AccEntry::getItemsEntry($this->document_id,Entry::TAG_SELL) ;
-         foreach($ia as $a=>$am){
-             \App\Entity\AccEntry::addEntry('90',$a, $am,$this->document_id)  ; 
-         }   
-          //услуги    
-         $sql="select   coalesce(abs(sum(quantity * cost )),0) as am   from entrylist_view   where service_id >0 and document_id={$this->document_id} and tag=   ".Entry::TAG_SELL;
-         $am=H::fa($conn->GetOne($sql));   
-         \App\Entity\AccEntry::addEntry('90','23', $am,$this->document_id)  ; 
- 
-       
-         \App\Entity\AccEntry::addEntry('36', '70', $this->payamount,$this->document_id)  ; 
-        
- 
-        
-         $this->DoAccPay('36');      
-        
-        
-                 
-  }
-       
+      
 }
