@@ -2,24 +2,24 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Замовлені товари на {{date}}
+            Заказанные  товары на {{date}}
         </td>
     </tr>
     {{#cust}}
     <tr>
 
         <td colspan="3">
-            <b> Покупець:</b> {{customer_name}}
+            <b> Покупатель:</b> {{customer_name}}
         </td>
     </tr>
     {{/cust}}
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px"> Найменування</th>
+        <th style="border: solid black 1px"> Наименование</th>
 
-        <th style="border: solid black 1px">Од.</th>
-        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th style="border: solid black 1px">Ед.</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
 
 
     </tr>
@@ -40,7 +40,7 @@
     <tr>
 
         <td colspan="3">
-            <b> На суму:</b> {{total}}
+            <b> На сумму:</b> {{total}}
         </td>
     </tr>
 

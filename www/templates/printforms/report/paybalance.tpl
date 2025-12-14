@@ -2,19 +2,19 @@
  
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Прибутки та видатки
+            Доходы и расходы
         </td>
     </tr>
    
     <tr>
 
         <td align="center" colspan="3">
-            Перiод з {{datefrom}} по {{dateto}} <br>
+            Период с {{datefrom}} по {{dateto}} <br>
         </td>
     </tr>
      <tr>
         <td colspan="3">
-            <b>Прибутки</b>
+            <b>Доъоды</b>
         </td>
     </tr>
 
@@ -42,7 +42,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Всього:</td>
+        <td align="right">Всего:</td>
 
         <td align="right">{{tin}}</td>
         <td></td>
@@ -50,7 +50,7 @@
     <tr>
 
         <td colspan="3">
-            <b>Видатки</b> 
+            <b>Расходы</b> 
         </td>
     </tr>
 
@@ -77,7 +77,7 @@
     {{/_detail2}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Всього:</td>
+        <td align="right">Всего:</td>
 
         <td align="right">{{tout}}</td>
         <td></td>
@@ -95,7 +95,7 @@
    
      <tr> 
         <td colspan="3"> <br>
-            <b>Деталiзацiя по ТМЦ </b>
+            <b>Детализация по ТМЦ </b>
         </td>       
     </tr>    
     
@@ -113,7 +113,7 @@
   {{#isfin}}  
   <tr style="font-weight: bolder;">
 
-        <td> <br>Фiнансовi показники</td>
+        <td> <br>Финансовые показатели</td>
 
         <td></td>
         <td></td>
@@ -124,48 +124,48 @@
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Виручка (відпускна ціна на кількість) мінус витрати основної діяльності   (затрати на закупку)"></i>
+               title="Выручка (отпускная цена на количество) минус затраты основной деятельности (затраты на закупку)"></i>
         </td>
     </tr>
     <tr>
-        <td>Змiннi витрати :</td>
+        <td>Переменные  затраты :</td>
         <td align="right"> {{tvc}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Витрати основної діяльності"></i>
+               title="Затраты основной деятельности"></i>
         </td>
     </tr>
     <tr>
-        <td>Операцiйнi витрати:</td>
+        <td>Операционные затраты:</td>
         <td align="right">{{OP}}  </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Всі витрати мінус змінні витрати "></i>
+               title="Все затраты минус  переменные  затраты "></i>
         </td>
     </tr>
     <tr>
-        <td>Чистий прибуток:</td>
+        <td>Чистая прибыль:</td>
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Проход мiнус операцiйнi витрати (виручка мiнус всi витрати)"></i>
+               title="Проход минус операционные расходы (выручка минус все расходы)"></i>
         </td>
     </tr>
    {{#isinv}}   
     <tr>
-        <td>Інвестиції:</td>
+        <td>Инвестиции:</td>
         <td align="right"> {{inv}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="ТМЦ на складі та основні фонди на балансі"></i>
+               title="ТМЦ на складе и ОС на балансе"></i>
         </td>
     </tr>
     <tr>
-        <td>Вiддача вiд iнвестицiй (ROI),%:</td>
+        <td>Отдача  от инвестиций (ROI),%:</td>
         <td align="right"> {{ROI}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Проход на iнвестицiї"></i>
+               title="Проход на инвестиции"></i>
         </td>
     </tr>
     {{/isinv}}     

@@ -4,21 +4,21 @@
     <tr>
 
         <td align="center" colspan="4">
-            Період з {{datefrom}} по {{dateto}} <br> <br>
+            Период с {{datefrom}} по {{dateto}} <br> <br>
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Закупівлі по товарам <br><br>
+            Закупки по товарам <br><br>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Наименование</th>
         <th style="border: solid black 1px">Код</th>
 
-        <th align="right" style="border: solid black 1px">Кіл.</th>
-        <th align="right" style="border: solid black 1px">На суму</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
+        <th align="right" style="border: solid black 1px">На сумму</th>
 
     </tr>
     {{#_detail}}
@@ -43,14 +43,14 @@
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупівлі по постачальникам <br> <br>
+        Закупки по  поставщикам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px">Найменування</th>
+    <th colspan="2" style="border: solid black 1px">Наименование</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
     <th></th>
 </tr>
 {{#_detail}}
@@ -72,13 +72,13 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="4">
-        Закупівлі по датам <br> <br>
+        Закупки по датам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
     <th style="border: solid black 1px;width:120px;">Дата</th>
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
     <th></th>
     <th></th>
 
@@ -104,15 +104,15 @@
 {{#_type4}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-         Послуги та роботи <br><br>
+         Услуги и работы <br><br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="2" style="border: solid black 1px">Найменування</th>
+    <th colspan="2" style="border: solid black 1px">Наименование</th>
 
     
-    <th align="right" style="border: solid black 1px; ">Кіл.</th>
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">Кол.</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
     
  
 </tr>
@@ -136,14 +136,14 @@
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Закупівлі по категорiям <br> <br>
+       Закупки по категориям <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
-    <th colspan="3" style="border: solid black 1px">Найменування</th>
+    <th colspan="3" style="border: solid black 1px">Наименование</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
  
 
  

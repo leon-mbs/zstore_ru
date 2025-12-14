@@ -4,24 +4,24 @@
     <tr>
 
         <td align="center" colspan="6">
-            Період з {{datefrom}} по {{dateto}} <br> <br>
+            Период с {{datefrom}} по {{dateto}} <br> <br>
         </td>
     </tr>
     {{#_type1}}
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Продажі по товарах <br><br>
+            Продажи по товарам <br><br>
         </td>
     </tr>
     <tr style="font-weight: bolder;">
         <th align="center" style="border: solid black 1px">Док.</th>
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Наименование</th>
         <th style="border: solid black 1px">Код</th>
 
-        <th align="right" style="border: solid black 1px">Кіл.</th>
-        <th align="right" style="border: solid black 1px">На суму</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
+        <th align="right" style="border: solid black 1px">На сумму</th>
       {{^noshowpartion}}
-        <th align="right" style="border: solid black 1px">Прибуток</th>
+        <th align="right" style="border: solid black 1px">Прибыль</th>
         <th align="right" style="border: solid black 1px">Приб.,%</th>
       {{/noshowpartion}}
 
@@ -68,19 +68,19 @@
 {{#_type2}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажі по покупцям <br> <br>
+        Продажи по покупателямы <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
     <th align="center"  style="border: solid black 1px">Док.</th>
-    <th colspan="3" style="border: solid black 1px">Найменування</th>
+    <th colspan="3" style="border: solid black 1px">Наименование</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
     
         {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Прибыль</th>
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
@@ -119,14 +119,14 @@
 {{#_type3}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажі по датам <br> <br>
+        Продажи по датам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
      <th align="center"  style="border: solid black 1px">Док.</th>
    <th style="border: solid black 1px;width:120px;">Дата</th>
 
-    <th align="right" style="border: solid black 1px;width:100px;">На суму</th>
+    <th align="right" style="border: solid black 1px;width:100px;">На сумму</th>
     <th></th>
     <th></th>
     <th></th>
@@ -154,16 +154,16 @@
 {{#_type4}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Послуги та роботи <br><br>
+        Услуги и работы <br><br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
      <th align="center"  style="border: solid black 1px">Док.</th>
-   <th style="border: solid black 1px">Найменування</th>
+   <th style="border: solid black 1px">Наименование</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
-    <th align="right" style="border: solid black 1px; ">Прибуток</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
+    <th align="right" style="border: solid black 1px; ">Прибыль</th>
     <th align="right" style="border: solid black 1px; ">Приб.,%</th>
    
     <th></th>
@@ -198,19 +198,19 @@
 {{#_type5}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по категорiям <br> <br>
+        Продажи по  категориях <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
      <th align="center"  style="border: solid black 1px">Док.</th>
-   <th colspan="3" style="border: solid black 1px">Найменування</th>
+   <th colspan="3" style="border: solid black 1px">Наименование</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
  
      {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Прибыль</th>
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
@@ -250,18 +250,18 @@
 {{#_type6}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по компанiям <br> <br>
+        Продажи по  компаниямы <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
       <th align="center"  style="border: solid black 1px">Док.</th>
-  <th colspan="3" style="border: solid black 1px">Найменування</th>
+  <th colspan="3" style="border: solid black 1px">Наименование</th>
 
 
     <th align="right" style="border: solid black 1px; ">На суму</th>
       {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Прибыль</th>
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
@@ -302,18 +302,18 @@
 {{#_type7}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по складам <br> <br>
+        Продажи по складам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
      <th align="center"  style="border: solid black 1px">Док.</th>
-   <th colspan="3" style="border: solid black 1px">Найменування</th>
+   <th colspan="3" style="border: solid black 1px">Наименование</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
      {{^noshowpartion}}
 
-   <th align="right" style="border: solid black 1px">Прибуток</th>
+   <th align="right" style="border: solid black 1px">Прибыль</th>
    <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
@@ -352,19 +352,19 @@
 {{#_type8}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажi по джерелам <br> <br>
+        Продажи по источникам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
     <th align="center"  style="border: solid black 1px">Док.</th>
-    <th colspan="2" style="border: solid black 1px">Найменування</th>
+    <th colspan="2" style="border: solid black 1px">Наименование</th>
 
-         <th align="right" style="border: solid black 1px">Кіл.</th>
+         <th align="right" style="border: solid black 1px">Кол.</th>
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
       {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Прибыль</th>
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
@@ -403,19 +403,19 @@
 {{#_type12}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Товари по брендам  {{brand}}<br> <br>
+        Продажи по брендам  {{brand}}<br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
      <th align="center"  style="border: solid black 1px">Док.</th>
-   <th colspan="2" style="border: solid black 1px">Найменування</th>
+   <th colspan="2" style="border: solid black 1px">Наименование</th>
 
-          <th align="right" style="border: solid black 1px">Кіл.</th>
+          <th align="right" style="border: solid black 1px">Кол.</th>
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
       {{^noshowpartion}}
 
-  <th align="right" style="border: solid black 1px">Прибуток</th>
+  <th align="right" style="border: solid black 1px">Прибыыль</th>
   <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 
@@ -453,19 +453,19 @@
 {{#_type13}}
 <tr style="font-size:larger; font-weight: bolder;">
     <td align="center" colspan="5">
-        Продажі по постачальниках <br> <br>
+        Продажи по  поставщикам <br> <br>
     </td>
 </tr>
 <tr style="font-weight: bolder;">
 
-    <th colspan="4" style="border: solid black 1px">Найменування</th>
+    <th colspan="4" style="border: solid black 1px">Наименование</th>
 
 
-    <th align="right" style="border: solid black 1px; ">На суму</th>
+    <th align="right" style="border: solid black 1px; ">На сумму</th>
     
         {{^noshowpartion}}
 
-    <th align="right" style="border: solid black 1px">Прибуток</th>
+    <th align="right" style="border: solid black 1px">Прибыль</th>
     <th align="right" style="border: solid black 1px">Приб.,%</th>
     {{/noshowpartion}}
 

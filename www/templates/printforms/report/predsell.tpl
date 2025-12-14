@@ -9,14 +9,14 @@
         <th   style="border-bottom:1px #000 solid;">Товар</th>
         <th   style="border-bottom:1px #000 solid;">Артикул</th>
         <th   style="border-bottom:1px #000 solid;" align="right">Прогноз </th>
-        <th   style="border-bottom:1px #000 solid;" align="right">На складі</th>
+        <th   style="border-bottom:1px #000 solid;" align="right">На складе</th>
         <th   style="border-bottom:1px #000 solid;" align="right">
         
        {{#tovar}}
-        Закупити
+        Закупить
        {{/tovar}}
        {{^tovar}}
-       Виробити
+       Произвести
        {{/tovar}}
         
         </th>

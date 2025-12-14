@@ -2,14 +2,14 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="7">
-            Комісійні товари  на {{dt}}
+            Комиссионные товары  на {{dt}}
         </td>
     </tr>
     
     {{#iscust}}
     <tr >
         <td  colspan="7">
-          <b> Комітент:</b>  {{cust}}
+          <b> Комитент:</b>  {{cust}}
             <br>
             <br>
         </td>
@@ -21,11 +21,11 @@
          
         <th style="border: solid black 1px">Товар</th>
         <th style="border: solid black 1px">Код</th>
-        <th style="border: solid black 1px">Ціна</th>
-        <th align="right" style="border: solid black 1px">Придбано</th>
+        <th style="border: solid black 1px">Цена</th>
+        <th align="right" style="border: solid black 1px">Приобретено</th>
         <th align="right" style="border: solid black 1px">Продано</th>
-        <th align="right" style="border: solid black 1px">Повернуто</th>
-        <th align="right" style="border: solid black 1px">Накладна</th>
+        <th align="right" style="border: solid black 1px">Возвращено</th>
+        <th align="right" style="border: solid black 1px">Накладная</th>
 
     </tr>
     {{#_detail}}
@@ -46,7 +46,7 @@
  
     <tr >
         <td  colspan="7">
-          <b> Продажі:</b>  
+          <b> Продажи:</b>  
             <br>
            
         </td>
@@ -54,7 +54,7 @@
    {{#_detail2}}
      <tr>
         <td  >Дата {{dt}}</td>
-        <td colspan="6">Документи {{docs}}</td>
+        <td colspan="6">Документы {{docs}}</td>
     </tr>
       {{#items}}
      <tr>
@@ -65,7 +65,7 @@
     </tr>
      {{/items}}
      <tr>
-        <td colspan="7">Сума {{sm}}</td>
+        <td colspan="7">Сумма {{sm}}</td>
     </tr>
 
    {{/_detail2}}   

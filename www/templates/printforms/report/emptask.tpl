@@ -4,12 +4,12 @@
     <tr>
 
         <td align="center" colspan="3">
-          <b>     Період з {{datefrom}} по {{dateto}}  </b> 
+          <b>     Период с {{datefrom}} по {{dateto}}  </b> 
         </td>
       </tr>
       <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Оплата по виробництву
+            Оплата по производству
         </td>
     </tr>
         {{#isemp}}  
@@ -49,7 +49,7 @@
   
      <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Виконанi роботи
+            Выполненые  работы
         </td>
     </tr> 
      

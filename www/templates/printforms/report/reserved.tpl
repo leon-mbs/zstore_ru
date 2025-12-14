@@ -3,7 +3,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="4">
-            Зарезервованi товари на {{date}}<br>
+            Зарезервированные товары на {{date}}<br>
         </td>
     </tr>
    
@@ -12,9 +12,9 @@
         <th style="border: solid black 1px">Код</th>
         <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Документ</th>
-        <th style="border: solid black 1px">Покупець</th>
+        <th style="border: solid black 1px">Покупатель</th>
 
-        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
 
     </tr>
     {{#_detail}}

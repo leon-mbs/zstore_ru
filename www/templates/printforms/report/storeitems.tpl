@@ -2,17 +2,17 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="{{$colspan}}">
-            Стан складiв  на  {{date}} 
+           Состояние складоы  на  {{date}} 
         </td>
     </tr>
  
 
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Нуименование</th>
         <th style="border: solid black 1px">Артикул</th>
         <th style="border: solid black 1px">Бренд</th>
-        <th style="border: solid black 1px">Miн. кiл.</th>
+        <th style="border: solid black 1px">Mин. кол.</th>
         {{#cfnames}}
         <th style="border: solid black 1px">{{value}} </th>
         {{/cfnames}}

@@ -2,40 +2,40 @@
 
     <tr>
         <td align="center" colspan="4">
-            <h4> Звіт по виробництву </h4>
+            <h4> Отчет по производству </h4>
         </td>
     </tr>
     <tr>
 
         <td colspan="4">
-            Період з <b>{{datefrom}}</b> по <b>{{dateto}}</b> <br>
+            Период с <b>{{datefrom}}</b> по <b>{{dateto}}</b> <br>
         </td>
     </tr>
     {{#parea}}
     <tr>
 
         <td colspan="4">
-            Виробнича ділянка <b>{{parea}}</b><br>
+            Производственный участок <b>{{parea}}</b><br>
         </td>
     </tr>
     {{/parea}}
     <tr>
 
         <td colspan="4">
-            <h5> Списано на виробництво </h5>
+            <h5> Списано на производство </h5>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Наименование</th>
 
         <th style="border: solid black 1px">Код</th>
-        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
 
 
-        <th align="right" style="border: solid black 1px">Сума</th>
+        <th align="right" style="border: solid black 1px">Сумма</th>
        </tr>
         {{#_detail}}
     <tr>
@@ -62,20 +62,20 @@
     <tr>
 
         <td colspan="4"><br>
-            <h5> Оприбутковано з виробництва </h5>
+            <h5> Оприходовано с  производства </h5>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Наименование</th>
 
         <th style="border: solid black 1px">Код</th>
-        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
 
 
-        <th align="right" style="border: solid black 1px">Сума</th>
+        <th align="right" style="border: solid black 1px">Сумма</th>
       </tr>
         {{#_detail2}}
     <tr>
@@ -103,17 +103,17 @@
       <tr>
 
         <td colspan="4">
-            <h5> Переміщено між етапами </h5>
+            <h5> Перемещено между этапами </h5>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Наименование</th>
 
         <th style="border: solid black 1px">Код</th>
-        <th   align="right" style="border: solid black 1px">Кіл.</th>
+        <th   align="right" style="border: solid black 1px">Кол.</th>
         <th   align="right" style="border: solid black 1px"> </th>
 
  
@@ -138,10 +138,10 @@
     <tr>
 
         <td colspan="4"><br>
-            <h5> Готово до виробництва </h5>
-             Станом на <b> {{currdate}} </b>
-             <br><small>Напівфабрикати та готова продукція, які можуть бути виготовлені відповідно до комплектів. 
-             Якщо матеріал або комплектуючі входять <br>в кілька позицій, будуть показані всі варіанти.
+            <h5> Готово к производству </h5>
+             Состоянием на <b> {{currdate}} </b>
+             <br><small>Полуфабрикаты и готовая продукция, которые могут быть изготовлены по комплектам. 
+                    Если материал или комплектующие входят в несколько позиций, будут показаны все варианты.
               </small>
         </td>
     </tr>
@@ -149,10 +149,10 @@
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Наименование</th>
 
         <th style="border: solid black 1px">Код</th>
-        <th colspan="2" align="right" style="border: solid black 1px">Кіл.</th>
+        <th colspan="2" align="right" style="border: solid black 1px">Кол.</th>
 
     </tr>
 

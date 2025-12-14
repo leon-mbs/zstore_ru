@@ -2,12 +2,12 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="5">
-            Кінець дня  {{date}}
+            Конец   дня  {{date}}
         </td>
     </tr>
    <tr style="  font-weight: bolder;">
         <td   colspan="5">
-            По користувачах
+            По пользователях
         </td>
     </tr>
  
@@ -16,9 +16,9 @@
 
         <th style="border: solid black 1px"> Iм'я</th>
 
-        <th colspan="2" style="border: solid black 1px">Рахунок</th>
-        <th  align="right" style="border: solid black 1px">Прибуток</th>
-        <th  align="right" style="border: solid black 1px">Видаток</th>
+        <th colspan="2" style="border: solid black 1px">Счет</th>
+        <th  align="right" style="border: solid black 1px">Приход</th>
+        <th  align="right" style="border: solid black 1px">Расход</th>
         
 
 
@@ -41,19 +41,19 @@
     {{#showmf}}
     <tr style="  font-weight: bolder;">
         <td   colspan="5">
-            По грошових рахунках
+            По денежных счетах
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th   style="border: solid black 1px"> Рахунок
+        <th   style="border: solid black 1px"> Счет
 
-        <th align="right"  style="border: solid black 1px">Початок
-        <th align="right"  style="border: solid black 1px">Прибуток
-        <th align="right"  style="border: solid black 1px">Видаток
-        <th align="right" style="border: solid black 1px">Кiнець
+        <th align="right"  style="border: solid black 1px">Начало
+        <th align="right"  style="border: solid black 1px">Приход
+        <th align="right"  style="border: solid black 1px">Расход
+        <th align="right" style="border: solid black 1px">Конец
      
         
 

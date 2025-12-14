@@ -4,13 +4,13 @@
     <tr>
 
         <td style="font-size:larger" align="center" colspan="8">
-          <b>  Прайс від {{date}}</b><br><br>
+          <b>  Прайс от {{date}}</b><br><br>
         </td>
     </tr>
  {{^iscat}}   
     <tr>
         <td  colspan="11">
-        <b>  Категорія:</b> {{catname}} <br>
+        <b>  Категория:</b> {{catname}} <br>
         </td>
     </tr>
  {{/iscat}}  
@@ -25,12 +25,12 @@
         {{#showimage}}
         <th> </th>
         {{/showimage}}
-        <th>Найменування</th>
+        <th>Наименование</th>
         <th>Код</th>
-        <th>Од. вим.</th>
-     {{#iscat}}   <th>Категорія</th>  {{/iscat}}
+        <th>Ед. изм.</th>
+     {{#iscat}}   <th>Категория</th>  {{/iscat}}
      {{#isbrand}}     <th>Бренд</th> {{/isbrand}} 
-{{#showqty}}      <th align="right">Кiл.</th>{{/showqty}}
+{{#showqty}}      <th align="right">Кол.</th>{{/showqty}}
         
 {{#price1name}}          <th align="right">{{price1name}}</th>  {{/price1name}} 
 {{#price2name}}          <th align="right">{{price2name}}</th>  {{/price2name}} 
@@ -38,7 +38,7 @@
 {{#price4name}}          <th align="right">{{price4name}}</th>  {{/price4name}} 
 {{#price5name}}          <th align="right">{{price5name}}</th>  {{/price5name}} 
 {{#showdesc}}      <th align="right">Опис</th>{{/showdesc}}
- <th>Примітка</th>
+ <th>Примечание</th>
     </tr>
     {{#_detail}}
     <tr>

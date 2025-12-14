@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Повернення вiд покупцiв
+            Возвраты от покупателей
         </td>
     </tr>
 
@@ -11,8 +11,8 @@
          
         <th style="border: solid black 1px">Товар</th>
         <th style="border: solid black 1px">Код</th>
-        <th align="right" style="border: solid black 1px">Придбано</th>
-        <th align="right" style="border: solid black 1px">Повернуто</th>
+        <th align="right" style="border: solid black 1px">Продано</th>
+        <th align="right" style="border: solid black 1px">Возвращено</th>
         <th align="right" style="border: solid black 1px">%</th>
 
     </tr>

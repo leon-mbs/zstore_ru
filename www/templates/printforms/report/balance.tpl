@@ -2,7 +2,7 @@
  
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="2">
-            Управлiнський  баланс
+            Управленческий  баланс
         </td>
     </tr>
   
@@ -16,103 +16,103 @@
  
    <tr>
 
-        <td colspan="2">            <b>Активи</b>         </td>
+        <td colspan="2">            <b>Активы</b>         </td>
     </tr>
     {{#amat}}
     <tr>
-        <td > Матерiали та  комплектуючi        </td>
+        <td > Материалы и комплектующие        </td>
         <td align="right"> {{amat}}  </td>
     </tr>
     {{/amat}}
    
     {{#aprod}}    
     <tr>
-        <td > Напiвфабрикати та  готова  продукцiя        </td>
+        <td > Полуфабрикаты и готовая продукция        </td>
         <td align="right">  {{aprod}}      </td>
     </tr>
     {{/aprod}} 
     {{#ambp}}      
     <tr>
-        <td >   МШП        </td>
+        <td >   МБП        </td>
         <td align="right">     {{ambp}}               </td>
     </tr>
     {{/ambp}}   
 
     {{#aitem}}                 
     <tr>
-        <td >Товари        </td>
+        <td >Товары        </td>
         <td align="right">    {{aitem}}      </td>
     </tr>
     {{/aitem}}                 
     {{#aother}}                 
     <tr>
-        <td >  Iншi ТМЦ    </td>
+        <td >  Прочие ТМЦ    </td>
         <td align="right">     {{aother}}     </td>
     </tr>
     {{/aother}}                     
     {{#anal}}                 
     <tr>
-        <td >  Готiвка        </td>
+        <td >  Наличные        </td>
         <td align="right">   {{anal}}                        </td>
     </tr>
     {{/anal}}                     
     {{#abnal}}                 
     <tr>
-        <td >  Безготiвка        </td>
+        <td >  Безнал        </td>
         <td align="right">  {{abnal}}   </td>
     </tr>
     {{/abnal}}                     
     {{#debet}}
     <tr>  
-        <td >Борг  контрагентiв       </td>
+        <td >Долг  контрагентов       </td>
         <td align="right">     {{debet}}              </td>
     </tr>
     {{/debet}} 
     {{#aemp}}                 
     <tr>
-        <td >  Спiвробiтники (виданi  аванси тощо)        </td>
+        <td >  Сотрудники (выданные  авансы и пр.)        </td>
         <td align="right">        {{aemp}}             </td>
     </tr>
     {{/aemp}}                 
    {{#aeq}}                 
     <tr>
-        <td >  Балансова вартiсть ОЗ        </td>
+        <td >  Балансовая стоимость ОС        </td>
         <td align="right">        {{aeq}}             </td>
     </tr>
     {{/aeq}}                 
     
     {{#aprodrest}}                 
     <tr>
-        <td >  Незавершене виробництво       </td>
+        <td >  Незавершенное производство       </td>
         <td align="right">        {{aprodrest}}             </td>
     </tr>
     {{/aprodrest}}                 
     
     
      <tr style="font-weight: bolder;">
-        <td align="right">Всього:</td>
+        <td align="right">Всего:</td>
         <td align="right">{{atotal}}</td>
     </tr>   
     
    <tr>
-        <td colspan="2">     <b>Пасиви</b>        </td>    </tr>
+        <td colspan="2">     <b>Пассивы</b>        </td>    </tr>
 
     {{#credit}}
     <tr>  
-        <td >  Борг  контрагентам       </td>
+        <td >  Долг  контрагентам       </td>
         <td align="right">     {{credit}}              </td>
     </tr>
     {{/credit}} 
  
     {{#pemp}}                 
     <tr>
-        <td >  Спiвробiтники (зарплата до видачi тощо)        </td>
+        <td >  Сотрудники (зарплата к выдаче  и  пр.)        </td>
         <td align="right">    {{pemp}}               </td>
     </tr>
      {{/pemp}}
 
      <tr style="font-weight: bolder;">
-        <td align="right">Всього:</td>
+        <td align="right">Всего:</td>
         <td align="right">{{ptotal}}</td>
     </tr>   
      <tr >

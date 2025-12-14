@@ -4,7 +4,7 @@
     <tr>
 
         <td style="font-size:larger" align="center" colspan="4">
-          <b>  Прайс від {{date}}</b><br><br>
+          <b>  Прайс от {{date}}</b><br><br>
         </td>
     </tr>
  

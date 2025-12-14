@@ -2,13 +2,13 @@
 
     <tr>
         <td align="center" colspan="3">
-            <h4> Звіт по кафе </h4>
+            <h4> Отчет  по общепиту  </h4>
         </td>
     </tr>
     <tr>
 
         <td colspan="3">
-            Період з <b>{{datefrom}}</b> по <b>{{dateto}}</b> <br>
+            Период с <b>{{datefrom}}</b> по <b>{{dateto}}</b> <br>
         </td>
     </tr>
     {{#isd1}}
@@ -16,7 +16,7 @@
     <tr>
 
         <td colspan="3">
-            <h5> Замовлення </h5>
+            <h5> Заказы </h5>
         </td>
     </tr>
 
@@ -26,7 +26,7 @@
         <th style="border: solid black 1px">Дата</th>
 
         <th style="border: solid black 1px">День</th>
-        <th align="right" style="border: solid black 1px">Кіл.</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
 
 
         </tr>
@@ -52,17 +52,17 @@
     <tr>
 
         <td colspan="3"><br>
-            <h5>Позиції   </h5>
+            <h5>Позиции   </h5>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
 
-        <th style="border: solid black 1px">Найменування</th>
+        <th style="border: solid black 1px">Наименование</th>
 
-        <th align="right" style="border: solid black 1px">Кіл.</th>
-        <th align="right" style="border: solid black 1px">На суму</th>
+        <th align="right" style="border: solid black 1px">Кол.</th>
+        <th align="right" style="border: solid black 1px">На сумму</th>
        </tr>
         
         {{#_detail2}}
