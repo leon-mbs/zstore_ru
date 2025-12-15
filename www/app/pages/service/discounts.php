@@ -239,7 +239,7 @@ class Discounts extends \App\Pages\Base
         $disc["bonus4"] = $sender->bonus4->getText();
         $disc["summa4"] = $sender->summa4->getText();
         System::setOptions("discount", $disc);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
 
 
@@ -258,7 +258,7 @@ class Discounts extends \App\Pages\Base
         $disc["disc4"] = $sender->disc4->getText();
         $disc["discsumma4"] = $sender->discsumma4->getText();
         System::setOptions("discount", $disc);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
 
 
@@ -322,7 +322,7 @@ class Discounts extends \App\Pages\Base
         }
         $this->ctab->clistform->clist->Reload();
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
 
     }
 
@@ -349,7 +349,7 @@ class Discounts extends \App\Pages\Base
         $sender->clean();
         
 
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
         $this->goAnkor('pbsearchkey') ;
 
     }   
@@ -400,7 +400,7 @@ class Discounts extends \App\Pages\Base
             $n = new \App\Entity\Notify();
             $n->user_id = \App\Entity\Notify::SYSTEM;
 
-            $n->message = "Користувач ".System::getUser()->username." змінив ({$am}) бонуси контрагента  " .$sender->custbc->getText()  ;
+            $n->message = "Пользователь ".System::getUser()->username." сменил ({$am}) бонусы контрагента  " .$sender->custbc->getText()  ;
             $n->save();            
             
             
@@ -460,7 +460,7 @@ class Discounts extends \App\Pages\Base
             $s->fromdate = $sender->ssearchfrom->getDate();
             $s->todate = $sender->ssearchto->getDate(true);
             if ($s->fromdate > $s->todate) {
-                $this->setError("Невірний інтервал");
+                $this->setError("Неверный инткрвал");
                 return;
             }
             $s->save();
@@ -520,7 +520,7 @@ class Discounts extends \App\Pages\Base
         $k =  $this->itab->ifilter->isearchkey->getKey();
         $i = Item::load($k);
         if ($i == null) {
-            $this->setError("Не вказано товар");
+            $this->setError("Не указано товар");
 
             return;
         }
@@ -533,7 +533,7 @@ class Discounts extends \App\Pages\Base
             $i->fromdate = $this->itab->ifilter->isearchfrom->getDate();
             $i->todate = $this->itab->ifilter->isearchto->getDate(true);
             if ($i->fromdate > $i->todate) {
-                $this->setError("Невірний інтервал");
+                $this->setError("Неверный интервал");
                 return;
             }
             $i->save();
@@ -557,7 +557,7 @@ class Discounts extends \App\Pages\Base
         $k = $this->itab->iofilter->isearchokey->getKey();
         $i = Item::load($k);
         if ($i == null) {
-            $this->setError("Не вказано товар") ;
+            $this->setError("Не указан товар") ;
             return;
         }
         $d1 = doubleval($this->itab->iofilter->isearchoprice1->getText());
@@ -672,7 +672,7 @@ class Discounts extends \App\Pages\Base
     public function OnGAdd($sender) {
         $g = \App\Entity\Category::load($sender->gsearchkey->getValue());
         if ($g == null) {
-            $this->setError("Не вказано категорію");
+            $this->setError("Не указана  категория");
 
             return;
         }
@@ -682,7 +682,7 @@ class Discounts extends \App\Pages\Base
             $g->fromdate = $sender->gsearchfrom->getDate();
             $g->todate = $sender->gsearchto->getDate(true);
             if ($g->fromdate > $g->todate) {
-                $this->setError("Невірний інтервал");
+                $this->setError("Неверный интервал");
                 return;
             }
 
@@ -713,10 +713,10 @@ class Discounts extends \App\Pages\Base
  
         $row->add(new  Label("pcode", $p->code));
         $type="";
-        if($p->type==1) $type="Одноразовий";
-        if($p->type==2) $type="Багаторазовий";
-        if($p->type==3) $type="Персональний";
-        if($p->type==4) $type="Реферальний";
+        if($p->type==1) $type="Одноразовый";
+        if($p->type==2) $type="Многоразовый";
+        if($p->type==3) $type="Персональный";
+        if($p->type==4) $type="Реферальный";
 
         $row->add(new  Label("ptype", $type));
         $disc = $p->disc.'%';
@@ -736,7 +736,7 @@ class Discounts extends \App\Pages\Base
                                                                                        
            $q = Customer::findCnt("customer_id in (select customer_id from documents where content like '%<promocode><![CDATA[{$p->code}]]></promocode>%') ") ;
            if($q > 0) {
-              $row->pcust->setText("Використали {$q}  ");    
+              $row->pcust->setText("Использовали {$q}  ");    
            }
            
         }    
@@ -802,7 +802,7 @@ class Discounts extends \App\Pages\Base
         $pc->code = $sender->peditcode->getText() ;
         $pc->type = $sender->paddtype->getValue() ;
         if($pc->type==0) {
-            $this->setError('Не вказано тип') ;
+            $this->setError('Не указано тип') ;
             return;
         }
         $pc->disc = doubleval($sender->peditdisc->getText() );
@@ -810,22 +810,22 @@ class Discounts extends \App\Pages\Base
         $pc->refbonus = intval( $sender->peditbonus->getText() );
         $pc->enddate = $sender->peditdate->getDate();
         if($pc->enddate >0 && $pc->enddate < time()) {
-           $this->setError('Неправильна дата') ;
+           $this->setError('Неверная дата') ;
            return; 
         }
         if($pc->disc == 0 && $pc->discf  == 0) {
-           $this->setError('Не задана  знижка ') ;
+           $this->setError('Не задана  сеидка ') ;
            return; 
         }
         if($pc->disc >0 && $pc->discf > 0) {
-           $this->setError('Вводиться або  процент або  сума') ;
+           $this->setError('Вводиться  или  процент или  сумма') ;
            return; 
         }
 
   
         $pc->customer_id = (int)$sender->peditcust->getKey();
         if($pc->type >2 && $pc->customer_id ==0 ) {
-           $this->setError('Не вибрано контрагента') ;
+           $this->setError('Не выбран контрагент') ;
            return; 
         }
         $pc->customer_name = $sender->peditcust->getText();
@@ -847,7 +847,7 @@ class Discounts extends \App\Pages\Base
         $disc["bonussell"] = $sender->ebonussell->getText();
 
         System::setOptions("discount", $disc);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
     }
   
  

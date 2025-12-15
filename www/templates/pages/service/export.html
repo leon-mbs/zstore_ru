@@ -1,24 +1,24 @@
 <html>
      <head>
-        <title> Експорт    </title>
+        <title> Экспорт    </title>
 
     </head>
 
     <body>
         <div class="row">
             <div class="col-12 col-md-6 col-xl-4 card">
-                <h3>Експорт документів</h3>
+                <h3>Экспорт документов</h3>
                 <form zippy="dform" class="row">
                     <div class="col-10">
                         <div class="form-group  row">
-                            <label for="dtype" class="col-sm-4 form-label">Тип експорту</label>
+                            <label for="dtype" class="col-sm-4 form-label">Тип экспорту</label>
                             <div class="col-sm-8">
                                 <select zippy="dtype" class="form-control   ">
                                 </select>
                             </div>
                         </div>
                         <div class="form-group  row">
-                            <label for="dfrom" class="col-sm-4 form-label">З</label>
+                            <label for="dfrom" class="col-sm-4 form-label">С</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control mr-sm-2  " zippy="dfrom" style="width:110px">
 
@@ -34,7 +34,7 @@
 
 
                         <div class="form-group ">
-                            <input class="btn btn-info" type="submit" value="Перегляд"/>
+                            <input class="btn btn-info" type="submit" value="Просмотр"/>
                         </div>
 
                     </div>
@@ -47,7 +47,7 @@
                                 <th>Номер</th>
                                 <th>Дата</th>
                                 <th>Контрагент</th>
-                                <th class="text-right">Сума</th>
+                                <th class="text-right">Сумма</th>
                             </tr>
                             <tr zippy="doclist">
                                 <td><input type="checkbox" zippy="dch" class="dchc"></td>
@@ -62,41 +62,41 @@
                        <div class="form-check">
 
                             <input   class="form-check-input" type="checkbox" zippy="docxml">
-                            <label class="form-check-label mr-3" for="docxml">Експорт у XML</label>
+                            <label class="form-check-label mr-3" for="docxml">Экспорт в XML</label>
                         </div>
 
                         
                         <div class="form-group ">
-                            <input class="btn btn-info" type="submit" value="Експорт"/>
+                            <input class="btn btn-info" type="submit" value="Экспорт"/>
                         </div>
                     </div>
 
                 </form>
             </div>
             <div class="col-12 col-md-6 col-xl-4 card">
-                <h3>Експорт номенклатури</h3>
+                <h3>Экспорт номенклатуры</h3>
 
 
                 <form zippy="iform" class="row">
                     <div class="col-10">
 
                         <div class="form-group  ">
-                            <label for="itype">Тип експорту</label>
+                            <label for="itype">Тип экспорта</label>
                             <select zippy="itype" class="form-control   ">
-                                <option value="0">Тільки довідник</option>
-                                <option value="1">Дані складу</option>
+                                <option value="0">Только  справочник</option>
+                                <option value="1">Данные  склада</option>
                             </select>
                         </div>
                         <div class="form-group  ">
                             <label for="item_type">Тип ТМЦ</label>
                             <select zippy="item_type" class="form-control   ">
-                                <option value="0">Всi</option>
+                                <option value="0">Все</option>
                             </select>
                         </div>
                         <div class="form-group  ">
-                            <label for="cat">Категорія</label>
+                            <label for="cat">Категория</label>
                             <select zippy="cat" class="form-control   ">
-                                     <option value="0">Не вказано</option>
+                                     <option value="0">Не указано</option>
                            </select>
                         </div>
                         <div class="form-group  ">
@@ -112,12 +112,12 @@
                        <div class="form-check">
 
                             <input   class="form-check-input" type="checkbox" zippy="itemxml">
-                            <label class="form-check-label mr-3" for="itemxml">Експорт у XML</label>
+                            <label class="form-check-label mr-3" for="itemxml">Экспорт у XML</label>
                         </div>
 
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Експорт"/>
+                            <input class="btn btn-info" type="submit" value="Экспорт"/>
                         </div>
                     </div>
 
@@ -125,7 +125,7 @@
                 </form>
             </div>
             <div class="col-12 col-md-6 col-xl-4  card">
-                <h3>Експорт контрагентів</h3>
+                <h3>Экспорт контрагентов</h3>
 
                 <form zippy="cform" class="row">
                     <div class="col-10  ">
@@ -133,33 +133,33 @@
                         <div class="form-group  ">
                             <label for="ctype">Тип </label>
                             <select zippy="ctype" class="form-control ">
-                                <option value="0">Всі</option>
-                                <option value="1">Покупці</option>
-                                <option value="2">Постачальники</option>
+                                <option value="0">Все</option>
+                                <option value="1">Покупатели</option>
+                                <option value="2">Поставщики</option>
                             </select>
                         </div>
 
                          <div class="form-check">
 
                             <input   class="form-check-input" type="checkbox" zippy="custxml">
-                            <label class="form-check-label mr-3" for="custxml">Експорт у XML</label>
+                            <label class="form-check-label mr-3" for="custxml">Экспорт в XML</label>
                         </div>
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Експорт"/>
+                            <input class="btn btn-info" type="submit" value="Экспорт"/>
                         </div>
                     </div>
 
 
                 </form>  
-               <h3>Експорт налаштувань</h3>
+               <h3>Экспорт настроек</h3>
 
                 <form zippy="oform" class="row">
                     <div class="col-10 col-md-6 col-xl-4">
                     
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Експорт"/>
+                            <input class="btn btn-info" type="submit" value="Экспорт"/>
                         </div>
                     </div>
 

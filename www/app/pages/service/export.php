@@ -94,12 +94,12 @@ class Export extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Найменування";
+        $header['A1'] = "Наименование";
         $header['B1'] = "Телефон";
         $header['C1'] = "Email";
-        $header['D1'] = "Місто";
-        $header['E1'] = "Адреса";
-        $header['F1'] = "ЕДРПОУ";
+        $header['D1'] = "Город";
+        $header['E1'] = "Адрес";
+        $header['F1'] = "ОКПО";
         $root="<root>";
         $i = 1;
         foreach (Customer::find($sql, "customer_name asc") as $item) {
@@ -160,14 +160,14 @@ class Export extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Найменуванння";
-        $header['B1'] = "Кор. назва";
-        $header['C1'] = "Од.";
-        $header['D1'] = "Категорія";
+        $header['A1'] = "Наименование";
+        $header['B1'] = "Кор. название";
+        $header['C1'] = "Ед.";
+        $header['D1'] = "Категория";
         $header['E1'] = "Бренд";
         $header['F1'] = "Артикул";
         $header['G1'] = "Штрих код";
-        $header['H1'] = "Мін. кіл.";
+        $header['H1'] = "Мин. кол.";
         $header['I1'] = $option['price1'];
         $header['J1'] = $option['price2'];
         $header['K1'] = $option['price3'];
@@ -176,9 +176,9 @@ class Export extends \App\Pages\Base
 
         
         if ($t == 1) {
-            $header['N1'] = "Комірка";
-            $header['O1'] = "Кіл.";
-            $header['P1'] = "На суму";
+            $header['N1'] = "Ячейка";
+            $header['O1'] = "Кол.";
+            $header['P1'] = "На сумму";
         }
 
         $root="<root>";
@@ -304,7 +304,7 @@ class Export extends \App\Pages\Base
             }
 
             $i++;
-            $data['A' . $i] = array('value' => "Всього: ", 'bold' => true, 'align' => 'right');
+            $data['A' . $i] = array('value' => "Всего: ", 'bold' => true, 'align' => 'right');
             $data['B' . $i] = array('value' => H::fa(doubleval($doc->amount)), 'format' => 'number', 'bold' => true, 'align' => 'right');
             $i++;
 

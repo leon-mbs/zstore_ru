@@ -48,7 +48,7 @@ class Import extends \App\Pages\Base
         $form->add(new DropDownChoice("colcat", $cols,$sc['colcat'] ?? 0));
         $form->add(new DropDownChoice("colqty", $cols,$sc['colqty'] ?? 0));
         $form->add(new DropDownChoice("colcell", $cols,$sc['colcell'] ?? 0));
-        $form->add(new DropDownChoice("coluktz", $cols,$sc['coluktz'] ?? 0));
+
         $form->add(new DropDownChoice("colshortname", $cols,$sc['colshortname'] ?? 0));
         $form->add(new DropDownChoice("colimage", $cols,$sc['colimage'] ?? 0));
         $form->add(new DropDownChoice("colwar", $cols,$sc['colwar'] ?? 0));
@@ -200,7 +200,7 @@ class Import extends \App\Pages\Base
         $colinprice = $this->iform->colinprice->getValue();
         $colmsr = $this->iform->colmsr->getValue();
         $colcell = $this->iform->colcell->getValue();
-        $coluktz = $this->iform->coluktz->getValue();
+        
         $colbrand = $this->iform->colbrand->getValue();
         $coldesc = $this->iform->coldesc->getValue();
         $colimage = $this->iform->colimage->getValue();
@@ -216,13 +216,13 @@ class Import extends \App\Pages\Base
 
 
         if ($t == 1 && $colqty === '0') {
-            $this->setError('Не вказано колонку з кількістю');
+            $this->setError('Не указанв  колонка с количеством');
             return;
         }
         $file = $this->iform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не вибраний файл');
+            $this->setError('Не выбран файл');
             return;
         }
 
@@ -241,7 +241,7 @@ class Import extends \App\Pages\Base
         $save['colinprice']=$colinprice;
         $save['colmsr']=$colmsr;
         $save['colcell']=$colcell;
-        $save['coluktz']=$coluktz;
+
         $save['colbrand']=$colbrand;
         $save['coldesc']=$coldesc;
         $save['colimage']=$colimage;
@@ -309,7 +309,7 @@ class Import extends \App\Pages\Base
                     'colprice5'  => $row[$colprice5] ?? '',
                     'colbrand'   => $row[$colbrand] ?? '',
                     'colcell'    => $row[$colcell] ?? '',
-                    'coluktz'    => $row[$coluktz] ?? '',
+
                     'coldesc'    => $row[$coldesc] ?? ''
                 );
             }
@@ -331,7 +331,7 @@ class Import extends \App\Pages\Base
             $itemname = trim($row[$colname] ?? '');
             $itembarcode = trim($row[$colbarcode] ?? '');
             $cell = trim($row[$colcell] ?? '');
-            $uktz = trim($row[$coluktz] ?? '');
+
             $msr = trim($row[$colmsr] ?? '');
             $desc = trim($row[$coldesc] ?? '');
             $catname = trim($row[$colcat] ?? '');
@@ -388,7 +388,7 @@ class Import extends \App\Pages\Base
             if($colbarcode !='0') $item->bar_code = $itembarcode;
             if($colmsr !='0')         $item->msr = $msr;
             if($colcell !='0')        $item->cell = $cell;
-            if($coluktz !='0')        $item->uktz = $uktz;
+
             if($colbrand   !='0')     $item->manufacturer = $brand;
             if($coldesc !='0')        $item->description = $desc;
             if($colshortname !='0')   $item->shortname = $shortname;
@@ -440,7 +440,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('IncomeItem');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "ПТ00001";
+                $doc->document_number = "ОТ-00001";
             }
             $doc->document_date = time();
 
@@ -465,7 +465,7 @@ class Import extends \App\Pages\Base
             $doc->updateStatus(\App\Entity\Doc\Document::STATE_EXECUTED);
         }
 
-        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
+        $this->setSuccess("Импортировано {$cnt} ТМЦ");
     }
 
     public function onCImport($sender) {
@@ -483,13 +483,13 @@ class Import extends \App\Pages\Base
         $coladdress = $this->cform->coladdress->getValue();
 
         if ($colcname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError('Не указана колонка с названием');
             return;
         }
 
         $file = $this->cform->cfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('Не вибраний файл');
+            $this->setError('Не выбран файл');
             return;
         }
 
@@ -577,7 +577,7 @@ class Import extends \App\Pages\Base
             }
         }
 
-        $this->setSuccess("Імпортовано {$cnt} контрагентів ");
+        $this->setSuccess("Импортировано {$cnt} контрагентов ");
     }
 
     public function onNImport($sender) {
@@ -599,23 +599,23 @@ class Import extends \App\Pages\Base
         $colbrand = $this->nform->ncolbrand->getValue();
 
         if ($colname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError('Не указана  кллонка  с названием');
             return;
         }
         if ($colqty === '0') {
-            $this->setError('Не вказано колонку з кількістю');
+            $this->setError('Не указана  кллонка  с названием');
             return;
         }
 
         if ($c == 0) {
-            $this->setError('Не обрано постачальника');
+            $this->setError('Не выбран  поставщик');
             return;
         }
 
         $file = $this->nform->nfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не вибраний файл');
+            $this->setError('Не выбран файл');
             return;
         }
 
@@ -713,7 +713,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('GoodsReceipt');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "ПН00001";
+                $doc->document_number = "ПН-00001";
             }
             $doc->document_date = time();
 
@@ -757,23 +757,23 @@ class Import extends \App\Pages\Base
         $colprice = $this->zform->zcolprice->getValue();
 
         if ($colname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError('Не выбрана  колонка  с названием');
             return;
         }
         if ($colqty === '0') {
-            $this->setError('Не вказано колонку з кількістю');
+            $this->setError('Не выбрана  колонка  с количеством');
             return;
         }
 
         if ($c == 0) {
-            $this->setError('Не обрано покупця');
+            $this->setError('Не выбран  покупатель');
             return;
         }
 
         $file = $this->zform->zfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не вибраний файл');
+            $this->setError('Не выбран файл');
             return;
         }
 
@@ -838,7 +838,7 @@ class Import extends \App\Pages\Base
                 $qty = str_replace(',', '.', trim($row[$colqty] ?? ''));
 
                 if ($item == null) {
-                    $this->setError("Не знайдоно товар {$itemname} {$itemcode}");
+                    $this->setError("Не найдкн товар {$itemname} {$itemcode}");
                     return;
                 }
                 if ($qty > 0) {
@@ -853,7 +853,7 @@ class Import extends \App\Pages\Base
             $doc = \App\Entity\Doc\Document::create('Order');
             $doc->document_number = $doc->nextNumber();
             if (strlen($doc->document_number) == 0) {
-                $doc->document_number = "З00001";
+                $doc->document_number = "З-00001";
             }
             $doc->document_date = time();
 
@@ -868,7 +868,7 @@ class Import extends \App\Pages\Base
             $doc->payamount = $doc->amount;
       
             $doc->headerdata['payed'] = 0;
-            $doc->notes = 'Імпорт з Excel';
+            $doc->notes = 'Импорт с  Excel';
             $doc->customer_id = $c;
             $doc->headerdata['customer_name'] = $this->zform->zcust->getText();
 
@@ -883,7 +883,7 @@ class Import extends \App\Pages\Base
 
         $file = $this->oform->ofilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('Не вибраний файл');
+            $this->setError('Не выбран файл');
             return;
         }
 
@@ -892,7 +892,7 @@ class Import extends \App\Pages\Base
         $xml = @simplexml_load_file($file['tmp_name']) ;
         if($xml==false) {
 
-            $this->setError("Невірний  контент");
+            $this->setError("Неверный контент  контент");
 
             return;
         }
@@ -933,7 +933,7 @@ class Import extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("Імпортовано  ");
+        $this->setSuccess("Имортировано  ");
     }
 
 

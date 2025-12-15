@@ -226,7 +226,7 @@ class ArmProdFood extends \App\Pages\Base
 
                 $notes = "";
                 if ($item->myself == 1) {
-                    $notes = "Із собою";
+                    $notes = "С собой";
                 }
                 if ($item->del == true) {
                     $notes = "Доставка";

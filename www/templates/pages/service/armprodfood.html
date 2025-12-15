@@ -1,6 +1,6 @@
 <html>
       <head>
-        <title> АРМ кухнi  </title>
+        <title> АРМ кухни  </title>
 
     </head>
 
@@ -8,26 +8,26 @@
         <div class="row"  >
 
             <div class="col-12 col-md-4 col-xl-3   " >
-                <h3>АРМ кухнi</h3>
+                <h3>АРМ кухни</h3>
                 
           
             </div>
             <div class="col-12 col-md-4 col-xl-3   " >
-             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звукове повiдомлення" class="fa fa-bell-slash text-secondary"></i>  
+             <i id="bell"  style="cursor:pointer"  onclick="onBell( )" title="Звуковое  сообщение" class="fa fa-bell-slash text-secondary"></i>  
             </div>
             
       
             <div class="w-100"></div>
     {{={| |}=}}             
   <div  id="vapp" class="col-12 col-md-10 col-lg-8" >
-        <input id="forbar"  class="ml-2" type="checkbox" v-model="forbar"  > <label for="forbar">Бар</label> <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info  ml-2">Оновити</a>
+        <input id="forbar"  class="ml-2" type="checkbox" v-model="forbar"  > <label for="forbar">Бар</label> <a onclick="updateItems()" href="javascript:void(0)"   class="btn btn-info  ml-2">Обновить</a>
          
         <table class="table table-striped">
         <tr>
-           <th>Замовлення</th>
+           <th>Заказ</th>
            <th>Блюдо</th>
-           <th>Кiл.</th>
-           <th>Стiл</th>
+           <th>Кол.</th>
+           <th>Стол</th>
            <th></th>
            <th>Рецепт</th>
            <th></th>
@@ -45,9 +45,9 @@
                   data-placement="bottom" v-bind:data-content="item.techcard" ></i>          
         
         </td> 
-        <td><a  v-show="item.foodstate == 1"  v-on:click="onInprocess(item.document_id,item.rowid, index) " class="btn btn-info">На виготовлення</a></td> 
+        <td><a  v-show="item.foodstate == 1"  v-on:click="onInprocess(item.document_id,item.rowid, index) " class="btn btn-info">На исполнение</a></td> 
         <td><a v-show="item.foodstate == 1 || item.foodstate == 2"   v-on:click="onReady(item.document_id,item.rowid, index) " class="btn btn-success ml-2">Готово</a></td> 
-        <td><a  v-show="item.foodstate == 3"   v-on:click="onSend(item.document_id,item.rowid, index) " class="btn btn-success ml-2">Видано</a></td> 
+        <td><a  v-show="item.foodstate == 3"   v-on:click="onSend(item.document_id,item.rowid, index) " class="btn btn-success ml-2">Выдано</a></td> 
     </tr>    
         </table>
         
@@ -151,7 +151,7 @@
                                 
                                 if(answer.cnt > 0){
 
-                                   toastr.info( 'Нових замовлень ' + answer.cnt +' ' ,'',{timeOut:5000})
+                                   toastr.info( 'Новых заказов ' + answer.cnt +' ' ,'',{timeOut:5000})
                                    beep()
                                    updateItems() 
                                 }
