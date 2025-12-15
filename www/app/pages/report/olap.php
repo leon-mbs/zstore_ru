@@ -77,31 +77,31 @@ class OLAP extends \App\Pages\Base
         $dim['document_date'] = "Дата";
         $dim['customer_name'] = "Контрагент";
   
-        $dim['username'] = "Співробітник";
+        $dim['username'] = "Сотрудник";
 
         if($type  < 4) {
             $dim['itemname'] = "ТМЦ";
-            $dim['cat_name'] = "Категорія";
+            $dim['cat_name'] = "Категория";
             $dim['storename'] = "Склад";
 
 
         }
 
         if($type==4 || $type==7 ) {
-            $dim['service_name'] = "Послуга";
+            $dim['service_name'] = "Услуга";
 
         }
       
 
         if($type==5) {
-            $dim['mf_name'] = "Рахунок";
+            $dim['mf_name'] = "Счет";
 
         }
         if($type  == 6) {
             $dim['itemname'] = "ТМЦ";
-            $dim['cat_name'] = "Категорія";
+            $dim['cat_name'] = "Категория";
             $dim['storename'] = "Склад";
-            $dim['service_name'] = "Послуга";
+            $dim['service_name'] = "Услуга";
 
 
         }
@@ -110,7 +110,7 @@ class OLAP extends \App\Pages\Base
         if ($options['usebranch'] == 1) {
             $id = \App\System::getBranch();
             if ($id == 0) {
-                $dim['branch_name'] = "Філія";
+                $dim['branch_name'] = "Филивлы";
             }
         }
 
@@ -131,11 +131,11 @@ class OLAP extends \App\Pages\Base
         $hor = $this->startform->sthor->getValue();
         $ver = $this->startform->stver->getValue();
         if($type==0) {
-            $this->setError('Не вибраний тип') ;
+            $this->setError('Не вибран тип') ;
             return;
         }
         if($hor==$ver) {
-            $this->setError('Виміри однакові') ;
+            $this->setError('Измерения одинаковы') ;
             return;
         }
 

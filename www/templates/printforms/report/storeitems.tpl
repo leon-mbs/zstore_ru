@@ -9,7 +9,7 @@
 
     <tr style="font-weight: bolder;">
 
-        <th style="border: solid black 1px">Нуименование</th>
+        <th style="border: solid black 1px">Наименование</th>
         <th style="border: solid black 1px">Артикул</th>
         <th style="border: solid black 1px">Бренд</th>
         <th style="border: solid black 1px">Mин. кол.</th>

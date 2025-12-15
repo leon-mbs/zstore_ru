@@ -9,17 +9,17 @@
         <div class="row">
             <div class="col-12 col-md-11  col-xl-9">
                 <h3>Прогноз  продаж</h3>
-                 <small>На підставі продаж за два останні місяці. Враховується  також кількість на  складі,
-                 в заявках постачальнику та  мінімальна  кількість (якщо задано).
-                 <br>Для  готової продукції формується закупка  комплектуючих</small>
-                <div class="card">
+                 <small>На основании продаж за два последних месяца. Учитывается также количество на складе, 
+                        в заявках поставщику и минимальное количество (если задано). 
+                        <br>Для готовой продукции формируется закупка комплектующих</small>
+                    <div class="card">
 
                     <form zippy="filter" class="form-inline ">
 
-                        <label for="cat">Категорія </label>
+                        <label for="cat">Категория </label>
 
                         <select class="form-control mr-2" zippy="cat">
-                            <option value="0">Всі категорії</option>
+                            <option value="0">Все категории</option>
                              
                  
                          </select>
@@ -32,7 +32,7 @@
 
                         <select class="form-control mr-2" zippy="type">
                             <option value="0">Товар</option>
-                            <option value="1">Готова продукція</option>
+                            <option value="1">Готовая продукция</option>
                         </select>
                      
                         <input class="btn btn-outline-primary  " type="submit" value="ОК">
@@ -42,12 +42,12 @@
                 </div>
 
                 <div zippy="detail">
-                     <a zippy="cci"  >Створити заявки на  закупку</a> 
+                     <a zippy="cci"  >Создать заявки на  закупку на  закупку</a> 
                     <div class="mt-2">
 
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/predsell" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/predsell" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/predsell" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/predsell" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i></a>
 
                     </div>
 
@@ -61,7 +61,7 @@
         <script >
        function check_cci(ele){
            
-            if(false ==confirm("Створити заявки постачальникам?")) {
+            if(false ==confirm("Создать заявки  поставщикам?")) {
                 return  false;
             }
            

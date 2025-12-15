@@ -25,11 +25,11 @@ class ABC extends \App\Pages\Base
             return;
         }
 
-        $this->typelist[1] = "Товари, маржа";
-        $this->typelist[2] = "Постачальники, об`єм поставок";
-        $this->typelist[3] = "Покупці, об`єм продаж";
-        $this->typelist[4] = "Послуги, маржа";
-        $this->typelist[5] = "Покупці, маржа";
+        $this->typelist[1] = "Товары, маржа";
+        $this->typelist[2] = "Поставщики, обьем поставок";
+        $this->typelist[3] = "Покупатели, обьем продаж";
+        $this->typelist[4] = "Услуги, маржа";
+        $this->typelist[5] = "Покупатели, маржа";
 
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');

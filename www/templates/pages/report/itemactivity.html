@@ -1,16 +1,16 @@
 <html>
    <head>
-        <title> Рух по складу   </title>
+        <title> Движение по складу   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12   ">
-                <h3>Рух по складу</h3>
+                <h3>Движение по складу</h3>
                 <div class="card">
                     <form zippy="filter" class="form-inline">
 
-                        <label for="from">З</label>
+                        <label for="from">С</label>
                         <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
 
                         <label for="to">по</label>
@@ -25,17 +25,17 @@
                        <label class="col-auto mt-2" for="searchemp">Співробітник</label>
                 
                         <select class="form-control mr-sm-2" zippy="searchemp">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
         
                        {{/storeemp}}                        
                         
              
                         <label for="item">ТМЦ</label>
-                        <input placeholder="Почніть вводити..." class="form-control mr-sm-2" zippy="item">
+                        <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="item">
                              {{#usesnumber}}
                
-                        <label data-label="snumber" for="snumber">Серія, с/н </label>
+                        <label data-label="snumber" for="snumber">Серия, с/н </label>
                         <input class="form-control mr-sm-2" zippy="snumber">
                              {{/usesnumber}}
                    
@@ -48,9 +48,9 @@
 
                 <div zippy="detail">
                     <div>
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemactivity" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemactivity" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemactivity" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemactivity" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
                                                                          
 
                     </div>

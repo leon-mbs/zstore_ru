@@ -1,17 +1,17 @@
 <html>
 
     <head>
-        <title>  OLAP аналіз  </title>
+        <title>  OLAP анализ  </title>
 
     </head>
 
     <body>
         <div class="row">
             <div class="col-12 col-md-8  col-xl-6">
-                <h3>OLAP аналіз</h3>
+                <h3>OLAP анализ</h3>
                  <form zippy="startform">
                           <div class="form-group row">
-                            <label class="col-5 col-form-label" for="stfrom">З</label>
+                            <label class="col-5 col-form-label" for="stfrom">С</label>
                             <div class="col-7">
                                  <input class="form-control " style="width: 130px" type="text" zippy="stfrom">
                            </div>
@@ -26,20 +26,20 @@
                             <label class="col-5 col-form-label" for="sttype">Тип</label>
                             <div class="col-7">
                                  <select class="form-control  " zippy="sttype"> 
-                                     <option value="0">Не вибрано</option>
-                                     <option value="1">Продаж, виторг</option>
-                                     <option value="2">Продаж, прибуток</option>
+                                     <option value="0">Не выбран</option>
+                                     <option value="1">Продажа, выручка</option>
+                                     <option value="2">Продажа, прибыль</option>
                                      <option value="3">Закупка</option>
-                                     <option value="4">Послуги, виторг</option>
-                                     <option value="7">Послуги, прибуток</option>
+                                     <option value="4">Услуги, выручка</option>
+                                     <option value="7">Услуги, прибыль</option>
 
-                                     <option value="5">Платежі</option>
-                                     <option value="6">Кіл. продажних документів</option>
+                                     <option value="5">Платежи</option>
+                                     <option value="6">Кол. продажных документов</option>
                                  </select>
                            </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label" for="stver">По вертикалі</label>
+                            <label class="col-5 col-form-label" for="stver">По вертикали</label>
                             <div class="col-7">
                                  <select class="form-control  " zippy="stver"> 
 
@@ -47,7 +47,7 @@
                            </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-5 col-form-label" for="sthor">По горизонталі</label>
+                            <label class="col-5 col-form-label" for="sthor">По горизонтали</label>
                             <div class="col-7">
                                  <select class="form-control  " zippy="sthor"> 
                                     
@@ -55,7 +55,7 @@
                            </div>
                         </div>
                         <div class="form-group">
-                               <input   type="submit" value="Далі &gt;" class="btn btn-primary  ">
+                               <input   type="submit" value="Далее &gt;" class="btn btn-primary  ">
                                 
                         </div>
                  </form>
@@ -63,16 +63,16 @@
                 <div class="col-12">                
                 <div zippy="reppan">
                     <a class="btn btn-info mb-2" zippy="back">&lt; Назад</a> 
-                    <br><b style="font-size:larger">Зріз (фільтр) по:</b>
+                    <br><b style="font-size:larger">Срез (фильтр) по:</b>
                     
                         <form zippy="filter" class="row" >
                              <div class="col-12 col-md-6  col-xl-4">
                                  {{#cat_name}}
                                  <div class="form-group row">
-                                    <label class="col-3 col-form-label" for="slcat_name">Категорія</label>
+                                    <label class="col-3 col-form-label" for="slcat_name">Категория</label>
                                     <div class="col-9">
                                          <select class="form-control  select2 " zippy="slcat_name"> 
-                                              <option value="0">Не вказано</option>     
+                                              <option value="0">Не указано</option>     
                                          </select>
                                    </div>
                                 </div>
@@ -82,7 +82,7 @@
                                     <label class="col-3 col-form-label" for="slitemname">ТМЦ</label>
                                     <div class="col-9">
                                          <select class="form-control select2 " zippy="slitemname"> 
-                                           <option value="0">Не вказано</option>            
+                                           <option value="0">Не указано</option>            
                                          </select>
                                    </div>
                                 </div>
@@ -92,7 +92,7 @@
                                     <label class="col-3 col-form-label" for="slcustomer_name">Контрагент</label>
                                     <div class="col-9">
                                          <select class="form-control select2  " zippy="slcustomer_name"> 
-                                           <option value="0">Не вказано</option>                                     
+                                           <option value="0">Не указано</option>                                     
                                          </select>
                                    </div>
                               </div>
@@ -100,10 +100,10 @@
                                {{#service_name}}
                                     
                               <div class="form-group row">
-                                    <label class="col-3 col-form-label" for="slservice_name">Послуга</label>
+                                    <label class="col-3 col-form-label" for="slservice_name">Услуга</label>
                                     <div class="col-9">
                                          <select class="form-control  select2 " zippy="slservice_name"> 
-                                                  <option value="0">Не вказано</option>                              
+                                                  <option value="0">Не указано</option>                              
                                          </select>
                                    </div>
                                 </div>
@@ -118,7 +118,7 @@
                                     <label class="col-5 col-form-label" for="sldocument_date">Дата</label>
                                     <div class="col-7">
                                          <select class="form-control  select2 " zippy="sldocument_date"> 
-                                                         <option value="0">Не вказано</option>                       
+                                                         <option value="0">Не указано</option>                       
                                          </select>
                                    </div>
                                 </div>
@@ -126,20 +126,20 @@
                          
                                   {{#username}}
                                 <div class="form-group row">
-                                    <label class="col-5 col-form-label" for="slusername">Співробітник</label>
+                                    <label class="col-5 col-form-label" for="slusername">Сотрудник</label>
                                     <div class="col-7">
                                          <select class="form-control  select2 " zippy="slusername"> 
-                                             <option value="0">Не вказано</option>                                   
+                                             <option value="0">Не указано</option>                                   
                                          </select>
                                    </div>
                                 </div>
                                  {{/username}}
                                   {{#mf_name}}
                                <div class="form-group row">
-                                    <label class="col-5 col-form-label" for="slmf_name">Рахунок</label>
+                                    <label class="col-5 col-form-label" for="slmf_name">Счет</label>
                                     <div class="col-7">
                                          <select class="form-control  select2 " zippy="slmf_name"> 
-                                               <option value="0">Не вказано</option>                                 
+                                               <option value="0">Не указано</option>                                 
                                          </select>
                                    </div>
                                 </div>
@@ -153,17 +153,17 @@
                                     <label class="col-5 col-form-label" for="slstorename">Склад</label>
                                     <div class="col-7">
                                          <select class="form-control  select2 " zippy="slstorename"> 
-                                               <option value="0">Не вказано</option>                                 
+                                               <option value="0">Не указано</option>                                 
                                          </select>
                                    </div>
                                 </div>
                                   {{/storename}}
                                   {{#branch_name}}
                               <div class="form-group row">
-                                    <label class="col-5 col-form-label" for="slbranch_name">Філія</label>
+                                    <label class="col-5 col-form-label" for="slbranch_name">Филиал</label>
                                     <div class="col-7">
                                          <select class="form-control select2  " zippy="slbranch_name"> 
-                                               <option value="0">Не вказано</option>                                 
+                                               <option value="0">Не указано</option>                                 
                                          </select>
                                    </div>
                                 </div>
@@ -174,7 +174,7 @@
                             
                              <div class="col-12">
           
-                               <input   type="submit" value="Оновити" class="btn btn-primary  ">
+                               <input   type="submit" value="Обновить" class="btn btn-primary  ">
                         
                             </div>
                          
@@ -188,8 +188,8 @@
                     <div zippy="detail">
                         <div>
 
-                            <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                            <a href="/index.php?p=App/Pages/ShowReport&arg=xls/olap" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                            <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                            <a href="/index.php?p=App/Pages/ShowReport&arg=xls/olap" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
 
 
                         </div>

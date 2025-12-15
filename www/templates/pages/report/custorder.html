@@ -1,20 +1,20 @@
 <html>
    <head>
-        <title> Товари в дорозі   </title>
+        <title> Товары в пути   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Товари в дорозі                </h3>
-                <small>Товари в замовленнях постачальнику зі статусом 'Виконується'</small>
+                <h3>Товары в пути                </h3>
+                <small>ТовТоварыари в заявках поставщику со  статусом   'Выполняется'</small>
 
                 <div class="card">
                     <form zippy="filter" class="form-inline">
 
-                        <label for="cust">Постачальник</label>
+                        <label for="cust">Поставщик</label>
                         <select class="form-control " zippy="cust">
-                            <option value="0">По всім</option>
+                            <option value="0">По всем</option>
                         </select>
 
                         <input class="btn btn-outline-primary ml-2 " type="submit" value="ОК">
@@ -25,9 +25,9 @@
 
                 <div zippy="detail">
                     <div>
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/custorder" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/custorder" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/custorder" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/custorder" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
                     </div>
                     <div zippy="preview" class="table-responsive-sm">

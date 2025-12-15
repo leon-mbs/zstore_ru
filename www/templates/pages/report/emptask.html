@@ -1,23 +1,23 @@
 <html>
    <head>
-        <title>  Оплата по виробництву  </title>
+        <title>  Оплата по производству  </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Оплата по виробництву</h3>
+                <h3>Оплата по производству</h3>
                 <div class="card">
                     <form zippy="filter" class="form-inline">
 
-                        <label for="from">З</label>
+                        <label for="from">С</label>
                         <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="from">
 
                         <label for="to">по</label>
                         <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="to">
-                        <label   for="emp">Виконавець </label>
+                        <label   for="emp">Исполнитель </label>
                         <select class="form-control  mr-sm-2 " zippy="emp">
-                            <option value="0">По всiм</option>
+                            <option value="0">По всем</option>
                         </select>
                    
 
@@ -30,9 +30,9 @@
 
                 <div zippy="detail">
 
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/etareport" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"> </i> </a>
-                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/etreport" target="_blank" title="Експорт у PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/etareport" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"> </i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/etreport" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
                                     
 
                     </div>
