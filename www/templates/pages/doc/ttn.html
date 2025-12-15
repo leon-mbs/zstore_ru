@@ -109,9 +109,7 @@
                     <div class="form-group">
                         <label data-label="ship_number" for="ship_number">Номер декларації</label>
                         <input class="form-control" type="text" zippy="ship_number">
-                        {{#np}}
-                          <small data-label="ship_number">Відправку НП можна  створити через журнал продаж</small>
-                        {{/np}}
+                      
                     </div>
                     <div class="form-group">
                         <label data-label="ship_amount" for="ship_amount">Сума витрат за доставку</label>
@@ -210,9 +208,7 @@
                     <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  mr-2 ">
                     <input zippy="execdoc" type="submit" value="Готово до вiдправки" class="btn btn-outline-primary  mr-2 ">
                     <input zippy="senddoc" type="submit" value="Відправити" class="btn btn-outline-success  mr-2 ">
-                    {{#np}}
-                    <input zippy="sendnp" type="submit" value="Відправити НП" class="btn btn-outline-success  ">            
-                    {{/np}}
+                   
 
 
                 </div>

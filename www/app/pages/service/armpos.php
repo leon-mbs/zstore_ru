@@ -123,9 +123,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->navbar->add(new ClickLink('tochecklist', $this, 'onCheckList'));
         $this->docpanel->navbar->add(new ClickLink('tosimple', $this, 'onModeOn'));
         $this->docpanel->navbar->add(new ClickLink('tostandard', $this, 'onModeOn'));
-        $this->docpanel->navbar->add(new ClickLink('openshift', $this, 'OnOpenShift'));
-        $this->docpanel->navbar->add(new ClickLink('closeshift', $this, 'OnCloseShift'));
-
+       
 
         $this->docpanel->add(new Form('form2'))->setVisible(false);
 
@@ -204,8 +202,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->formcheck->add(new Label('showcheck'));
         $this->docpanel->formcheck->add(new Button('newdoc'))->onClick($this, 'newdoc');
         $this->docpanel->formcheck->add(new Button('print'))->onClick($this, "OnPrint", true);
-        $this->docpanel->formcheck->add(new Button('qrpaybtn'));
-
+      
         $this->docpanel->add(new Form('editdetail'))->setVisible(false);
         $this->docpanel->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->docpanel->editdetail->add(new TextInput('editprice'));
@@ -245,8 +242,7 @@ class ARMPos extends \App\Pages\Base
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
-        $this->add(new Label('qrimg')) ;
-
+       
         $this->_tvars['simplemode']  = false;
         $common = System::getOptions("common");
 
@@ -345,17 +341,14 @@ class ARMPos extends \App\Pages\Base
         }
 
 
-        if($this->pos->usefisc != 1) {
-            $this->_tvars['fiscal']  = false;
-        }
+      
         if($this->pos->usefreg != 1) {
-            $this->_tvars['freg']  = false;
+            $this->_tvars['usefr']  = false;
         } else {
             $this->_tvars['scriptfreg']  = $this->pos->scriptfreg;
         }
  
-        $this->_tvars['fiscaltestmode']  = $this->pos->testing==1;
-
+        
          
         
         $filter = \App\Filter::getFilter("armpos");
@@ -1301,82 +1294,13 @@ class ARMPos extends \App\Pages\Base
             }            
             
 
-            if($this->pos->usefreg == 1) {
-                $this->_doc->headerdata["passfisc"] = 1;
-                $this->_doc->save();
-            }    
+            if($this->_pos->usefreg == 1 && $this->docpanel->form3->passfisc->isChecked()==false) {
+                    $this->_doc->headerdata["passfisc"] = 1;
+                      
+                    $this->_doc->save();
+            }  
                 
-            if($this->pos->usefisc == 1) {
-                if($this->docpanel->form3->passfisc->isChecked()) {
-                    $this->_doc->headerdata["passfisc"]  = 1;
-                } else {
-                    $this->_doc->headerdata["passfisc"]  = 0;
-                    if($this->_tvars['checkbox'] == true) {
-
-                        $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
-                        $ret = $cb->Check($this->_doc) ;
-
-                        if(is_array($ret)) {
-                            $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                            $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                            $this->_doc->headerdata["checkbox"] = $ret['checkid'];
-                        } else {
-                            throw new \Exception($ret);
-
-                        }
-
-
-                    }
-                    if($this->_tvars['vkassa'] == true) {
-                        $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-                        $ret = $vk->Check($this->_doc) ;
-
-                        if(is_array($ret)) {
-                            $this->_doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                            $this->_doc->headerdata["tax_url"] = $ret['tax_url'];
-                            $this->_doc->headerdata["vkassa"] = $ret['checkid'];
-                                                 
-                        } else {
-                            throw new \Exception($ret);
-
-                        }         
-                    }
-                    if ($this->_tvars['ppo'] == true) {
-
-
-                        $this->_doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
-
-
-                        $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                            //повторяем для  нового номера
-                            $this->pos->fiscdocnumber = $ret['doclocnumber'];
-                            $this->pos->save();
-                            $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                        }
-                        if ($ret['success'] == false) {
-                            $this->setErrorTopPage($ret['data']);
-                            throw new \Exception($ret['data']);
-                        } else {
-                            //  $this->setSuccess("Выполнено") ;
-                            if ($ret['docnumber'] > 0) {
-                                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                                $this->pos->save();
-                                $this->_doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                                $this->_doc->headerdata["fiscalamount"] = $ret['fiscalamount'];
-                                $this->_doc->headerdata["fiscaltest"] = $ret['fiscaltest'];
-                            } else {
-                                throw new \Exception("Не повернено фіскальний номер");
-                            }
-                        }
-
-                    }
-                                     
-                }
-                $this->_doc->save();       
-                
-            }
-  
+           
             $conn->CommitTrans();
         } catch(\Throwable $ee) {
             global $logger;
@@ -1400,222 +1324,14 @@ class ARMPos extends \App\Pages\Base
         $check = $this->_doc->generatePosReport();
         $this->docpanel->formcheck->showcheck->setText($check, true);
 
-        $this->docpanel->formcheck->qrpaybtn->setVisible(false);
-        $qr = $this->_doc->getQRPay()   ;
-        if(is_array($qr)) {
-            $this->docpanel->formcheck->qrpaybtn->setVisible(true);
-            $this->qrimg->setText($qr['qr'], true);
-        }
+       
   
-        if($this->pos->usefreg == 1   ) {
-           $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
+        if($this->_pos->usefreg == 1 && $this->docpanel->form3->passfisc->isChecked()==false) {
+              $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
         } 
     }
 
-    public function OnOpenShift($sender) {
  
-        if($this->_tvars['checkbox'] == true) {
-
-
-            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
-            $ret = $cb->OpenShift() ;
-
-            if($ret === true) {
-                $this->setSuccess("Зміна відкрита");
-            } else {
-                $this->setError($ret);
-            }
-            if($this->pos->autoshift >0){
-                $task = new  \App\Entity\CronTask()  ;
-                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
-                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
-                 
-                $task->starton=$t;
-                $task->taskdata= serialize(array(
-                       'pos_id'=>$this->pos->pos_id, 
-                       'type'=>'cb' 
-       
-                    ));         
-                $task->save();
-                    
-            }  
-
-
-            return;
-        }
-
-         if($this->_tvars['vkassa'] == true) {
-
-
-            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-            $ret = $vk->OpenShift() ;
-
-            if($ret === true) {
-                $this->setSuccess("Зміна відкрита");
-            } else {
-                $this->setError($ret);
-            }
-            if($this->pos->autoshift >0){
-                $task = new  \App\Entity\CronTask()  ;
-                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
-                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
-                 
-                $task->starton=$t;
-                $task->taskdata= serialize(array(
-                       'pos_id'=>$this->pos->pos_id, 
-                       'type'=>'vk' 
-       
-                    ));         
-                $task->save();
-                    
-            }  
-
-
-            return;
-        }
-        $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-            //повторяем для  нового номера
-            $this->pos->fiscdocnumber = $ret['doclocnumber'];
-            $this->pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, true);
-        }
-        if ($ret['success'] == false) {
-            $this->setErrorTopPage($ret['data']);
-            return false;
-        } else {
-            $this->setSuccess("Зміна відкрита");
-            if ($ret['doclocnumber'] > 0) {
-                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->pos->save();
-
-            }
-            \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
-            
-            //задача  для  автозакрытия
-            if($this->pos->autoshift >0){
-                $task = new  \App\Entity\CronTask()  ;
-                $task->tasktype = \App\Entity\CronTask::TYPE_AUTOSHIFT;
-                $t =   strtotime(  date('Y-m-d ') .  $this->pos->autoshift.':00' );  
-                  
-                $task->starton=$t;
-                $task->taskdata= serialize(array(
-                       'pos_id'=>$this->pos->pos_id, 
-                       'type'=>'ppro' 
-       
-                    ));         
-                $task->save();
-                    
-            }              
-            
-        }
-
-
-        $this->pos->save();
-       
-    }
-
-    public function OnCloseShift($sender) {
-
-        if($this->_tvars['checkbox'] == true) {
-
-            $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
-            $ret = $cb->CloseShift() ;
-
-            if($ret === true) {
-                $this->setSuccess("Зміна закрита");
-            } else {
-                $this->setError($ret);
-            }
-
-            return;
-        }
-        if($this->_tvars['vkassa'] == true) {
-
-            $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-            $ret = $vk->CloseShift() ;
-
-            if($ret === true) {
-                $this->setSuccess("Зміна закрита");
-            } else {
-                $this->setError($ret);
-            }
-
-            return;
-        }
-
-        $ret = $this->zform();
-        if ($ret == true) {
-            $this->closeshift();
-        }
-    }
-    //для ПРРО
-    public function zform() {
-
-        $stat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id);
-        $rstat = \App\Modules\PPO\PPOHelper::getStat($this->pos->pos_id, true);
-
-        $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
-        if (strpos($ret['data'], 'ZRepAlreadyRegistered')) {
-            return true;
-        }
-        if ($ret['success'] == false && ($ret['doclocnumber'] ??0 ) > 0) {
-            //повторяем для  нового номера
-            $this->pos->fiscdocnumber = $ret['doclocnumber'];
-            $this->pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::zform($this->pos->pos_id, $stat, $rstat);
-        }
-        if ($ret['success'] == false) {
-            $this->setErrorTopPage($ret['data']);
-            return false;
-        } else {
-
-            if ($ret['doclocnumber'] > 0) {
-                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->pos->save();
-            } else {
-                $this->setError("Не повернено фіскальний номер");
-                return;
-            }
-        }
-
-
-        return true;
-    }
-
-    //для ПРРО
-    public function closeshift() {
-        $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
-        if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-            //повторяем для  нового номера
-            $this->pos->fiscdocnumber = $ret['doclocnumber'];
-            $this->pos->save();
-            $ret = \App\Modules\PPO\PPOHelper::shift($this->pos->pos_id, false);
-        }
-        if ($ret['success'] == false) {
-            $this->setErrorTopPage($ret['data']);
-            return false;
-        } else {
-            
-            $sc = \App\System::getSession()->shiftclose;
-            if(strlen($sc)>0) {
-               \App\System::getSession()->shiftclose="";
-               $this->setInfoTopPage("Зміна закрита. ".$sc );                               
-            } else {
-               $this->setSuccess("Зміна закрита");    
-            }
-            
-            if ($ret['doclocnumber'] > 0) {
-                $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                $this->pos->save();
-            }
-            \App\Modules\PPO\PPOHelper::clearStat($this->pos->pos_id);
-        }
-
-
-        return true;
-    }
-
     //строка  списка чеков
     public function onDocRow($row) {
         $doc = $row->getDataItem();
@@ -1633,7 +1349,7 @@ class ARMPos extends \App\Pages\Base
         $row->checkreturn->setVisible($doc->state > 4);
         if($doc->meta_name=='ReturnIssue')   $row->checkreturn->setVisible(false);
  
-        $row->add(new ClickLink('checkfisc', $this, "onFisc"))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
+      
         $row->add(new Label('checkfr' ))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
         $row->checkfr->setAttribute("onclick","fiscFR({$doc->document_id})")  ;
         if($doc->state <5) {
@@ -1671,100 +1387,7 @@ class ARMPos extends \App\Pages\Base
         $this->checklistpan->checklist->Reload();
     }
 
-    public function onFisc($sender) {
-
-        $doc =  $sender->getOwner()->getDataItem();
-
-        $conn = \ZDB\DB::getConnect();
-        $conn->BeginTrans();
-        try {
-
-            if($this->_tvars['checkbox'] == true) {
-
-                $cb = new  \App\Modules\CB\CheckBox($this->pos->cbkey, $this->pos->cbpin) ;
-                $ret = $cb->Check($doc) ;
-
-                if(is_array($ret)) {
-                    $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                    $doc->headerdata["tax_url"] = $ret['tax_url'];
-                    $doc->headerdata["checkbox"] = $ret['checkid'];
-                    $doc->headerdata["passfisc"] = 0;
-                    $doc->save();
-                    $this->setSuccess("Виконано");
-                } else {
-
-                    throw new \Exception($ret);
-
-                }
-
-
-            }
-            if($this->_tvars['vkassa'] == true) {
-                $vk = new  \App\Modules\VK\VK($this->pos->vktoken) ;
-                $ret = $vk->Check($doc) ;
-
-                if(is_array($ret)) {
-                    $doc->headerdata["fiscalnumber"] = $ret['fiscnumber'];
-                    $doc->headerdata["passfisc"] = 0;
-                    $doc->save();
-                  
-                } else {
-                    throw new \Exception($ret);
-
-
-                }  
-            }
-
-
-            if ($this->_tvars['ppo'] == true) {
-
-
-                $doc->headerdata["fiscalnumberpos"]  = $this->pos->fiscalnumber;
-
-
-                $ret = \App\Modules\PPO\PPOHelper::check($doc);
-                if ($ret['success'] == false && $ret['doclocnumber'] > 0) {
-                    //повторяем для  нового номера
-                    $this->pos->fiscdocnumber = $ret['doclocnumber'];
-                    $this->pos->save();
-                    $ret = \App\Modules\PPO\PPOHelper::check($this->_doc);
-                }
-                if ($ret['success'] == false) {
-                      throw new \Exception($ret['data']);
-
-                } else {
-                    //  $this->setSuccess("Выполнено") ;
-                    if ($ret['docnumber'] > 0) {
-                        $this->pos->fiscdocnumber = $ret['doclocnumber'] + 1;
-                        $this->pos->save();
-                        $doc->headerdata["fiscalnumber"] = $ret['docnumber'];
-                        $doc->headerdata["passfisc"] = 0;
-                        $doc->save();
-                        $this->setSuccess("Виконано");
-                    } else {
-                        throw new \Exception("Не повернено фіскальний номер");
-
-                    }
-                }
-
-            }
-
-        
-            $conn->CommitTrans();
-        } catch(\Throwable $ee) {
-            global $logger;
-            $conn->RollbackTrans();
-            $this->setErrorTopPage($ee->getMessage());
-
-            $logger->error($ee->getMessage() . " Документ " . $doc->meta_desc);
-      
-            
-            return;
-        }        
-        
-        $this->updatechecklist(null);
-    }
-
+    
     public function onEdit($sender) {
         $item =  $sender->getOwner()->getDataItem();
         $doc = Document::load($item->document_id);

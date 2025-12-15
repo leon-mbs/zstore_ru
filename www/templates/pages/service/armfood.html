@@ -99,16 +99,7 @@
               <div zippy="navbar" class="card justify-content-start">
                
                <h5><strong><a zippy="toorderlist"><i class="fa fa-list"></i> До переліку замовлень</a></strong> </h5>
-                   {{#fiscal}}
-                          &nbsp;  &nbsp;
-                            <a zippy="openshift"><i class="fa fa-bullhorn"></i> Вiдкрити змiну</a>
-                        &nbsp;  &nbsp; <a zippy="closeshift"><i class="fa fa-gavel"></i> Закрити змiну</a>
-                        {{#fiscaltestmode}}
-                        &nbsp; <small><i class="fa fa-exclamation-triangle"></i> Тестовий режим</small>
-                        {{/fiscaltestmode}}
-                        
-             
-                           {{/fiscal}}              
+                          
 
              </div> 
             </div> 
@@ -474,13 +465,13 @@
                                 &nbsp;&nbsp; <input zippy="btocheck" type="submit" value="Оплатити > "   class="btn btn-success">
        
                             
-                           {{#fiscal}}
+                           {{#usefr}}
                             &nbsp;&nbsp;<input zippy="passfisc" type="checkbox"> Відкласти фiскалiзацiю  
                            <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                                    title="На випадок збою інтернету фіскалізацію можна пропустити.
                                     Чек може бути фіскалізований зі списку чеків "></i>
                                               
-                            {{/fiscal}}                            
+                            {{/usefr}}                            
                             &nbsp;&nbsp;<input zippy="passprod" type="checkbox"> <span  data-label="passprod"> Не відправляти в виробництво </span>
                            <i class="fa fa-info-circle  " data-label="passprod" data-toggle="tooltip" data-placement="top"
                                    title="Якщо товар не потребує приготування "></i>
@@ -570,7 +561,7 @@
                        
                         <th ></th>
                         <th > </th>
-                       {{#fiscal}}      <th ></th>     {{/fiscal}}
+                       {{#usefr}}      <th ></th>     {{/usefr}}
                         
                     </tr>
                     <tr zippy="orderlist">
@@ -596,13 +587,10 @@
                         <td ><a zippy="bredit" class="btn btn-sm btn-info"><i class="fa fa-edit"></i> Редагувати</a></td>
                         <td ><a zippy="brclose" class="btn btn-sm btn-success"><i class="fa fa-stamp"></i> Закрити</a></td>
                         <td ><a zippy="brrefuse" class="text-danger"> Анулювати</a></td>
-                    {{#fiscal}}
-                        <td  ><a zippy="checkfisc" >Фiскалiзувати</a>
-                        </td>
-                         {{/fiscal}}                        
-                   {{#freg}}
+                                         
+                   {{#usefr}}
                         <td  ><span style="cursor:pointer" zippy="checkfr" >Фiскалiзувати</span></td>
-                         {{/freg}}                        
+                         {{/usedr}}                        
                     </tr>
 
                 </table> 

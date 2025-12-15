@@ -96,8 +96,7 @@ class TTN extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('senddoc'))->onClick($this, 'savedocOnClick');
-        $this->docform->add(new SubmitButton('sendnp'))->onClick($this, 'savedocOnClick');
-
+       
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
@@ -646,7 +645,7 @@ class TTN extends \App\Pages\Base
             }
             $this->_doc->save();
             
-            if ($sender->id == 'execdoc' ||$sender->id == 'senddoc' || $sender->id == 'sendnp') {
+            if ($sender->id == 'execdoc' ||$sender->id == 'senddoc' ) {
              
           
              
@@ -685,20 +684,14 @@ class TTN extends \App\Pages\Base
             } else  if ($sender->id == 'senddoc') {
                  $this->_doc->updateStatus(Document::STATE_INSHIPMENT);
             }
-            else  if ($sender->id == 'sendnp') {
-                 $this->_doc->updateStatus(Document::STATE_READYTOSHIP);
-            }
+           
             else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
 
 
             $conn->CommitTrans();
-            if ($sender->id == 'sendnp') {
-
-                App::Redirect('\App\Pages\Register\GIList', $this->_doc->document_id);
-                return;
-            }
+         
             App::Redirect("\\App\\Pages\\Register\\GIList");
         } catch(\Throwable $ee) {
             global $logger;
@@ -877,11 +870,10 @@ class TTN extends \App\Pages\Base
 
         if ($sender->getValue() != Document::DEL_SELF) {
             $this->docform->senddoc->setVisible(true);
-            $this->docform->sendnp->setVisible(true);
-
+           
             $this->docform->payseller->setVisible(true);
             $this->docform->ship_address->setVisible(true);
-            $this->docform->ship_number->setVisible($sender->getValue() == Document::DEL_NP);
+         
             $this->docform->ship_amount->setVisible(true);
             $this->docform->sent_date->setVisible(true);
             $this->docform->delivery_date->setVisible(true);
@@ -898,7 +890,7 @@ class TTN extends \App\Pages\Base
             $this->docform->emp->setVisible(false);
             $this->docform->ship_number->setText('');
         }
-        $this->docform->sendnp->setVisible($sender->getValue() == Document::DEL_NP);
+     
     }
 
     public function onOpenItemSel($sender) {

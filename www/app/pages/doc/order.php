@@ -85,7 +85,7 @@ class Order extends \App\Pages\Base
  
         $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], H::getDefPayType() ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
-        $this->docform->add(new DropDownChoice('deliverynp', [],0))->onChange($this, 'OnDeliverynp');
+     
         $this->docform->add(new TextInput('email'));
         $this->docform->add(new TextInput('phone'));
         $this->docform->add(new TextArea('address'))->setVisible(false);
@@ -107,14 +107,9 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('total'));
         $this->docform->add(new DropDownChoice('store', \App\Entity\Store::getList(), H::getDefStore()));
 
-        $this->docform->add(new AutocompleteTextInput('baycity'))->onText($this, 'onTextBayCity');
-        $this->docform->baycity->onChange($this, 'onBayCity');
-        $this->docform->add(new AutocompleteTextInput('baypoint'))->onText($this, 'onTextBayPoint');;
-        
+       
       
-        $this->docform->add(new TextInput('bayhouse'));
-        $this->docform->add(new TextInput('bayflat'));
-  
+      
         $this->OnDelivery($this->docform->delivery);
         $this->OnPayType($this->docform->paytype);
 
@@ -172,17 +167,10 @@ class Order extends \App\Pages\Base
             $this->OnDelivery($this->docform->delivery);
             $this->docform->paytype->setValue($this->_doc->headerdata['paytype']);
             $this->OnPayType($this->docform->paytype);
-            $this->docform->deliverynp->setValue($this->_doc->headerdata['deliverynp']);
-            $this->OnDeliverynp($this->docform->deliverynp);
-
+         
+         
             
-            $this->docform->baycity->setKey($this->_doc->headerdata['baycity'] ?? '');
-            $this->docform->baypoint->setKey($this->_doc->headerdata['baypoint'] ?? '');
-            $this->docform->baycity->setText($this->_doc->headerdata['baycityname'] ?? '');
-            $this->docform->baypoint->setText($this->_doc->headerdata['baypointname'] ?? '');
-            
-            $this->docform->bayhouse->setText($this->_doc->headerdata['bayhouse'] );
-            $this->docform->bayflat->setText($this->_doc->headerdata['bayflat'] );
+          
             $this->docform->store->setValue($this->_doc->headerdata['store'] );
             
             
@@ -507,35 +495,8 @@ class Order extends \App\Pages\Base
 
         $this->_doc->headerdata['delivery'] = $this->docform->delivery->getValue();
         $this->_doc->headerdata['delivery_name'] = $this->docform->delivery->getValueName();
-        $this->_doc->headerdata['deliverynp'] = $this->docform->deliverynp->getValue();
 
-        $this->_doc->headerdata['baycity'] = $this->docform->baycity->getKey();
-        $this->_doc->headerdata['baycityname'] = $this->docform->baycity->getText();
-        $this->_doc->headerdata['baypoint'] = $this->docform->baypoint->getKey();
-        $this->_doc->headerdata['baypointname'] = $this->docform->baypoint->getText();
-        
-        $this->_doc->headerdata['bayhouse'] = $this->docform->bayhouse->getText();
-        $this->_doc->headerdata['bayflat'] = $this->docform->bayflat->getText();
-        $this->_doc->headerdata['npaddress'] = $this->docform->address->getText();
-        $this->_doc->headerdata['npaddressfull'] ='';
-
-       
-        if(strlen($this->_doc->headerdata['baycity'])>1) {
-           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baycity->getText() );   
-        }
-        if(strlen($this->_doc->headerdata['baypoint'])>1) {
-           $this->_doc->headerdata['npaddressfull']  .= (' '. $this->docform->baypoint->getText() );   
-        }
-        if(strlen($this->_doc->headerdata['bayhouse'])>0) {
-           $this->_doc->headerdata['npaddressfull']  .= (' буд '. $this->docform->bayhouse->getText() );   
-        }
-        if(strlen($this->_doc->headerdata['bayflat'])>0) {
-           $this->_doc->headerdata['npaddressfull']  .= (' кв '. $this->docform->bayflat->getText() );   
-        }
-        if(strlen($this->_doc->headerdata['npaddressfull'])==0) {
-           $this->_doc->headerdata['npaddressfull']  = $this->_doc->headerdata['npaddress'];   
-        }
-        
+    
         
         
         $this->_doc->headerdata['phone'] = $this->docform->phone->getText();
@@ -858,34 +819,11 @@ class Order extends \App\Pages\Base
             $this->docform->address->setVisible(false);
         }
 
-        $this->docform->deliverynp->setVisible($dt == Document::DEL_NP);
-
-        $this->docform->baycity->setVisible($dt  == Document::DEL_NP ) ;
-        $this->docform->baypoint->setVisible($dt == Document::DEL_NP ) ;
-        $this->docform->bayhouse->setVisible($dt == Document::DEL_NP ) ;
-        $this->docform->bayflat->setVisible($dt == Document::DEL_NP ) ;
-        if ($dt == Document::DEL_NP) {
-            $this->docform->deliverynp->setValue(0);
-            $this->OnDeliverynp($this->docform->deliverynp) ;
-        }
+    
 
     }
 
-    public function OnDeliverynp($sender) {
-      $dt = $sender->getValue() ;        
-      $this->docform->baypoint->setKey('') ;   
-      $this->docform->baypoint->setText('') ;   
-
-      $this->docform->baycity->setKey('');   
-      $this->docform->baycity->setText('')  ;   
-
-     
-      $this->docform->address->setVisible($dt ==2) ;   
-      $this->docform->bayhouse->setVisible($dt ==2) ;   
-      $this->docform->bayflat->setVisible($dt ==2) ;     
-      
-    }
-
+  
     public function OnChangePriceType($sender) {
         foreach ($this->_tovarlist as $item) {
             //$item = Item::load($item->item_id);
@@ -1026,45 +964,7 @@ class Order extends \App\Pages\Base
 
  
 
-    public function onTextBayCity($sender) {
-        $text = $sender->getText()  ;
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->searchCity($text);
-
-        if($list['success']!=true) return;
-        $opt=[];  
-        foreach($list['data'] as $d ) {
-            foreach($d['Addresses'] as $c) {
-               $opt[$c['Ref']]=$c['Present']; 
-            }
-        }
-        
-        return $opt;
-       
-    }
-
-    public function onBayCity($sender) {
-     
-        $this->docform->baypoint->setKey('');
-        $this->docform->baypoint->setText('');
-    }
-  
-    public function onTextBayPoint($sender) {
-        $text = $sender->getText()  ;
-        $ref=  $this->docform->baycity->getKey();
-        $api = new \App\Modules\NP\Helper();
-        $list = $api->searchPoints($ref,$text);
-       
-        if($list['success']!=true) return;
-        
-        $opt=[];  
-        foreach($list['data'] as $d ) {
-           $opt[$d['WarehouseIndex']]=$d['Description']; 
-        }
-        
-        return $opt;        
-    }
-
+ 
 
     public function onSavePromo($sender) {
         $code= trim($this->docform->editpromo->getText());

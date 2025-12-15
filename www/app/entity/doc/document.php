@@ -42,7 +42,7 @@ class Document extends \ZCL\DB\Entity
     public const DEL_SELF    = 1;    //  самовывоз
     public const DEL_BOY     = 2;    //  курьер
     public const DEL_SERVICE = 3;    //  служба доставки
-    public const DEL_NP      = 4;    //  новая почта
+   // public const DEL_NP      = 4;    //  новая почта
     public const DEL_UP      = 5;    //  укрпочта
     public const DEL_MEEST   = 6;    //  мест
     public const DEL_ROZ     = 7;    //  

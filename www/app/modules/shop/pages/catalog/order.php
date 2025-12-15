@@ -82,7 +82,7 @@ class Order extends Base
 
         $dt = $sender->getValue();
         
-        if ($dt == Document::DEL_SELF || $dt == Document::DEL_NP) {
+        if ($dt == Document::DEL_SELF  ) {
             $this->orderform->address->setVisible(false);
         } else {
             $this->orderform->address->setVisible(true);
