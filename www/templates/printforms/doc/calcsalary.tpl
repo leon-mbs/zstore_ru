@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td  colspan="{{colspan}}">
-            <b> Нарахування зарплати № {{document_number}} від {{date}}</b> <br>
+            <b> Начисление зарплаты № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
 
@@ -9,14 +9,14 @@
 
     <tr>
         <td  colspan="{{colspan}}">
-            <b>Місяць:</b> {{month}} {{year}}
+            <b>Месяц:</b> {{month}} {{year}}
         </td>
     </tr>
 
     {{#department}}  
    <tr>
         <td  colspan="{{colspan}}">
-            <b>Відділ:</b> {{department}}  
+            <b>Отдел:</b> {{department}}  
         </td>
     </tr>
     {{/department}}  
@@ -52,7 +52,7 @@
     {{/_detail}}
     <tr>
         <td colspan="{{colspan}}">
-            <b>Всього:  {{total}}</b>
+            <b>Всего:  {{total}}</b>
         </td>
          
     </tr>

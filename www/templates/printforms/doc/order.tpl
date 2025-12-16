@@ -2,7 +2,7 @@
 
     <tr>
         <td></td>
-        <td>Замовник</td>
+        <td>Заказчик</td>
         <td colspan="8">{{customer_name}}</td>
     </tr>
     <tr>
@@ -17,7 +17,7 @@
     </tr>
     <tr>
         <td></td>
-        <td> Тип оплати</td>
+        <td> Тип оплаты</td>
         <td colspan="8">{{paytypename}}</td>
         
     </tr>
@@ -25,12 +25,12 @@
         <td></td>
         <td> Доставка</td>
         <td>{{delivery}}</td>
-        <td colspan="7">Адреса: {{ship_address}}</td>
+        <td colspan="7">Адрес: {{ship_address}}</td>
     </tr>
     {{#isoutnumber}}
     <tr>
         <td></td>
-        <td>Зовнiшнiй номер</td>
+        <td>Внешний номер</td>
         <td colspan="8">{{outnumber}}</td>
     </tr>
 
@@ -40,7 +40,7 @@
     <tr>
 
         <td></td>
-        <td><b> Продавець</b></td>
+        <td><b> Продавец</b></td>
         <td colspan="8"><b>{{firm_name}}</b></td>
 
     </tr>  
@@ -62,21 +62,21 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="10" valign="middle">
-            Замовлення № {{document_number}} від {{date}}
+            Заказ № {{document_number}} от {{date}}
         </td>
     </tr>
 
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування        </th>
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование        </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;"> </th>
 
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кіл.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Ціна</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сума</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кол.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Цена</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сумма</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -92,7 +92,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="9" align="right">На суму:</td>
+        <td style="border-top:1px #000 solid;" colspan="9" align="right">На сумму:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
@@ -100,13 +100,13 @@
 
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">Знижка:</td>
+        <td colspan="9" align="right">Скидка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
     {{#delbonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">Списано бонусiв::</td>
+        <td colspan="9" align="right">Списано бонусов::</td>
         <td align="right">{{delbonus}}</td>
     </tr>
     {{/delbonus}}
@@ -114,7 +114,7 @@
 
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">До сплати:</td>
+        <td colspan="9" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 

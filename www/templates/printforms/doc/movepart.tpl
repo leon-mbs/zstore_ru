@@ -1,24 +1,24 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b>Перемiщення партiй ТМЦ № {{document_number}} вiд {{date}}</b> <br>
+            <b>Перемещение партий ТМЦ № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b> З :</b> {{from}}  
+            <b> С :</b> {{from}}  
         </td>
 
     </tr>
    <tr>
         <td colspan="4">
-            <b> До :</b> {{to}}  
+            <b> В :</b> {{to}}  
         </td>
 
     </tr>
    <tr>
         <td colspan="4">
-            <b> Кiл. :</b> {{qty}}  
+            <b> Кол. :</b> {{qty}}  
         </td>
 
     </tr>

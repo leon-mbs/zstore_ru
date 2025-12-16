@@ -3,27 +3,25 @@
 <text>Чек {{document_number}}</text>
     {{/ischeck}}
     {{^ischeck}}
-<text>Рахунок {{document_number}}</text>
+<text>Счет {{document_number}}</text>
     {{/ischeck}}
     
 <font >a</font>
-<text>вiд {{date}}</text>
+<text>от {{date}}</text>
 <align>left</align>
 
     {{#fiscalnumber}}
-<text>Фiскальний чек</text>
+<text>Фискальный чек</text>
 <text>ФН чека {{fiscalnumber}}</text>
     {{/fiscalnumber}}
-   {{#fiscalnumberpos}}
-<text>ФН РРО {{fiscalnumberpos}}</text>   
-    {{/fiscalnumberpos}}
+ 
 
 <text>{{firm_name}}</text>   
 {{#inn}}  
-<text>ІПН {{inn}}</text>   
+<text>ИНН {{inn}}</text>   
 {{/inn}}  
 {{#tin}}  
-<text>ЄДРПОУ {{tin}}</text>   
+<text>ОКПО {{tin}}</text>   
 {{/tin}}  
 <text>{{shopname}}</text>   
   {{#shopname}}
@@ -32,7 +30,7 @@
 <text>{{address}}</text>    
  
     {{#customer_name}}
-<text>Покупець: {{customer_name}}</text>    
+<text>Покупатель: {{customer_name}}</text>    
 
     {{/customer_name}}
     
@@ -40,21 +38,17 @@
    
     
         {{#form1}}
- <text>Форма оплати: готiвка</text>        
+ <text>Форма оплаты: наличные</text>        
         {{/form1}}
         {{#form2}}
- <text>Форма оплати: безготiвка</text>        
+ <text>Форма оплаты: безнал</text>        
         {{/form2}}    
-         {{#payeq}}
- <text>Засiб оплати:  </text>        
- <text>{{payeq}}  </text>        
-          
-        {{/payeq}}   
+ 
         {{#trans}}
- <text>№ транзакції  {{trans}}</text>        
+ <text>№ транзакци  {{trans}}</text>        
           
         {{/trans}}     
-<text>Касир: {{username}}</text>    
+<text>Кассир: {{username}}</text>    
    {{/ischeck}}
  
 
@@ -72,39 +66,39 @@
  <font bold="true">a</font>
 
 <align>right</align>
-<text>Всього: {{total}}</text>
+<text>Всего: {{total}}</text>
 <font >a</font>
  
 
     {{^prepaid}}
     {{#isdisc}}
-<text>Знижка: {{totaldisc}}</text>
+<text>Скидка: {{totaldisc}}</text>
  
     {{/isdisc}}
    {{#bonus}}
- <text>Списано бонусiв: {{bonus}}</text>
+ <text>Списано бонусов: {{bonus}}</text>
  
     {{/bonus}}
 
- <text>До сплати: {{payamount}}</text>
+ <text>К оплате: {{payamount}}</text>
  
     {{#ischeck}} 
  
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
- <text>Решта: {{exchange}}</text>
+ <text>Сдача: {{exchange}}</text>
  {{/exchange}} 
  
     {{/ischeck}} 
      
     {{/prepaid}}
     {{#addbonus}}
- <text>Нараховано бонусiв: {{addbonus}}</text>
+ <text>Насчитано: {{addbonus}}</text>
  
     {{/addbonus}}
     {{#allbonus}}
 
- <text>Всього бонусiв: {{allbonus}}</text>
+ <text>Всего бонусов: {{allbonus}}</text>
  
     {{/allbonus}}
     
@@ -119,16 +113,6 @@
 <text>  {{checkslogan}}</text>
 {{/checkslogan}}
 
-
-
-    {{#ischeck}} 
-
-{{#docqrcodeurl}}
-<font >a</font>
-<newline ></newline>
-<qrcode type="code128"> {{docqrcodeurl}}</qrcode>
-{{/docqrcodeurl}}
-
-    {{/ischeck}} 
+ 
 <newline ></newline>
  

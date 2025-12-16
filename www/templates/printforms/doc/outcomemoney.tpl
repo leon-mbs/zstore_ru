@@ -1,19 +1,19 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b> Видатковий ордер № {{document_number}} від {{date}}</b> <br>
+            <b> Выдатковий ордер № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
 
 
     <tr>
         <td colspan="4">
-            <b>З рахунку:</b> {{from}}
+            <b>Со счета:</b> {{from}}
         </td>
     </tr>
     <tr>
         <td colspan="4">
-            <b>Сума:</b> {{amount}} 
+            <b>Сумма:</b> {{amount}} 
         </td>
     </tr>
     <tr>
@@ -32,14 +32,14 @@
     {{#contract}}
     <tr>
         <td colspan="4">
-            <b>Договір:</b> {{contract}}
+            <b>Договор:</b> {{contract}}
         </td>
     </tr>
     {{/contract}}
     {{#emp}}
     <tr>
         <td colspan="4">
-            <b>Спiвробiтник:</b> {{emp}}
+            <b>Сотрудник:</b> {{emp}}
         </td>
     </tr>
     {{/emp}}

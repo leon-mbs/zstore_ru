@@ -173,7 +173,7 @@ class ARMFood extends \App\Pages\Base
 
         $this->docpanel->payform->add(new TextInput('pfexch2b'));
 
-        $this->docpanel->payform->add(new CheckBox('passfisc'));
+
         $this->docpanel->payform->add(new CheckBox('passprod'));
 
         $bind = new  \Zippy\Binding\PropertyBinding($this, '_pt');
@@ -196,7 +196,7 @@ class ARMFood extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
-        $this->editcust->add(new TextInput('editaddress'));
+
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -1160,7 +1160,7 @@ class ARMFood extends \App\Pages\Base
         if ($this->createdoc() == false) {
             return;
         }
-        $this->docpanel->payform->passfisc->setChecked(false);
+
         $this->docpanel->payform->passprod->setChecked(false);
 
         $this->docpanel->payform->setVisible(true);
@@ -1196,7 +1196,7 @@ class ARMFood extends \App\Pages\Base
         }
         if($amount == 0) {
             $this->setWarn("0 к  оплате");  
-            $this->docpanel->payform->passfisc->setChecked(true);
+            
                           
         }
     }
@@ -1320,7 +1320,7 @@ class ARMFood extends \App\Pages\Base
             }            
 
             
-           if($this->_pos->usefreg == 1 && $this->docpanel->payform->passfisc->isChecked()==false) {
+           if($this->_pos->usefreg == 1  ) {
    
                     $this->_doc->headerdata["passfisc"] = 1;
                        
@@ -1344,7 +1344,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->checkpan->checktext->setText($check, true);
         $this->docpanel->checkpan->setVisible(true);
         $this->docpanel->payform->setVisible(false);
-        if($this->_pos->usefreg == 1 && $this->docpanel->payform->passfisc->isChecked()==false) {
+        if($this->_pos->usefreg == 1  ) {
            $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
         }         
     }
@@ -1443,7 +1443,7 @@ class ARMFood extends \App\Pages\Base
         $this->docpanel->listsform->setVisible(false);
 
         $this->editcust->editcustname->setText('');
-        $this->editcust->editaddress->setText('');
+
         $this->editcust->editphone->setText('');
     }
 
@@ -1455,7 +1455,7 @@ class ARMFood extends \App\Pages\Base
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->address = $this->editcust->editaddress->getText();
+
         $cust->phone = $this->editcust->editphone->getText();
         $cust->phone = \App\Util::handlePhone($cust->phone);
 

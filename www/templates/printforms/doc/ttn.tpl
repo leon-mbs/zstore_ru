@@ -104,19 +104,19 @@
 
 <tr>
     <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-        ТТН № {{document_number}} від {{date}} <br>
+        ТТН № {{document_number}} от {{date}} <br>
     </td>
 </tr>
 
 <tr style="font-weight: bolder;">
     <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування</th>
+    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
     <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
-    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
+    <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
-    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
-    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Ціна</th>
-    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сума</th>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
+    <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сумма</th>
 </tr>
 {{#_detail}}
 <tr>
@@ -132,7 +132,7 @@
 {{/_detail}}
 <tr style="font-weight: bolder;">
     <td style="border-top:1px #000 solid;" colspan="2">{{weight}}</td>
-    <td style="border-top:1px #000 solid;" colspan="4" align="right">Всього:</td>
+    <td style="border-top:1px #000 solid;" colspan="4" align="right">Всего:</td>
     <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
 </tr>
 

@@ -1,17 +1,17 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b> {{opname}} № {{document_number}} від {{document_date}}</b> <br>
+            <b> {{opname}} № {{document_number}} от {{document_date}}</b> <br>
         </td>
     </tr>
   
  
     <tr>
         <td colspan="2">
-            <b>Найменування:</b> {{eqname}}
+            <b>Наименование:</b> {{eqname}}
         </td>
         <td colspan="2">
-            <b>Інв. номер:</b> {{invnumber}}
+            <b>Инв. номер:</b> {{invnumber}}
         </td>
    </tr> 
  
@@ -19,7 +19,7 @@
    {{#isamount }}
     <tr>
         <td colspan="4">
-          <b>Сума:</b>   {{amount }}
+          <b>Сумма:</b>   {{amount }}
         </td>
     </tr>
    {{/isamount }}   
@@ -34,10 +34,10 @@
     <tr>
         <td colspan="4">
           {{#ispa}}
-          <b>Виробнича дільниця:</b>   {{item_name}}   &nbsp;&nbsp;&nbsp;&nbsp;
+          <b>Производственный участок:</b>   {{item_name}}   &nbsp;&nbsp;&nbsp;&nbsp;
           {{/ispa}} 
            {{#isemp}}
-            <b>Відповідальний</b> {{store_name}}
+            <b>Ответственный</b> {{store_name}}
           {{/isemp}} 
         </td>
     </tr>
@@ -57,7 +57,7 @@
 
     <tr>    
         <td colspan="4" > 
-        <br>    Підпис ___________
+        <br>    Подпись ___________
         </td>
         
 

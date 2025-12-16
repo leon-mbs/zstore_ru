@@ -196,7 +196,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form3->add(new TextInput('trans'));
 
 
-        $this->docpanel->form3->add(new CheckBox('passfisc'));
+       
         //печать
         $this->docpanel->add(new Form('formcheck'))->setVisible(false);
         $this->docpanel->formcheck->add(new Label('showcheck'));
@@ -238,7 +238,7 @@ class ARMPos extends \App\Pages\Base
         $this->add(new Form('editcust'))->setVisible(false);
         $this->editcust->add(new TextInput('editcustname'));
         $this->editcust->add(new TextInput('editphone'));
-        $this->editcust->add(new TextInput('editemail'));
+
         $this->editcust->add(new Button('cancelcust'))->onClick($this, 'cancelcustOnClick');
         $this->editcust->add(new SubmitButton('savecust'))->onClick($this, 'savecustOnClick');
 
@@ -431,7 +431,7 @@ class ARMPos extends \App\Pages\Base
         $this->docpanel->form2->custinfo->setText('');
         $this->docpanel->form3->trans->setText('') ;
         $this->docpanel->form2->prepaid->setText('') ;
-        $this->docpanel->form3->passfisc->setChecked(false) ;
+
         $this->docpanel->form2->setVisible(true);
 
         $this->docpanel->formcheck->setVisible(false);
@@ -1015,7 +1015,7 @@ class ARMPos extends \App\Pages\Base
             $disctext = "";
             $d = $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = "Постійна знижка {$d}%";
+                $disctext = "Постоянная скидка {$d}%";
 
                 $tmp=[];
                 foreach($this->_itemlist as $i) {
@@ -1043,7 +1043,7 @@ class ARMPos extends \App\Pages\Base
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
-                    $disctext = "Начиислено  бонусов {$bonus} ";
+                    $disctext = "Начислено  бонусов {$bonus} ";
                 }
             }
             $this->docpanel->form2->custinfo->setText($disctext);
@@ -1064,7 +1064,7 @@ class ARMPos extends \App\Pages\Base
 
         $this->editcust->editcustname->setText('');
         $this->editcust->editphone->setText('');
-        $this->editcust->editemail->setText('');
+
     }
 
     public function savecustOnClick($sender) {
@@ -1075,7 +1075,7 @@ class ARMPos extends \App\Pages\Base
         }
         $cust = new Customer();
         $cust->customer_name = $custname;
-        $cust->email = $this->editcust->editemail->getText();
+
         $cust->phone = $this->editcust->editphone->getText();
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
@@ -1294,7 +1294,7 @@ class ARMPos extends \App\Pages\Base
             }            
             
 
-            if($this->_pos->usefreg == 1 && $this->docpanel->form3->passfisc->isChecked()==false) {
+            if($this->_pos->usefreg == 1  ) {
                     $this->_doc->headerdata["passfisc"] = 1;
                       
                     $this->_doc->save();
@@ -1326,7 +1326,7 @@ class ARMPos extends \App\Pages\Base
 
        
   
-        if($this->_pos->usefreg == 1 && $this->docpanel->form3->passfisc->isChecked()==false) {
+        if($this->_pos->usefreg == 1  ) {
               $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
         } 
     }

@@ -3,23 +3,23 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="9" valign="middle">
-            Списання на виробництво № {{document_number}} від {{date}} <br>
+            Списание в  производство № {{document_number}} от {{date}} <br>
         </td>
     </tr>
     <tr>
         <td colspan="9" valign="middle">
-            Виробнича ділянка <b>{{pareaname}}</b><br>
+            Производственный участок <b>{{pareaname}}</b><br>
         </td>
     </tr>
    <tr>
         <td colspan="9" valign="middle">
-            Зi складу <b>{{storename}}</b><br>
+            Со  склада <b>{{storename}}</b><br>
         </td>
     </tr>
     {{#emp}}
     <tr>
         <td colspan="9">
-            <b>Відповідальний:</b> {{emp}}
+            <b>Ответственный:</b> {{emp}}
         </td>
     </tr>
  
@@ -32,13 +32,13 @@
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Найменування
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование
         </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Од.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ком.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Яч.</th>
 
-        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кіл.</th>
+        <th align="right" style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
     </tr>
     {{#_detail}}
     <tr>

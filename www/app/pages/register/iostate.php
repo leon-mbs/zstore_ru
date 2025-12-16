@@ -45,15 +45,13 @@ class IOState extends \App\Pages\Base
         $this->_ptlist = \App\Entity\IOState::getTypeList();
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('fuser', \App\Entity\User::findArray('username', 'disabled<>1', 'username'), 0));
+
         $this->filter->add(new DropDownChoice('ftype', $this->_ptlist, 0));
         $this->filter->add(new Date('from',strtotime('-1 month')));
         $this->filter->add(new Date('to'));
 
         
-        $this->add(new Form('docform'))->onSubmit($this, 'addOnSubmit');
-        $this->docform->add(new TextInput('docnumber'));
-     
+       
         
         $doclist = $this->add(new DataView('doclist', new IOStateListDataSource($this), $this, 'doclistOnRow'));
 
@@ -65,50 +63,19 @@ class IOState extends \App\Pages\Base
        
         
         $this->add(new ClickLink('csv', $this, 'oncsv'));
-        $this->add(new ClickLink('bmode', $this, 'onmode')) ;
-        $this->add(new ClickLink('jmode', $this, 'onmode')) ;
-
+       
         $this->_ptlist[0] = '';
        
         $this->update(); 
     }
 
-    public function onmode($sender) {
-        
-        $this->_tvars['bmode'] = $sender->id=='bmode';
-        if($this->_tvars['bmode'] ) {
-            $dt = new \App\DateTime();
-            $dt->subMonth(1)   ;
-            $from = $dt->startOfMonth()->getTimestamp();
-            $to = $dt->endOfMonth()->getTimestamp();
-            $this->filter->from->setDate($from); 
-            $this->filter->to->setDate($to); 
-             
-        }  
-        $this->update(); 
-    }
    
     public function filterOnSubmit($sender) {
         $this->docview->setVisible(false);
         $this->update();
     }
     
-    public function addOnSubmit($sender) {
-        $dm = trim($this->docform->docnumber->getText() );
-        $doc = Document::getFirst("  document_number = ".Document::qstr($dm) )  ;
-        if($doc==null) {
-            $this->setError('Документ не знайдено') ;
-            return;
-        }
-        $doc->setHD('iniostate',1);
-        $doc->setHD('outiostate',0);
-        $doc->save();
-        $this->setSuccess('Додано') ;
-        $this->docform->docnumber->setText('');
-        $this->docview->setVisible(false);
-        $this->update();
-    }
-
+    
     private function update( ) {
      
         $this->doclist->Reload(); 
@@ -138,10 +105,9 @@ class IOState extends \App\Pages\Base
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('amountin', ''));
         $row->add(new Label('amountout', ''));
-        $row->add(new Label('username', $doc->username));
+
         $row->add(new Label('iotype', $this->_ptlist[$doc->iotype] ??''));
         $row->add(new ClickLink('show', $this, 'showOnClick'));
-        $row->add(new ClickLink('delete', $this, 'deleteOnClick'));
         
         if($doc->iotype < 30) {
            $row ->amountin->setText(H::fa($doc->amount));
@@ -153,17 +119,7 @@ class IOState extends \App\Pages\Base
         
     }
 
-    //просмотр
-    public function deleteOnClick($sender) {
-
-        $this->_doc = Document::load($sender->owner->getDataItem()->document_id);
-        $this->_doc->setHD('outiostate',1);
-        $this->_doc->setHD('iniostate',0);
-        $this->_doc->save();
-
-        $this->docview->setVisible(false);
-        $this->update();       
-    }
+ 
   
     public function showOnClick($sender) {
 
@@ -261,22 +217,16 @@ class IOStateListDataSource implements \Zippy\Interfaces\DataSource
             $where .= " and  d.document_date <= " . $conn->DBDate($to);
         }
 
-        if($this->page->_tvars['bmode'] ==true) {
-             $where .= " and ( iotype in (1,3,50,51,54,59,60)  or    d.content  like '%<iniostate>1</iniostate>%' )  and d.content not like '%<outiostate>1</outiostate>%'  " ; 
-        } else {
-            $author = $this->page->filter->fuser->getValue();
+      
+          
             $type = $this->page->filter->ftype->getValue();
 
             if ($type > 0) {
                 $where .= " and iotype=" . $type;
             }
 
-
-            if ($author > 0) {
-                $where .= " and d.user_id=" . $author;
-            }
          
-        }
+       
 
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {

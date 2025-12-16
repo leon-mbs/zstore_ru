@@ -6,26 +6,22 @@
     {{/ischeck}}    
     {{^ischeck}}
     <tr>
-        <td colspan="3">Рахунок {{document_number}}</td>
+        <td colspan="3">Счет {{document_number}}</td>
     </tr>
     {{/ischeck}}    
     
     {{#fiscalnumber}}
     <tr>
-        <td colspan="3">Фiскальний чек</td>
+        <td colspan="3">Фискальный чек</td>
     </tr>
     <tr>
         <td colspan="3">ФН чека {{fiscalnumber}}</td>
     </tr>
     {{/fiscalnumber}}
-   {{#fiscalnumberpos}}
-    <tr>
-        <td colspan="3">ФН РРО {{fiscalnumberpos}}</td>
-    </tr>
-    {{/fiscalnumberpos}}
+ 
     <tr>
 
-        <td colspan="3">від {{time}}</td>
+        <td colspan="3">от {{time}}</td>
     </tr>
     <tr>
 
@@ -34,13 +30,13 @@
   {{#inn}}
     <tr>
 
-        <td colspan="3">ІПН {{inn}}</td>
+        <td colspan="3">ИНН {{inn}}</td>
     </tr>
  {{/inn}} 
  {{#tin}}
     <tr>
 
-        <td colspan="3">ЄДРПОУ {{tin}}</td>
+        <td colspan="3">ОКПО {{tin}}</td>
     </tr>
  {{/tin}} 
     {{#shopname}}
@@ -58,7 +54,7 @@
     </tr>
     {{#customer_name}}
     <tr>
-        <td colspan="3"> Покупець:</td>
+        <td colspan="3"> Покупатель:</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -70,34 +66,28 @@
       <tr>
        <td colspan="3">
       {{#form1}}
-          Форма оплати: готiвка
+          Форма оплаты: наличные
         {{/form1}}
         {{#form2}}
-          Форма оплати: безготiвка
+          Форма оплаты: безнал
         {{/form2}}    
     
     </td>
     </tr>    
     
-   {{#payeq}}
-    <tr>
-       <td colspan="3" > 
-          Засiб оплати:  {{payeq}}
-   </td>
-    </tr> 
-  {{/payeq}}   
+  
    {{#trans}}
     <tr>
        <td colspan="3" > 
-          № транзакції:  {{trans}}
+          № транзакции:  {{trans}}
        </td>
     </tr> 
   {{/trans}}    
     <tr>
-        <td colspan="3">Термінал: {{pos_name}}</td>
+        <td colspan="3">Терміинал: {{pos_name}}</td>
     </tr>
     <tr>
-        <td colspan="3">Касир: {{username}}</td>
+        <td colspan="3">Кассир: {{username}}</td>
     </tr>
     {{/ischeck}}
 
@@ -116,26 +106,26 @@
     </tr>
     {{/_detail}}
     <tr>
-        <td colspan="2" align="right">Всього:</td>
+        <td colspan="2" align="right">Всего:</td>
         <td align="right">{{total}}</td>
     </tr>
 
     {{^prepaid}}
     {{#isdisc}}
     <tr  >
-        <td colspan="2" align="right">Знижка:</td>
+        <td colspan="2" align="right">Скидка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/isdisc}}
    {{#bonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Списано бонусiв::</td>
+        <td colspan="2" align="right">Списано бонусов::</td>
         <td align="right">{{bonus}}</td>
     </tr>
     {{/bonus}}
 
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">До сплати:</td>
+        <td colspan="2" align="right">К оплате:</td>
         <td style="font-size:larger" align="right">{{payamount}}</td>
     </tr>
     
@@ -146,7 +136,7 @@
         <td align="right">{{payed}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Решта:</td>
+        <td colspan="2" align="right">Сдача:</td>
         <td align="right">{{exchange}}</td>
     </tr>
     {{/ischeck}}
@@ -154,13 +144,13 @@
     {{/prepaid}}
     {{#addbonus}}
     <tr >
-        <td colspan="2" align="right">Нараховано бонусiв::</td>
+        <td colspan="2" align="right">Насчитано бонусов:</td>
         <td align="right">{{addbonus}}</td>
     </tr>
     {{/addbonus}}
     {{#allbonus}}
     <tr >
-        <td colspan="2" align="right">Всього бонусiв::</td>
+        <td colspan="2" align="right">Всего бонусов:</td>
         <td align="right">{{allbonus}}</td>
     </tr>
     {{/allbonus}}
@@ -178,13 +168,6 @@
     </tr>
    {{/checkslogan}}   
 
-    {{#ischeck}}
-       <tr>                    
-                        <td colspan="3" > 
-                            {{{docqrcode}}}
-                        </td>
-
-                    </tr>      
-    {{/ischeck}}                    
+                      
                     
 </table>

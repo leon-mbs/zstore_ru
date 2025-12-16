@@ -3,7 +3,7 @@
 
     <tr>
         <td></td>
-        <td>Постачальник</td>
+        <td>ПОставщик</td>
         <td colspan="9">{{customer_name}}</td>
     </tr>
       <tr>
@@ -12,24 +12,24 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="11" valign="middle">
-            <br> Заявка № {{document_number}} від {{date}} <br><br>
+            <br> Заявка № {{document_number}} от {{date}} <br><br>
         </td>
     </tr>
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Найменування</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код у пост.</th>
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Штрих-код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Бренд</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Од.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;"> </th>
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кіл.</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ціна</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сума</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кол.</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Цена</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сумма</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -49,7 +49,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="10" align="right">Разом:</td>
+        <td style="border-top:1px #000 solid;" colspan="10" align="right">Всего:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 

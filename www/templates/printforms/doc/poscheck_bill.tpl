@@ -3,23 +3,17 @@
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
     {{#fiscalnumber}}
-    <tr>
-        <td colspan="3">Фiскальний чек</td>
-    </tr>
+ 
     <tr>
         <td colspan="3">ФН чека {{fiscalnumber}}</td>
     </tr>
     {{/fiscalnumber}}
-   {{#fiscalnumberpos}}
-    <tr>
-        <td colspan="3">ФН РРО {{fiscalnumberpos}}</td>
-    </tr>
-    {{/fiscalnumberpos}}
+ 
    
 
     <tr>
 
-        <td colspan="3">від {{time}}</td>
+        <td colspan="3">от {{time}}</td>
     </tr>
     <tr>
 
@@ -28,13 +22,13 @@
   {{#inn}}
     <tr>
 
-        <td colspan="3">ІПН {{inn}}</td>
+        <td colspan="3">ИНН {{inn}}</td>
     </tr>
  {{/inn}} 
  {{#tin}}
     <tr>
 
-        <td colspan="3">ЄДРПОУ {{tin}}</td>
+        <td colspan="3">ОКПО {{tin}}</td>
     </tr>
  {{/tin}} 
     
@@ -52,7 +46,7 @@
     </tr>
     {{#customer_name}}
     <tr>
-        <td colspan="3"> Покупець:</td>
+        <td colspan="3"> Покупатель:</td>
     </tr>
     <tr>
         <td colspan="3"> {{customer_name}}</td>
@@ -62,36 +56,30 @@
     <tr>
        <td colspan="3" > 
         {{#form1}}
-          Форма оплати: готiвка
+          Форма оплаты: наличные
         {{/form1}}
         {{#form2}}
-          Форма оплати: безготiвка
+          Форма оплаты: безнал
         {{/form2}}
         {{#form3}}
-          Форма оплати: iнше
+          Форма оплати: Прочее
         {{/form3}}
 
        </td>
     </tr>  
-  {{#payeq}}
-    <tr>
-       <td colspan="3" > 
-          Засiб оплати:  {{payeq}}
-       </td>
-    </tr> 
-  {{/payeq}}       
+       
    {{#trans}}
     <tr>
        <td colspan="3" > 
-          № транзакції:  {{trans}}
+          № транзакции:  {{trans}}
        </td>
     </tr> 
   {{/trans}}   
     <tr>
-        <td colspan="3">Термiнал: {{pos_name}}</td>
+        <td colspan="3">Терминал: {{pos_name}}</td>
     </tr>
     <tr>
-        <td colspan="3">Касир: {{username}}</td>
+        <td colspan="3">Кассир: {{username}}</td>
     </tr>
     {{#_detail}}
     <tr>
@@ -104,31 +92,31 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Всього:</td>
+        <td colspan="2" align="right">Всего:</td>
         <td align="right">{{total}}</td>
     </tr>
 
  
     {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Знижка:</td>
+        <td colspan="2" align="right">Скидка:</td>
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
     {{#delbonus}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Списано бонусiв:</td>
+        <td colspan="2" align="right">Списано бонусов:</td>
         <td align="right">{{delbonus}}</td>
     </tr>
     {{/delbonus}}
    {{#prepaid}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Передплата:</td>
+        <td colspan="2" align="right">Предоплата:</td>
         <td align="right">{{prepaid}}</td>
     </tr>
     {{/prepaid}}
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">До сплати:</td>
+        <td colspan="2" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
@@ -136,7 +124,7 @@
         <td align="right">{{payed}}</td>
     </tr>
     <tr style="font-weight: bolder;">
-        <td colspan="2" align="right">Решта:</td>
+        <td colspan="2" align="right">Сдача:</td>
         <td align="right">{{exchange}}</td>
     </tr>
   
@@ -147,13 +135,13 @@
          
    {{#addbonus}}
    <tr  >
-        <td colspan="2" align="right">Нараховано бонусiв:</td>
+        <td colspan="2" align="right">Насчитано бонусов:</td>
         <td align="right">{{addbonus}}</td>
     </tr>
    {{/addbonus}}    
   {{#allbonus}}
    <tr  >
-        <td colspan="2" align="right">Всього бонусiв:</td>
+        <td colspan="2" align="right">Всего бонусов:</td>
         <td align="right">{{allbonus}}</td>
     </tr>
    {{/allbonus}}          
@@ -173,14 +161,5 @@
    {{/checkslogan}}   
  
     
-    
-    
-{{#isdocqrcode}}                
-       <tr>                    
-                        <td colspan="3"> 
-                            {{{docqrcode}}}
-                        </td>
-
-                    </tr>    
-{{/isdocqrcode}}                    
+                   
 </table>
