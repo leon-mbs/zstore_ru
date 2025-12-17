@@ -113,7 +113,7 @@
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
      
                             <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editcust">Постачальник </label>
+                                <label class="col-5 col-form-label" for="editcust">Поставщик </label>
                                 <div class="col-7">
                                      <input placeholder="Начните вводить..." class="form-control    " zippy="editcust">
                                      
@@ -166,7 +166,7 @@
                             </div>
  
                             <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editqty">Кількість</label>
+                                <label class="col-5 col-form-label" for="editqty">Количество</label>
                                 <div class="col-7">
                                     <input style="width: 150px" pattern="[0-9\.]+"  class="form-control" zippy="editqty"/>
                                   
@@ -199,36 +199,36 @@
                        
                     <form zippy="optionsform">
                          <div class="form-group">
-                            <label for="compare">Шукати при iмпортi вiдповiдний ТМЦ в номенклатурi</label>
+                            <label for="compare">Искать при импорте соответствующий ТМЦ в номенклатуре</label>
                             <select zippy="compare" class="form-control">
                                <option value="0">По артикулу+бренду</option>
                                <option value="1">По штрих коду</option>
-                               <option value="2">Штрих код потiм артикул+бренд,</option>
+                               <option value="2">Штрих код потом артикул+бренд,</option>
                             </select>
-                             <small  >Для закупки або оновлення цiн. 
-                             В разi  активного  використання прайсiв рiзних постачальникiв слiд  вимкнути в  довiднику  ТМЦ автоматичне  
-                             створення артикулу та/або перевiрку артикула  на  унiкальнiсть</small>                                  
+                             <small  >Для закупки или обновления  цен. 
+                             При активном использовании прайсов разных поставщиков следует выключить в справочнике ТМЦ автоматическое 
+                              создание артикула и/или проверку артикула на уникальность</small>                                  
                              
                         </div> 
                          <div class="form-check mb-2">
                             <input zippy="optcreateitem" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="optcreateitem">Створювати новий  ТМЦ якщо не  знайдено вiдповiдний</label>
+                            <label class="form-check-label" for="optcreateitem">Создавать новый ТМЦ если не найден соответствующий</label>
                            
                         </div>                     
                         <div class="form-group">
-                            <label for="optclean">Очищати неактуальне за</label>
+                            <label for="optclean">Очизать неактуальное за</label>
                             <div style="width:100px;" class="input-group  ">
                                 <input  class="form-control"  zippy="optclean" pattern="[0-9]+">
                              <div  class="input-group-append">                                
-                               &nbsp; днiв
+                               &nbsp; дней
                             </div> 
                            </div>   
-                           <small>Має бути активований планувальник</small>  
+                           <small>Нужно активировать планировщик</small>  
                         </div>   
                         <div class="form-check mb-2">
                             <input zippy="optupdate" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="optupdate">Оновлювати з Прибуткової накладної</label>
-                            <br><small>Цiни оновлюватимуться  при  проведеннi документу</small>                                  
+                            <label class="form-check-label" for="optupdate">Обновлять с Приходной  накладной</label>
+                            <br><small>Цены будут обновляться при  проведении документа</small>                                  
                         </div>  
                           
                         <div class="form-group"> 
@@ -246,35 +246,35 @@
                 
                 <form zippy="importform" enctype="multipart/form-data"  >
                  
-                    <h4>Iмпорт з Excel</h4>
-                         <small>Товар  без  коду постачальника пропускається </small>
+                    <h4>Импорт из Excel</h4>
+                         <small>Товар  без  кода поставщика  пропускается </small>
                         <div class="row">
                          <div class="col-12 col-md-4 col-xl-3">
                           
                             <div class="form-group  ">
-                                <label data-label="icust" for="icust">Постачальник</label>
+                                <label data-label="icust" for="icust">Поставщик</label>
                                 <input zippy="icust" placeholder="Начните вводить" class="form-control   ">
                                  
                             </div>
                         
                              <div class="form-group  ">
-                                <label for="filename">Файл імпорту</label>
+                                <label for="filename">Файл импорта</label>
                                 <input type="file" zippy="filename" class="form-control  "/>
                              </div>
                              <div class="  form-check">
                                 <input zippy="passfirst" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="passfirst">Пропустити першу строку</label>
+                                <label class="form-check-label" for="passfirst">пропустить первую  строку строку</label>
                             </div>
                          </div> 
                          
                         <div class="col-12 col-md-4 col-xl-3">
                       
                              <div class="form-group  ">
-                                <label><b>Номери колонок Excel файлу</b> </label>
+                                <label><b>Номера колонок Excel файла</b> </label>
 
                             </div>
                              <div class="form-group row">
-                                <label  class="col-8 col-form-label" for="colcustname">Название у постачальника</label>
+                                <label  class="col-8 col-form-label" for="colcustname">Название у поставщика</label>
                                 <div class="col-2">
                                     <select   zippy="colcustname" class="form-control  ">
                                 </select>  
@@ -300,7 +300,7 @@
                                  </div> 
                             </div>                     
                           <div class="form-group row">
-                                <label  class="col-8 col-form-label" for="colstore">Склад у постачальника</label>
+                                <label  class="col-8 col-form-label" for="colstore">Склад у поставщика</label>
                                 <div class="col-3">
                                     <select   zippy="colstore" class="form-control  ">
                                 </select>  
@@ -315,14 +315,14 @@
                                  </div> 
                             </div>                                                                                
                             <div class="form-group row">
-                                <label  class="col-8 col-form-label" for="colqty">Кiлькiсть</label>
+                                <label  class="col-8 col-form-label" for="colqty">Количество</label>
                                 <div class="col-3">
                                     <select   zippy="colqty" class="form-control  ">
                                 </select>  
                                  </div> 
                             </div>                                                                                
                             <div class="form-group row">
-                                <label  class="col-8 col-form-label" for="colcomment">Коментар</label>
+                                <label  class="col-8 col-form-label" for="colcomment">Комментарий</label>
                                 <div class="col-3">
                                     <select   zippy="colcomment" class="form-control  ">
                                 </select>  
@@ -333,7 +333,7 @@
                        <div class="col-12">
                        <a zippy="back" class="btn btn-secondary  mr-4 " >Отменить</a>                          
                             
-                        <input zippy="loadimport"    type="submit" value="Iмпортувати" class="btn btn-primary  "> 
+                        <input zippy="loadimport"    type="submit" value="Импортировать" class="btn btn-primary  "> 
                      
                        </div>
                         </div>  
@@ -349,7 +349,7 @@
                 <div   class="row  " >
                   <div    class="col-12 col-md-6 col-xl-4 " >
                       <div zippy="tablepanx"    >
-                       <a zippy="cancelx">До списку</a>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;    <a data-label="payed" href="javascript:void(0);" data-toggle="modal"
+                       <a zippy="cancelx">К списку</a>   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;    <a data-label="payed" href="javascript:void(0);" data-toggle="modal"
                                    data-target="#modalimhelp"><b>Описание</b> <i class="fa fa-info-circle"></i></a> 
                         <br>
                        <a zippy="addnewx" class="btn btn-success mr-4 ml-2" >   Добавить</a>
@@ -359,7 +359,7 @@
                               <td zippy="custnamex">          </td>
 
                               <td>  <a   zippy="editx">Редактировать код</a>       </td>
-                              <td>  <a   zippy="editi">Iмпорт</a>       </td>
+                              <td>  <a   zippy="editi">Импорт</a>       </td>
                               <td>  <a   zippy="delx"><i class="fa fa-trash"></i></a>       </td>
                             </tr>   
                         </table>  
@@ -368,7 +368,7 @@
               
                  <form zippy="editformx"    >
                      <div class="form-group  ">
-                        <label    for="editcustx">Постачальник </label>
+                        <label    for="editcustx">Поставщик </label>
                    
                         <input placeholder="Начните вводить..." class="form-control    " zippy="editcustx">
                        
@@ -392,14 +392,14 @@
            
                  <form zippy="importformx"    >
                  <h6 zippy="imxcustname" ></h6>
-                 <a zippy="cancelix" >До списку </a>
+                 <a zippy="cancelix" >К списку </a>
                         <div class="form-group  ">
-                                <label for="filenamex">Файл імпорту</label>
+                                <label for="filenamex">Файл импорта</label>
                                 <input onchange="readFile(this)" type="file" zippy="filenamex" class="form-control  "/>
                              </div>
-                               <a class="btn btn-success" onclick="OnLoadFile()">Завантажити</a>
+                               <a class="btn btn-success" onclick="OnLoadFile()">Загрузить</a>
                           <span id="spinimx" style="display:none;"   >
-                              Завантаження...
+                              Звгрузка...
                            <div class="spinner-border spinner-border-sm"  >
                             </span>    </div>  
                          
@@ -421,21 +421,21 @@
                     <div class="modal-content">
                    
                         <div class="modal-body">
-Для iмпорту прайсу необхiдно для файлу данного  постачальника  написати javascript функцiю 
-парсингу xml   перетворення данних в  json формат.
+Для iмпортупрайсу  нужно  для файла данного поставщика написать   javascript функцию 
+парсинга xml  превразающую данные в  json формат.
 <br>  Фц
-Функція має  називатись  "parseprice". На вхiд буде  передано змiст  вибраного файлу.
-Функцiя має  повернкти строку  json з данними.
+функцмя должна называтся  "parseprice". На вход будет  передано содержимое  выбраного  файла.
+функцмядолжна  вернуть строку json м данными.
  
 <pre>
 <code>
     function parseprice(xmldata){
-      тут виймаємо данi з xml
+      преобразовываем xml в  json
       return jsondata
     }
 </code> 
 </pre> 
-JSON має мати таку  структуру
+JSON долэен  иметь такую  структуру
 <pre>
 <code>
   [
@@ -453,18 +453,18 @@ JSON має мати таку  структуру
   ]    
 </code>     
 </pre>  
-name - назва товару  <br> 
+name - название товара  <br> 
                   
-cust_code - код у постачальника <br>
+cust_code - код у поставщика <br>
 bar_code - штрих-код  <br>
-price - цiна   <br>
-quantity - кiлькiсть  <br>
-brand - бренд, виробник  <br>
-store - склад у постачальника (якщо заданий)   <br>
-comment - примiтка <br>
+price - цена   <br>
+quantity - количество  <br>
+brand - бренд, призводитель  <br>
+store - склад у поставщика (если  есть)   <br>
+comment - примечание <br>
 <br>
 <i class="fa fa-exclamation-circle"></i> 
-Якщо є готовий json, створений стороннiм засобом, функцiя  має просто повернути вхiдний параметр
+Если есть готовый json, созданный сторонним  способом, функция должна  просто вернуть входной параметр
  
 
           </div>

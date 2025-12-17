@@ -1,13 +1,13 @@
 <html>
      <head>
-        <title> Журнал замовлень  </title>
+        <title> Журнал заказов  </title>
 
     </head>
   <body>
         <div class="row">
             <div class="col-12 ">
 
-                <h3>Журнал замовлень </h3>
+                <h3>Журнал заказов </h3>
             </div>
              <div zippy="listpanel" class="col-12 col-xl-11">
 
@@ -24,7 +24,7 @@
                         <select class="form-control mr-2" zippy="status">
                         </select>
 
-                        <label for="salesource">Джерело продаж</label>
+                        <label for="salesource">Источник продаж</label>
                         <select class="form-control mr-2" zippy="salesource">
                             <option value="0">Не выбрано</option>
                         </select>
@@ -37,7 +37,7 @@
 
                     </form>
                 </div>
-                <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Нове замовлення</a>
+                <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Новый заказ</a>
 
 
                 <br><a zippy="csv">Экспорт в Excel</a>
@@ -47,7 +47,7 @@
 
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th>Замовник</th>
+                        <th>Заказчик</th>
                         <th class="text-right">Сумма</th>
                         <th>Статус</th>
                         <th>Ответственный</th>
@@ -74,17 +74,17 @@
                         <td   zippy="emp"></td>
                         <td ><small zippy="onotes"></small></td>
                         <td>
-                            <i  zippy="isreserved" title="Зарезервованi товари" class="fa fa-archive"></i>
+                            <i  zippy="isreserved" title="Зарезервированные  товары" class="fa fa-archive"></i>
                         </td>
                         <td>
                             <i  zippy="ispay"   class="fa fa-credit-card "></i>
                         </td>
                          <td>
-                           <i style="cursor:pointer" zippy="cchat" title="Чат с  замовником" ></i>  
+                           <i style="cursor:pointer" zippy="cchat" title="Чат с заказчиком" ></i>  
                         </td>
 
                         <td class="text-nowrap">
-                            &nbsp; &nbsp;<a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            &nbsp; &nbsp;<a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
                              &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
 
                         </td>
@@ -106,7 +106,7 @@
         <div class="row" zippy="statuspan">
             <div class="col-12   col-xl-10">
                 <details>
-                  <summary>Наявнiсть товарiв на складi та/або у постачальника</summary>
+                  <summary>Наличие товаров на  склада и/или  у поставщика</summary>
                   
                  
            
@@ -114,12 +114,12 @@
                      <tr>
                      <th>Товар</th>
                      <th>Артикул</th>
-                     <th class="text-right">Замовлено</th>
-                     <th>На складi</th>
-                     <th>У постачальникiв</th>
+                     <th class="text-right">Заказано</th>
+                     <th>На складе</th>
+                     <th>У поставщиков</th>
                       {{#isciprod}}
                   
-                     <th class="text-right">Гот. до вир.</th>
+                     <th class="text-right">Гот. к произв.</th>
                      {{/isciprod}}
                     
                   
@@ -173,11 +173,11 @@
           
                   
                 <details>
-                  <summary> Товари в  заявках постачальнику</summary>
+                  <summary> Товары в  заявках поставщику</summary>
                <table class="table table-sm">
                      <tr>
                      <th>Заявка</th>
-                     <th>Постачальник</th>
+                     <th>Поставщик</th>
                      <th >Поставка</th>
                      </tr>
                        {{#sitems}} 
@@ -196,28 +196,28 @@
                     <form zippy="statusform" class="form-inline row">
                        <div class="col-12 mb-2">      
                       
-                        <button zippy="binp" class="btn btn-success  mr-2">  В обробку</button>
+                        <button zippy="binp" class="btn btn-success  mr-2">  В обработку</button>
                         
-                        <button zippy="bscan" class="btn btn-primary  mr-2">  Зiбрати</button>
+                        <button zippy="bscan" class="btn btn-primary  mr-2">  Собрать</button>
                    
-                        <button zippy="brd" class="btn btn-success  mr-2">  Готовий до вiдправки</button>
-                        <button zippy="bsent" class="btn btn-success  mr-2">  Вiдправлений</button>
-                        <button zippy="brec" class="btn btn-success  mr-2">  Доставлений</button>
-                        <button zippy="bclose"   class="  btn btn-success  mr-2 ">  Закрити                </button>
-                        <a zippy="btopay" class="  btn btn-success  mr-4 "> Сплатити</a>
-                        <button zippy="bref" class="btn btn-danger  mr-2">  Анулювати                </button>
+                        <button zippy="brd" class="btn btn-success  mr-2">  Готов к отправке</button>
+                        <button zippy="bsent" class="btn btn-success  mr-2">  Отправлен</button>
+                        <button zippy="brec" class="btn btn-success  mr-2">  Доставлен</button>
+                        <button zippy="bclose"   class="  btn btn-success  mr-2 ">  Закрыт                </button>
+                        <a zippy="btopay" class="  btn btn-success  mr-4 "> Оплатить</a>
+                        <button zippy="bref" class="btn btn-danger  mr-2">  Аннулировать                </button>
                        </div>
                        <div class="col-12"> 
                         <span>Створити </span> 
                         <button zippy="bttn" class="btn btn-info  mr-2">  ТТН</button>
                         <button zippy="bpos" class="btn btn-info  mr-2">    Чек                   </button>
-                        <button zippy="bgi" class="btn btn-info  mr-2">  Видаткову накладну                </button>
-                        <button zippy="bginv" class="btn btn-info  mr-2">  Рахунок-фактуру                </button>
-                        <button zippy="bco" class="btn btn-info  mr-2">  Заявку постачальнику                                       </button>
+                        <button zippy="bgi" class="btn btn-info  mr-2">  Расходную накладную                </button>
+                        <button zippy="bginv" class="btn btn-info  mr-2">  Счет-фактуру                </button>
+                        <button zippy="bco" class="btn btn-info  mr-2">  Заявку поставщику                                       </button>
                         {{#useprod}} 
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">  Наряд</button>
                             {{/useprod}}
-                        <button zippy="bcopy" class="btn btn-info  mr-4">  Копію</button>
+                        <button zippy="bcopy" class="btn btn-info  mr-4">  Копию</button>
                        </div>     
                             
                     </form> 
@@ -230,11 +230,11 @@
               
                      
                      <form zippy="resform" class="form-inline mt-1">
-                        <label data-label="bres">Резервувати товари </label>
+                        <label data-label="bres">Резераировать  товары </label>
                         <select class="form-control mr-2"  zippy="store"></select>
                          
                         <button zippy="bres" class="btn btn-info  ">OK                 </button>
-                        <button zippy="bunres" class="btn btn-info "> Зняти з резерву                </button>
+                        <button zippy="bunres" class="btn btn-info "> Снять с резерва                </button>
 
 
                     </form>       
@@ -245,14 +245,14 @@
                         <label class="mr-2">Перевести на: </label>
                        {{#usebranch}}
 
-                        <label for="brmove">фiлiя </label>
+                        <label for="brmove">Филиал </label>
                         <select zippy="brmove" class="form-control mr-2 ">
                             <option value="0">Не указано</option>
                         </select>
                   
                        {{/usebranch}}
                   
-                        <label for="usmove">користувач </label>
+                        <label for="usmove">пользователь </label>
                         <select class="form-control mr-2" zippy="usmove"  >
 
                         </select>
@@ -274,7 +274,7 @@
         
        <div zippy="editpanel" class="row">
             <div class="col-12 col-md-8 col-xl-6">
-                 <h5>Замовлення <span zippy="editdn"></span></h5>
+                 <h5>Заказ <span zippy="editdn"></span></h5>
                  <form zippy="editform"  >
                      {{#usescanner}}
                     <div class="card justify-content-start">
@@ -288,7 +288,7 @@
                    <table class="table table-sm">
                    <tr><th>
 <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
-                                style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
+                                style="width:30px;cursor:pointer" title="Снять/выставить флаг"
                                     class="fa fa-check-double "></i>                   
                    </th><th colspan="4"></th></tr>
                    <tr  zippy="edititemlist">
@@ -302,9 +302,9 @@
                  <div class="form-group">
                     <button zippy="editcancel" type="submit" class="  btn btn-secondary  mr-2 ">Отменить</button>                 
                     <button zippy="editsave" type="submit" class="  btn btn-info  mr-2 ">Сохранить</button>                 
-                    <button zippy="editready" type="submit" class="  btn btn-success  mr-4 ">Зiбрано</button>                 
+                    <button zippy="editready" type="submit" class="  btn btn-success  mr-4 ">Собрано</button>                 
 
-                    <i style="cursor:pointer" title="Вiдправити запитання" zippy="editchat" class="fa fa-comments"></i>
+                    <i style="cursor:pointer" title="Отправить вопрос" zippy="editchat" class="fa fa-comments"></i>
 
  
                  </div>
@@ -324,7 +324,7 @@
                     <div class="modal-dialog modal-dialog-centered   ">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Чат  з замовником</h5>
+                                <h5 class="modal-title">Чат  с заказчиком</h5>
                                 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -333,7 +333,7 @@
                             <div class="modal-body">
                             
                              <details  >
-                                <summary>Перелiк товарiв</summary>
+                                <summary>Перечень товаров</summary>
                                 <table class="ctable" style="font-size:smaller">
                                     <tr v-for="item in cchatitemlist">
                                         <td>{{item.itemname}} </td>
@@ -348,7 +348,7 @@
                                   <div class="row">
                                   <div v-for="msg in msglist" class="col-12">
                                       <div v-show="msg.isseller ==false" class="row">
-                                         <div class="col-6"><b>Замовник</b></div>
+                                         <div class="col-6"><b>Заказчик</b></div>
                                          <div class="col-4 text-right"><small>{{msg.msgdate}}</small></div>
                                          <div class="col-2"> </div>
                                        </div>
@@ -362,7 +362,7 @@
                                             <div class="col-2"> </div>
                                             <div class="col-4 text-left"><small>{{msg.msgdate}}</small></div>
                                             
-                                            <div class="col-6 text-right"><b>Продавець</b></div>
+                                            <div class="col-6 text-right"><b>Продавец</b></div>
                                         </div>
                                         
                                         <div v-show="msg.isseller ==true" class="row">
@@ -387,17 +387,17 @@
                                  </div>                            
                                 <form>
                                   <div class="form-group">
-                                         <label for="msgtext">Повiдомлення</label> 
+                                         <label for="msgtext">Сообщение</label> 
                                         <textarea  v-model="message"      class="form-control"></textarea>
                                          
                                            
                                       </div>
                                   <div class="input-group">
                                     
-                                      <button v-show="showntnsend" v-on:click.prevent="send()"   class="btn btn-primary">Вiдправити</button>
+                                      <button v-show="showntnsend" v-on:click.prevent="send()"   class="btn btn-primary">Отправить</button>
                                     
                                   </div>
-                                <small>Вiдправка уточнень по  смс  </small>  
+                                <small>Отправка уточнений по  смс  </small>  
                                 </form>
                            
                             
@@ -425,7 +425,7 @@
           {{#askclose}}
 
             function check_bclose() {
-                return confirm("Замовлення не оплачено або не виконано. Закрити?")
+                return confirm("Заказ не оплачен  или не выполнен. Закрыть?")
 
             }
           {{/askclose}} 

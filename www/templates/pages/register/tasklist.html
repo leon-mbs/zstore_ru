@@ -1,6 +1,6 @@
 <html>
    <head>
-        <title>  Журнал нарядів </title>
+        <title>  Журнал нарядов </title>
 
  
         <link rel="stylesheet" type="text/css" href="/vendor/leon-mbs/zippy/zcl/gantt/jquery.ganttView.css"/>
@@ -12,38 +12,38 @@
         <link rel="stylesheet" type="text/css" href="/assets/js/fullcalendar/main.css"/>
 
         <script language="javascript" src="/assets/js/fullcalendar/main.js"></script>
-        <script language="javascript" src="/assets/js/fullcalendar/locales/ua.js"></script>
+        <script language="javascript" src="/assets/js/fullcalendar/locales/ru.js"></script>
 
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Журнал нарядів</h3>
+                <h3>Журнал нарядов</h3>
                 <div class="card">
                     <form zippy="filterform" class="form-inline">
 
 
-                        <label for="filterassignedto">Виконавець</label>
+                        <label for="filterassignedto">Исполнитель</label>
 
                         <select class="form-control  mr-sm-2" zippy="filterassignedto">
                             <option value="0">Не выбрано</option>
                         </select>
-                        <label for="filterpa">Вир. ділянка</label>
+                        <label for="filterpa">Пр. участок</label>
 
                         <select class="form-control  mr-sm-2" zippy="filterpa">
-                            <option value="0">По всіх</option>
+                            <option value="0">По всех</option>
                         </select>
 
 
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="filterfinished">
-                            <label class="form-check-label mr-sm-3" for="filterfinished">Закриті</label>
+                            <label class="form-check-label mr-sm-3" for="filterfinished">Закрытые</label>
                         </div>
 
                         <button type="submit" class="btn btn-primary  ">ОК</button>
-                        &nbsp;<a title="Очистити фільтр" zippy="eraser"><i class="fa fa-eraser"></i></a>
+                        &nbsp;<a title="Очистить фильтр" zippy="eraser"><i class="fa fa-eraser"></i></a>
 
                     </form>
                 </div>
@@ -56,13 +56,13 @@
 
 
                 <div class="mt-1" style="font-size: 1.5rem">
-                    <a zippy="tabs"><span class="{{{tabcbadge}}}">  Перелік</span> </a> &nbsp;&nbsp;
-                    <a zippy="tabc"><span class="{{{tababadge}}}">  Календар   </span> </a> &nbsp;&nbsp;
+                    <a zippy="tabs"><span class="{{{tabcbadge}}}">  Список</span> </a> &nbsp;&nbsp;
+                    <a zippy="tabc"><span class="{{{tababadge}}}">  Календарь   </span> </a> &nbsp;&nbsp;
 
                 </div>
 
                 <div zippy="tasktab" class="tab-pane  active ">
-                    <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Створити</a>
+                    <a href="/index.php?p=App/Pages/Doc/Task" class="btn btn-info mt-2 mb-3">Создать</a>
 
                     <div class="row">
                         <div class="col-12    table-responsive">
@@ -74,12 +74,12 @@
                                     <th>Номер</th>
 
 
-                                    <th>Початок</th>
+                                    <th>Начало</th>
 
-                                    <th style="text-align: right;">Час.</th>
+                                    <th style="text-align: right;">Часов</th>
 
-                                    <th>Виконавець</th>
-                                    <th>Робота</th>
+                                    <th>Исполнитель</th>
+                                    <th>Работа</th>
                                     <th>Статус</th>
                                     <th>Описание</th>
 
@@ -102,7 +102,7 @@
                                     <td zippy="taskdesc"></td>
 
                                     <td>
-                                        <a zippy="taskshow" title="Перегляд"><i class="fa fa-eye"></i></a>
+                                        <a zippy="taskshow" title="Просмотр"><i class="fa fa-eye"></i></a>
                                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="taskedit" title="Редактировать"><i class="fa fa-edit"></i></a>
 
                                     </td>
@@ -122,23 +122,23 @@
                             <div class="card">
                                 <form zippy="statusform" class="form-inline ">
                                     <button zippy="binprocess" type="submit" class="  btn btn-primary  mr-2 "><i
-                                            class="fas fa-wrench"></i> На виконання
+                                            class="fas fa-wrench"></i> На выполнение
                                     </button>
                                     <button zippy="bshifted" type="submit" class="  btn btn-warning  mr-2 "><i
-                                            class="fas fa-clock"></i> Відкласти
+                                            class="fas fa-clock"></i> Отложить
                                     </button>
                                     <button zippy="bclosed" type="submit" class="  btn btn-success  mr-2 "><i
-                                            class="fa fa-gavel"></i> Закінчено
+                                            class="fa fa-gavel"></i> Закончен
                                     </button>
                                     <button zippy="bitems" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                            class="fa fa-cogs"></i> Витратні матеріали
+                                            class="fa fa-cogs"></i> Расходные  материалы
                                     </button>
 
                                     <button zippy="bgoods" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                            class="fa fa-box"></i> Готова продукція
+                                            class="fa fa-box"></i> Готовая продукция
                                     </button>
                                     <button zippy="bact" type="submit" class="  btn btn-secondary  mr-2 "><i
-                                            class="fa fa-tools"></i> Акт виконаних робіт
+                                            class="fa fa-tools"></i> Акт выполненных работ
                                     </button>
 
 

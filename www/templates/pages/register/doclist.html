@@ -1,17 +1,17 @@
 <html>
     <head>
-        <title> Журнал документів  </title>
+        <title> Журнал документов  </title>
 
     </head>
    <body>
         <div class="row">
             <div class="col-12  ">
                 
-                <h3>Журнал документів
+                <h3>Журнал документов
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-content="Загальний журнал для всіх документів з можливістю їх скасування та видалення.
-                       Більш детальне управління статусами проводиться у відповідних спеціалізованих журналах."></i>
+                       data-placement="bottom" data-content="Общий журнал для всех документов с возможностью их отмены и удаления. 
+Более подробное управление статусами проводится в соответствующих специализированных журналах."></i>
                 </h3>
 
 
@@ -22,13 +22,13 @@
                         <label class="col-auto mt-2" for="searchnumber">№ </label>
                         <div class="col-auto">
                            <input autofocus="on" placeholder="Поиск..." class="form-control  " type="search" zippy="searchnumber"
-                               autocomplete="off"    onkeydown="onSearch()" style="width:125px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
+                               autocomplete="off"    onkeydown="onSearch()" style="width:125px" title="При поиске по номеру остальные элементы фильтра  игнорируются">
                          </div>
                        </div>
                       </div>
                        <div class="col-auto">  
                           <div class=" row no-gutters"> 
-                             <label class="col-auto mt-2" for="from">З </label>
+                             <label class="col-auto mt-2" for="from">С </label>
                              <div class="col-auto">
                                 <input type="text" class="form-control    " zippy="from" style="width:110px">
                              </div>
@@ -97,7 +97,7 @@
                            
                       <div class="col-auto"> 
                            <div class=" row no-gutters"> 
-                      <label class="col-auto mt-2" for="mfund">Рахунок</label>
+                      <label class="col-auto mt-2" for="mfund">Счет</label>
                                <div class="col-auto">
                         <select class="form-control mr-sm-2" zippy="mfund">
                             <option value="0">Не выбрано</option>
@@ -120,7 +120,7 @@
 
                     </form>
                 </div>
-                <a zippy="csv">Експорт в Excel</a>
+                <a zippy="csv">Экспорт в Excel</a>
                 <table class="table   table-sm  table-hover   ">
                   <thead>  <tr>
                         <th></th>
@@ -135,7 +135,7 @@
                         <th>Филиал</th>
                         {{/usebranch}}
 
-                        <th>Підстава</th>
+                        <th>Основание</th>
                         <th></th>
                         <th></th>
 
@@ -175,19 +175,19 @@
                             </td>
 
                             <td style="white-space:   nowrap"> &nbsp;&nbsp;
-                                <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i> </a>
+                                <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i> </a>
                               &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i> </a>
-                                <a zippy="cancel" title="Отменить виконання"><i class="fa fa-undo"></i> </a>
+                                <a zippy="cancel" title="Отменить выполнение"><i class="fa fa-undo"></i> </a>
 
                             </td>
                             <td>
-                                <a zippy="delete" title="Видалення"><i class="fa fa-trash"></i></a>
+                                <a zippy="delete" title="Удаление"><i class="fa fa-trash"></i></a>
                             </td>
                             <td>
                                 <div class="btn-group" zippy="basedon">
-                                    <button title="Створити на підставі" type="button"
+                                    <button title="Создать на  основании" type="button"
                                             class="btn btn-outline-secondary btn-sm  dropdown-toggle" data-toggle="dropdown">
-                                        Створити <span class="caret"></span>
+                                        Создать <span class="caret"></span>
                                     </button>
                                     <div class="dropdown-menu" role="menu" zippy="basedlist">
 
@@ -207,20 +207,20 @@
                          <select zippy="mstates" class="form-control mr-2">
                          <option value="0">Не выбрано</option>
                          </select>
-                         <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
+                         <button zippy="bstatus" class="btn btn-success  mr-2"> Применить</button>
                          <label data-label="musers" for="musers"> Ответственный </label>
                          <select zippy="musers" class="form-control mr-2">
                          <option value="0">Не выбрано</option>
                          </select>
                          <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
-                         &nbsp;&nbsp;<a zippy="btopay" class="  btn btn-primary  mr-2 ">Сплатити</a>
-                        <button zippy="bap" class="btn btn-primary  mr-2"><i class="fas fa-thumbs-up"></i> Затвердити</button>
-                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Відхилити</button>
-                        <input class="form-control mr-4" zippy="refcomment" placeholder="Коментар до скасування">
+                         &nbsp;&nbsp;<a zippy="btopay" class="  btn btn-primary  mr-2 ">Оплатить</a>
+                        <button zippy="bap" class="btn btn-primary  mr-2"><i class="fas fa-thumbs-up"></i> Утвердить</button>
+                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Отклонить</button>
+                        <input class="form-control mr-4" zippy="refcomment" placeholder="Коментарий к отклонентю">
                          
-                         <button zippy="bprint" class="btn btn-success  mr-2 ml-4"><i class="fa fa-print"></i> Друк етикеток</button>
-                         &nbsp;<input data-label="bprint" zippy="print1" type="checkbox" > <span data-label="bprint">По одній на позицію</span>
-                        <button zippy="bcopy" class="btn btn-info  ml-2"><i class="fas fa-copy"></i> Копія</button>                         
+                         <button zippy="bprint" class="btn btn-success  mr-2 ml-4"><i class="fa fa-print"></i> Печать этикеток</button>
+                         &nbsp;<input data-label="bprint" zippy="print1" type="checkbox" > <span data-label="bprint">По одной  на  позицию</span>
+                        <button zippy="bcopy" class="btn btn-info  ml-2"><i class="fas fa-copy"></i> Копия</button>                         
                     </form>
                 </div>
 
@@ -263,16 +263,16 @@
                         <div class="modal-body  ">
                           <table class="table table-sm">
                           <tr><td align="center">
-                            <h5 >Посилання  на  документ</h5>
+                            <h5 >Ссылка  на  документ</h5>
                            </td></tr>
                           <tr><td align="center">
                           <div class="mb-2" id="imagelink" > </div>
                           </td></tr>
                           
                           <tr><td align="center">
-                          <a  class="btn btn-info  " id="urllink"  >  Відкрити посилання        </a>
+                          <a  class="btn btn-info  " id="urllink"  >  Открыть ссылку        </a>
 
-                           <button onclick="copycplink()" class="btn btn-success   "    title="Скопіювати в кліпборд" >Скопіювати </button>
+                           <button onclick="copycplink()" class="btn btn-success   "    title="Копировать в  клипборд" >Копировать </button>
                           </td></tr> </table>
                         </div>
 
@@ -303,7 +303,7 @@
              
                 if(navigator.clipboard){
                     navigator.clipboard.writeText(url);
-                }else alert('Ваш браузер не підтримує Clipboard'); 
+                }else alert('Ваш браузер не поддерживает Clipboard'); 
   
       
                   

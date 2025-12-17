@@ -1,13 +1,13 @@
 <html>
    <head>
-        <title>  Журнал послуг </title>
+        <title>  Журнал услуг </title>
 
     </head>
     <body>
         <div zippy="listpan" class="row">
             <div class="col-12 col-xl-10">
 
-                <h3>Журнал послуг  </h3>
+                <h3>Журнал услуг  </h3>
 
 
                 <div class="card">
@@ -29,7 +29,7 @@
                     </form>
                 </div>
 
-                <a href="/index.php?p=App/Pages/Doc/ServiceAct" class="btn btn-info mt-2 mb-3">Створити новий</a>
+                <a href="/index.php?p=App/Pages/Doc/ServiceAct" class="btn btn-info mt-2 mb-3">Создать новый</a>
                 <br> <a zippy="csv">Экспорт в Excel</a>
 
                 <table class="table   table-sm   ">
@@ -37,7 +37,7 @@
 
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th>Клієнт</th>
+                        <th>Клиент</th>
                         <th> </th>
                         <th class="text-right">Сумма</th>
 
@@ -67,7 +67,7 @@
                         <td zippy="onotes"></td>
 
                         <td class="text-nowrap">
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
 
                             &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
 
@@ -92,18 +92,18 @@
                 <div class="card">
                     <form zippy="statusform" class="form-inline ">
 
-                        <button zippy="binproc" type="submit" class="  btn btn-success  mr-2 ">На виконання</button>
-                        <button zippy="bfin" type="submit" class="  btn btn-success  mr-2 ">Виконано</button>
+                        <button zippy="binproc" type="submit" class="  btn btn-success  mr-2 ">На выполнение</button>
+                        <button zippy="bfin" type="submit" class="  btn btn-success  mr-2 ">Выполнено</button>
                         <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатити</a>
                         <button zippy="bpos" class="btn btn-info  mr-2">   Чек     </button>
  
 
-                        <button zippy="binvoice" type="submit" class="  btn btn-info mr-2 "  >Рахунок  </button>
+                        <button zippy="binvoice" type="submit" class="  btn btn-info mr-2 "  >Счет  </button>
                         <button zippy="bwarranty" type="submit" class="  btn btn-info mr-2 "  >Гар. талон  </button>
                           {{#useprod}}
                         <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Наряд</button>
                          {{/useprod}}
-                        <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Анулювано</button>
+                        <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Аннулировано</button>
 
 
                     </form>
@@ -133,11 +133,11 @@
                     </tr>
                     <tr><td colspan="8">
                          <form zippy="sform" class="form-inline" >
-                               Робота  
+                               Работа  
                                <select zippy="sser" class="form-control select2">
                                   <option value="0">Не вибрана</option>                                  
                                </select>
-                               &nbsp;Коментар
+                               &nbsp;Коментарий
                                <input  type="text"  class="form-control" zippy="sdesc"  >
                                &nbsp;Кол.
                                <input  required="on"  style="width:100px"  type="text"  class="form-control priceqty" zippy="sqty"  >
@@ -192,7 +192,7 @@
                                 </td>
                             </tr>                 
                              <tr style="font-weight: bolder;">
-                                <td colspan="5" class="text-right">На суму:</td>
+                                <td colspan="5" class="text-right">На сумму:</td>
                                 <td zippy="etotal"  class="text-right"></td>
                                 <td></td>
                             </tr>                                 

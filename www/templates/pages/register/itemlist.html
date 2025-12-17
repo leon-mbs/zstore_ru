@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title> Товари на складі  </title>
+        <title> Товары на складе  </title>
 
    
         <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
@@ -12,7 +12,7 @@
         <div class="row">
 
             <div class="col-12    " zippy="itempanel">
-                <h3>Товари на складі </h3>
+                <h3>Товары на складе </h3>
                 <div class="card  ">
                     <form zippy="filter" class="row   g-2 align-items-center">
                         <div class="col-auto">
@@ -22,7 +22,7 @@
                        <div class="col-auto"> 
                            <div class=" row no-gutters"> 
 
-                        <label class="col-auto mt-2" for="searchcat">категорія</label>
+                        <label class="col-auto mt-2" for="searchcat">категория</label>
                                  <div class="col-auto">
 
                         <select class="form-control mr-sm-2" zippy="searchcat">
@@ -44,7 +44,7 @@
                         {{#storeemp}}
                       <div class="col-auto"> 
                            <div class=" row no-gutters"> 
-                               <label class="col-auto mt-2" for="searchemp">Співробітник</label>
+                               <label class="col-auto mt-2" for="searchemp">Сотрудник</label>
                                <div class="col-auto">
                                     <select class="form-control mr-sm-2" zippy="searchemp">
                                         <option value="0">Не указано</option>
@@ -74,9 +74,9 @@
                      </div>
                            <div class="col-auto">
                        <select class="form-control mr-sm-2" zippy="searchqty">
-                            <option value="0">На  складі </option>
-                            <option value="1">В  мінусі </option>
-                            <option value="2">Всі </option>
+                            <option value="0">На  складе </option>
+                            <option value="1">В  минусе </option>
+                            <option value="2">Все </option>
                         </select>
 
                       </div>
@@ -86,12 +86,12 @@
                               <label class="col-auto mt-2"  for="searchtype">Тип</label>
                           <div class="col-auto">
                             <select zippy="searchtype" class="form-control mr-sm-2">
-                                <option value="0">Всі</option>
-                                <option value="1">Товари</option>
-                                <option value="2">Матеріали та комплектуючі</option>
-                                <option value="3">МШП</option>
-                                <option value="4">Готова продукція</option>
-                                <option value="5">Напівфабрикати</option>
+                                <option value="0">Все</option>
+                                <option value="1">Товары</option>
+                                <option value="2">Материалы и комплектующие</option>
+                                <option value="3">МБП</option>
+                                <option value="4">Готовая продукцич</option>
+                                <option value="5">Полуфабрикаты</option>
 
                             </select>
                           </div>
@@ -101,7 +101,7 @@
                        <div class="col-auto">
                              <div class="  form-check">
                                 <input zippy="searchterm" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="searchterm">просроченi</label>
+                                <label class="form-check-label" for="searchterm">просроченные</label>
                              </div>
                       </div>
                         {{/usesnumberdate}}
@@ -113,7 +113,7 @@
                    </form>
                 </div>
                 <a zippy="csv">Экспорт в Excel</a>
-                <a zippy="printqty" class=" ml-4  " title="Друкувати вiдфiльтрованi по кiлькостi наявних"> <i class="fa fa-print"></i> </a>
+                <a zippy="printqty" class=" ml-4  " title="Печатать отфильтрованные по наличию"> <i class="fa fa-print"></i> </a>
                 <table class="table      table-sm  table-hover ">
                     <tr>
                         {{#useimages}}
@@ -134,16 +134,16 @@
 
                         <th class="text-right  ">Кол.</th>
   <th class="text-right  "> <i title="Зарезервовано" class="fa fa-archive"></i> </th>     
-  <th class="text-right  "> <i title="В закупці" class="fa fa fa-truck"></i> </th>     
+  <th class="text-right  "> <i title="В закупке" class="fa fa fa-truck"></i> </th>     
                         
    {{^noshowpartion}}                         
-                        <th class="text-right  ">Обл. ціна</th>
+                        <th class="text-right  ">Уч. цена</th>
    {{/noshowpartion}}         
    
    {{^nohowprodprice}}       
-                        <th class="text-right  ">Прод. ціна</th>
+                        <th class="text-right  ">Прод. цена</th>
    {{/nohowprodprice}}                               
-                        <th class="text-right  ">На суму</th>
+                        <th class="text-right  ">На сумму</th>
 
                                            
 
@@ -190,7 +190,7 @@
 
                         <td>
                        
-                            <a zippy="show" title="Детальна інформація"><i class="fa fa-eye"></i></a>
+                            <a zippy="show" title="Детальная информация"><i class="fa fa-eye"></i></a>
                          
                         </td>
                         
@@ -198,7 +198,7 @@
 
                     </tr>
                     <tr>
-                        <td colspan="10" class="  font-weight:bolder"> Всього на суму: <span zippy="totamount"></span> </td>
+                        <td colspan="10" class="  font-weight:bolder"> Всего на сумму: <span zippy="totamount"></span> </td>
 
                     </tr>
                 </table>
@@ -212,22 +212,22 @@
                 <h3 zippy="itemdetname"></h3>
                 
             {{^noshowpartion}}                 
-                <h5> Партiї облiку  </h5>
+                <h5> Партии учета  </h5>
                 <table class="table   table-responsive-sm   table-sm  table-hover ">
                     <tr>
                         <th>Склад</th>
                          {{#storeemp}}
-                        <th>Спiвробiтник</th>
+                        <th>Сотрудник</th>
                          {{/storeemp}}
                         {{#usesnumber}}
-                        <th class="text-right text-nowrap">Серія</th>
+                        <th class="text-right text-nowrap">Серия</th>
 
-                        <th class="text-right text-nowrap">Придатний до</th>
+                        <th class="text-right text-nowrap">Годен до</th>
                         {{/usesnumber}}
-                        <th class="text-right text-nowrap">Обл. ціна</th>
+                        <th class="text-right text-nowrap">Уч. цена</th>
             
                         <th class="text-right text-nowrap">Кол.</th>
-                        <th class="text-right text-nowrap">На суму</th>
+                        <th class="text-right text-nowrap">На сумму</th>
                   
                  
 
@@ -251,22 +251,22 @@
                         <td zippy="amount" class="text-right  "></td>
 
 
-                         <td  ><a zippy="createmove" >Перемiстити партiю</a></td>
+                         <td  ><a zippy="createmove" >Переместить партию</a></td>
 
 
                     </tr>
                 </table>
-                <small><i class="fa fa-exclamation-triangle"></i> Скоригувати партiї, наприклад, якщо утворився мiнус можна
-                    документом Перемiщення партiй.</small>
+                <small><i class="fa fa-exclamation-triangle"></i> Скорректировать парию (например  если образовался  минус) можно
+                    документом Перемещение  партий.</small>
              {{/noshowpartion}} 
               </div>
               
               
                 <div class="col-6  ">
-                     <b>Остання продажа</b> <br>
+                     <b>Последняя продажа</b> <br>
                   {{i_lastsell}}  <br>
                      {{i_avgout}} <br>                 
-                     <b>Вiдпускнi цiни</b> <br>
+                     <b>Отпускные  цены</b> <br>
                     <table class="ctable">
                       {{#i_plist}}
                       <tr><td>{{i_pricename}}</td><td class="text-right">{{i_price}}</td></tr>
@@ -278,7 +278,7 @@
                
                 {{^noshowpartion}} 
                 <div class="col-6">
-                     <b>Остання закупка</b><br>
+                     <b>Последняя закупка</b><br>
                       {{i_lastbay}}  <br>
                      {{#useval}}
                        Валюта  {{i_rate}} <br>
@@ -325,7 +325,7 @@
         
         <script>
             function check_delete() {
-                return confirm("Удалить партію?")
+                return confirm("Удалить партию?")
             }
 
             $(document).ready(function () {

@@ -1,13 +1,13 @@
 <html>
      <head>
-        <title> Виробничі етапи  </title>
+        <title> Производственные этапы  </title>
   
     </head>
   <body>
         <div class="row">
             <div class="col-12  ">
 
-                <h3>Виробничі етапи</h3>
+                <h3>Производственные этапыетапи</h3>
 
 
 
@@ -24,11 +24,11 @@
 
 
 
-                            <label for="fproc"> Процес </label>
+                            <label for="fproc"> Процесс </label>
                             <select class="form-control mr-2" zippy="fproc">
                                 <option value="0">Не выбрано</option>
                             </select>
-                            <label for="fparea"> Дільниця </label>
+                            <label for="fparea"> Участок </label>
                             <select class="form-control mr-2" zippy="fparea">
                                 <option value="0">Не выбрано</option>
                             </select>
@@ -53,7 +53,7 @@
                             <th  >Статус</th>
                      
 
-                            <th>Процес</th>
+                            <th>Процесс</th>
                             
 
                             <th></th>
@@ -75,7 +75,7 @@
 
 
                             <td  >
-                                <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                                <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
                             </td>
                        
                             <td  >
@@ -105,7 +105,7 @@
             <div   class="col-12 col-md-8 col-xl-6">
                 <a zippy="backc"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
                 <h5 zippy="stagenamec"></h5>
-                <b>Технологічна карта</b>
+                <b>Тех. карта</b>
                 <div zippy="carddata" ></div>
             </div>
         </div>
@@ -113,19 +113,19 @@
   
         <div zippy="statuspan"  class="row">
             <div   class="col-12 col-md-8 col-xl-6">
-                <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> До списку</a> 
+                <a zippy="backs"><i class="fa fa-arrow-alt-circle-left"></i> К списку</a> 
                 <h5 zippy="stagenames"></h5>
                 <div class="navbar nav justify-content-start">
                     
-                    <a title="Запустити етап" class="btn btn-primary mr-2" zippy="btnstart">Запустити</a>
-                    <a title="Призупинити етап" class="btn btn-primary mr-2" zippy="btnstop">Призупинити</a>
-                    <a title="Закрити етап" class="btn btn-success mr-2" zippy="btnclose">Закрити</a>
+                    <a title="Запустити етап" class="btn btn-primary mr-2" zippy="btnstart">Стартовать</a>
+                    <a title="Призупинити етап" class="btn btn-primary mr-2" zippy="btnstop">Приостановить</a>
+                    <a title="Закрити етап" class="btn btn-success mr-2" zippy="btnclose">Закрыть</a>
           
                      &nbsp;&nbsp;&nbsp;&nbsp;
-                    <a title="Списати у виробництво сировину та матеріали" class="btn btn-info mr-2" zippy="btntoprod">Списати</a>
-                    <a title="Оприбуткувати готову продукцію або напівфабрикати" class="btn btn-info mr-2" zippy="btnfromprod">Оприбуткувати</a>
-                    <a title="Переміщення між етапами " class="btn btn-info mr-2" zippy="btnmove">Переміщення</a>
-                    <a title="Сторонні  послуги " class="btn btn-info mr-2" zippy="btnservice">Отримані послуги</a>
+                    <a title="Списати у виробництво сировину та матеріали" class="btn btn-info mr-2" zippy="btntoprod">Списать</a>
+                    <a title="Оприбуткувати готову продукцію або напівфабрикати" class="btn btn-info mr-2" zippy="btnfromprod">Оприходовать</a>
+                    <a title="Переміщення між етапами " class="btn btn-info mr-2" zippy="btnmove">Перемещение</a>
+                    <a title="Сторонні  послуги " class="btn btn-info mr-2" zippy="btnservice">Полученные услуги</a>
    
 
                 </div>             
@@ -154,7 +154,7 @@
       
 
             function check_btnclose() {
-                return confirm("Закрити етап?")
+                return confirm("Закрыть этап?")
             }
         </script>  
     </body>

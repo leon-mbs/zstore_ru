@@ -1,18 +1,18 @@
 <html>
    <head>
-        <title> Журнал руху ТМЦ  </title>
+        <title> Журнал движения ТМЦ  </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12 col-xl-10  ">
 
-                <h3>Журнал руху ТМЦ </h3>
+                <h3>Журнал движения ТМЦ </h3>
 
                 <div class="card">
                     <form zippy="filter" class="form-inline ">
 
-                        <label for="from">З </label>
+                        <label for="from">С </label>
                         <input type="text" class="form-control mr-sm-2  " zippy="from" style="width:110px">
 
 
@@ -26,7 +26,7 @@
                         
                        {{#storeemp}}
              
-                       <label class="col-auto mt-2" for="searchemp">Співробітник</label>
+                       <label class="col-auto mt-2" for="searchemp">Сотрудник</label>
                 
                         <select class="form-control mr-sm-2" zippy="searchemp">
                             <option value="0">Не указано</option>
@@ -38,7 +38,7 @@
                         <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="fitem">
                          {{#usesnumber}}
                
-                        <label data-label="fsnumber" for="fsnumber">Серія, с/н </label>
+                        <label data-label="fsnumber" for="fsnumber">Серия, с/н </label>
                         <input class="form-control mr-sm-2" zippy="fsnumber">
                              {{/usesnumber}}
                    
@@ -63,7 +63,7 @@
                   
 
                         {{#usesnumber}}
-                        <th class="text-right">Серія</th>
+                        <th class="text-right">Серия</th>
                         {{/usesnumber}}
                         <th class="text-right">Кол.</th>
                        
@@ -85,7 +85,7 @@
 
                   
                         <td class="text-nowrap">
-                            <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
+                            <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
 
 
                         </td>

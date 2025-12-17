@@ -1,13 +1,13 @@
 <html>
      <head>
-        <title>  Виробничі процеси </title>
+        <title>  Призводственные процессы </title>
  
     </head>
   <body>
         <div class="row">
             <div class="col-12  ">
 
-                <h3>Виробничі процеси</h3>
+                <h3>Призводственные процессы</h3>
 
 
 
@@ -18,12 +18,12 @@
             <div class="col-12 col-md-12 col-xl-10">
                   <div class="row  "  >
                     <div class="col-2  "  >
-                <a  zippy="addnewproc" class="btn btn-info">Створити</a>    
+                <a  zippy="addnewproc" class="btn btn-info">Создпть</a>    
                  
                    </div> 
                       <div class="col-2  "  >
                  
-                   <a class="btn btn-outline-success mr-2"   zippy="options"  ><i class="fa fa-cog"> Налаштування</i> </a>
+                   <a class="btn btn-outline-success mr-2"   zippy="options"  ><i class="fa fa-cog"> Настройки</i> </a>
                 
                   </div>  
                 </div>  
@@ -33,11 +33,11 @@
 
 
                         <th>Наименование</th>
-                        <th>Замовлення, договір</th>
+                        <th>Заказ, договор</th>
                       
                         <th>Статус</th>
-                        <th>Початок</th>
-                        <th>Кінець</th>
+                        <th>Начало</th>
+                        <th>Окончание</th>
 
 
                         <th  > </th>
@@ -62,18 +62,18 @@
 
 
                         <td  >
-                          &nbsp;   <a zippy="view" title="Перегляд"><i class="fa fa-eye"></i></a>
+                          &nbsp;   <a zippy="view" title="Просмотр"><i class="fa fa-eye"></i></a>
                         </td> 
                         <td  >
-                       &nbsp;        <a zippy="prods" title="Готова продукція"><i class="fa fa-gift"></i></a>
+                       &nbsp;        <a zippy="prods" title="Готовая продкуция"><i class="fa fa-gift"></i></a>
                         </td> 
                         <td  >
                           &nbsp;   <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
                         </td> <td  >
-                          &nbsp;   <a zippy="stages" title="Виробничі етапи"><i class="fa fa-gavel"></i></a>
+                          &nbsp;   <a zippy="stages" title="Производственные  этапы"><i class="fa fa-gavel"></i></a>
                         </td> 
                         <td  >
-                          &nbsp;   <a zippy="copy" title="Копіювати"><i class="fa fa-copy"></i></a>
+                          &nbsp;   <a zippy="copy" title="Копировать"><i class="fa fa-copy"></i></a>
                         </td>
                         <td  >
                           &nbsp;   <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
@@ -92,13 +92,13 @@
                 <div   class="row">
                     <div   class="col-12  ">
                         <div class="navbar nav justify-content-start">
-                            <a class="btn btn-info" zippy="btnstinprocess">На виконання</a>
+                            <a class="btn btn-info" zippy="btnstinprocess">На выполнение</a>
                             &nbsp;&nbsp;
-                            <a class="btn btn-warning" zippy="btnstsuspend">Призупинити</a>
+                            <a class="btn btn-warning" zippy="btnstsuspend">Приостановить</a>
                             &nbsp;&nbsp;
                             <a class="btn btn-danger" zippy="btnstcancel">Отменить</a>
                             &nbsp;&nbsp;
-                            <a class="btn btn-success" zippy="btnstclose">Виконано</a>
+                            <a class="btn btn-success" zippy="btnstclose">Выполнен</a>
 
 
                         </div>               
@@ -106,7 +106,7 @@
                     <div   class="col-12 col-md-8 col-xl-6">
                         <h5>Виробничі етапи</h5>
                         <table class="table table-sm">
-                            <tr><th>Наименование</th><th  >Статус</th><th  >Виробнича дільниця</th></tr>
+                            <tr><th>Наименование</th><th  >Статус</th><th  >Производственный участок</th></tr>
                             {{#stagelist}}
                             <tr   >
                                 <td   >{{stagename}} </td>
@@ -122,7 +122,7 @@
                     <div   class="col-12 col-md-6 col-xl-4">
                         <h5>Готова продукція</h5>
                         <table class="table table-sm">
-                            <tr><th>Наименование</th><th  >Код</th>  <th>Серія, партія</th><th class="text-right">План</th><th class="text-right">Оприходувано</th></tr>
+                            <tr><th>Наименование</th><th  >Код</th>  <th>Серия, партия</th><th class="text-right">План</th><th class="text-right">Оприходовано</th></tr>
                             {{#prodready}}
                             <tr><td >{{itemname}} </td><td >{{item_code}} </td><td >{{itemsnumber}} </td><td class="text-right">{{itemplan}} </td><td class="text-right">  {{itemfact}}</td></tr>
                             {{/prodready}}
@@ -130,7 +130,7 @@
                     </div>  
                     <div class="w-100"></div>           
                     <div   class="col-12 col-md-8 col-xl-6">
-                        <h5>Матеріали та комплектуючі</h5>
+                        <h5>Материалы и клмплектующие</h5>
                         <table class="table table-sm">
                             <tr><th>Наименование</th><th  >Код</th><th class="text-right">План</th><th class="text-right">Списано</th><th class="text-right">Наявність</th></tr>
                             {{#prodstuff}}
@@ -140,9 +140,9 @@
                     </div>            
                     <div class="w-100"></div>           
                     <div   class="col-12 col-md-8 col-xl-6">
-                        <h5>Роботи</h5>
+                        <h5>Работы</h5>
                         <table class="table table-sm">
-                            <tr><th>Наименование</th><th  >Код</th><th class="text-right">План</th><th class="text-right">Виконано</th>  </tr>
+                            <tr><th>Наименование</th><th  >Код</th><th class="text-right">План</th><th class="text-right">Выполнено</th>  </tr>
                             {{#prodservice}}
                             <tr><td >{{itemname}} </td><td >{{item_code}} </td<td class="text-right">{{itemqtyplan}} </td> <td class="text-right">  {{itemqtystore}}</td></tr>
                             {{/prodservice}}                     
@@ -156,7 +156,7 @@
         </div>
 
         <form zippy="editproc"  >
-            <h4>Редактирование процесу</h4>
+            <h4>Редактирование процесса</h4>
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
@@ -164,16 +164,16 @@
                         <input  required="on"  class="form-control" zippy="editname"/>
                     </div>
                     <div class="form-group">
-                        <label for="editbasedoc">Замовлення, договір</label>
+                        <label for="editbasedoc">Заказ, договор</label>
                         <input   class="form-control" zippy="editbasedoc"/>
                     </div>
                 
                     <div class="form-group">
-                        <label for="editstartdateplan">Початок (план)</label>
+                        <label for="editstartdateplan">Начало (план)</label>
                         <input    class="form-control" zippy="editstartdateplan"/>
                     </div>
                     <div class="form-group">
-                        <label for="editenddateplan">Кінець (план)</label>
+                        <label for="editenddateplan">Окончание (план)</label>
                         <input    class="form-control" zippy="editenddateplan"/>
                     </div>        
                   
@@ -181,11 +181,11 @@
                  <div class="col-12 col-md-3 col-xl-2">
                 
                   <div class="form-group  ">
-                        <label for="editstore">Проміжний виробничий склад <small class="text-danger">*</small></label>
+                        <label for="editstore">Прмежуточный производственный  склад <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="editstore">
                             <option value="0">Не указано</option>
                         </select>
-                         <small>Бажано створити окремий (можна віртуальний)    </small>
+                         <small>Желательно создать отдельный (можно виртуальный)    </small>
                                 
                      </div>   
                    <div class="form-group">
@@ -205,7 +205,7 @@
 
         <div class="row" zippy="prodspan" >
             <div class="col-12 col-md-8 col-xl-6">
-                <h5>Запланована готова продукція</h5>
+                <h5>Запланированная готовая  продукция</h5>
                 <div class="card">
                     <form zippy="addprodform" class="form-inline ">
                         <label  for="additem">Наименование</label>
@@ -217,7 +217,7 @@
                         <label for="addqty">Кол.</label>
                         <input style="width:60px"  class="form-control qtyprice mr-2" zippy="addqty" pattern="[0-9,\.]+"  />
                            {{#usesnumber}}
-                        <label for="addsnumber">Серія, партія</label>
+                        <label for="addsnumber">Серия, партия</label>
                  
                         <input   class="form-control  mr-2" zippy="addsnumber"/>
                         {{/usesnumber}} 
@@ -242,14 +242,14 @@
 
         <div class="row" zippy="stagespan" >
             <div class="col-12 col-md-8 col-xl-6">
-                <h5>Виробничі етапи </h5>
-                <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> До списку процесів</a>  <br>
+                <h5>Произвоственные этапы </h5>
+                <a zippy="backtoproc"   ><i class="fa fa-arrow-alt-circle-left"></i> К списку процессов</a>  <br>
                 <a zippy="addstage"  class="btn  btn-success">Добавить</a>
                 <table class="table table-sm">
                     <tr>
                        <th>Название</th>
                        <th>Статус</th>
-                       <th>Вир. дільниця</th>
+                       <th>Пр. участок</th>
              
                        <th> </th>
                        <th> </th>
@@ -265,7 +265,7 @@
 
                         <td><a title="Редактировать" zippy="stageedit"><i class="fa fa-edit"></i></a></td>
                         <td><a title="ТМЦ" zippy="stageitems"><i class="fa fa-cogs"></i></a></td>
-                        <td><a title="Виконавці " zippy="stageemps"><i class="fa fa-users"></i></a></td>
+                        <td><a title="Исполнители " zippy="stageemps"><i class="fa fa-users"></i></a></td>
                         <td><a title="Тех. карта" zippy="stagecard"><i class="fa fa-wrench"></i></a></td>
                         <td><a title="Удалить" zippy="stagedel"><i class="fa fa-trash"></i></a></td>
                     </tr>
@@ -274,7 +274,7 @@
         </div>
 
         <form zippy="editstage"  >
-                <h4>Редактирование етапу</h4>
+                <h4>Редактирование етапа</h4>
  
             <div class="row"  >
                 <div class="col-12 col-md-4 col-xl-3">
@@ -283,7 +283,7 @@
                         <input  required="on"  class="form-control" zippy="editstagename"/>
                     </div>
                     <div class="form-group">
-                        <label for="editstagearea">Виробнича дільниця  </label>
+                        <label for="editstagearea">Призводственный участок  </label>
                         <select  class="form-control" zippy="editstagearea">
                             <option value="0">Не выбрано</option>
                         </select>
@@ -291,7 +291,7 @@
 
                  
                     <div class="form-group">
-                        <label for="editstagenotes">Коментар</label>
+                        <label for="editstagenotes">Коментарий</label>
                         <textarea  style="height:100px"  class="form-control" zippy="editstagenotes"></textarea>
                     </div>
                 </div>
@@ -308,7 +308,7 @@
             <div class="row"  >
                 <div class="col-12 col-md-8 col-xl-6">
                     <div class="form-group">
-                        <label for="editcard">Технологічна карта</label>
+                        <label for="editcard">Тех. карта</label>
                         <textarea     class="form-control" zippy="editcard"></textarea>
                     </div>             
 
@@ -324,7 +324,7 @@
 
             <i zippy="stagename5"></i><br>    
                    
-            <h5>Виготовлювані ТМЦ</h5>
+            <h5>Изготовленные ТМЦ</h5>
             <div class="card">
 
              <form zippy="edititemsform" class="form-inline">
@@ -370,7 +370,7 @@
                   <i zippy="stagename6"></i><br>    
    
 
-                    <h5><b>Виконавці</b></h5>
+                    <h5><b>Исполнители</b></h5>
                   
              <form zippy="editempsform" class="form-inline">
                         <select zippy="editemp" class="form-control mr-2  ">
@@ -405,11 +405,11 @@
                 <form zippy="optionsform"  >
                  <h4>Налаштування     </h4>
                    <div class="form-group  ">
-                        <label for="editrole">Роль для робітників</label>
+                        <label for="editrole">Роль для рабоьнниклв</label>
                         <select class="form-control" zippy="editrole">
                             <option value="0">Не указано</option>
                         </select>
-                         <small>  Якщо задано виконавців на етап можна буде вказати тільки з такою роллю   </small>
+                         <small>  Если заданы исполнители на этап можно будет указать только с такой ролью   </small>
                                       
                   </div> 
                  <div class="col-12">
