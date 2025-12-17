@@ -19,14 +19,14 @@
                         <label for="store">Зі складу <small class="text-danger">*</small></label>
 
                         <select class="form-control" zippy="store">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                   {{#storeemp}}
                      <div class="form-group  ">
                         <label for="storeemp">Зі спiвробiтника</label>
                         <select class="form-control  " zippy="storeemp">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                         <small> Матерiально вiдповiдальна  особа</small>
                     </div> 
@@ -36,7 +36,7 @@
                          <div class="input-group  ">
                              <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
                              <div class="input-group-append">
-                                 <a title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
+                                 <a title="Добавить нового" class="btn btn-success" zippy="addcust" >+</a>
                             </div>                    
                         </div>                               
                         <span zippy="custinfo"> </span>
@@ -48,7 +48,7 @@
                     <div class="form-group  ">
                         <label for="contract" data-label="contract">Договір</label>
                         <select class="form-control" zippy="contract">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
 
 
@@ -56,7 +56,7 @@
                      <div class="form-group  ">
                         <label for="fop" data-label="fop"  >Вказати ФОПа</label>
                         <select class="form-control" zippy="fop">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
 
 
@@ -72,7 +72,7 @@
                     <div class="form-group  ">
                         <label for="payment">Каса, рахунок</label>
                         <select class="form-control" zippy="payment">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
           <div class="form-group  ">
@@ -82,7 +82,7 @@
                     </div>           
 
                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -97,7 +97,7 @@
                      <div class="form-group  ">
                         <label for="salesource">Джерело продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>    
                 </div>
@@ -113,23 +113,23 @@
                     </div>
                     {{/usescanner}}
 
-                    <a class="btn btn-info btn-sm" zippy="addrow">Додати позицію</a>
+                    <a class="btn btn-info btn-sm" zippy="addrow">Добавить позицію</a>
                     &nbsp;&nbsp;&nbsp;<a zippy="paste"><i class="fa fa-paste"></i> Вставити</a>
                     <table class="table table-sm">
                         <tr>
                             <th></th>
-                            <th>Назва</th>
+                            <th>Название</th>
                             <th>Код</th>
-                            <th>Од.</th>
+                            <th>Ед.</th>
                                                  <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
 
 
 
-                            <th class="text-right">Кіл.</th>
+                            <th class="text-right">Кол.</th>
                             <th class="text-right"><i class="fa fa-gift"></i>,%</th>
-                            <th class="text-right">Ціна</th>
+                            <th class="text-right">Цена</th>
                           
-                            <th class="text-right">Сума</th>
+                            <th class="text-right">Сумма</th>
                             <th  ></th>
                         </tr>
                         <tr zippy="detail">
@@ -187,7 +187,7 @@
                             <td class="text-right"></td>
                            
                             <td class="text-right"></td>
-                            <td class="text-right">В т.ч. ПДВ:</td>
+                            <td class="text-right">В т.ч. НДС:</td>
 
 
                             <td zippy="totalnds" class="text-right"></td>
@@ -253,8 +253,8 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  ">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
 
@@ -318,7 +318,7 @@
 
 
                     <div class="form-group">
-                        <label for="edittovar">Назва</label>
+                        <label for="edittovar">Название</label>
                         <input    placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
                         <a zippy="openitemsel">Відкрити довідник</a>
                        <br>  На складі: <span zippy="qtystock"></span>
@@ -345,7 +345,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="editprice">Ціна </label>
+                        <label for="editprice">Цена </label>
                         <input class="form-control qtyprice" type="text" zippy="editprice"  required="on"  pattern="[0-9,\.\s]+"
                                style="width: 100px;">
 
@@ -353,8 +353,8 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-secondary mr-2">
-                        <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-primary ">
+                        <input type="button" zippy="cancelrow" value="К списку" class="btn btn-secondary mr-2">
+                        <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-primary ">
                         
                     </div>
 
@@ -374,7 +374,7 @@
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
-                        <label for="editcustname">Назва </label>
+                        <label for="editcustname">Название </label>
                         <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
@@ -388,8 +388,8 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary  mr-2">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-outline-secondary  mr-2">
+                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
                         
                     </div>
                 </div>

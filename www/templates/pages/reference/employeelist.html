@@ -1,6 +1,6 @@
 <html>
     <head>
-          <title>  Довідник співробітників</title>
+          <title>  Справочник сотрудников</title>
  
     </head>
 
@@ -9,34 +9,34 @@
 
 
             <div zippy="employeetable" class="col-12 col-md-10 col-xl-8">
-                <h3>Довідник співробітників </h3>
+                <h3>Справочник сотрудников </h3>
                  <div class="card">
 
                     <form zippy="filter" class="form-inline">
 
-                        <label for="searchtext">Пошук</label>
+                        <label for="searchtext">Поиск</label>
                         <input zippy="searchtext" class="form-control mr-sm-2">
                              
 
                         <input class="btn btn-outline-success  " type="submit" value="ОК">
 
                     </form>
-                </div>               <a zippy="addnew" class="btn btn-outline-primary btn-sm">Додати</a>
+                </div>               <a zippy="addnew" class="btn btn-outline-primary btn-sm">Добавить</a>
                 <table class="table table-hover   table-sm"  >
                     <tr>
-                        <th>П І Б</th>
+                        <th>ФИО</th>
 
-                        <th>Логін</th>
+                        <th>Логин</th>
 
                         {{#usebranch}}
-                        <th>Філія</th>
+                        <th>Филиал</th>
                         {{/usebranch}}
 
 
                         <th></th>
                         <th></th>
-                        <th class="text-right">До сплати</th>
-                        <th class="text-right">В пiдзвiтi</th>
+                        <th class="text-right">К оплате</th>
+                        <th class="text-right">В подотчете</th>
                       
                         <th></th>
                         <th></th>
@@ -53,8 +53,8 @@
                         <td class="text-right" zippy="zarp" ></td>
                         <td class="text-right" zippy="av" ></td>
                         <td><a zippy="contentlist"  ><i class="fa fa-eye"></i></a></td>
-                        <td ><a zippy="edit" title="Редагування"><i class="fa fa-fa fa-edit"></i></a> 
-                       &nbsp; &nbsp; <a  zippy="delete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
+                        <td ><a zippy="edit" title="Редактирование"><i class="fa fa-fa fa-edit"></i></a> 
+                       &nbsp; &nbsp; <a  zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
                 <div zippy="pag"></div>
@@ -68,19 +68,19 @@
                        <div class="col-12 col-md-6 col-xl-3">
                       
                             <div class="form-group">
-                                <label for="editemp_name">Прізвище ім'я</label>
+                                <label for="editemp_name">Фамилия имя</label>
                                 <input autofocus="on"    required="on"  zippy="editemp_name" class="form-control">
 
                             </div>
                             <div class="form-group">
-                                <label for="editlogin">Логін</label>
+                                <label for="editlogin">Логин</label>
                                 <select class="form-control" zippy="editlogin">
-                                    <option value="0">Не вказано</option>
+                                    <option value="0">Не указано</option>
                                 </select>
-                                <small>Логiн зв'язує спiвробiтника з користувачем системи</small>
+                                <small>Логин связывает  сотрудника  с  пользователем</small>
                             </div>
                             <div class="form-group">
-                                <label for="edithiredate">Дата найму</label>
+                                <label for="edithiredate">Дата найма</label>
                                 <input type="date" class="form-control" zippy="edithiredate"/>
                             </div>
                            <div class="form-group">
@@ -93,46 +93,46 @@
                             </div>
                             {{#usebranch}}
                             <div class="form-group">
-                                <label for="editbranch">Філія</label>
+                                <label for="editbranch">Филиал</label>
                                 <select class="form-control" zippy="editbranch">
-                                    <option value="0">Не вказано</option>
+                                    <option value="0">Не указано</option>
                                 </select>
                             </div>
                             {{/usebranch}}
                             <div class="form-group">
-                                <label for="editcomment">Коментар</label>
+                                <label for="editcomment">Коментарий</label>
                                 <textarea class="form-control" zippy="editcomment"></textarea>
                             </div>
                             <div class="form-check">
                                 <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editdisabled">Звільнився</label>
+                                <label class="form-check-label" for="editdisabled">Уволился</label>
                             </div>
                           
                         </div>
                       
                          <div class="col-12 col-md-4 col-xl-3">
                             <div class="form-group">
-                               <label  for="editdepartment">Відділ</label>
+                               <label  for="editdepartment">Отдел</label>
                                <input   class="form-control" zippy="editdepartment"/>
                            </div>
                             <div class="form-group">
-                               <label  for="editposition">Позиція (посада)</label>
+                               <label  for="editposition">Позиция (должность)</label>
                                <input   class="form-control" zippy="editposition"/>
                            </div>
                       
                             <div class="form-group">
-                               <label for="editztype">Тип зарплати</label>
+                               <label for="editztype">Тип зарплаты</label>
                                <select     zippy="editztype" class="form-control">
     
                                </select>
     
                            </div>
                             <div class="form-group">
-                               <label data-label="editzhour" for="editzhour">Оплата за годину</label>
+                               <label data-label="editzhour" for="editzhour">Оплата за час</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editzhour"/>
                            </div>
                            <div class="form-group">
-                               <label data-label="editzmon" for="editzmon">Оплата в міс.</label>
+                               <label data-label="editzmon" for="editzmon">Оплата в мес.</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editzmon"/>
                            </div>
                            <div class="form-group">
@@ -140,14 +140,14 @@
                                <input pattern="[0-9]+"    class="form-control" zippy="editadvance"/>
                            </div>
                                <div class="form-group">
-                               <label for="editchildren">Кiл. дiтей до 14</label>
+                               <label for="editchildren">Дети до 14</label>
                                <input pattern="[0-9]+"    class="form-control" zippy="editchildren"/>
                            </div>
                            <div class="form-check">
                                 <input zippy="editinvalid" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editinvalid">Особа з інвалiдністю</label>
+                                <label class="form-check-label" for="editinvalid">Инвалид</label>
                                 <br><input zippy="editcoworker" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="editcoworker">Сумiсник</label>
+                                <label class="form-check-label" for="editcoworker">Совместитель</label>
                            </div>
 
    
@@ -156,8 +156,8 @@
                     <div class="row">
                        <div class="col-12   ">
                    <div class="form-group">
-                                <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2">
-                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                                <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-secondary mr-2">
+                                <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">
                                 
                             </div>       
                         
@@ -171,11 +171,11 @@
          <div zippy="contentview" class="row">  
    <div class="col-12 ">  
                 <h5 zippy="accname"></h5>
-                <a zippy="accback">До переліку</a>
+                <a zippy="accback">К списку</a>
               
             </div>             
             <div class="col-12 col-md-8 col-xl-3 ">
-                   <h5> Коментарі </h5>
+                   <h5> Коментарии </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_msglist">
                                 <td>
@@ -189,16 +189,16 @@
                         <hr>
                         <form zippy="addmsgform">
                             <div class="form-group">
-                                <label for="addmsg">Коментар</label>
+                                <label for="addmsg">Коментарий</label>
                                 <textarea  required="on"  class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
                             </div>
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
                         </form>
             </div>       
       
           <div class="col-12 col-md-8 col-xl-3  "> 
-                      <h5> Прикріплені файли </h5>
+                      <h5> Прикрепленные файлы </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_files">
                                 <td><a zippy="filename" target="_blank"></a></td>
@@ -208,28 +208,28 @@
                         <hr>
                         <form zippy="addfileform" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="addfile">Вибрати файл</label>
+                                <label for="addfile">Вибрать файл</label>
                                 <input type="file" class="form-control"  required="on"  zippy="addfile">
 
                             </div>
 
                             <div class="form-group">
-                                <label for="adddescfile">Опис </label>
+                                <label for="adddescfile">Описание </label>
                                 <input class="form-control" zippy="adddescfile">
                             </div>
 
 
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
 
                         </form>   
             </div>
       
           <div class="col-12  col-lg-8 col-xl-6">
-                <h3>Особовий  рахунок</h3>   
+                <h3>Лицевой счет</h3>   
                    
                     <form zippy="filters" class="form-inline">
                                         
-                        <label for="from">З</label>
+                        <label for="from">С</label>
                         <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="from">
 
                         <label for="to">По</label>
@@ -263,7 +263,7 @@
        
               <script>               
          function check_delete() {
-                return confirm("Видалити?")
+                return confirm("Удалить?")
             }
         </script>     
 

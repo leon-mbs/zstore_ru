@@ -1,6 +1,6 @@
 <html>
     <head>
-      <title> Договори</title>
+      <title> Договора</title>
     </head>
          
  
@@ -8,13 +8,13 @@
         <div class="row">
             <div class="col-12  col-md-10 col-xl-8">
                 <div zippy="contracttable">
-                    <h3>Договори </h3>
-                    <small><i class="fa fa-info-circle"></i> В  документах вибираються  договори зi статусом В роботi  </small>
+                    <h3>Договора </h3>
+                    <small><i class="fa fa-info-circle"></i> В  документах выбираются  договора  со  статусом в Работе  </small>
                     <div class="card">
 
                         <form zippy="filter" class="form-inline">
 
-                            <label for="searchkey">Пошук</label>
+                            <label for="searchkey">Поиск</label>
                             <input class="form-control mr-sm-2" type="text" zippy="searchkey">
                             <label for="searchcust">Контрагент</label>
                             <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="searchcust"/>
@@ -24,24 +24,24 @@
 
                             <div class="form-check">
 
-                                <input title="Показати також не актуальнi" class="form-check-input" type="checkbox" zippy="showdis">
-                                <label class="form-check-label mr-sm-3" for="showdis">Всi</label>
+                                <input title="Показать также неактуальные" class="form-check-input" type="checkbox" zippy="showdis">
+                                <label class="form-check-label mr-sm-3" for="showdis">Все</label>
                             </div>
 
                             <input class="btn btn-success  " type="submit" value="ОК">
 
                         </form>
                     </div>
-                    <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
                     <table class="table table-bordered   table-sm">
                         <tr>
                             <th>Номер</th>
-                            <th>Термін</th>
+                            <th>Срок</th>
                             <th>Контрагент</th>
 
                             
                             <th>Статус</th>
-                           <th class="text-right"  >Сума</th>
+                           <th class="text-right"  >Сумма</th>
                          
                      
                            
@@ -67,10 +67,10 @@
 
                             <td ><small zippy="shortdesc"></small></td>
                            
-                            <td><a zippy="show" title="Документи"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
+                            <td><a zippy="show" title="Документы"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
 
-                            <td><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
-                                <a zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
+                            <td><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
+                                <a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </table>
                     <div zippy="pag"></div>
@@ -91,19 +91,19 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-5 col-form-label" for="editcreatedon">Дата початку</label>
+                        <label class="col-5 col-form-label" for="editcreatedon">Дата начала</label>
                       <div class="col-7  ">
                          <input style="width: 120px;"  required="on"  class="form-control" zippy="editcreatedon"/>
                      </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-5 col-form-label" for="editenddate">Дата закiнчення</label>
+                        <label class="col-5 col-form-label" for="editenddate">Дата окончания</label>
                        <div class="col-7  ">
                         <input style="width: 120px;"  required="on"  class="form-control" zippy="editenddate"/>
                      </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-5 col-form-label" for="editamount">Сума</label>
+                        <label class="col-5 col-form-label" for="editamount">Сумма</label>
                        <div class="col-7  ">
                         <input style="width: 120px;"     class="form-control" zippy="editamount"/>
                      </div>
@@ -117,9 +117,9 @@
                   
 
                     <div class="form-group">
-                        <label for="editemp">Вiдповiдальний</label>
+                        <label for="editemp">Ответственный</label>
                         <select zippy="editemp" class="form-control  ">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
                     </div>   
 
@@ -129,11 +129,11 @@
                 <div class="col-12 col-md-4 col-xl-3">
                    
                       <div class="form-group">
-                        <label  required="on"  for="editshortdesc">Скорочений опис, призначення</label>
+                        <label  required="on"  for="editshortdesc">Короткое описание, назначение</label>
                         <input class="form-control" zippy="editshortdesc"/>
                     </div>
                     <div class="form-group">
-                        <label for="editdesc">Детальний опис</label>
+                        <label for="editdesc">Детальное описание</label>
                         <textarea style="height:200px" class="form-control" zippy="editdesc"></textarea>
                     </div>
                    
@@ -142,8 +142,8 @@
                 </div>
 
                 <div class="col-12">
-                    <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">
-                    <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary mr-2 ">
+                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">
                     
                 </div>
             </div>
@@ -153,7 +153,7 @@
 
             <div class="col-12 ">  
                 <h5 zippy="cname"></h5>
-                <a zippy="back">До переліку</a>
+                <a zippy="back">К списку</a>
                <div class="card ">  
               
                     <form zippy="statusform" class="form-inline ">
@@ -162,9 +162,9 @@
                         
                          </select>
                          <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
-                         <label data-label="musers" for="mstates"> Відповідальний </label>
+                         <label data-label="musers" for="mstates"> Ответственный </label>
                          <select zippy="musers" class="form-control mr-2">
-                         <option value="0">Не обрано</option>
+                         <option value="0">Не выбрано</option>
                          </select>
                          <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
                       </form>
@@ -172,7 +172,7 @@
               </div>
             </div>
             <div class="col-12 col-md-8 col-xl-3  "> 
-                       <h5> Коментарі </h5>
+                       <h5> Коментарии </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_msglist">
                                 <td>
@@ -186,15 +186,15 @@
                         <hr>
                         <form zippy="addmsgform">
                             <div class="form-group">
-                                <label for="addmsg">Коментар</label>
+                                <label for="addmsg">Коментарий</label>
                                 <textarea  required="on"  class="form-control" zippy="addmsg"
                                           style=" height:120px;"></textarea>
                             </div>
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
                         </form>  
             </div>
             <div class="col-12 col-md-8 col-xl-3  "> 
-                      <h5> Прикріплені файли </h5>
+                      <h5> Прикрепленные файлы </h5>
                         <table class="table table-sm">
                             <tr zippy="dw_files">
                                 <td><a zippy="filename" target="_blank"></a></td>
@@ -204,18 +204,18 @@
                         <hr>
                         <form zippy="addfileform" enctype="multipart/form-data">
                             <div class="form-group">
-                                <label for="addfile">Вибрати файл</label>
+                                <label for="addfile">Выбрать файл</label>
                                 <input type="file" class="form-control"  required="on"  zippy="addfile">
 
                             </div>
 
                             <div class="form-group">
-                                <label for="adddescfile">Опис </label>
+                                <label for="adddescfile">Описание </label>
                                 <input class="form-control" zippy="adddescfile">
                             </div>
 
 
-                            <input class="btn btn-outline-success  " type="submit" value="Додати">
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
 
                         </form>   
             </div>
@@ -224,7 +224,7 @@
                  <pre zippy="showdesc"></pre> 
             
                 <details>
-                        <summary  >Документи</summary>
+                        <summary  >Документы</summary>
                              
                 <table class="table table-sm">
                     
@@ -241,7 +241,7 @@
               
                 </details>
                   <details>
-                        <summary  >Платежi</summary>
+                        <summary  >Платежи</summary>
                
                  
                 <table class="table table-sm">

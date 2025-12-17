@@ -21,7 +21,7 @@
                        <div class="  row no-gutters"> 
                         <label class="col-auto mt-2" for="searchnumber">№ </label>
                         <div class="col-auto">
-                           <input autofocus="on" placeholder="Пошук..." class="form-control  " type="search" zippy="searchnumber"
+                           <input autofocus="on" placeholder="Поиск..." class="form-control  " type="search" zippy="searchnumber"
                                autocomplete="off"    onkeydown="onSearch()" style="width:125px" title="Якщо пошук по номеру, iншi елементи фiльтру iгноруються">
                          </div>
                        </div>
@@ -47,7 +47,7 @@
                         <label class="col-auto mt-2" for="status"> Статус </label>
                              <div class="col-auto">
                                 <select class="form-control  " zippy="status">
-                                    <option value="0">Не вказано</option>
+                                    <option value="0">Не указано</option>
                                 </select>
                             </div>
                            </div>
@@ -58,7 +58,7 @@
                         <label class="col-auto mt-2" for="doctype"> Тип </label>
                                    <div class="col-auto">
                     <select class="form-control    " zippy="doctype">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
                            </div>
                            </div>
@@ -78,7 +78,7 @@
                                <label class="col-auto mt-2" for="author"> Автор </label>
                                                             <div class="col-auto">
                                <select class="form-control    " zippy="author">
-                                        <option value="0">Не обрано</option>
+                                        <option value="0">Не выбрано</option>
                                     </select>
                              </div>
                            </div>
@@ -89,7 +89,7 @@
                       <label class="col-auto mt-2" for="store">Склад</label>
                                <div class="col-auto">
                         <select class="form-control mr-sm-2" zippy="store">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                          </div>
                         </div>
@@ -100,14 +100,14 @@
                       <label class="col-auto mt-2" for="mfund">Рахунок</label>
                                <div class="col-auto">
                         <select class="form-control mr-sm-2" zippy="mfund">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                          </div>
                         </div>
                         </div>                           
                            
                            <div class="col-auto"> 
-                        <input class="form-control ml-2  mr-2" type="search" zippy="searchtext" placeholder="Пошук по контенту"   >
+                        <input class="form-control ml-2  mr-2" type="search" zippy="searchtext" placeholder="Поиск по контенту"   >
 
                            </div>
                            <div class="col-auto"> 
@@ -129,10 +129,10 @@
                         <th  ><a zippy="sortnum">Номер</a></th>
                         <th  ><a zippy="sortdate">Дата</a></th>
                         <th ><a zippy="sortcust">Контрагент</a></th>
-                        <th class="text-right   "><a zippy="sortamount">Сума</a></th>
+                        <th class="text-right   "><a zippy="sortamount">Сумма</a></th>
                         <th  > Статус </th>
                         {{#usebranch}}
-                        <th>Філія</th>
+                        <th>Филиал</th>
                         {{/usebranch}}
 
                         <th>Підстава</th>
@@ -149,8 +149,8 @@
                     <tbody>
                         <tr zippy="doclist">
                             <td>
-                           <a  zippy="tofav"><i title="Додати в обране" zippy="top" class="far fa-star"  ></i></a>
-                            <a  zippy="fromfav"><i title="Видалити з обраного" zippy="nottop" class="fas fa-star"  ></i></a>
+                           <a  zippy="tofav"><i title="Добавить в обране" zippy="top" class="far fa-star"  ></i></a>
+                            <a  zippy="fromfav"><i title="Удалить з обраного" zippy="nottop" class="fas fa-star"  ></i></a>
                             </td>
                            
                             <td class="text-nowrap  "><a zippy="name"></a></td>
@@ -176,8 +176,8 @@
 
                             <td style="white-space:   nowrap"> &nbsp;&nbsp;
                                 <a zippy="show" title="Перегляд"><i class="fa fa-eye"></i> </a>
-                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i> </a>
-                                <a zippy="cancel" title="Скасувати виконання"><i class="fa fa-undo"></i> </a>
+                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i> </a>
+                                <a zippy="cancel" title="Отменить виконання"><i class="fa fa-undo"></i> </a>
 
                             </td>
                             <td>
@@ -205,12 +205,12 @@
                     <form zippy="statusform" class="form-inline ">
                          <label data-label="mstates" for="mstates"> Статус </label>
                          <select zippy="mstates" class="form-control mr-2">
-                         <option value="0">Не обрано</option>
+                         <option value="0">Не выбрано</option>
                          </select>
                          <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
-                         <label data-label="musers" for="musers"> Відповідальний </label>
+                         <label data-label="musers" for="musers"> Ответственный </label>
                          <select zippy="musers" class="form-control mr-2">
-                         <option value="0">Не обрано</option>
+                         <option value="0">Не выбрано</option>
                          </select>
                          <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
                          &nbsp;&nbsp;<a zippy="btopay" class="  btn btn-primary  mr-2 ">Сплатити</a>
@@ -244,7 +244,7 @@
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#tag').printThis();$('#pform').modal('hide')"
-                                                      class="btn btn-success btn-sm">Друк</a></td>
+                                                      class="btn btn-success btn-sm">Печать</a></td>
                             </tr>
                         </table>
                     </div>
@@ -294,7 +294,7 @@
 
 
             function check_delete() {
-                return confirm("Видалити документ?")
+                return confirm("Удалить документ?")
             }
             
   function  copycplink() 

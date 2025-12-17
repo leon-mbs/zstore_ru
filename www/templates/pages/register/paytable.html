@@ -11,7 +11,7 @@
 
             <div class="col-12  col-md-10  col-xl-8" zippy="listpan">
  
-                <a zippy="addnew" class="btn btn-success mb-1">Додати</a>
+                <a zippy="addnew" class="btn btn-success mb-1">Добавить</a>
                 <br><span class="badge badge-danger">Просрочено</span> &nbsp;
                  <span class="badge badge-warning">Недостатньо  коштів</span>&nbsp;
                  <small >Коштів на  всіх рахунках <b> {{allcost}} </b></small>
@@ -38,8 +38,8 @@
                         <td zippy="customer"  ></td>
                         <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
  
-                        <td><a title="Редагувати" zippy="edit"><i class="fa fa-edit"></i></a></td>
-                        <td><a title="Видалити" zippy="delete"><i class="fa fa-trash text-danger"></i></a></td>
+                        <td><a title="Редактировать" zippy="edit"><i class="fa fa-edit"></i></a></td>
+                        <td><a title="Удалить" zippy="delete"><i class="fa fa-trash text-danger"></i></a></td>
 
                     </tr>
                 </table>
@@ -69,7 +69,7 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="addeventamount">Сума платежу</label>
+                        <label for="addeventamount">Сумма платежу</label>
                         <input style="width:150px"  class="form-control qtyprice"   zippy="addeventamount"  required="on" >
                     </div>
                     <div class="form-group">
@@ -85,8 +85,8 @@
                         <textarea class="form-control" zippy="addeventdesc" style=" height:120px;"></textarea>
                     </div>
                     <div class="form-group">  
-                       <a zippy="cancel" class="btn btn-outline-success  mr-4">Скасувати</a>
-                       <input class="btn btn-success  " type="submit" value="Зберегти">
+                       <a zippy="cancel" class="btn btn-outline-success  mr-4">Отменить</a>
+                       <input class="btn btn-success  " type="submit" value="Сохранить">
                      </div>
                    
                 </form>
@@ -98,15 +98,15 @@
                         <input style="width:150px"  required="on"  class="form-control" zippy="editeventdate">
                     </div>
                     <div class="form-group">
-                        <label for="editeventamount">Сума платежу</label>
+                        <label for="editeventamount">Сумма платежу</label>
                         <input style="width:150px"  required="on"  class="form-control" zippy="editeventamount">
                     </div>
                     <div class="form-group">
                         <label for="editeventdesc">Коментар</label>
                         <textarea class="form-control" zippy="editeventdesc" style=" height:120px;"></textarea>
                     </div>
-                    <a zippy="canceledit" class="btn btn-outline-success  mr-2">Скасувати</a> &nbsp;
-                    <input class="btn btn-success mr-4 " type="submit" value="Зберегти">
+                    <a zippy="canceledit" class="btn btn-outline-success  mr-2">Отменить</a> &nbsp;
+                    <input class="btn btn-success mr-4 " type="submit" value="Сохранить">
                      
                 </form>
 
@@ -116,7 +116,7 @@
              
    <script>
        function check_delete() {
-                return confirm("Видалити оплату?")
+                return confirm("Удалить оплату?")
        }
    
    </script> 

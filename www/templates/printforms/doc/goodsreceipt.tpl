@@ -6,16 +6,7 @@
         <td><b>Поставщик</b></td>
         <td colspan="6">{{customer_name}}</td>
     </tr>
-    {{#isfirm}}
-    <tr>
-        <td></td>
-
-        <td valign="top"><b>Покупатель</b></td>
-        <td colspan="6">{{firm_name}}</td>
-
-    </tr>
-    {{/isfirm}}
-    {{#iscontract}}
+     {{#iscontract}}
     <tr>
 
         <td></td>
@@ -25,7 +16,26 @@
 
 
     </tr>
-    {{/iscontract}}
+    {{/iscontract}}   
+    {{#ispayreq}}
+    <tr>
+
+        <td></td>
+
+        <td colspan="7"> Платежные  реквизиты:<br>  {{payreq}}  </td>
+
+    </tr>
+    {{/ispayreq}}      
+    {{#isfirm}}
+    <tr>
+        <td></td>
+
+        <td valign="top"><b>Покупатель</b></td>
+        <td colspan="6">{{firm_name}}</td>
+
+    </tr>
+    {{/isfirm}}
+
    {{#outnumber}}
     <tr>
         <td></td>

@@ -1,6 +1,6 @@
 <html>
     <head>
-            <title> Довідник нарахувань та утримань </title>
+            <title> Начисления и удержания в зарплате </title>
   </head>
 
     <body>
@@ -9,13 +9,13 @@
             
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item">
-    <a class="nav-link active"   data-toggle="tab" href="#listtab" role="tab"  >Перелiк</a>
+    <a class="nav-link active"   data-toggle="tab" href="#listtab" role="tab"  >Перечень</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link"   data-toggle="tab" href="#calctab" role="tab"  >Формули</a>
+    <a class="nav-link"   data-toggle="tab" href="#calctab" role="tab"  >Формулы</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link"   data-toggle="tab" href="#optiontab" role="tab"  >Налаштування</a>
+    <a class="nav-link"   data-toggle="tab" href="#optiontab" role="tab"  >Настройки</a>
   </li>
 </ul>
 <div class="tab-content"  >
@@ -23,14 +23,14 @@
        <div class="row"    >
        
                <div zippy="tablepan"  class="col-12  col-md-8  col-xl-6" >
-                <h4>Коди нарахувань та утримань </h4>    
-                <small>За замовчанням коди до 200 - нарахування </small>    
-                   <br> <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
+                <h4>Коды начислений и удержаний </h4>    
+                <small>По умоляанию коды до 200 - начисления </small>    
+                   <br> <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
                     <table class="table table-bordered   table-sm"  >
                         <tr>
-                            <th>Найменування</th>
+                            <th>Наименование</th>
 
-                            <th> Скорочення</th>
+                            <th> Сокращение</th>
                             <th> Код</th>
                            
                             <th> </th>
@@ -40,7 +40,7 @@
                             <td zippy="shortname"></td>
                             <td zippy="code"></td>
                           
-                            <td  ><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a></td>
+                            <td  ><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a></td>
                         </tr>
                     </table>
 
@@ -49,29 +49,29 @@
 
                 <form class="col-6 col-md-6 col-xl-4" zippy="editform">
                     <div class="form-group">
-                        <label for="editstname">Найменування</label>
+                        <label for="editstname">Наименование</label>
                         <input autofocus="on"    required="on"  class="form-control" zippy="editstname"/>
                     </div>
                     <div class="form-group">
-                        <label for="editshortname">Скорочене позначення</label>
+                        <label for="editshortname">Сокращенное обозначение</label>
                         <input maxlength="10"  style="width:200px;"  required="on"  class="form-control" zippy="editshortname"/>
-                        <small>До 10 символів. Використовується для заголовків таблиць у документах та звітах</small>
+                        <small>До 10 символов. ДЛя заголовков  в документах и отчетах</small>
                     </div>
                     <div class="form-group">
                         <label for="editcode">Код                        </label>
                         <input maxlength="3" style="width:75px;" pattern="[0-9]{3}"  required="on"  class="form-control" zippy="editcode"/>
-                        <small>Тризначний код   для використання у формулах. Колонки в документах та звітах будуть розміщені у порядку, заданому кодом.                         </small>
+                        <small>Трехзначный  код   для использования у формулах. Колонки в документах  и отчетах будут отсортированы по коду.                         </small>
                     </div>
                
                  
                     <div class="form-check">
                         <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Більше не використовується</label>
+                        <label class="form-check-label" for="editdisabled">Больше не  используется</label>
                     </div>
                    <div class="form-group">
-                     <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2 ">
-                     <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary mr-2 ">
-                     <input zippy="delete" type="button" value="Видалити" class="btn btn-outline-danger  ">
+                     <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary mr-2 ">
+                     <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary mr-2 ">
+                     <input zippy="delete" type="button" value="Удалить" class="btn btn-outline-danger  ">
                    </div>
                 </form>
   
@@ -79,24 +79,24 @@
        </div>
   </div>
   <div class="tab-pane  " id="calctab"  >
-     <h4>Формули розрахунку зарплати</h4>   
+     <h4>Формулы расчета зарплаты</h4>   
       <div class="row"    >
        <div class="col-12 col-md-6 col-xl-4"    >
          
          <form zippy="calcform"  >
              <div class="form-group">
-                <label for="calcbase">Розрахунок основної зарплати</label>             
+                <label for="calcbase">Расчет основной зарплаты</label>             
                 <textarea style="height:100px;width:300px" class="form-control" zippy="calcbase" ></textarea>
-                <small>Виконується однократно для заповнення поля  редагування</small>
+                <small>Выполняется  однократно  чтобы  заполнить редактируемое  поле</small>
              </div> 
              <div class="form-group">
-                <label for="calc">Розрахунок нарахувань та утримань </label>
+                <label for="calc">Расчет начислений и удержаний </label>
                 <textarea style="height:400px;width:300px" class="form-control" zippy="calc" ></textarea>
-                <small>Виконується після редагування основної зарплати</small>
+                <small>Выполняется  при редактированиии поля  основной  зарплаты</small>
            </div> 
              <div class="form-group">
                     
-                     <a zippy="savecalc"    class="btn btn-success  ">Зберегти</a>&nbsp;&nbsp;
+                     <a zippy="savecalc"    class="btn btn-success  ">Сохранить</a>&nbsp;&nbsp;
                       
              </div>
                 
@@ -105,98 +105,98 @@
          
           </div>
  <div class="col-12 col-md-6  "    >
-     <h5>Коди контексту      </h5>
-       <b>daysmon</b>  - кiлькiсть робочих днiв у мiсяцi   <br>
-       <b>invalid</b> - особа з iнвалiдністю (true або false) <br>
-       <b>salarytype</b> - тип  зарплати   1 - оклад, 2 - Погодинна оплата, 3 - відрядна оплата <br>  
+     <h5>Коды контекста      </h5>
+       <b>daysmon</b>  - количество  раб. дней в  месяце   <br>
+       <b>invalid</b> - инвалид (true или false) <br>
+       <b>salarytype</b> - тип  зарплаты   1 - оклад, 2 - почасовая, 3 - сдельная <br>  
        <b>salarym</b> - оклад    <br>
-       <b>salaryh</b> - погодинна  сума    <br>
-       <b>sellvalue</b> - виручка   по продажних документах співробітника <br>
-       <b>tasksum</b> - сума  по вiдрядному  виробництву <br>
-       <b>hours</b> - робочi години з облiку часу <br>
-       <b>days</b> - робочi днi з облiку часу <br>
-       <b>hours_over</b> - переробка <br>
-       <b>hours_week</b> - години в вихiднi <br>
-       <b>days_week</b> - днi в вихiднi <br>
-       <b>days_vac</b> - днi вiдпустки <br>
-       <b>days_sick</b> - лiкарнянi днi <br>
-       <b>days_bt</b> - днi в вiдрядженнi <br>
+       <b>salaryh</b> - почасовая сумма    <br>
+       <b>sellvalue</b> - выручка   по по  продажным документам сотрадника<br>
+       <b>tasksum</b> - сума  по  сдельному производству <br>
+       <b>hours</b> - рабочие  часы с табеля  учета  времени <br>
+       <b>days</b> - рабочие дни с табеля <br>
+       <b>hours_over</b> - переработка <br>
+       <b>hours_week</b> - часы в  выходные <br>
+       <b>days_week</b> - дни в  выходные <br>
+       <b>days_vac</b> - дни отпуска <br>
+       <b>days_sick</b> - больничные дни <br>
+       <b>days_bt</b> - дни в  командировке <br>
        <b>advance</b> - аванс <br>
-       <b>bonus</b> - премiї та бонуси <br>
-       <b>fine</b> - штрафи <br>
+       <b>bonus</b> - премии и бонусы <br>
+       <b>fine</b> - штрафы <br>
 
      
       
        <br>
        <br>
 <details>
-            <summary><b>Керiвництво по синтаксису</b></summary>
+            <summary><b>Руководство  по синтаксису</b></summary>
             <p>  <br>
-              Формули пишуться з використанням синтаксису мови JavaScript. Обчислення (у документі Нарахування зарплати) здійснюються за
-              рядками (за співробітником у переліку) .
-              <br>Нарахування та утримання позначаються кодом із префіксом v.
-               <br>Наприклад v900 = v200 + v300
-              <br>При необхідності список нарахувань та утримань може мати не грошові поля, наприклад, кількість днів відпустки
-              або лікарняного для розрахунку на підставі зарплати та кількості днiв у місяці.
-               <br> Для форматування  сум (наприклад  після  операцій ділення)  можна використати  функцію  fa()  наприклад = v105=fa(v105) . 
-               Кількість нулів після  коми буде відповідати загальним налаштуванням.
-                 
-              <br>Також можуть використовуватися деякі системні змінні, такі як кількість днів у
-              місяці, кількість дітей, особа з інвалідністю, сумісник тощо.
-              
-              <br>Результат має бути присвоєний зміннiй з номером, заданим у налаштуваннях -
-              поле До видачі. Цим полем буде виконано запис в особистий рахунок співробітника.
-              
-              <br>Формули зберігаються як налаштування, тобто може бути заданий алгоритм для будь якого
-              типу бізнесу та/або будь якого законодавства будь якої країни.
-               <br>  Розрахунок  може не  працювати  зза  помилки  в  формулах, наприклад  неіснуюча змінна  або  який  спецсимвол.
-               помилки скрипта   можна побачити  в  devtools (для  хрома  F12-&gt;console)
-             </p>
+             Формулы пишутся с использованием синтаксиса языка JavaScript. Вычисление (в документе Начисление зарплаты) производятся за 
+            строками (по сотруднику в перечне) . 
+            <br>Начисление и удержание обозначаются кодом с префиксом v. 
+            <br>Например v900 = v200 + v300 
+            <br>При необходимости список начислений и удержаний может иметь не денежные поля, например количество дней отпуска 
+            или больничного для расчета на основании зарплаты и количества дней в месяце. 
+            <br> Для форматирования сумм (например после операций деления) можно использовать функцию fa() например = v105=fa(v105) . 
+            Количество нулей после запятой будет соответствовать общим настройкам. 
+
+            <br>Также могут использоваться некоторые системные переменные, такие как количество дней в 
+            месяцы, количество детей, лицо с инвалидностью, совместитель и т.д. 
+
+            <br>Результат должен быть присвоен переменной с номером, заданным в настройках - 
+            поле До выдачи. Этим полем будет выполнена запись в личный счет сотрудника. 
+
+            <br>Формулы сохраняются как настройки, то есть может быть задан алгоритм для любого 
+            типа бизнеса и/или любого законодательства любой страны. 
+            <br> Расчет может не работать из-за ошибки в формулах, например несуществующая переменная или какой-либо спецсимвол. 
+            ошибки скрипта можно увидеть в  devtools (для  хрома  F12-&gt;console)
+                         </p>
          </details>        
        </div>
      </div>
        
   </div>
   <div class="tab-pane  " id="optiontab"  >
-     <h4>Налаштування </h4>
+     <h4>Настройки </h4>
     <div class="row"    >
        <div class="col-12 col-md-6 col-xl-4"    >
          
          <form zippy="optform"  >
              <div class="form-group">
-                <label for="optbaseincom">Основна зарплата</label>
+                <label for="optbaseincom">Основная зарплата</label>
                 <select  class="form-control" zippy="optbaseincom" >
-                   <option value="0">Не вибрано</option>
+                   <option value="0">Не выбрано</option>
                 </select>
-                <small>Показуєтся  як  поле ручного вводу </small>
-               <br> <small> <i class="fa fa-exclamation-triangle"></i> Інші поля тільки на  основі  формул  </small>
+                <small>Показывается  как  поле ручного ввода </small>
+               <br> <small> <i class="fa fa-exclamation-triangle"></i> Остальные  поля - вычисляемые  </small>
              </div> 
      
      
       
              <div class="form-group">
-                <label for="optall">Всього нараховано</label>
+                <label for="optall">Всего насчитано</label>
                 <select  class="form-control" zippy="optall" >
                 
                 </select>
-                <small>Обов'язкове поле, значення якого відноситься до  витрат . </small>
+                <small>Обязательное поле . </small>
                 
              </div> 
      
        
              <div class="form-group">
-                <label for="optresult">До видачi</label>
+                <label for="optresult">К выдаче</label>
                 <select  class="form-control" zippy="optresult" >
                 
                 </select>
-                <small>Обов'язкове поле, значення якого заноситься до балансу особового рахунку співробітника. </small>
+                <small>Обязательное поле, значение которого заносится  в  лицевой счет. </small>
                 
              </div> 
      
              <div class="form-group">
                     
                       
-                   <a zippy="saveopt"    class="btn btn-success  ">Зберегти</a>
+                   <a zippy="saveopt"    class="btn btn-success  ">Сохранить</a>
                       
              </div>
                 
@@ -212,7 +212,7 @@
 </div>
            <script>               
          function check_delete() {
-                return confirm("Видалити?")
+                return confirm("Удалить?")
             }
         </script>     
     </body>

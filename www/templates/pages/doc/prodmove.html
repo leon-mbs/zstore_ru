@@ -21,20 +21,20 @@
                      <div class="form-group  ">
                         <label for="pp">Виробничий процес</label>
                         <select class="form-control" zippy="pp">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                      <div class="form-group  ">
                         <label for="psfrom">З етапу</label>
                         <select class="form-control" zippy="psfrom">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
 
                      <div class="form-group  ">
                         <label for="psto">До етапу</label>
                         <select class="form-control" zippy="psto">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                     
@@ -48,7 +48,7 @@
        <div class="form-group  ">
                         <label for="emp">Виконавець </label>
                         <select class="form-control  " zippy="emp">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
                         <small> Для нарахування  зарплати при вiдрядному виробництвi</small>
                     </div>                      
@@ -56,7 +56,7 @@
                  
                  
                      <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
                         <textarea class="form-control"   zippy="notes"></textarea>
                     </div>            
               
@@ -72,18 +72,18 @@
   
                     </div>
                     {{/usescanner}}
-                    <a zippy="addrow" class="btn btn-info  ">Додати ТМЦ</a>
+                    <a zippy="addrow" class="btn btn-info  ">Добавить ТМЦ</a>
 
                     <table class="table table-sm">
                         <tr>
-                            <th>Назва</th>
+                            <th>Название</th>
                             <th>Код</th>
-                            <th>Од.</th>
+                            <th>Ед.</th>
                            <th>{{#usesnumber}}Серія {{/usesnumber}}</th>
                         
 
 
-                            <th class="text-right">Кіл.</th>
+                            <th class="text-right">Кол.</th>
 
 
                             <th  ></th>
@@ -109,8 +109,8 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  mr-2 ">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary   mr-2">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  mr-2 ">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary   mr-2">
                     <input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
 
 
@@ -123,9 +123,9 @@
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
-                       <label for="edititem">Назва </label>
+                       <label for="edititem">Название </label>
                         <select class="form-control select2" zippy="edititem">
-                            <option value="1">Не обрано</option>
+                            <option value="1">Не выбрано</option>
                         </select>
                     </div>
                     {{#usesnumber}}
@@ -145,8 +145,8 @@
 
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary  mr-2">
-                        <input type="submit" zippy="submitrow" value="Зберегти" class="btn btn-outline-primary ">
+                        <input type="button" zippy="cancelrow" value="К списку" class="btn btn-outline-secondary  mr-2">
+                        <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-outline-primary ">
                         
                     </div>
 

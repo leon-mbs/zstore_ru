@@ -23,13 +23,13 @@
                            <div class="input-group  ">
                               <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
                          <div class="input-group-append">
-                              <a title="Додати нового" class="btn btn-success" zippy="addcust" >+</a>
+                              <a title="Добавить нового" class="btn btn-success" zippy="addcust" >+</a>
                              </div>
                          </div>             
                         </div>
                   </div>
                  <div class="form-group row">
-                        <label class="col-5 col-form-label" for="notes">Примітка</label>
+                        <label class="col-5 col-form-label" for="notes">Примечание</label>
                         <div class="col-7">
                             <input zippy="notes"      class="form-control  "    />
                         </div>
@@ -52,20 +52,20 @@
            
             </div>    
              <div class="col-10  col-lg-8">
-                    <a  zippy="addrow" class="btn btn-info  ">Додати позицію</a>
+                    <a  zippy="addrow" class="btn btn-info  ">Добавить позицію</a>
 
                     <table class="table  table-sm">
                         <tr>
 
-                            <th>Найменування</th>
+                            <th>Наименование</th>
                             <th>Артикул</th>
                             <th>Код постачальника</th>
-                            <th>Од.</th>
+                            <th>Ед.</th>
                             <th  > </th>
-                            <th class="text-right">Кіл.</th>
-                            <th class="text-right">Ціна</th>
+                            <th class="text-right">Кол.</th>
+                            <th class="text-right">Цена</th>
 
-                            <th class="text-right">Сума</th>
+                            <th class="text-right">Сумма</th>
 
                             <th  ></th>
                         </tr>
@@ -98,8 +98,8 @@
                
                <div class="col-12 ">
                
-                    <input type="button" zippy="backtolist" value="Скасувати"   class="btn btn-outline-secondary  ">
-                     &nbsp;<input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+                    <input type="button" zippy="backtolist" value="Отменить"   class="btn btn-outline-secondary  ">
+                     &nbsp;<input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc"   type="submit" value="На виконання" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="apprdoc"   type="submit" value="На затвердження" class="btn btn-outline-primary  ">
 
@@ -119,7 +119,7 @@
                           <div class="input-group  ">
                               <input  placeholder="Начните вводить..." class="form-control " zippy="edititem"/>
                           <div class="input-group-append">
-                             <a title="Додати новий" class="btn btn-success" zippy="addnewitem" >+</a>
+                             <a title="Добавить новий" class="btn btn-success" zippy="addnewitem" >+</a>
                         </div>                    
                      </div>                    
                  
@@ -138,7 +138,7 @@
 
 
                 <div class="form-group row">
-                    <label class="col-7 col-form-label" for="editprice">Ціна </label>
+                    <label class="col-7 col-form-label" for="editprice">Цена </label>
                     <div class="col-4" >
                     <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"    required="on" 
                            pattern="[0-9,\.]+"                               >
@@ -162,8 +162,8 @@
                 </div>
 
                 <div class="form-group">
-                    <input zippy="canceledit" type="button"   value="Скасувати" class="btn btn-outline-secondary ">
-                    <input zippy="saveedit"  type="submit" value="Зберегти" class="btn btn-outline-primary"> 
+                    <input zippy="canceledit" type="button"   value="Отменить" class="btn btn-outline-secondary ">
+                    <input zippy="saveedit"  type="submit" value="Сохранить" class="btn btn-outline-primary"> 
                 </div>
            
     </form>
@@ -180,7 +180,7 @@
             <h3>&nbsp;Новий товар </h3>
                                  
                     <div class="form-group">
-                        <label for="editnewitemname">Назва </label>
+                        <label for="editnewitemname">Название </label>
                         <input zippy="editnewitemname" class="form-control "    required="on" />
                     </div>
                     <div class="form-group">
@@ -193,23 +193,23 @@
                         
                     </div>
                    <div class="form-group">
-                        <label for="editnewitemmsr">Од. вим.</label>
+                        <label for="editnewitemmsr">Ед. вим.</label>
                         <input zippy="editnewitemmsr" class="form-control" type="text"   />
                     </div>
                     
                   <div class="form-group  ">
-                        <label for="editnewcat">Категорія</label>
+                        <label for="editnewcat">Категория</label>
 
                         <select zippy="editnewcat" class="form-control" id="editnewcat">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
 
                         </select>
 
                     </div>
 
                     <div class="form-group">
-                        <input  type="button" zippy="cancelnewitem"   value="Скасувати" class="btn btn-outline-secondary mr-2">
-                        <input  zippy="savenewitem"  type="button" value="Зберегти" class="btn btn-outline-primary">
+                        <input  type="button" zippy="cancelnewitem"   value="Отменить" class="btn btn-outline-secondary mr-2">
+                        <input  zippy="savenewitem"  type="button" value="Сохранить" class="btn btn-outline-primary">
                     </div>
           
         </form>       
@@ -222,7 +222,7 @@
 
         
                     <div class="form-group">
-                        <label for="editcustname">Назва </label>
+                        <label for="editcustname">Название </label>
                         <input autofocus="on"   class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
@@ -232,8 +232,8 @@
               
 
                     <div class="form-group">
-                        <input type="button" zippy="cancelcust" value="Скасувати" class="btn btn-outline-secondary mr-2">
-                        <input zippy="savecust" type="submit" value="Зберегти" class="btn btn-outline-primary">
+                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-outline-secondary mr-2">
+                        <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
                         
                     </div>
           

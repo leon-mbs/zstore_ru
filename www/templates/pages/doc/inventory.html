@@ -22,22 +22,22 @@
                     <div class="form-group  ">
                         <label for="store">Склад</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
              {{#storeemp}}
                      <div class="form-group  ">
                         <label for="storeemp">Cпiвробiтник</label>
                         <select class="form-control  " zippy="storeemp">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                         <small> Матерiально вiдповiдальна  особа</small>
                     </div> 
                       {{/storeemp}}                    
                     <div class="form-group  ">
-                        <label for="store">Категорiя</label>
+                        <label for="store">Категория</label>
                         <select class="form-control" zippy="category">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                         
                     </div>
@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
 
                         <input class="form-control" type="text" zippy="notes">
 
@@ -91,18 +91,18 @@
                    
                     </div>
                     {{/usescanner}}
-                    &nbsp; <a zippy="addrow" class="btn  btn-info">Додати ТМЦ</a>
+                    &nbsp; <a zippy="addrow" class="btn  btn-info">Добавить ТМЦ</a>
 
                     <table class="table table-sm mt-2">
                         <tr>
                             <th> <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
                                 style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
                                     class="fa fa-check-double "></i></th>
-                            <th> <a zippy="sortname">Назва</a> </th>
+                            <th> <a zippy="sortname">Название</a> </th>
                             <th><a zippy="sortcode">Артикул</a></th>
 
                            <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
-                           <th width="40"  class="text-right" >Кiл. </th> 
+                           <th width="40"  class="text-right" >Кол. </th> 
 
                             <th width="40" class="text-center">Факт. кіл.</th>
 
@@ -130,7 +130,7 @@
                         </tr>
                          
                         <tr><td >
-                            <a class="text-danger" zippy="delall" title="Видалити"><i class="fa fa-trash"></i></a>
+                            <a class="text-danger" zippy="delall" title="Удалить"><i class="fa fa-trash"></i></a>
                           </td> 
                          <td colspan="4"></td>   
                          
@@ -143,8 +143,8 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Зберегти" class="btn   btn-outline-primary">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary">
+                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>
@@ -160,7 +160,7 @@
             <div class="col-12 col-md-4">
 
                 <div class="form-group">
-                    <label for="edititem">Найменування</label>
+                    <label for="edititem">Наименование</label>
                     <input   class="form-control" zippy="edititem" placeholder="Начните вводить...  ">
 
                 </div>
@@ -182,8 +182,8 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="button" zippy="cancelrow" value="Скасувати" class="btn   btn-outline-secondary  mr-2">
-                    <input zippy="saverow" type="submit" value="Зберегти" class="btn  btn-outline-primary">
+                    <input type="button" zippy="cancelrow" value="Отменить" class="btn   btn-outline-secondary  mr-2">
+                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">
                     
                 </div>
             </div>

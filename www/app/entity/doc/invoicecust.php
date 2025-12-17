@@ -48,6 +48,8 @@ class InvoiceCust extends Document
 
         $header['isdisc'] = $this->headerdata["disc"] > 0;
         $header['isnds'] = $this->headerdata["nds"] > 0;
+        $header['payreq'] = $this->getHD('payreq');
+        $header['ispayreq'] = strlen($header['payreq']) > 0;
 
         $header['disc'] = H::fa($this->headerdata["disc"]);
         $header['nds'] = H::fa($this->headerdata["nds"]);

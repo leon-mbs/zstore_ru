@@ -70,6 +70,8 @@ class GoodsReceipt extends Document
         $header['isnds'] = $this->headerdata["nds"] > 0;
         $header['isval'] = strlen($this->headerdata['val']) > 1;
         $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
+        $header['payreq'] = $this->getHD('payreq');
+        $header['ispayreq'] = strlen($header['payreq']) > 0;
 
         $header['prepaid'] = H::fa($this->headerdata["prepaid"]);
         $header['disc'] = H::fa($this->headerdata["disc"]);

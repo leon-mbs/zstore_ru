@@ -26,10 +26,10 @@
 
                         <label for="salesource">Джерело продаж</label>
                         <select class="form-control mr-2" zippy="salesource">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
 
-                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Пошук по контенту">
+                        <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
 
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -40,7 +40,7 @@
                 <a href="/index.php?p=App/Pages/Doc/Order" class="btn btn-info mt-2 mb-3">Нове замовлення</a>
 
 
-                <br><a zippy="csv">Експорт у Excel</a>
+                <br><a zippy="csv">Экспорт в Excel</a>
 
                 <table class="table   table-sm   ">
                     <tr>
@@ -48,9 +48,9 @@
                         <th>Номер</th>
                         <th>Дата</th>
                         <th>Замовник</th>
-                        <th class="text-right">Сума</th>
+                        <th class="text-right">Сумма</th>
                         <th>Статус</th>
-                        <th>Вiдповiдальний</th>
+                        <th>Ответственный</th>
 
 
 
@@ -85,7 +85,7 @@
 
                         <td class="text-nowrap">
                             &nbsp; &nbsp;<a zippy="show" title="Перегляд"><i class="fa fa-eye"></i></a>
-                             &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редагування"><i class="fa fa-edit"></i></a>
+                             &nbsp; &nbsp; &nbsp; &nbsp; <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i></a>
 
                         </td>
 
@@ -247,7 +247,7 @@
 
                         <label for="brmove">фiлiя </label>
                         <select zippy="brmove" class="form-control mr-2 ">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
                   
                        {{/usebranch}}
@@ -300,8 +300,8 @@
                    </tr> 
                  </table>         
                  <div class="form-group">
-                    <button zippy="editcancel" type="submit" class="  btn btn-secondary  mr-2 ">Скасувати</button>                 
-                    <button zippy="editsave" type="submit" class="  btn btn-info  mr-2 ">Зберегти</button>                 
+                    <button zippy="editcancel" type="submit" class="  btn btn-secondary  mr-2 ">Отменить</button>                 
+                    <button zippy="editsave" type="submit" class="  btn btn-info  mr-2 ">Сохранить</button>                 
                     <button zippy="editready" type="submit" class="  btn btn-success  mr-4 ">Зiбрано</button>                 
 
                     <i style="cursor:pointer" title="Вiдправити запитання" zippy="editchat" class="fa fa-comments"></i>

@@ -16,13 +16,13 @@
                     <div class="form-group  ">
                         <label for="store">На склад</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                    <div class="form-group  ">
                         <label data-label="emp" for="emp">Виконавець </label>
                         <select class="form-control  " zippy="emp">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
                         <small data-label="emp"> Для нарахування  зарплати при вiдрядному виробництвi</small>
                     </div>                    
@@ -37,12 +37,12 @@
                     <div class="form-group  ">
                         <label for="parea">Виробнича ділянка</label>
                         <select class="form-control" zippy="parea">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
             
                   <div class="form-group  ">
-                        <label for="notes">Примітка </label>
+                        <label for="notes">Примечание </label>
 
                         <textarea class="form-control"   zippy="notes"></textarea>
 
@@ -52,20 +52,20 @@
             </div>
             <div class="row">
                 <div class="col-10">
-                    <a zippy="addrow" class="btn btn-info  ">Додати позицію</a>
+                    <a zippy="addrow" class="btn btn-info  ">Добавить позицію</a>
                     <table class="table  table-sm">
                         <tr>
 
-                            <th>Найменування</th>
+                            <th>Наименование</th>
                             <th>Код</th>
-                            <th>Од.</th>
+                            <th>Ед.</th>
                               <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
                  
 
-                            <th class="text-right">Кіл.</th>
-                            <th class="text-right">Ціна</th>
+                            <th class="text-right">Кол.</th>
+                            <th class="text-right">Цена</th>
 
-                            <th class="text-right">Сума</th>
+                            <th class="text-right">Сумма</th>
 
                             <th  ></th>
                         </tr>
@@ -101,8 +101,8 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <input type="button" value="Скасувати" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    <input zippy="savedoc" type="submit" value="Зберегти" class="btn btn-outline-primary  ">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  ">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
                     &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
 
 
@@ -121,9 +121,9 @@
 
 
                     <div class="form-group">
-                        <label for="edititem">Назва </label>
+                        <label for="edititem">Название </label>
                         <select class="form-control select2" zippy="edititem">
-                            <option value="1">Не обрано</option>
+                            <option value="1">Не выбрано</option>
                         </select>
 
                     </div>
@@ -153,8 +153,8 @@
                     </div>
 
                     <div class="form-group">
-                        <input  type="button" zippy="cancelrow" value="До переліку" class="btn btn-outline-secondary mr-2">
-                        <input zippy="saverow" type="submit" value="Зберегти" class="btn btn-outline-primary"> 
+                        <input  type="button" zippy="cancelrow" value="К списку" class="btn btn-outline-secondary mr-2">
+                        <input zippy="saverow" type="submit" value="Сохранить" class="btn btn-outline-primary"> 
                         
                     </div>
                 </div>

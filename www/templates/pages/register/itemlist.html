@@ -17,7 +17,7 @@
                     <form zippy="filter" class="row   g-2 align-items-center">
                         <div class="col-auto">
        
-                        <input autofocus="on" autocomplete="off" placeholder="Пошук..." class="form-control mr-sm-2" type="search"     onkeydown="onSearch()" zippy="searchkey">
+                        <input autofocus="on" autocomplete="off" placeholder="Поиск..." class="form-control mr-sm-2" type="search"     onkeydown="onSearch()" zippy="searchkey">
                        </div>
                        <div class="col-auto"> 
                            <div class=" row no-gutters"> 
@@ -47,7 +47,7 @@
                                <label class="col-auto mt-2" for="searchemp">Співробітник</label>
                                <div class="col-auto">
                                     <select class="form-control mr-sm-2" zippy="searchemp">
-                                        <option value="0">Не вказано</option>
+                                        <option value="0">Не указано</option>
                                     </select>
                               </div>
                            </div>
@@ -55,7 +55,7 @@
                        {{/storeemp}}
                        <div class="col-auto"> 
                            <div class=" row no-gutters"> 
-                      <label class="col-auto mt-2" for="searchprice">Сума по  </label>
+                      <label class="col-auto mt-2" for="searchprice">Сумма по  </label>
 
                                  <div class="col-auto">
                       <select class="form-control mr-sm-2" zippy="searchprice">
@@ -112,7 +112,7 @@
                    
                    </form>
                 </div>
-                <a zippy="csv">Експорт у Excel</a>
+                <a zippy="csv">Экспорт в Excel</a>
                 <a zippy="printqty" class=" ml-4  " title="Друкувати вiдфiльтрованi по кiлькостi наявних"> <i class="fa fa-print"></i> </a>
                 <table class="table      table-sm  table-hover ">
                     <tr>
@@ -120,19 +120,19 @@
                         <th></th>
                         {{/useimages}}
 
-                        <th>Назва</th>
+                        <th>Название</th>
 
 
                         <th>Код</th>
-                        <th>Категорія</th>
+                        <th>Категория</th>
                         <th>Бренд</th>
                           {{#usecf}}
                             <th>Каст. поля</th>
                              {{/usecf}}
-                        <th>Од.</th>
+                        <th>Ед.</th>
                         <th> <i title="Комірка" class="fa fa-box"></i> </th>     
 
-                        <th class="text-right  ">Кіл.</th>
+                        <th class="text-right  ">Кол.</th>
   <th class="text-right  "> <i title="Зарезервовано" class="fa fa-archive"></i> </th>     
   <th class="text-right  "> <i title="В закупці" class="fa fa fa-truck"></i> </th>     
                         
@@ -208,7 +208,7 @@
             <div class="col-12 col-md-10 col-xl-8" zippy="detailpanel">
              <div class="row">
               <div class="col-12 mb-4">
-                <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> До переліку</a>
+                <a zippy="back"> <i class="fa fa-arrow-circle-left"></i> К списку</a>
                 <h3 zippy="itemdetname"></h3>
                 
             {{^noshowpartion}}                 
@@ -226,7 +226,7 @@
                         {{/usesnumber}}
                         <th class="text-right text-nowrap">Обл. ціна</th>
             
-                        <th class="text-right text-nowrap">Кіл.</th>
+                        <th class="text-right text-nowrap">Кол.</th>
                         <th class="text-right text-nowrap">На суму</th>
                   
                  
@@ -285,9 +285,9 @@
                      {{/useval}}  
                  
                      <form zippy="iformbay" class="form-inline mt-4">
-                       <label>Кiл.</label> 
+                       <label>Кол.</label> 
                        <input  required="on"  style="width:120px;" zippy="iformbayqty"  pattern="[0-9\.]+" class="form-control priceqty" >
-                       <input title="Додати в заявку постачальнику"   type="submit" value="В закупку"  class="btn btn-info" >
+                       <input title="Добавить в заявку постачальнику"   type="submit" value="В закупку"  class="btn btn-info" >
                      </form>
                      
 
@@ -314,7 +314,7 @@
                             <tr>
                                 <td align="center"><a href="javascript:void(0)"
                                                       onclick="$('#tag').printThis();$('#pform').modal('hide')"
-                                                      class="btn btn-success  ">Друк</a></td>
+                                                      class="btn btn-success  ">Печать</a></td>
                             </tr>
                         </table>
                     </div>
@@ -325,7 +325,7 @@
         
         <script>
             function check_delete() {
-                return confirm("Видалити партію?")
+                return confirm("Удалить партію?")
             }
 
             $(document).ready(function () {

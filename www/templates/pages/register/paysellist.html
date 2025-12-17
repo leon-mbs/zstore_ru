@@ -14,7 +14,7 @@
 
                         <label for="holdlist"> Холдинг </label>
                         <select class="form-control mr-2" zippy="holdlist">
-                            <option value="0">Не вказано</option>
+                            <option value="0">Не указано</option>
                         </select>
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
@@ -26,7 +26,7 @@
                 <table class="table   table-sm   ">
                     <tr>
 
-                        <th>Ім'я</th>
+                        <th>Имя</th>
                         <th>Тел.</th>
                         <th class="text-right">Борг постачальника</th>
                         <th class="text-right">Борг постачальнику</th>
@@ -83,7 +83,7 @@
                            {{#usebranch}}
                         <th>Фiлiя</th>
                            {{/usebranch}}
-                         <th class="text-right">Сума</th>
+                         <th class="text-right">Сумма</th>
                        
 
 
@@ -125,7 +125,7 @@
                 <div class="card">
                     <form zippy="payform" class="form-inline ">
                         <label>До оплати</label>
-                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сума..."
+                        <input zippy="pamount" pattern="[0-9\.\-]+" style="width:100px;" placeholder="Сумма..."
                                class="form-control mr-2">
                         <label for="payment">рахунок</label>
                         <select class="form-control mr-2" zippy="payment">
@@ -134,7 +134,7 @@
                         {{#hideblock}}
                         <label for="pos">POS</label>
                         <select class="form-control mr-2" zippy="pos">
-                            <option value="0">Не обрано</option>
+                            <option value="0">Не выбрано</option>
 
                         </select>
                         {{/hideblock}}

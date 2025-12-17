@@ -13,7 +13,7 @@
 
                     <form zippy="filter" class="form-inline">
 
-                        <label for="searchkey">Пошук</label>
+                        <label for="searchkey">Поиск</label>
                         <input required="on" class="form-control mr-2" type="text" zippy="searchkey" onkeydown="onSearch()">
                          
    
@@ -24,7 +24,7 @@
                 </div>
                 <div class="navbar nav justify-content-start" >
                
-                <a zippy="addnew" class="btn btn-success mr-4 ml-2" >   Додати</a>
+                <a zippy="addnew" class="btn btn-success mr-4 ml-2" >   Добавить</a>
                 <a zippy="csv" class="mr-4 "><i  class="fa fa-upload" ></i> Експорт в CSV</a>   
                 <a zippy="imports" class="mr-4"><i  class="fa fa-download" ></i> Iмпорт з Excel</a>
                   </div>
@@ -36,7 +36,7 @@
                                 style="width:30px;cursor:pointer" title="Зняти/виставити прапорець"
                                     class="fa fa-check-double "></i></th>                    
                          
-                            <th>Найменування </th>
+                            <th>Наименование </th>
                             <th>Код оригiнала  </th>
                             <th>Бренд оригiнала  </th>
                             <th>Код замiни</th>
@@ -61,7 +61,7 @@
                         </tr>
                         <tr>
                         <td  >
-                                <a   zippy="deleteall" title="Видалити"><i class="fa fa-trash text-danger"></i></a>&nbsp;&nbsp;
+                                <a   zippy="deleteall" title="Удалить"><i class="fa fa-trash text-danger"></i></a>&nbsp;&nbsp;
                               </td>
                         <td colspan="7">
                                 
@@ -75,13 +75,13 @@
 
             <div class="col-12  ">
                 <form zippy="itemdetail"  >
-                    <h4>Редагування   </h4>
+                    <h4>Редактирование   </h4>
                     <div class="row">
                         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
      
                           
                             <div class="form-group row">
-                                <label class="col-5 col-form-label" for="editname">Найменування</label>
+                                <label class="col-5 col-form-label" for="editname">Наименование</label>
                                 <div class="col-7">
                                    <input required="on"     class="form-control" zippy="editname"/>
                                  
@@ -124,8 +124,8 @@
                         <div class="col-12  ">
 
                             <div class="form-group">
-                                <input zippy="cancel" type="button" value="До переліку" class="btn btn-outline-secondary mr-4 "> 
-                                <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                                <input zippy="cancel" type="button" value="К списку" class="btn btn-outline-secondary mr-4 "> 
+                                <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">
 
                             </div>
                         </div>
@@ -168,7 +168,7 @@
 
                             </div>
                              <div class="form-group row">
-                                <label  class="col-6 col-form-label" for="colname">Найменування  </label>
+                                <label  class="col-6 col-form-label" for="colname">Наименование  </label>
                                 <div class="col-3">
                                     <select   zippy="colname" class="form-control  ">
                                 </select>  
@@ -210,7 +210,7 @@
                         <tr>
                                        
                          
-                            <th>Найменування </th>
+                            <th>Наименование </th>
                             <th>Код оригiнала  </th>
                             <th>Бренд оригiнала  </th>
                             <th>Код замiни</th>
@@ -230,7 +230,7 @@
                        </div>  
                         {{/ispreview}}
                        <div class="col-12">
-                       <a zippy="back" class="btn btn-secondary  mr-4 " >Скасувати</a>                          
+                       <a zippy="back" class="btn btn-secondary  mr-4 " >Отменить</a>                          
                             
                         <input zippy="loadimport"    type="submit" value="Iмпортувати" class="btn btn-primary  "> 
                      
@@ -255,10 +255,10 @@
                return true;
             }
             function check_deleteall() {
-                return confirm("Видалити?")
+                return confirm("Удалить?")
             }
             function check_delx() {
-                return confirm("Видалити?")
+                return confirm("Удалить?")
             }
        
         {{{import_func}}}  
@@ -288,7 +288,7 @@
             };   
             reader.readAsText(file);
         } else {
-           toastr.error("Не вибрано файл")  
+           toastr.error("Не выбрано файл")  
         }
     } 
        

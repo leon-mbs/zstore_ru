@@ -1,6 +1,6 @@
 <html>
     <head>
-            <title> Довідник складів </title>
+            <title> Справочник  складов </title>
 
     </head>
 
@@ -9,16 +9,16 @@
 
         <div class="row" zippy="storetable">
             <div class="col-12 col-md-6  col-xl-5">
-                <h2>Довідник складів</h2>
-                  <a zippy="storeadd" class="btn btn-primary  ">Додати</a>
+                <h2>Справочник  складов</h2>
+                  <a zippy="storeadd" class="btn btn-primary  ">Добавить</a>
                 <table class="table table-bordered  table-sm">
                     <tr>
-                        <th>Назва</th>
+                        <th>Название</th>
                         {{#usebranch}}
-                        <th>Філія</th>
+                        <th>Филиал</th>
                         {{/usebranch}}
-                        <th class="text-right">ТМЦ на суму</th>
-                        <th>Опис</th>
+                        <th class="text-right">ТМЦ на сумму</th>
+                        <th>Описание</th>
                         <th style="width: 80px"></th>
                     </tr>
                     <tr zippy="storelist">
@@ -30,8 +30,8 @@
  
                         <td zippy="storedesc"></td>
                         <td align="center">
-                            <a zippy="storeedit" title="Редагувати"><i class="fa fa-edit"></i></a>
-                        &nbsp;&nbsp;    <a zippy="storedelete" title="Вилучити"><i class="fa fa-trash"></i></a></td>
+                            <a zippy="storeedit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                        &nbsp;&nbsp;    <a zippy="storedelete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
 
@@ -43,28 +43,28 @@
 
 
                 <div class="form-group">
-                    <label for="storeeditname"> Назва</label>
+                    <label for="storeeditname"> Название</label>
                     <input autofocus="on"   class="form-control" type="text" zippy="storeeditname"  required="on" >
                 </div>
                 {{#usebranch}}
                 <div class="form-group">
-                    <label for="editbranch">Філія</label>
+                    <label for="editbranch">Филиал</label>
                     <select class="form-control" zippy="editbranch">
-                        <option value="0">Не обрано</option>
+                        <option value="0">Не выбрано</option>
                     </select>
                 </div>
                 {{/usebranch}}
                 <div class="form-group">
-                    <label for="storeeditdesc"> Опис </label>
+                    <label for="storeeditdesc"> Описание </label>
                     <textarea class="form-control" type="text" zippy="storeeditdesc"></textarea>
                 </div>
                 <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                    <label class="form-check-label" for="editdisabled">Не используется</label>
                 </div>                
                 <div class="form-group">
-                    <input zippy="storecancel" type="button" value="Скасувати" class="btn btn-outline-secondary mr-2">
-                    <input zippy="storesave" type="submit" value="Зберегти" class="btn btn-outline-primary  "> 
+                    <input zippy="storecancel" type="button" value="Отменить" class="btn btn-outline-secondary mr-2">
+                    <input zippy="storesave" type="submit" value="Сохранить" class="btn btn-outline-primary  "> 
                     
                 </div>
 

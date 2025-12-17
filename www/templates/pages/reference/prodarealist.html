@@ -1,14 +1,14 @@
 <html>
     <head>
-           <title> Виробничі дільниці </title>
+           <title> Производственные участки </title>
    </head>
 
     <body>
         <div class="row">
            
                 <div zippy="patable" class="col-12 col-md-8 col-xl-6">
-                    <h3>Виробничі дільниці </h3>
-                    <a zippy="addnew" class="btn btn-outline-primary  ">Додати</a>
+                    <h3>Производственные участки </h3>
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
                     <table class="table table-bordered   table-sm"  >
                      
                         <tr zippy="palist">
@@ -16,8 +16,8 @@
                             <td zippy="pa_notes"></td>
 
 
-                            <td style="width:75px"><a zippy="edit" title="Редагувати"><i class="fa fa-edit"></i></a> <a
-                                    zippy="delete" title="Видалити"><i class="fa fa-trash"></i></a></td>
+                            <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
+                                    zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </table>
 
@@ -26,29 +26,29 @@
 
                 <form class="col-6 col-md-4" zippy="padetail">
                     <div class="form-group">
-                        <label for="editpa_name">Назва</label>
+                        <label for="editpa_name">Название</label>
                         <input autofocus="on"    required="on"  class="form-control" zippy="editpa_name"/>
                     </div>
                {{#usebranch}}
                 <div class="form-group">
-                    <label for="editbranch">Філія</label>
+                    <label for="editbranch">Филиал</label>
                     <select class="form-control" zippy="editbranch">
-                        <option value="0">Не обрано</option>
+                        <option value="0">Не выбрано</option>
                     </select>
                 </div>
                 {{/usebranch}}                    
                   <div class="form-group">
-                        <label for="editpa_notes">Примітка</label>
+                        <label for="editpa_notes">Примечание</label>
                         <input      class="form-control" zippy="editpa_notes"/>
                     </div>
                  <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                    <label class="form-check-label" for="editdisabled">Не використовується</label>
+                    <label class="form-check-label" for="editdisabled">Не используется</label>
                 </div>                    
                     <div class="form-group">
 
-                      <input zippy="cancel" type="button" value="Скасувати" class="btn btn-outline-primary mr-2  ">
-                      <input zippy="save" type="submit" value="Зберегти" class="btn btn-primary  ">
+                      <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary mr-2  ">
+                      <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">
                    </div>
 
                 </form>
@@ -56,7 +56,7 @@
         </div>
            <script>               
          function check_delete() {
-                return confirm("Видалити?")
+                return confirm("Удалить?")
             }
         </script>     
     </body>

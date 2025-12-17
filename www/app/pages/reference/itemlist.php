@@ -142,7 +142,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new TextInput('editimageurl'));
 
         $this->itemdetail->add(new TextInput('editcell'));
-        $this->itemdetail->add(new TextInput('edituktz'));
+
         $this->itemdetail->add(new TextInput('editmsr'));
         $this->itemdetail->add(new TextInput('editnotes'));
 
@@ -362,7 +362,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editurl->setText($this->_item->url);
         $this->itemdetail->editweight->setText($this->_item->weight);
         $this->itemdetail->editcell->setText($this->_item->cell);
-        $this->itemdetail->edituktz->setText($this->_item->uktz);
+
         $this->itemdetail->editminqty->setText(\App\Helper::fqty($this->_item->minqty));
         $this->itemdetail->editzarp->setText(\App\Helper::fa($this->_item->zarp));
         $this->itemdetail->editcostprice->setText(\App\Helper::fa($this->_item->costprice));
@@ -513,7 +513,7 @@ class ItemList extends \App\Pages\Base
 
         $this->_item->imageurl = $this->itemdetail->editimageurl->getText();
         $this->_item->cell = $this->itemdetail->editcell->getText();
-        $this->_item->uktz = $this->itemdetail->edituktz->getText();
+
         $this->_item->minqty = $this->itemdetail->editminqty->getText();
         $this->_item->zarp = $this->itemdetail->editzarp->getText();
         $this->_item->costprice = $this->itemdetail->editcostprice->getText();
