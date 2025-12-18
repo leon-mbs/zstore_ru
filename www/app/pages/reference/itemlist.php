@@ -51,7 +51,7 @@ class ItemList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchkey'));
         $catlist = array();
-        $catlist[-1] = "Без категорії";
+        $catlist[-1] = "Без категории";
         foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
         }
@@ -253,10 +253,10 @@ class ItemList extends \App\Pages\Base
         if($item->hasAction()) {
             $title="";
             if(doubleval($item->actionprice) > 0) {
-                $title= "Акційна ціна " . H::fa($item->actionprice);
+                $title= "Акционная цена " . H::fa($item->actionprice);
             }
             if(doubleval($item->actiondisc) > 0) {
-                $title= "Акційна знижка ". H::fa($item->actiondisc) ."%";
+                $title= "Акционная скидка ". H::fa($item->actiondisc) ."%";
             }
             $row->hasaction->setAttribute('title', $title)  ;
         }
@@ -466,7 +466,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->itemname = trim($this->_item->itemname);
 
         if (strlen($this->_item->itemname) == 0) {
-            $this->setError('Не введено назву');
+            $this->setError('Не введено название');
             return;
         }
 
@@ -478,7 +478,7 @@ class ItemList extends \App\Pages\Base
                 $code = Item::qstr($this->_item->item_code);
                 $cnt =  \App\Entity\Entry::findCnt("item_id = {$this->_item->item_id}  ");
                 if ($cnt > 0) {
-                    $this->setError('Не можна міняти  артикул вже використовуваного  ТМЦ');
+                    $this->setError('Нельзя  менять уже используемый артикул');
                     return;
                 }
             }        
@@ -531,7 +531,7 @@ class ItemList extends \App\Pages\Base
 
         //проверка  уникальности артикула
         if ($this->_item->checkUniqueArticle()==false) {
-            $this->setError('Такий артикул вже існує');
+            $this->setError('Такой артикул уже  существует');
             return;
         }
 
@@ -545,7 +545,7 @@ class ItemList extends \App\Pages\Base
             $digits = intval( preg_replace('/[^0-9]/', '', $this->_item->item_code) );
              
             if (strlen($digits) > ( strlen(''.PHP_INT_MAX)-1)  ) {    
-                $this->setError('Надто велике  число в артикулі');
+                $this->setError('Слищком болшое  число в артикуле');
                 return;
             }
         }          
@@ -556,14 +556,14 @@ class ItemList extends \App\Pages\Base
             $code = Item::qstr($this->_item->bar_code);
             $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and bar_code={$code} ");
             if ($cnt > 0) {
-                $this->setWarn('Такий штрих код вже існує"');
+                $this->setWarn('Такой штрих код уже  существует"');
             }
         }
         $printer = System::getOptions('printer');
 
         if (intval($printer['pmaxname']) > 0 && mb_strlen($this->_item->shortname) > intval($printer['pmaxname'])) {
 
-            $this->setWarn("Коротка назва має бути не більше {$printer['pmaxname']} символів");
+            $this->setWarn("Короткое название  должно  быть не  более {$printer['pmaxname']} символов");
 
         }
 
@@ -572,7 +572,7 @@ class ItemList extends \App\Pages\Base
         $code = Item::qstr($this->_item->item_code);
         $cnt = Item::findCnt("item_id <> {$this->_item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
-            $this->setError('ТМЦ з такою назвою і артикулом вже існує');
+            $this->setError('ТМЦ с таким названием и артикулом уже существует');
             return;
         }
 
@@ -608,14 +608,14 @@ class ItemList extends \App\Pages\Base
             
             if (filesize($file["tmp_name"])  > 1024*1024*4) {
 
-                    $this->setError('Розмір файлу більше 4M');
+                    $this->setError('Файл больше 4M');
                     return;
             }
            
             $imagedata = getimagesize($file["tmp_name"]);
  
             if (preg_match('/(png|jpeg)$/', $imagedata['mime']) == 0) {
-                $this->setError('Невірний формат зображення');
+                $this->setError('Неверный формат изображения');
                 return;
             }
 
@@ -798,7 +798,7 @@ class ItemList extends \App\Pages\Base
         $form=  $this->setpanel->setform;
         $id = $form->editsname->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано ТМЦ");
+            $this->setError("Не выбран ТМЦ");
             return;
         }
 
@@ -833,7 +833,7 @@ class ItemList extends \App\Pages\Base
         $form= $this->setpanel->setsform;
         $id = $form->editssname->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано послугу або роботу");
+            $this->setError("Не выбрана  услуга или работа");
             return;
         }
 
@@ -1140,13 +1140,13 @@ class ItemList extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("Видалено {$d}, деактивовано {$u}");
+        $this->setSuccess("Удалено {$d}, деактивировано {$u}");
 
         if(count($onstore)>0) {
-            $w = "Товари ";
+            $w = "Товары ";
             $w .=  implode(",", $onstore)  ;
 
-            $w .= " ще є на складі";
+            $w .= " в галичии на складе";
             $w = str_replace("'", "`", $w) ;
             $w = str_replace("\"", "`", $w) ;
             $this->setWarn($w);

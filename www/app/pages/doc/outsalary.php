@@ -127,7 +127,7 @@ class OutSalary extends \App\Pages\Base
             }
         }
         if ($this->_doc->amount == 0) {
-            $this->setError("Не введено суму");
+            $this->setError("Не введено сумму");
             return;
         }
         if ($this->checkForm() == false) {
@@ -173,14 +173,14 @@ class OutSalary extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
 

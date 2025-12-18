@@ -174,7 +174,7 @@ class OrderFood extends \App\Pages\Base
 
                 }
             } else {
-                $this->setWarn('Замовлення слід створювати через  АРМ касира для кафе')  ;
+                $this->setWarn('Заказ следует создавать  через  АРМ кассира для кафе')  ;
             }
         }
 
@@ -238,7 +238,7 @@ class OrderFood extends \App\Pages\Base
 
         $id = $this->editdetail->edittovar->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
 
@@ -344,7 +344,7 @@ class OrderFood extends \App\Pages\Base
                 foreach ($this->_itemlist as $item) {
                     $qty = $item->getQuantity($this->_doc->headerdata['store']);
                     if ($qty < $item->quantity) {
-                        $this->setError("На складі всього ".H::fqty($qty)." ТМЦ {$item->itemname}. Списання у мінус заборонено");
+                        $this->setError("На складе всего ".H::fqty($qty)." ТМЦ {$item->itemname}. Списание  в  минус запрещено");
                         return;
                     }
                 }
@@ -486,36 +486,36 @@ class OrderFood extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено позиції");
+            $this->setError("Не введены позиции");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не выбран склад");
         }
         if (($this->docform->pos->getValue() > 0) == false) {
-            $this->setError("Не обрано POS термінал");
+            $this->setError("Не выбран POS терминал");
         }
         $p = $this->docform->payment->getValue();
         $c = $this->docform->customer->getKey();
 
         if ($this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("Якщо у борг або передоплата або нарахування бонусів має бути обраний контрагент");
+            $this->setError("Если долг, предоплата или насчитывание бонусов нужно выбрать контрагента");
         }
         if ($p == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError("Если внесена  сумма  больше  нуля  нужно указать денежный счет");
         }
         if ($c == 0 && $this->_doc->headerdata['bonus'] > 0) {
-            $this->setError("Для списання бонусів виберіть контрагента");
+            $this->setError("Для списания бонусов  выберите контрагента");
         }
 
 
@@ -580,12 +580,12 @@ class OrderFood extends \App\Pages\Base
             $customer = Customer::load($customer_id);
             $d = $customer->getDiscount();
             if ($d > 0) {
-                $this->docform->custinfo->setText("Знижка " . $d . '%');
+                $this->docform->custinfo->setText("Скидка " . $d . '%');
 
             } else {
                 $b = $customer->getBonus();
                 if ($b > 0) {
-                    $this->docform->custinfo->setText("Бонусiв " . $b);
+                    $this->docform->custinfo->setText("Бонусов " . $b);
 
                 }
             }
@@ -628,7 +628,7 @@ class OrderFood extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $cust = new Customer();
@@ -637,14 +637,14 @@ class OrderFood extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длина номера  телефона должна  быть  ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError("Уже есть контрагент с таким телефоном");
                 return;
             }
         }

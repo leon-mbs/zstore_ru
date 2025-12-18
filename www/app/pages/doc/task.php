@@ -121,11 +121,11 @@ class Task extends \App\Pages\Base
                     $this->docform->customer->setText($basedoc->customer_name);
 
                     if ($basedoc->meta_name == 'ServiceAct') {
-                        $this->docform->notes->setText('Підстава '. $basedoc->document_number);
+                        $this->docform->notes->setText('Основание '. $basedoc->document_number);
                         $this->_servicelist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'Order') {
-                        $this->docform->notes->setText('Підстава '. $basedoc->document_number);
+                        $this->docform->notes->setText('Основание '. $basedoc->document_number);
                         $this->_prodlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
@@ -176,7 +176,7 @@ class Task extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано роботу");
+            $this->setError("Не выбрана  работа");
             return;
         }
         $service = Service::load($id);
@@ -227,7 +227,7 @@ class Task extends \App\Pages\Base
     public function saverowprodOnClick($sender) {
         $id = $this->editdetailprod->editprod->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано продукцію");
+            $this->setError("Не выбрана  продукция");
             return;
         }
         $item = Item::load($id);
@@ -236,7 +236,7 @@ class Task extends \App\Pages\Base
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
         if ( doubleval($item->quantity) == 0) {
-            $this->setError("Не вказано кількість");
+            $this->setError("Не указано количество");
             return;
         }
 
@@ -258,7 +258,7 @@ class Task extends \App\Pages\Base
         $id = $this->editdetail3->editemp->getValue();
         if ($id == 0) {
 
-            $this->setError("Не обрано виконавця");
+            $this->setError("Не выбран исполнитель");
             return;
         }
         $emp = Employee::load($id);
@@ -288,7 +288,7 @@ class Task extends \App\Pages\Base
         $id = $this->editdetail4->editeq->getValue();
         if ($id == 0) {
 
-            $this->setError("Не обрано обладнання");
+            $this->setError("Не выбрано оборудование");
             return;
         }
         $eq = Equipment::load($id);
@@ -394,22 +394,22 @@ class Task extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (strlen($this->_doc->document_date) == 0) {
 
-            $this->setError('Введіть дату документа');
+            $this->setError('Введите дату документа');
         }
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
-            $this->setError("Мають бути введені роботи та/або продукція");
+            $this->setError("Должны быть введены  работы  и/или продукциия");
         }
         if (count($this->_emplist) > 0) {
             $ktu = 0;
@@ -417,7 +417,7 @@ class Task extends \App\Pages\Base
                 $ktu += doubleval($emp->ktu);
             }
             if ($ktu != 1) {
-                $this->setError("Сумарний КТУ повинен бути 1");
+                $this->setError("Суммарный КТУ должен быть 1");
             }
 
         }

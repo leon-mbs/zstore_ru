@@ -265,7 +265,7 @@ class EQ extends \App\Pages\Base
     private function checkForm() {
          $eq = intval($this->docform->eq->getKey() );
          if($eq==0)  {
-             $this->setError('Не вибрано ОЗ') ;
+             $this->setError('Не выбран ОС') ;
              return false;
          }        
          $isincome = 0< intval( EqEntry::findCnt(" eq_id = {$eq}  and  optype=".EqEntry::OP_INCOME) ); // введен в эксплуатацию
@@ -275,16 +275,16 @@ class EQ extends \App\Pages\Base
          $op = intval($this->docform->optype->getValue() );
          
          if(!in_array($op,[1,6,7,8 ]) && !$isincome ){
-             $this->setError('Не введено в експлуатацію')  ;
+             $this->setError('Не введено в эксплуатацию')  ;
          }
          if(in_array($op,[1,6,7,8]) && $isincome  ){
-             $this->setError('Вже введено в експлуатацію')  ;
+             $this->setError('Вже введено в эксплуатацию')  ;
          }
          if( in_array($op,[  9,10,11]) && !$isoutcome  ){
-             $this->setError('Не виведено з експлуатації')  ;
+             $this->setError('Не выведено с эксплуатации')  ;
          }
          if(!in_array($op,[  9,10,11 ]) && $isoutcome  ){
-             $this->setError('Вже виведено з експлуатації')  ;
+             $this->setError('Вже выведено с эксплуатации')  ;
          }
           
          $amount = doubleval($this->docform->amount->getText() );
@@ -294,14 +294,14 @@ class EQ extends \App\Pages\Base
       
          if($op==6 || $op==9){
              if($c==0)  {
-                 $this->setError('Не вибрано контрагента') ;
+                 $this->setError('Не выбран контрагент') ;
              }
      
  
          }
          if($op==8 ||$op==10   ){
              if($item==0)  {
-                 $this->setError('Не вибрано ТМЦ') ;
+                 $this->setError('Не выбран ТМЦ') ;
              }
     
          }
@@ -309,14 +309,14 @@ class EQ extends \App\Pages\Base
             $parea = intval($this->docform->parea->getValue() );
             $emp = intval($this->docform->emp->getValue() );
             if($parea==0 && $emp==0)   {
-               $this->setError('Не вибрано дільницю та/або  відповідального ') ;
+               $this->setError('Не выбран участок и/или  ответсвенный ') ;
             
             }
              
          }
          if(in_array($op,[3,4,6.7] )){
              if($amount==0)  {
-                 $this->setError('Не вказано суму  ') ;
+                 $this->setError('Не указана  сумма  ') ;
              }
          }
    

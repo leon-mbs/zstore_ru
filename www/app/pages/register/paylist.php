@@ -178,7 +178,7 @@ class PayList extends \App\Pages\Base
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$pl->paydate) {
-            $this->setError("Не можна відміняти оплату раніше  " .date('Y-m-d', $da));
+            $this->setError("Нельзя отменять оплату ранее  " .date('Y-m-d', $da));
             return;
         }
 
@@ -224,10 +224,10 @@ class PayList extends \App\Pages\Base
         $user = \App\System::getUser();
 
 
-        \App\Entity\Notify::toSystemLog("Користувач {$user->username} видалив платіж з документа {$doc->document_number}. Підстава: " . $sender->notes->getText()) ;
+        \App\Entity\Notify::toSystemLog("Пользователь {$user->username} удалил платеж с документа {$doc->document_number}. Основание: " . $sender->notes->getText()) ;
 
         $sender->notes->setText('');
-        $this->setSuccess('Платіж скасовано');
+        $this->setSuccess('Платеж отменен');
         $this->resetURL();
     }
 
@@ -238,13 +238,13 @@ class PayList extends \App\Pages\Base
         $data = array();
 
         $header['A1'] = "Дата";
-        $header['B1'] = "Рахунок";
-        $header['C1'] = "Прибуток";
-        $header['D1'] = "Видаток";
+        $header['B1'] = "Счет";
+        $header['C1'] = "Прибыль";
+        $header['D1'] = "Процент";
         $header['E1'] = "Документ";
-        $header['F1'] = "Створив";
+        $header['F1'] = "Сздал";
         $header['G1'] = "Контрагент";
-        $header['H1'] = "Примітка";
+        $header['H1'] = "Примечание";
 
         $i = 1;
         foreach ($list as $doc) {

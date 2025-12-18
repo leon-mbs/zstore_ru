@@ -258,7 +258,7 @@
       
       function drawChart() {
 
-        //структура видатків
+        //структура расходов
           
         var psdata = google.visualization.arrayToDataTable( 
         
@@ -290,7 +290,7 @@
         };
 
   
-       //старвнение
+       //срвнение
         var pschart = new google.visualization.PieChart(document.getElementById('paystructure'));
 
         pschart.draw(psdata, psoptions);

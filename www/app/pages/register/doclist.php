@@ -119,7 +119,7 @@ class DocList extends \App\Pages\Base
             $this->docview->setVisible(true);
             $this->_doc = Document::load($docid);
             if($this->_doc == null) {
-                $this->setError('Документ вже видалений') ;
+                $this->setError('Документ уже  удален') ;
                 App::RedirectHome() ;
             }
             $this->_doc = $this->_doc->cast() ;
@@ -444,14 +444,14 @@ class DocList extends \App\Pages\Base
         $user = System::getUser();
         if ($doc->user_id != $user->user_id && $user->rolename != 'admins') {
 
-            $this->setError("Видаляти документ може тільки автор або адміністратор");
+            $this->setError("Удалять документ  может только  автор  или  администратор");
             return;
         }
         // $f = $doc->checkStates(array(Document::STATE_EXECUTED ));
 
         $list = $doc->getChildren();
         if (count($list) > 0) {
-            $this->setError("У документа є дочірні документи");
+            $this->setError("У документа  есть  дочерние");
 
             return;
         }
@@ -522,7 +522,7 @@ class DocList extends \App\Pages\Base
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$doc->document_date) {
-           $this->setError("Не можна скасовувати документ старший " .date('Y-m-d', $da));
+           $this->setError("Нельзя отменить документ старше " .date('Y-m-d', $da));
            return;
             
         }
@@ -537,7 +537,7 @@ class DocList extends \App\Pages\Base
                 //свой может  отменить
             } else {
 
-                $this->setError("Немає права скасовувати документ " . $doc->meta_desc);
+                $this->setError("Нет права  отменять документ " . $doc->meta_desc);
                 return;
             }
         }
@@ -545,12 +545,12 @@ class DocList extends \App\Pages\Base
 
         $f = $doc->checkStates(array(Document::STATE_CLOSED, Document::STATE_INSHIPMENT, Document::STATE_DELIVERED)) > 0;
         if ($f) {
-            $this->setWarn("У документа були відправки, доставки або документ був закритий");
+            $this->setWarn("У документа были отправка, доставка или документ был закрыт");
         }
         $list = $doc->getChildren('', true);
         if (count($list) > 0) {
 
-            $this->setError("У документа є проведені дочірні документи");
+            $this->setError("У документа есть проведенные  дочерние документы");
             return;
         }
         $cc = $doc->canCanceled();
@@ -579,7 +579,7 @@ class DocList extends \App\Pages\Base
             return;
         }
         if(strlen($doc->headerdata["fiscalnumber"]??'')>0) {
-            $this->setError('Не можна  скасовувати фіскалізований документ') ;
+            $this->setError('Нельзя отменять фискализоыанный документ') ;
             return;
         }
 
@@ -597,7 +597,7 @@ class DocList extends \App\Pages\Base
 
     public function statusOnSubmit($sender) {
         if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
-            $this->setError('Немає права виконувати документ');
+            $this->setError('Нет права  выполнять документ');
             return;
         }
         $this->_doc = $this->_doc->cast();
@@ -642,7 +642,7 @@ class DocList extends \App\Pages\Base
                 $n->user_id = $this->_doc->user_id;
                 $n->sender_id = $user->user_id;
                 $n->dateshow = time();
-                $n->message = "Документ {$this->_doc->document_number} відхилено" ;
+                $n->message = "Документ {$this->_doc->document_number} отклонен" ;
                 $n->message .= "<br> " . $text;
                 $n->save();
 

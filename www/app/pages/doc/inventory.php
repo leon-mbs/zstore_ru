@@ -154,7 +154,7 @@ class Inventory extends \App\Pages\Base
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не выбран склад");
             return;
         }
         $this->editdetail->setVisible(true);
@@ -171,7 +171,7 @@ class Inventory extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано ТМЦ");
+            $this->setError("Не выбран ТМЦ");
             return;
         }
         $item = Item::load($id);
@@ -185,7 +185,7 @@ class Inventory extends \App\Pages\Base
 
         foreach($this->_itemlist as $i=> $it) {
             if($it->item_id==$item->item_id && $it->snumber==$item->snumber) {
-                $this->setError("ТМЦ  вже  в  списку") ;
+                $this->setError("ТМЦ  уже  в  списке") ;
                 return;
             }
         }
@@ -295,21 +295,21 @@ class Inventory extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введено ТМЦ");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не выбран склад");
         }
 
 
@@ -426,7 +426,7 @@ class Inventory extends \App\Pages\Base
         $item = Item::findBarCode($code,$store,$cat_id );
 
         if ($item == null) {
-            $this->setError("ТМЦ з кодом `{$code}` не знайдено");
+            $this->setError("ТМЦ с кодом `{$code}` не найден");
             // Издаем звук если ШК не найден
             App::$app->getResponse()->addJavaScript("new Audio('/assets/error.mp3').play()", true);
             return;

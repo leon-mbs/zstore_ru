@@ -122,7 +122,7 @@ class CalcSalary extends \App\Pages\Base
         $post = json_decode($post) ;
         if (false == \App\ACL::checkEditDoc($this->_doc, false, false)) {
 
-            return json_encode(['error'=>'Нема прав редагування документу' ], JSON_UNESCAPED_UNICODE);
+            return json_encode(['error'=>'Нет прав редактирвоания документу' ], JSON_UNESCAPED_UNICODE);
         }
 
         $this->_doc->document_number = $post->doc->document_number;
@@ -139,7 +139,7 @@ class CalcSalary extends \App\Pages\Base
 
 
         if (false == $this->_doc->checkUniqueNumber()) {
-            return json_encode(['error'=>'Не унікальний номер документу. Створено новий.','newnumber'=>$this->_doc->nextNumber()], JSON_UNESCAPED_UNICODE);
+            return json_encode(['error'=>'Не уникальный  номер  документа. Создан новый.','newnumber'=>$this->_doc->nextNumber()], JSON_UNESCAPED_UNICODE);
         }
 
 
@@ -394,7 +394,7 @@ class CalcSalary extends \App\Pages\Base
 
         if (false == \App\ACL::checkShowDoc($this->_doc, false, false)) {
 
-            return json_encode(['error'=>'Нема прав на  доступ до документу' ], JSON_UNESCAPED_UNICODE);
+            return json_encode(['error'=>'Нет прав доступа  к документу' ], JSON_UNESCAPED_UNICODE);
         }
 
 

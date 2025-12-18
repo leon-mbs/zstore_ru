@@ -230,7 +230,7 @@ class IssueList extends \App\Pages\Base
         if($issue->status != $post->status) {
             $issue->status = $post->status;
             $stlist = Issue::getStatusList()  ;
-            $desc="Статус змінено на  <b>" . $stlist[$issue->status] . "</b>"  ;
+            $desc="Статус изменено на  <b>" . $stlist[$issue->status] . "</b>"  ;
         }
 
         if($issue->priority != $post->priority) {

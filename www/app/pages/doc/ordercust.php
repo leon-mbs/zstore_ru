@@ -175,7 +175,7 @@ class OrderCust extends \App\Pages\Base
    public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $item = new Item();
@@ -187,7 +187,7 @@ class OrderCust extends \App\Pages\Base
         $item->cat_id = $this->editnewitem->editnewcat->getValue();
   
         if ($item->checkUniqueArticle()==false) {
-              $this->setError('Такий артикул вже існує');
+              $this->setError('Такой артикул уже существует');
               return;
         }  
 
@@ -215,7 +215,7 @@ class OrderCust extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $cust = new Customer();
@@ -226,7 +226,7 @@ class OrderCust extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длина номера  телефона должна  быть  ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
@@ -234,7 +234,7 @@ class OrderCust extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError("Уже есть контрагент с таким телефоном");
                 return;
             }
         }
@@ -298,7 +298,7 @@ class OrderCust extends \App\Pages\Base
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
 
@@ -311,7 +311,7 @@ class OrderCust extends \App\Pages\Base
 
         if ($item->price == 0) {
 
-            $this->setWarn("Не вказана ціна");
+            $this->setWarn("Не выбрана цена");
         }
  
 
@@ -322,7 +322,7 @@ class OrderCust extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
             $this->addrowOnClick(null);
-            $this->setInfo("Позиція додана") ;
+            $this->setInfo("Позиция добавлена") ;
         } else {
             $this->_itemlist[$this->_rowid] = $item;
             $this->cancelrowOnClick(null);
@@ -366,14 +366,14 @@ class OrderCust extends \App\Pages\Base
     
    private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
@@ -381,7 +381,7 @@ class OrderCust extends \App\Pages\Base
         }
 
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("Не обрано постачальника");
+            $this->setError("Не выбран поставщик");
         }
 
 

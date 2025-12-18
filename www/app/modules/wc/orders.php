@@ -35,7 +35,7 @@ class Orders extends \App\Pages\Base
         $modules = System::getOptions("modules");
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
-        $this->filter->add(new DropDownChoice('eistatus', array('pending' => 'В очікуванні', 'processing' => 'В обробці','on-hold'=>'На  утриманні' ), 'pending'));
+        $this->filter->add(new DropDownChoice('eistatus', array('pending' => 'В ожидании', 'processing' => 'В обработке','on-hold'=>'На  удержании' ), 'pending'));
 
         $this->add(new DataView('neworderslist', new ArrayDataSource(new Prop($this, '_neworders')), $this, 'noOnRow'));
 
@@ -191,7 +191,7 @@ class Orders extends \App\Pages\Base
                         $cust->customer_name = trim($shoporder->headerdata['wcclient']);
                         $cust->type = Customer::TYPE_BAYER;
                         $cust->phone = $phone;
-                        $cust->comment = "Клiєнт WC";
+                        $cust->comment = "Клиент WC";
                         $cust->save();
                   }
                 

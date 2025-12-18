@@ -289,7 +289,7 @@ class Admin extends \App\Pages\Base
  
        
         System::setOptions("modules", $modules);
-        $this->setSuccess('Збережено');
+        $this->setSuccess('Сохранено');
         App::Redirect("\\App\\Pages\\Admin");
 
     }

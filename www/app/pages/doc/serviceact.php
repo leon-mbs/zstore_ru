@@ -58,7 +58,7 @@ class ServiceAct extends \App\Pages\Base
        
         $this->docform->add(new TextArea('notes'));
 
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], 2 ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Предоплата',2=>'Постоплата',3=>'Оплата РН или чеком'], 2 ))->onChange($this, 'OnPayType');
   
     
         $this->docform->add(new TextInput('phone'));
@@ -336,7 +336,7 @@ class ServiceAct extends \App\Pages\Base
         
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
 
@@ -359,7 +359,7 @@ class ServiceAct extends \App\Pages\Base
             
             if (strlen($item->snumber) == 0  ) {
 
-                $this->setError("Потрібен серійний номер");
+                $this->setError("Нужен серийный номер");
                 return;
             }
             
@@ -368,7 +368,7 @@ class ServiceAct extends \App\Pages\Base
             
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setError('Невірний серійний номер  ');
+                $this->setError('Неверный серийный номер  ');
                 return;
             }  
 
@@ -383,7 +383,7 @@ class ServiceAct extends \App\Pages\Base
 
                 foreach(  $this->_itemlist as $i){
                     if($this->_rowid == -1 && strlen($item->snumber) > 0 &&  $item->snumber==$i->snumber )  {
-                        $this->setError('Вже є ТМЦ  з таким серійним номером');
+                        $this->setError('Уже  есть ТМЦ  с таким серийным номером');
                         return;
                         
                     }
@@ -430,7 +430,7 @@ class ServiceAct extends \App\Pages\Base
         }
         $id = $this->editserdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано послугу");
+            $this->setError("Не выбрано услугу");
             return;
         }
   
@@ -644,14 +644,14 @@ class ServiceAct extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_serlist) == 0) {
@@ -659,12 +659,12 @@ class ServiceAct extends \App\Pages\Base
         }
 
         if ( count($this->_itemlist) > 0 && ($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не выбран склад");
         }
 
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-            $this->setError("Не задано замовника");
+            $this->setError("Не задан заказчик");
         }
 
         return !$this->isError();
@@ -738,7 +738,7 @@ class ServiceAct extends \App\Pages\Base
             $disctext = "";
             $d =  $cust->getDiscount() ;
             if (doubleval($d) > 0) {
-                $disctext = "Постійна знижка " . " {$d}%";
+                $disctext = "Постоянная скидка " . " {$d}%";
             } else {
                 $bonus = $cust->getBonus();
                 if ($bonus > 0) {
@@ -775,7 +775,7 @@ class ServiceAct extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $cust = new Customer();
@@ -784,14 +784,14 @@ class ServiceAct extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длина номера  телефона должна  быть  ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError("Уже есть контрагент с таким телефоном");
                 return;
             }
         }

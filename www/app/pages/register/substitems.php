@@ -238,7 +238,7 @@ class SubstItems extends \App\Pages\Base
              || $colsubstcode === '0'
              || $colsubstbrand === '0'
          ) {
-            $this->setError('Не вказанi колонки ');
+            $this->setError('Не указаны колонки ');
             return;
         }
          
@@ -246,7 +246,7 @@ class SubstItems extends \App\Pages\Base
         $file =  $this->importform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не обрано файл');
+            $this->setError('Не выбран файл');
             return;
         }
         
@@ -333,7 +333,7 @@ class SubstItems extends \App\Pages\Base
         
        
         
-        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
+        $this->setSuccess("Импортировано {$cnt} ТМЦ");
         $this->itemtable->listform->itemlist->Reload();
 
         $this->itemtable->setVisible(true);

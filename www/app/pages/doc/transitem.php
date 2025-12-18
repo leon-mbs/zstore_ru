@@ -138,16 +138,16 @@ class TransItem extends \App\Pages\Base
         $fi=intval( $this->docform->fromitem->getKey() );
         $fqty=doubleval( $this->docform->fromquantity->getText());
         if ($fi == 0 ) {
-            $this->setError("  Не вибрано ТМЦ ");
+            $this->setError("  Не выбран ТМЦ ");
             return;
         } 
         $st = Stock::load($fi) ;
         if ($fqty > $st->qty ) {
-            $this->setError(" Недостатньо ТМЦ на складі");
+            $this->setError(" Недостаточно ТМЦ на складе");
             return;
         }                  
         if ($fqty == 0 ) {
-            $this->setError(" Не вказана  кількість ");
+            $this->setError(" Не указано количество ");
             return;
         }   
         $st->qty= $fqty;
@@ -164,12 +164,12 @@ class TransItem extends \App\Pages\Base
         $fi=intval( $this->docform->toitem->getKey() );
         $fqty=doubleval( $this->docform->toquantity->getText());
         if ($fi == 0 ) {
-            $this->setError("  Не вибрано ТМЦ ");
+            $this->setError("  Не вибран  ТМЦ ");
             return;
         } 
                      
         if ($fqty == 0 ) {
-            $this->setError(" Не вказана  кількість ");
+            $this->setError(" Не указано количество ");
             return;
         }   
         $it = Item::load($fi) ;
@@ -286,24 +286,24 @@ class TransItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         
         if (count( $this->_fromlist)==0 || count( $this->_tolist)==0  ) {
-            $this->setError(" Не введено ТМЦ ");
+            $this->setError(" Не введен ТМЦ ");
         }        
         
         foreach($this->_tolist as $it){
            if( doubleval($it->price)==0  ) {
-                $this->setError(" Не введена  ціна   ");
+                $this->setError(" Не введена  цена   ");
                 break;
            }
         }

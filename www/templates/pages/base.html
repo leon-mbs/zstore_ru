@@ -441,7 +441,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-puzzle-piece"></i>
                                     <p>
-                                        Модулі
+                                        Модули
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -516,7 +516,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Обмін з ОпенКарт
+                                            <p>Обмен с ОпенКарт
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -550,7 +550,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Обмін з Woocommerce
+                                            <p>Обмен с Woocommerce
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -610,7 +610,7 @@
                                                
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/TimeSheet" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Облік часу</p>
+                                                    <p>&nbsp;&nbsp;Учет времени</p>
                                                 </a>
                                               
                                              
@@ -823,7 +823,7 @@
                 <div class="modal-dialog  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Інформація про контрагента</h5>
+                            <h5 class="modal-title">Информация о контрагенте</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -832,7 +832,7 @@
                              
                         </div>
                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрить</button>
 
                       </div>
                     </div>
@@ -852,7 +852,7 @@
                              
                         </div>
                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрить</button>
 
                       </div>
                     </div>
@@ -960,12 +960,12 @@
             }
             {{/twodigit}}        
         
-       //автофокус на модальному вікні
+       //автофокус на  модальном окне
        $(document).on('shown.bs.modal', '.modal', function() {
           $(this).find('input:visible:first').focus();
        });            
    
-       //заміна коми
+       //замена  зарятой
         $(document).on('change', 'input.qtyprice', function() {
           var val =   $(this).val()
           val= fixInput(val)
@@ -1060,7 +1060,7 @@
               })
               .then((data) => {
                  if(data == ""){
-                     toastr.success("Вiдправлено на принтер" )   
+                     toastr.success("Отправлено на принтер" )   
                  }   else {
                     toastr.error(data )        
                  }
@@ -1104,7 +1104,7 @@
                 {
                     
                       if(data=="") {
-                         toastr.info('Додано' )              
+                         toastr.info('Добавлено' )              
                       } else {
                            toastr.error(data)   
                       }         
@@ -1120,7 +1120,7 @@
                     
                     
                   if(data=="") {
-                     toastr.info('Відправлено' )              
+                     toastr.info('Отправлено' )              
                   } else {
                        toastr.error(data)   
                   }

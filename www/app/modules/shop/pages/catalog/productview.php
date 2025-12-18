@@ -103,7 +103,7 @@ class ProductView extends Base
         } else {
 
             if ($product->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
-                $this->onstore->setText('В наявності');
+                $this->onstore->setText('В наличии');
                 $this->buy->setValue('Купить');
             } else {
                 $this->onstore->setText('Под заказ');
@@ -167,9 +167,9 @@ class ProductView extends Base
         $item = $datarow->getDataItem();
         $datarow->add(new Label("attrname", $item->attributename));
         $meashure = "";
-        $nodata = "Немає даних";
-        $yes = "Є";
-        $no = "Немає";
+        $nodata = "Нет данных";
+        $yes = "Есть";
+        $no = "Нет";
         $value = $item->attributevalue;
         if ($item->attributetype == 2) {
             $meashure = $item->valueslist;

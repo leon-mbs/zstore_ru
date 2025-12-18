@@ -40,21 +40,21 @@ class Outcome extends \App\Pages\Base
 
         $types = array();
         $types[1] = "За товарами";
-        $types[6] = "Товари за покупцями";
-        $types[2] = "За покупцями";
+        $types[6] = "Товары за покупателями";
+        $types[2] = "За покупателями";
         $types[3] = "За датами";
-        $types[4] = "Послуги, роботи";
-        $types[7] = "Послуги за покупцями";
-        $types[5] = "За категоріями";
+        $types[4] = "Услуги, работы";
+        $types[7] = "Услуги за клиентами";
+        $types[5] = "За категориями";
 
         if (count($hlist) > 0) {
-            $types[8] = "За холдінгами";
+            $types[8] = "За холдингами";
         }
        
         $types[10] = "За складами";
-        $types[11] = "За джерелами";
+        $types[11] = "За источниками";
         $types[12] = "За брендами" ;
-        $types[13] = "За постачальниками" ;
+        $types[13] = "За поставщиками" ;
 
         $this->filter->add(new DropDownChoice('type', $types, 1))->onChange($this, "OnType");
 
@@ -176,7 +176,7 @@ class Outcome extends \App\Pages\Base
         }
 
         if ($type == 2) {  //по покупателям
-            $empty = "Фіз. особа";
+            $empty = "Физ. лицо";
             $sql = "
           select coalesce(c.customer_name,'{$empty}') as itemname,c.customer_id, count(d.document_id) as docs, sum(0-e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
           from entrylist_view  e

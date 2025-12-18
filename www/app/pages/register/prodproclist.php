@@ -240,7 +240,7 @@ class ProdProcList extends \App\Pages\Base
         $this->_proc->enddateplan = $this->editproc->editenddateplan->getDate();
 
         if($this->_proc->store==0){
-            $this->setError('Не вибрано склад')  ;
+            $this->setError('Не выбран склад')  ;
             return;
         }
         
@@ -355,7 +355,7 @@ class ProdProcList extends \App\Pages\Base
         $this->_stage->pa_id = $this->editstage->editstagearea->getValue();
   
         if ($this->_stage->pa_id == 0) {
-            $this->setError("Не обрано виробничу ділянку");
+            $this->setError("Не выбран  производственный участок");
             return;
         }
         $this->_stage->state= $this->_stage->st_id >0 ? ProdStage::STATE_STOPPED: ProdStage::STATE_NEW ; 
@@ -396,7 +396,7 @@ class ProdProcList extends \App\Pages\Base
         //проверка на  доки
         $cnt = \App\Entity\doc\Document::findCnt("meta_name in ('ProdMove','IncomeService', 'ProdReceipt','ProdIssue' ) and ( content  like '%<st_id>{$stage->st_id}</st_id>%' or content like '%<psto>{$stage->st_id}</psto>%' or content like '%<psfrom>{$stage->st_id}</psfrom>%'   )  ");
         if($cnt >0) {
-            $this->setError('Вже  ствворено документи на  етап') ;
+            $this->setError('Уже  создан документ на  этап') ;
             return;
         }
         ProdStage::delete($stage->st_id);
@@ -492,7 +492,7 @@ class ProdProcList extends \App\Pages\Base
            $empids[] =  $emp->employee_id;       
         } 
         if($ktu != 1 && count($this->_emplist) >0) {
-            $this->setError('Сумма  КТУ повинна дорiвнювати 1 ') ;
+            $this->setError('Сумма  КТУ должна быть равна 1 ') ;
             return;
         }
 

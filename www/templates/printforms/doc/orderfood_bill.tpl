@@ -84,7 +84,7 @@
     </tr> 
   {{/trans}}    
     <tr>
-        <td colspan="3">Терміинал: {{pos_name}}</td>
+        <td colspan="3">Терминал: {{pos_name}}</td>
     </tr>
     <tr>
         <td colspan="3">Кассир: {{username}}</td>

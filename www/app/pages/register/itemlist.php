@@ -21,7 +21,7 @@ use Zippy\Html\Panel;
 use App\Application as App;
 
 /**
-* Товари на складі
+* Товары на складе
 */
 class ItemList extends \App\Pages\Base
 {
@@ -41,7 +41,7 @@ class ItemList extends \App\Pages\Base
         $this->filter->add(new TextInput('searchkey'));
 
         $catlist = array();
-        $catlist[-1] = "Без категорії";
+        $catlist[-1] = "Без категории";
         foreach (Category::getList() as $k => $v) {
             $catlist[$k] = $v;
         }
@@ -51,7 +51,7 @@ class ItemList extends \App\Pages\Base
 
         $prices = [];
         if($this->_tvars["noshowpartion"] == false) {
-            $prices['price'] = "Закупівельна ціна";
+            $prices['price'] = "Закупочная цена";
         }
 
         foreach(Item::getPriceTypeList() as $k=>$v) {
@@ -411,7 +411,7 @@ class ItemList extends \App\Pages\Base
           $r = $this->addItemToCO([$this->_item->item_id,$qty]);
           if($r==""){
              $sender->iformbayqty->setText('') ;                 
-             $this->setSuccess('Додано') ;
+             $this->setSuccess('Добавлено') ;
           } else {
               $this->setError($r) ;
           }
@@ -432,15 +432,15 @@ class ItemList extends \App\Pages\Base
         $header = array();
         $data = array();
 
-        $header['A1'] = "Наименуваня";
+        $header['A1'] = "Наименование";
         $header['B1'] = "Артикул";
         $header['C1'] = "Штрих-код";
-        $header['D1'] = "Од.";
-        $header['E1'] = "Категорiя";
+        $header['D1'] = "Ед.";
+        $header['E1'] = "Категория";
         $header['F1'] = "Бренд";
-        $header['G1'] = "Комірка";
-        $header['H1'] = "Кiл.";
-        $header['I1'] = "Обл. цiна";
+        $header['G1'] = "Ячейка";
+        $header['H1'] = "Кол.";
+        $header['I1'] = "Уч. цена";
         if($this->_tvars["noshowpartion"] == true) {
             $header['I1'] ='';
         }
@@ -461,8 +461,8 @@ class ItemList extends \App\Pages\Base
             $header['N1'] = $common['price5'];
         }
 
-        $header['O1'] = "На суму";
-        $header['P1'] = "Опис";
+        $header['O1'] = "На сумму";
+        $header['P1'] = "Описвние";
 
         $i = 1;
         foreach ($list as $item) {

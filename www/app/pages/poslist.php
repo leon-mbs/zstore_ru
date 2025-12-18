@@ -27,7 +27,7 @@ class PosList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg("До сторінки має доступ тільки користувачі з роллю admins  ");
+            System::setErrorMsg("К странице  имеют доступ только  пользователи роли admins  ");
             \App\Application::RedirectError();
             return  ;
         }

@@ -1,7 +1,7 @@
 <table class="ctable" cellspacing="0" cellpadding="1">
       <tr  style="font-weight: bolder;">
         <td align="center" colspan="{{cols}}">
-            <h3 style="font-size: 16px;">OLAP аналіиз '{{type}}' с {{from}} по {{to}}</h3>
+            <h3 style="font-size: 16px;">OLAP анализ '{{type}}' с {{from}} по {{to}}</h3>
         </td>
     </tr>
     <tr>

@@ -384,7 +384,7 @@ class OLAP extends \App\Pages\Base
             $sql = "SELECT iv.itemname,
                 ssv.storename,
                 iv.cat_name,
-                COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
+                COALESCE(c.customer_name,'Физ. лицо') AS customer_name, 
                 {$concat} as document_date ,
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
                
@@ -410,7 +410,7 @@ class OLAP extends \App\Pages\Base
 
 
             $sql = "SELECT  ss.service_name,
-                COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
+                COALESCE(c.customer_name,'Физ. лицо') AS customer_name, 
                 {$concat} as document_date ,
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
                 
@@ -467,7 +467,7 @@ class OLAP extends \App\Pages\Base
                 iv.itemname,
                 ssv.storename,
                 iv.cat_name,            
-                COALESCE(c.customer_name,'Фіз. особа') AS customer_name, 
+                COALESCE(c.customer_name,'Физ. лицо') AS customer_name, 
                 {$concat} as document_date ,
                 COALESCE(b.branch_name,'Н/Д') AS branch_name,
                

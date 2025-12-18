@@ -83,7 +83,7 @@ class Order extends \App\Pages\Base
         $this->docform->add(new Label('custinfo'))->setVisible(false);
         $this->docform->add(new DropDownChoice('pricetype', Item::getPriceTypeList()))->onChange($this, 'OnChangePriceType');
  
-        $this->docform->add(new DropDownChoice('paytype',[1=>'Передплата',2=>'Постоплата',3=>'Оплата ВН або чеком'], H::getDefPayType() ))->onChange($this, 'OnPayType');
+        $this->docform->add(new DropDownChoice('paytype',[1=>'Предоплата',2=>'Постоплата',3=>'Оплата РН или чеком'], H::getDefPayType() ))->onChange($this, 'OnPayType');
         $this->docform->add(new DropDownChoice('delivery', Document::getDeliveryTypes($this->_tvars['np'] == 1),1))->onChange($this, 'OnDelivery');
      
         $this->docform->add(new TextInput('email'));
@@ -335,7 +335,7 @@ class Order extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
 
@@ -371,7 +371,7 @@ class Order extends \App\Pages\Base
             }
             
             $this->addrowOnClick(null);
-            $this->setInfo("Позиція додана") ;
+            $this->setInfo("Позиция добавлена") ;
             //очищаем  форму
             $this->editdetail->edittovar->setKey(0);
             $this->editdetail->edittovar->setText('');
@@ -425,7 +425,7 @@ class Order extends \App\Pages\Base
         }
  
         if($item->useserial==1 && $common['usesnumber'] >0){
-            $this->setWarn("Товар потребує вводу серійного номеру");
+            $this->setWarn("Товар требует серийного номара");
             return;
         }
         foreach ($this->_tovarlist as $ri => $_item) {
@@ -548,11 +548,11 @@ class Order extends \App\Pages\Base
                 $this->_doc->headerdata['payed'] = $this->_doc->payed;
          
                 if ($this->_doc->payed > $this->_doc->payamount) {
-                    $this->setError('Внесена сума більше необхідної');
+                    $this->setError('Внесена сумма больше необходимой');
                     return;
                 }
                 if ($this->_doc->headerdata['payment']==0) {
-                    $this->setError('Не вказана  каса');
+                    $this->setError('Не указана  касса');
                     return;
                 }
                 if ($this->_doc->payed == 0) {
@@ -636,14 +636,14 @@ class Order extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_tovarlist) == 0) {
@@ -652,11 +652,11 @@ class Order extends \App\Pages\Base
 
         $c = $this->docform->customer->getKey();
         if ($c == 0) {
-            $this->setError("Не задано контрагента");
+            $this->setError("Не задан контрагент");
         }
 
        if ($this->_doc->headerdata['paytype'] == 0) {
-            $this->setError("Не задано тип оплати");
+            $this->setError("Не задан тип оплаты");
        }
 
        return !$this->isError();
@@ -710,11 +710,11 @@ class Order extends \App\Pages\Base
             $d= $customer->getDiscount();
 
             if (doubleval($d) > 0) {
-                $disctext = "Постійна знижка {$d}%";
+                $disctext = "Постоянная скидка {$d}%";
             } else {
                 $bonus = $customer->getBonus();
                 if ($bonus > 0) {
-                    $disctext = "Нараховано бонусів {$bonus} ";
+                    $disctext = "Насчитано бонусов {$bonus} ";
                 }
             }
             $this->docform->custinfo->setText($disctext);
@@ -762,7 +762,7 @@ class Order extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $cust = new Customer();
@@ -772,14 +772,14 @@ class Order extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длина номера  телефона должна  быть  ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
         $c = Customer::getByPhone($cust->phone);
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError("Уже есть контрагент с таким телефоном");
                 return;
             }
         }
@@ -932,7 +932,7 @@ class Order extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $item = new Item();
@@ -941,7 +941,7 @@ class Order extends \App\Pages\Base
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
         if ($item->checkUniqueArticle()==false) {
-              $this->setError('Такий артикул вже існує');
+              $this->setError('Такой артикул уже  существует');
               return;
         }  
         

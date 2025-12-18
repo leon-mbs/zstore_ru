@@ -28,7 +28,7 @@ class Update extends \App\Pages\Base
         parent::__construct();
        
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg('До сторінки має доступ тільки адміністратор');
+            System::setErrorMsg('К странице имеет  доступ только  администратор');
             \App\Application::RedirectError();
             return  ;
         }  

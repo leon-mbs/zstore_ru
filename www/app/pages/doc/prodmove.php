@@ -189,7 +189,7 @@ class ProdMove extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getValue();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
         
@@ -215,7 +215,7 @@ class ProdMove extends \App\Pages\Base
 
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError("Нужна партия производителя");
             return;
         }
 
@@ -223,7 +223,7 @@ class ProdMove extends \App\Pages\Base
             $slist = $item->getSerials($store_id);
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setError('Невірний номер серії');
+                $this->setError('Неверный номер  серии');
                 return;
             }
         }
@@ -333,30 +333,30 @@ class ProdMove extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено ТМЦ");
+            $this->setError("Не введен ТМЦ");
         }
         if (($this->_doc->headerdata['pp'] > 0) == false) {
-            $this->setError("Не обрано процесс");
+            $this->setError("Не выбран процесс");
         }
         if (($this->_doc->headerdata['psfrom'] > 0) == false) {
-            $this->setError("Не обрано етапи");
+            $this->setError("Не выбраны етапы");
         }
         if (($this->_doc->headerdata['psto'] > 0) == false) {
-            $this->setError("Не обрано етапи");
+            $this->setError("Не выбраны етапы");
         }
         if ($this->_doc->headerdata['psto'] > 0  &&  $this->_doc->headerdata['psto']==$this->_doc->headerdata['psfrom'] ) {
-            $this->setError("Етапи мають бути різні");
+            $this->setError("Этапы мають буты разными");
         }
 
         return !$this->isError();

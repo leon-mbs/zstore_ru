@@ -220,7 +220,7 @@ class GoodsReceipt extends \App\Pages\Base
                         $order = $basedoc->cast();
                         $nr=$order->getNotReceivedItems();
                         if(count($nr)==0) {
-                           $this->setWarn('Всі позиції вже доставлені') ;
+                           $this->setWarn('Все  позиции уже доставлены') ;
                         }
                         $this->_itemlist = [];
                       
@@ -307,7 +307,7 @@ class GoodsReceipt extends \App\Pages\Base
                 }
             } else {
                 if(intval($common['paytypein']) == 1) {
-                    $this->setWarn('Накладну слід створювати на  підставі вхідного рахунку') ;
+                    $this->setWarn('Наклудкую следует создавать на основании Входящего счета') ;
                 }
             }
         }
@@ -414,7 +414,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         if ($item == null) {
 
-            $this->setWarn('Товар не знайдено');
+            $this->setWarn('Товар не найден');
             $this->addnewitemOnClick(null);
         } else {
             $this->editdetail->edititem->setKey($item->item_id);
@@ -481,13 +481,13 @@ class GoodsReceipt extends \App\Pages\Base
         $id = $this->editsnitem->editsnitemname->getKey();
         $name = trim($this->editsnitem->editsnitemname->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
         $price = doubleVal($this->editsnitem->editsnprice->getText());
         if ($price == 0) {
 
-            $this->setError("Не вказана ціна");
+            $this->setError("Не выбрана цена");
             return;
         }
         $sns =  $this->editsnitem->editsn->getText();
@@ -501,7 +501,7 @@ class GoodsReceipt extends \App\Pages\Base
         }
         if (count($list) == 0) {
 
-            $this->setError("Не вказані серійні номери");
+            $this->setError("Не указаны серийные   номери");
             return;
         }
         
@@ -510,7 +510,7 @@ class GoodsReceipt extends \App\Pages\Base
             
             $temp_array = array_unique($list);
             if(sizeof($temp_array) < sizeof($list)) {
-                $this->setError("Cерійний номер має бути унікальним для виробу");    
+                $this->setError("Серийный номер  должен быть уникальнвм для изделия");    
                 return;
             }           
             
@@ -550,7 +550,7 @@ class GoodsReceipt extends \App\Pages\Base
         $id = $this->editdetail->edititem->getKey();
         $name = trim($this->editdetail->edititem->getText());
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
 
@@ -579,7 +579,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         if ($item->price == 0) {
 
-            $this->setWarn("Не вказана ціна");
+            $this->setWarn("Не выбрана цена");
         }
 
         $item->pricends= $item->price + $item->price * $item->nds();
@@ -590,14 +590,14 @@ class GoodsReceipt extends \App\Pages\Base
         if($common['usesnumber'] > 0) {
             if (strlen($item->snumber) == 0 && $item->useserial == 1  ) {
                 if($common['usesnumber'] != 3){
-                   $this->setError("Потрібна партія виробника");
+                   $this->setError("Нужна партия производителя");
                    return;
                 }
                 if($common['usesnumber'] == 3 && $item->quantity <> 1){
-                   $this->setError("Cерійний номер має бути унікальним для виробу");    
+                   $this->setError("Серийный номер  должен быть уникальным для изделия");    
                    return;
                 }  
-                $this->setError("Не введено серійний номер");    
+                $this->setError("Не введен серийный номер");    
                 return;
                 
                 
@@ -608,7 +608,7 @@ class GoodsReceipt extends \App\Pages\Base
                 $item->sdate = '';
             }
             if (strlen($item->sdate) == 0 && $item->useserial == 1  ) {
-                $this->setError("Потрібна дата придатності");
+                $this->setError("Нужна дата  годности");
                 return;
             }
            
@@ -618,7 +618,7 @@ class GoodsReceipt extends \App\Pages\Base
 
             foreach(  $this->_itemlist as $i){
                 if( $this->_rowid == -1 && strlen($item->snumber) > 0 && $item->snumber==$i->snumber )  {
-                    $this->setError('Вже є ТМЦ  з таким серійним номером');
+                    $this->setError('Уже  есть ТМЦ с  таким серийным номером');
                     return;
                     
                 }
@@ -634,7 +634,7 @@ class GoodsReceipt extends \App\Pages\Base
         if($this->_rowid == -1) {
             $this->_itemlist[] = $item;
             $this->addrowOnClick(null);
-            $this->setInfo("Позиція додана") ;
+            $this->setInfo("Позиция добавлена") ;
         } else {
             $this->_itemlist[$this->_rowid] = $item;
             $this->cancelrowOnClick(null);
@@ -920,48 +920,47 @@ class GoodsReceipt extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введено товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не выбран склад");
         }
         if ($this->docform->customer->getKey() == 0) {
-            $this->setError("Не обрано постачальника");
+            $this->setError("Не выбран  поставщик");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError("Если внесена  сумма  больше  нуля  нужно указать денежный счет");
         }
         $val = $this->docform->val->getValue();
         if (strlen($val) > 1) {
             if($this->_doc->payamount  > $this->_doc->payed) {
-                $this->setError("Якщо валюта має бути вказана оплата");
+                $this->setError("Если  валюта нужно указать оплату");
                 return;
             }
             if ($this->_doc->headerdata['comission']==1  ) {
-                $this->setError("Не можна валюту і комісію ");
-            }
+                $this->setError("Нельзя валюту и комиссию"); 
             if ($this->_doc->getHD('nds',0) >0  ) {
-                $this->setError("Не можна валюту і ПДВ ");
+                $this->setError("Нельзя валюту и НЛС ");
             }
             if ($this->_doc->getHD('delivery',0) >0  ) {
-                $this->setError("Не можна валюту і доставку ");
+                $this->setError("Нельзя валюту и   доставку ");
             }
         } 
         
      
         if ($this->_doc->headerdata['comission']==1 && ($this->_doc->payed - doubleval($this->_doc->headerdata['delivery']) ) > 0) {
-            $this->setError("Оплата не  вноситься якщо Комісія ");
+            $this->setError("Оплата не  вносится  если  комиссия ");
         }
         
         return !$this->isError();
@@ -1021,7 +1020,7 @@ class GoodsReceipt extends \App\Pages\Base
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $item = new Item();
@@ -1031,7 +1030,7 @@ class GoodsReceipt extends \App\Pages\Base
         $item->bar_code = $this->editnewitem->editnewitembarcode->getText();
 
         if ($item->checkUniqueArticle()==false) {
-              $this->setError('Такий артикул вже існує');
+              $this->setError('Уже  есть такой артикул');
               return;
         }  
 
@@ -1042,7 +1041,7 @@ class GoodsReceipt extends \App\Pages\Base
             $code = Item::qstr($item->bar_code);
             $cnt = Item::findCnt("  bar_code={$code} ");
             if ($cnt > 0) {
-                $this->setError('Такий штрих код вже існує"');
+                $this->setError('Уже  есть такой штрих-код"');
                 return;
             }
 
@@ -1081,7 +1080,7 @@ class GoodsReceipt extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $cust = new Customer();
@@ -1092,7 +1091,7 @@ class GoodsReceipt extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длина номера  телефона должна  быть  ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
@@ -1100,7 +1099,7 @@ class GoodsReceipt extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError("Уже есть контрагент с таким телефоном");
                 return;
             }
         }

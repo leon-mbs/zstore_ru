@@ -236,7 +236,7 @@ class Catalog extends Base
         }
 
         $row->add(new TextInput('srated'))->setText($item->getRating());
-        $row->add(new Label('scomments'))->setText("Відгуків (".$item->comments.")");
+        $row->add(new Label('scomments'))->setText("Отзывов (".$item->comments.")");
         $row->add(new ClickLink('sbuy', $this, 'OnBuy'));
 
         /*        if ($item->getQuantity() > 0 || $this->_tvars["isfood"]==true) {
@@ -342,7 +342,7 @@ class FilterAttributeComponent extends \Zippy\Html\CustomComponent implements \Z
             if (in_array("1", $this->value)) {
                 $checked = ' checked="on"';
             }
-            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"1\" {$checked} /> Є<br>";
+            $ret .= "<input type=\"checkbox\"  name=\"{$this->id}[]\" value=\"1\" {$checked} /> Есть<br>";
             $checked = "";
             if (in_array("0", $this->value)) {
                 $checked = ' checked="on"';

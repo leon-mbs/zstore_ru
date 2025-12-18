@@ -159,35 +159,35 @@ class OutcomeMoney extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
 
         if (($this->_doc->amount > 0) == false) {
-            $this->setError("Не введено суму");
+            $this->setError("Не введено сумму");
         }
         if ($this->docform->mtype->getValue() == 0) {
-            $this->setError("Не обрано тип витрат");
+            $this->setError("Не выбран т тип  затрат");
         }
 
 
         if ($this->docform->detail->getValue() == 1 || $this->docform->detail->getValue() == 2) {
 
             if ($this->_doc->customer_id == 0) {
-                $this->setError("Не задано контрагента");
+                $this->setError("Не задан контрагент");
             }
         }
         if ($this->docform->detail->getValue() == 3) {
 
             if ($this->_doc->headerdata['emp'] == 0) {
-                $this->setError("Не обрано співробітника");
+                $this->setError("Не выбран  сотрудник");
             }
         }
 

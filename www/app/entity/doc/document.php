@@ -454,7 +454,7 @@ class Document extends \ZCL\DB\Entity
   
 
             $state = self::STATE_WA;   //переводим на   ожидание  утверждения
-            \App\System::setInfoMsg('Очікує затвердження') ;
+            \App\System::setInfoMsg('Ожидает утверждения') ;
           
             
         } else {
@@ -1206,7 +1206,7 @@ class Document extends \ZCL\DB\Entity
         $user_id= intval($conn->GetOne("select vald from stats where  category ={$cat} and keyd = {$document_id} limit 0,1  ") );
         if($user_id > 0) {
             $user= \App\Entity\User::load($user_id) ;
-            \App\System::setWarnMsg("Документ  редагується  користувачем  ".$user->username)  ;
+            \App\System::setWarnMsg("Документ  редактируется пользователем  ".$user->username)  ;
             return;
         }
        

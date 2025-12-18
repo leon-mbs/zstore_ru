@@ -146,11 +146,11 @@ class OfficeList extends \App\Pages\Base
         if (count($ua) > 0 && in_array($doc->state, [7, 8])) {
             if (in_array($user->user_id, $ua)) {
                 $row->state->setAttribute('class', 'text-danger');
-                $row->state->setText("Очікує ващ підпис");
+                $row->state->setText("Ожидает ващу подпись");
             } else {
                 $un = array_values($wa);
                 $names = implode(", ", $un);
-                $row->state->setText("Очікує підпис від: " . $names);
+                $row->state->setText("Ожидает подпись от: " . $names);
             }
         }
 
@@ -382,7 +382,7 @@ class OfficeList extends \App\Pages\Base
             if ($sender->id == 'brefuse') {
                 $comment = trim($this->statuspan->buttons->refusecomm->getText());
                 if (strlen($comment) == 0) {
-                    $this->setError("Не введено коментар");
+                    $this->setError("Не введен коментарий");
                     return;
                 }
 
@@ -417,7 +417,7 @@ class OfficeList extends \App\Pages\Base
 
     public function maintOnSubmit($sender) {
         if (\App\ACL::checkExeDoc($this->_doc, true, false) == false) {
-            $this->setError('Немає права на дану операцiю');
+            $this->setError('Нет права на  даннцю операцию');
             return;
         }
 
@@ -469,7 +469,7 @@ class OfficeList extends \App\Pages\Base
 
         $list = $this->_doc->getChildren();
         if (count($list) > 0) {
-            $this->setError("У документа є дочірні документи");
+            $this->setError("У документа есть дочерние");
 
             return;
         }

@@ -174,7 +174,7 @@ class ServiceList extends \App\Pages\Base
         $this->_service->nds = $this->servicedetail->editnds->getText();
         $this->_service->notes = $this->servicedetail->editnotes->getText();
         if ($this->_service->service_name == '') {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $this->_service->disabled = $this->servicedetail->editdisabled->isChecked() ? 1 : 0;
@@ -258,13 +258,13 @@ class ServiceList extends \App\Pages\Base
         $colnotes  = $this->importform->cform->colnotes->getValue();
        
         if ($colname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError('Не указано колонку с названием');
             return;
         }
 
         $file = $this->importform->cform->cfilename->getFile();
         if (strlen($file['tmp_name']) == 0) {
-            $this->setError('Не вибраний файл');
+            $this->setError('Не выбран файл');
             return;
         }
 
@@ -337,7 +337,7 @@ class ServiceList extends \App\Pages\Base
         }
 
        $this->servicetable->servicelist->Reload();
-       $this->setSuccess("Імпортовано {$cnt} позицiй ");
+       $this->setSuccess("Испортировано {$cnt} позиций ");
     }
     
     
@@ -390,7 +390,7 @@ class ServiceList extends \App\Pages\Base
         $form=  $this->setpanel->setform;
         $id = $form->editsname->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано ТМЦ");
+            $this->setError("Не выбран ТМЦ");
             return;
         }
 

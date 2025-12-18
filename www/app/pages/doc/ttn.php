@@ -201,10 +201,10 @@ class TTN extends \App\Pages\Base
                         $order = $basedoc->cast();
 
                         if($order->getNotSendedItem() == 0){
-                            $this->setWarn('Позиції по  цьому замовленню вже відправлені') ;
+                            $this->setWarn('Позиции с этого  заказа уже отправлены') ;
                         }
                         if($order->getHD('paytype',0) == 3){
-                            $this->setWarn('В замовленні не передбачена оплата. Створіть чек  або ВН') ;
+                            $this->setWarn('В заказе не предусмотрена  оплата. Создайте чек  или РН') ;
                             App::Redirect("\\App\\Pages\\Register\\OrderList");
                             return; 
                         }
@@ -398,7 +398,7 @@ class TTN extends \App\Pages\Base
 
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('Не обрано склад');
+            $this->setError('Не выбран склад');
             return;
         }        
         $item = Item::findBarCode($code,$store_id);
@@ -419,7 +419,7 @@ class TTN extends \App\Pages\Base
       
         if ($item == null) {
 
-            $this->setWarn("Товар з кодом `{$code}` не знайдено");
+            $this->setWarn("Товар с кодом `{$code}` не найден");
             return;
         }
 
@@ -427,7 +427,7 @@ class TTN extends \App\Pages\Base
         $qty = $item->getQuantity($store_id);
         if ($qty <= 0) {
 
-            $this->setWarn("Товару {$item->itemname} немає на складі");
+            $this->setWarn("Товара {$item->itemname} нет на  складе");
         }
 
 
@@ -442,7 +442,7 @@ class TTN extends \App\Pages\Base
 
 
             if (strlen($serial) == 0) {
-                $this->setWarn('Потрібна партія виробника');
+                $this->setWarn('Нужна партия производителя');
                 $this->editdetail->setVisible(true);
                 $this->docform->setVisible(false);
 
@@ -497,7 +497,7 @@ class TTN extends \App\Pages\Base
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
 
@@ -514,12 +514,12 @@ class TTN extends \App\Pages\Base
 
         if ($item->quantity > $qstock) {
 
-            $this->setWarn('Введено більше товару, чим є в наявності');
+            $this->setWarn('Введено больше  товара  чем в наличии');
         }
 
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
 
-            $this->setError("Потрібна партія виробника");
+            $this->setError("Нужна партия производителя");
             return;
         }
 
@@ -528,7 +528,7 @@ class TTN extends \App\Pages\Base
 
             if (in_array($item->snumber, $slist) == false) {
 
-                $this->setWarn('Невірний номер серії');
+                $this->setWarn('Неверный номер серии');
             } else {
                 $st = Stock::getFirst("store_id={$store_id} and item_id={$item->item_id} and snumber=" . Stock::qstr($item->snumber));
                 if ($st instanceof Stock) {
@@ -632,7 +632,7 @@ class TTN extends \App\Pages\Base
         $isEdited = $this->_doc->document_id > 0;
 
         if ($sender->id == 'senddoc' && $this->_doc->headerdata['delivery'] > 2 && strlen($this->_doc->headerdata['delivery']) == 0) {
-            $this->setError('Не вказана декларація служби доставки');
+            $this->setError('Не указана декларация службы доставки');
             return;
         }
 
@@ -661,7 +661,7 @@ class TTN extends \App\Pages\Base
 
                     if($this->_changedpos) {
                         if($this->_changedpos) {
-                            $msg=  "У документа {$this->_doc->document_number}, створеного на підставі {$basedoc->document_number}, користувачем ".\App\System::getUser()->username." змінено перелік ТМЦ "  ;
+                            $msg=  "У документа {$this->_doc->document_number}, созданного на  основании {$basedoc->document_number}, пользователем ".\App\System::getUser()->username." изменен список ТМЦ "  ;
                             \App\Entity\Notify::toSystemLog($msg) ;
                         }
 
@@ -735,7 +735,7 @@ class TTN extends \App\Pages\Base
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
 
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
 
         if (false == $this->_doc->checkUniqueNumber()) {
@@ -743,7 +743,7 @@ class TTN extends \App\Pages\Base
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
 
@@ -752,12 +752,12 @@ class TTN extends \App\Pages\Base
         }
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не выбран склад");
         }
         $c = $this->docform->customer->getKey();
 
         if ($c == 0) {
-            $this->setError("Не задано контрагента");
+            $this->setError("Не задан  контрагент");
         }
 
 
@@ -826,7 +826,7 @@ class TTN extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $cust = new Customer();
@@ -838,7 +838,7 @@ class TTN extends \App\Pages\Base
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
             $this->setError("");
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длина номера  телефона должна  быть  ".\App\Helper::PhoneL()." цифр");
             return;
         }
 
@@ -846,7 +846,7 @@ class TTN extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError("Уже есть контрагент с таким телефоном");
                 return;
             }
         }

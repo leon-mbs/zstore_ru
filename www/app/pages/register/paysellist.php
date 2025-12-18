@@ -348,12 +348,14 @@ GROUP BY c.customer_name,
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$pdate) {
-            return  "Не можна додавати оплату раніше  " .date('Y-m-d', $da);
+            $this->setError("Нельзя добавлять оплату раньше  " .date('Y-m-d', $da);
+            return;
+             
         }
 
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 
-            $this->setWarn('Сума більше необхідної');
+            $this->setWarn('Сумма больше необходимой');
         }
         
 
@@ -369,7 +371,7 @@ GROUP BY c.customer_name,
                 $b = \App\Entity\MoneyFund::Balance() ;
 
                 if($b[$mf] < $amount) {
-                    $this->setError('Сума  на рахунку недостатня  для  оплати');
+                    $this->setError('Сумма на  счету  недостаточна для  оалвты');
                     return;
                 }
             }
@@ -393,7 +395,7 @@ GROUP BY c.customer_name,
         $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
         $doc->DoBalans();
 
-        $this->setSuccess('Оплата додана');
+        $this->setSuccess('Оплата добавоена');
 
         //$this->updateDocs();
         $this->paypan->setVisible(false);

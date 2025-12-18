@@ -46,7 +46,7 @@ class SerList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => "Відкриті", 1 => "Нові", 2 => "Виконуються", 3 => "Всі"), 0));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => "Открытые", 1 => "Новые", 2 => "Выполняются", 3 => "Все"), 0));
 
         $doclist = $this->listpan->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
 
@@ -157,14 +157,14 @@ class SerList extends \App\Pages\Base
         if ($sender->id == "btask") {
             if ($task) {
 
-                $this->setWarn('Вже існує документ Наряд');
+                $this->setWarn('Уже  существует документ Наряд');
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "bpos") {
             if (count($this->_doc->getChildren('POSCheck')) > 0) {
-                $this->setWarn('Вже існує документ Чек');
+                $this->setWarn('Уже  существует документ Чек');
             }
             App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
             return;
@@ -172,7 +172,7 @@ class SerList extends \App\Pages\Base
         }
         if ($sender->id == "binvoice") {
             if (count($this->_doc->getChildren('Invoice')) > 0) {
-                $this->setWarn('Вже існує документ Рахунок');
+                $this->setWarn('Уже  существует документ Счет');
             }
             App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
             return;
@@ -186,7 +186,7 @@ class SerList extends \App\Pages\Base
         if ($sender->id == "bref") {
             if ($gi || $task) {
 
-                $this->setWarn('Були створені документи Наряд та/або Видаткова накладна');
+                $this->setWarn('Были созданы документы  Наряд и/или Расходная накладная');
             }
             $this->_doc->updateStatus(Document::STATE_REFUSED);
         }
@@ -466,7 +466,7 @@ class SerList extends \App\Pages\Base
         $qty  = floatval($this->editpan->sform->sqty->getText());
         $price  = floatval($this->editpan->sform->sprice->getText());
         if($id ==0 || $qty==0 || $price==0) {
-            $this->setError('Невiрнi данi')  ;
+            $this->setError('Неверные данные')  ;
             return;
         }
         $ser = Service::load($id) ;
@@ -495,7 +495,7 @@ class SerList extends \App\Pages\Base
         $qty  = floatval($this->editpan->iform->iqty->getText());
         $price  = floatval($this->editpan->iform->iprice->getText());
         if($id ==0 || $qty==0 || $price==0) {
-            $this->setError('Невiрнi данi')  ;
+            $this->setError('Неверные данные')  ;
             return;
         }
  
@@ -515,7 +515,7 @@ class SerList extends \App\Pages\Base
             
             if (strlen($item->snumber) == 0  ) {
 
-                $this->setError("Потрібен серійний номер");
+                $this->setError("Нужен серийный номер");
                 return;
             }
             
@@ -525,7 +525,7 @@ class SerList extends \App\Pages\Base
             
             if (in_array($snumber, $slist) == false) {
 
-                $this->setError('Невірний серійний номер  ');
+                $this->setError('Неверный серийный номер  ');
                 return;
             }  
       

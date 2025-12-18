@@ -46,7 +46,7 @@ class GIList extends \App\Pages\Base
 
         $this->listpan->filter->add(new TextInput('searchnumber'));
         $this->listpan->filter->add(new TextInput('searchtext'));
-        $this->listpan->filter->add(new DropDownChoice('status', array(0 => 'Відкриті', 1 => 'Нові', 2 => 'Відправлені', 5 => 'Готові до відправки', 3 => 'Всі'), 0));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые', 2 => 'Отправленные', 5 => 'Готовые  к  отправке', 3 => 'Все'), 0));
 
         $this->listpan->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
         $this->listpan->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
@@ -167,7 +167,7 @@ class GIList extends \App\Pages\Base
 
             $this->_doc->save();
 
-            $this->setSuccess('Відправлено');
+            $this->setSuccess('Отправлено');
         }
 
         if ($sender->id == "bdevivered") {
@@ -183,7 +183,7 @@ class GIList extends \App\Pages\Base
                 $this->_doc->headerdata['ship_number'] = $dec;
             }
             $this->_doc->save();
-            $this->setSuccess("Збережено");
+            $this->setSuccess("Сохранено");
             $this->statuspan->setVisible(false);
         }
         if ($sender->id == "bttn") {

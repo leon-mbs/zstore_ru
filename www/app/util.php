@@ -627,7 +627,7 @@ function money2str_ua($money, $options = 0) {
 
     return trim($ret);
 }
-
+ 
 // service function to select the group of digits
 function dec_digits_group($number, $power, $digits = 1) {
                  

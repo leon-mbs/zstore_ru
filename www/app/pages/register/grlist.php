@@ -41,7 +41,7 @@ class GRList extends \App\Pages\Base
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => 'Відкриті',   1 => 'Не сплачені', 2 => 'Всі'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые',   1 => 'Не оплаченные', 2 => 'Все'), 0));
 
         $this->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
         $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
@@ -131,7 +131,7 @@ class GRList extends \App\Pages\Base
             $d = $this->_doc->getChildren('GoodsReceipt');
 
             if (count($d) > 0) {
-                $this->setWarn('Вже існує документ Прибуткова накладна');
+                $this->setWarn('Уже  есть  документ Приходная накладная');
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
             return;
@@ -141,7 +141,7 @@ class GRList extends \App\Pages\Base
 
             if (count($d) > 0) {
 
-                $this->setWarn('Вже існує документ Повернення');
+                $this->setWarn('Уже  есть документ Возврат');
             }
             App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
             return;

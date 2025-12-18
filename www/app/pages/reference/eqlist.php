@@ -182,7 +182,7 @@ class EqList extends \App\Pages\Base
         $this->_item->invnumber = $this->itemdetail->editinvnumber->getText();
         $this->_item->branch_id = $this->itemdetail->editbranch->getValue();
         if ($this->_tvars['usebranch'] == true && $this->_item->branch_id == 0) {
-            $this->setError('Виберіть філію');
+            $this->setError('Выберите  филиал');
             return;
         }
         $this->_item->serial = $this->itemdetail->editserial->getText();

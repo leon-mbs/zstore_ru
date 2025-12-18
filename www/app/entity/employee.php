@@ -84,7 +84,7 @@ class Employee extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  documents where   customer_id = {$this->customer_id}  ";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return  "Контрагент використовується в документах";
+            return  "Контрагент использкеься в документах";
         }
         */
         return "";

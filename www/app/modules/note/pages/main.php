@@ -145,7 +145,7 @@ class Main extends \App\Pages\Base
             $newtopic->content = $topic->content;
             $newtopic->ispublic = $topic->ispublic;
             if ($node->node_id == $topic->node_id) {
-                $newtopic->title = $topic->title . " (Копія)";
+                $newtopic->title = $topic->title . " (Копия)";
             }
             $newtopic->detail = $topic->detail;
             $newtopic->save();

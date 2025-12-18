@@ -145,14 +145,14 @@ class MovePart extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("Введіть номер документа");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
 
@@ -161,13 +161,13 @@ class MovePart extends \App\Pages\Base
         $to = Stock::load($this->docform->tostock->getKey());
 
         if ($from == null || $to == null) {
-            $this->setError("Не обрано партію");
+            $this->setError("Не выбрана партия");
         }
         if ($from->stock_id == $to->stock_id) {
-            $this->setError("Однакові партії");
+            $this->setError("Одинаковые партии");
         }
         if ($from->item_id != $to->item_id) {
-            $this->setError("Різні ТМЦ");
+            $this->setError("Разные ТМЦ");
         }
 
 

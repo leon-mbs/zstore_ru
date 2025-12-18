@@ -352,7 +352,7 @@ GROUP BY c.customer_name,
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$pdate) {
-            $this->setError("Не можна додавати оплату раніше  " .date('Y-m-d', $da));
+            $this->setError("Нельзя добавлять оплату  раньше  " .date('Y-m-d', $da));
             return;
         }
 
@@ -360,7 +360,7 @@ GROUP BY c.customer_name,
 
         if ($amount > H::fa($this->_doc->payamount - $this->_doc->payed)) {
 
-            $this->setWarn('Сума більше необхідної');
+            $this->setWarn('Сумма  больше необходимой');
         }
      
         if (in_array($this->_doc->meta_name, array(  'ReturnIssue'))) {
@@ -371,7 +371,7 @@ GROUP BY c.customer_name,
                 $b = \App\Entity\MoneyFund::Balance() ;
 
                 if($b[$mf] < $amount) {
-                    $this->setError('Сума на рахунку недостатня  для  повернення');
+                    $this->setError('Сумма на счету недостаточна для  возврата');
                     return;
                 }
             }
@@ -399,7 +399,7 @@ GROUP BY c.customer_name,
         $doc = \App\Entity\Doc\Document::load($this->_doc->document_id)->cast();
         $doc->DoBalans();
         
-        $this->setSuccess('Оплата додана');
+        $this->setSuccess('Оплата добавлена');
 
         //$this->updateDocs();
         $this->paypan->setVisible(false);

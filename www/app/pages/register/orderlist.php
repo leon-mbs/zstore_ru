@@ -47,7 +47,7 @@ class OrderList extends \App\Pages\Base
 
         $this->listpanel->filter->add(new TextInput('searchnumber'));
         $this->listpanel->filter->add(new TextInput('searchtext'));
-        $this->listpanel->filter->add(new DropDownChoice('status', array(0 => 'Вiдкритi', 1 => 'Новi',2 => 'До сплати', 3 => 'Всi'), 0));
+        $this->listpanel->filter->add(new DropDownChoice('status', array(0 => 'Открытые', 1 => 'Новые',2 => 'К оплате', 3 => 'Все'), 0));
         $this->listpanel->filter->add(new DropDownChoice('salesource', H::getSaleSources(), 0));
 
         $doclist = $this->listpanel->add(new DataView('doclist', new OrderDataSource($this), $this, 'doclistOnRow'));
@@ -291,14 +291,14 @@ class OrderList extends \App\Pages\Base
 
             if ($task) {
 
-                $this->setWarn('Вже існує документ Наряд');
+                $this->setWarn('Уже есть документ Наряд');
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
             return;
         }
         if ($sender->id == "bttn") {
             if ($ttn) {
-                $this->setWarn('У замовлення вже є відправки');
+                $this->setWarn('У заказа  уже  есть  отправыки');
             }
             App::Redirect("\\App\\Pages\\Doc\\TTN", 0, $this->_doc->document_id);
             return;
@@ -310,7 +310,7 @@ class OrderList extends \App\Pages\Base
         }
         if ($sender->id == "bpos") {
             if ($pos) {
-                $this->setWarn('Вже існує документ Чек');
+                $this->setWarn('Уже  есть документ Чек');
             }
             App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
             return;
@@ -362,7 +362,7 @@ class OrderList extends \App\Pages\Base
                 $this->_doc->setHD('waitpay',0); 
                 $this->_doc->save();     
 
-                $this->setWarn('Замовлення анульовано');
+                $this->setWarn('Заказ аннулирован');
             }
 
             if ($sender->id == "bclose") {
@@ -370,11 +370,11 @@ class OrderList extends \App\Pages\Base
   
 
                 if($this->_doc->payamount >0 && $this->_doc->payamount>$this->_doc->payed && $gi == false) {
-                    $this->setWarn('"Замовлення закрито без оплати"');
+                    $this->setWarn('"Заказ закрЫт без оплатЫ"');
                 }
 
                 if($ttn== false && $gi == false) {
-                    $this->setWarn('Замовлення закрито без доставки');
+                    $this->setWarn('Заказ закрыт без доставки');
                 }
 
                 $this->_doc->updateStatus(Document::STATE_CLOSED);
@@ -856,7 +856,7 @@ class OrderList extends \App\Pages\Base
         foreach ($this->_itemlist as $ri => $_item) {
             if ($_item->bar_code == $code || $_item->item_code == $code || $_item->bar_code == $code0 || $_item->item_code == $code0) {
                 if($this->_itemlist[$ri]->checkedqty ==  $this->_itemlist[$ri]->quantity) {
-                    $this->setWarn('Лишній товар') ;
+                    $this->setWarn('Лишний товар') ;
                     $this->addJavaScript("new Audio('/assets/error.mp3').play()", true);
                                
                     return;
@@ -872,7 +872,7 @@ class OrderList extends \App\Pages\Base
                 return;
             }
         }
-        $this->setWarn('Товар не знайдено') ;
+        $this->setWarn('Товар не найден') ;
         $this->addJavaScript("new Audio('/assets/error.mp3').play()", true);
 
 
@@ -890,7 +890,7 @@ class OrderList extends \App\Pages\Base
 
                 foreach ($this->_itemlist as   $_item) {
                     if($sender->id == "editready" && $_item->checked != true) {
-                        $this->setError('Не зібрані всі позиції') ;
+                        $this->setError('Не собраны все  позиции') ;
 
                         return;
                     }
@@ -984,7 +984,7 @@ class OrderList extends \App\Pages\Base
 
         $issms = (\App\System::getOption('sms', 'smstype')??0) >0 ;
         if($issms == 0) {
-           return  $this->jsonError("Не знайдений сервіс смс") ;
+           return  $this->jsonError("Не найден сервис смс") ;
         }
 
         $phone= $doc->headerdata['phone'] ??'';
@@ -993,7 +993,7 @@ class OrderList extends \App\Pages\Base
             $phone = $c->phone ?? '';
         }
         if($phone == '') {
-           return  $this->jsonError("Не знайдений телефон") ;
+           return  $this->jsonError("Не найден телефон") ;
 
         }
 
@@ -1001,7 +1001,7 @@ class OrderList extends \App\Pages\Base
        
         $fn = (\App\System::getOption('common', 'shopname')??'')  ;
 
-        $text = "Маємо запитання  по  вашому  замовленню. Відповісти за адресою ".$link;
+        $text = "Есть вопросы по вашему заказу. Ответить по  адресу ".$link;
 
         $r = \App\Entity\Subscribe::sendSMS($phone, $text) ;
         if($r!="") {

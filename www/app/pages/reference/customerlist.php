@@ -257,11 +257,11 @@ class CustomerList extends \App\Pages\Base
         }
         $d = $item->getDiscount();
         if(doubleval($d) > 0) {
-            $title=  "Накопичувальна знижка " . Helper::fa($d) ."%";
+            $title=  "Накопительная скидка " . Helper::fa($d) ."%";
         }
         $d = $item->discount;   //постоянная  скидка
         if(doubleval($d) > 0) {
-            $title =  "Постійна знижка " . Helper::fa($d). "%";
+            $title =  "Постоянная скидка " . Helper::fa($d). "%";
         }
         $row->add(new Label('hasaction'))->setVisible(strlen($title)>0);
 
@@ -360,7 +360,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->customer_name = trim($this->customerdetail->editcustomername->getText());
 
         if ($this->_customer->customer_name == '') {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $this->_customer->phone = $this->customerdetail->editphone->getText();
@@ -383,11 +383,11 @@ class CustomerList extends \App\Pages\Base
             $this->_customer->leadstatus = $this->customerdetail->editleadstatus->getValue();
             $this->_customer->status = 2;
             if ($this->_customer->leadsource == "0") {
-                $this->setError("Не вказано джерело ліда");
+                $this->setError("Не вказан источник лида");
                 return;
             }
             if ($this->_customer->leadstatus == "0") {
-                $this->setError("Не вказано стан ліда");
+                $this->setError("Не вказано состояние лида");
                 return;
             }
         } else {
@@ -401,7 +401,7 @@ class CustomerList extends \App\Pages\Base
         $this->_customer->isholding = $this->customerdetail->editisholding->isChecked() ? 1 : 0;
 
         if ($this->_customer->isholding == 1 && $this->_customer->holding > 0) {
-            $this->setError('Холдинг не може бути дочірньою компанією');
+            $this->setError('Холдинг не может быть дочерней компанией');
             return;
         }
 
@@ -409,20 +409,20 @@ class CustomerList extends \App\Pages\Base
         $c = Customer::getByEmail($this->_customer->email);
         if ($c != null) {
             if ($c->customer_id != $this->_customer->customer_id) {
-                $this->setError("Вже існує контрагент з таким e-mail");
+                $this->setError("Уже есть контрагент с таким e-mail");
                 return;
             }
         }
         $this->_customer->phone = \App\Util::handlePhone($this->_customer->phone);
 
         if (strlen($this->_customer->phone) > 0 && strlen($this->_customer->phone) != Helper::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути ".\App\Helper::PhoneL()." цифр");
+            $this->setError("Длина номера телефона должна быть ".\App\Helper::PhoneL()." цифр");
             return;
         }
         $c = Customer::getByPhone($this->_customer->phone);
         if ($c != null) {
             if ($c->customer_id != $this->_customer->customer_id) {
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError("Уже  есть контрагент с таким телефоном");
                 return;
             }
         }
@@ -433,12 +433,12 @@ class CustomerList extends \App\Pages\Base
 
         if (strlen($pass)>0) {
             if ($confirm == '') {
-                $this->setError('Підтвердіть пароль');
+                $this->setError('Подтверждение пароль');
                 return;
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('Невірне підтвердження');
+                    $this->setError('Неверное  подтверждение');
                     return;
                 }
             }
@@ -493,7 +493,7 @@ class CustomerList extends \App\Pages\Base
         }
         $doc = \App\Entity\Doc\Document::getFirst("customer_id=" . $this->_customer->customer_id, 'document_id desc');
         if ($doc instanceof \App\Entity\Doc\Document) {
-            $lastdoc = "Останній документ {$doc->document_number} від ".Helper::fd($doc->document_date).". Всього " .$this->_customer->docs    ;
+            $lastdoc = "Последний документ {$doc->document_number} от ".Helper::fd($doc->document_date).". Всего " .$this->_customer->docs    ;
         }
 
 
@@ -531,7 +531,7 @@ class CustomerList extends \App\Pages\Base
 
         $file = $this->contentview->addfileform->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл більше 10 МБ!");
+            $this->setError("Файл больше 10 МБ!");
             return;
         }
 
@@ -987,7 +987,7 @@ class CustomerList extends \App\Pages\Base
         }
 
 
-        $this->setSuccess("Видалено {$d}, деактивовано {$u} ");
+        $this->setSuccess("Удалено {$d}, деактивировано {$u} ");
 
         $this->Reload();
 

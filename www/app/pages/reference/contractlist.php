@@ -167,12 +167,12 @@ class ContractList extends \App\Pages\Base
 
         $this->_contract->contract_number = $this->contractdetail->editcontract_number->getText();
         if ($this->_contract->contract_number == '') {
-            $this->setError("Не введено номер");
+            $this->setError("Не введен номер");
             return;
         }
         $this->_contract->customer_id = $this->contractdetail->editcust->getKey();
         if ($this->_contract->customer_id == 0) {
-            $this->setError("Не задано контрагента");
+            $this->setError("Не задан контрагент");
             return;
         }
       
@@ -296,7 +296,7 @@ class ContractList extends \App\Pages\Base
 
         $file = $this->docpan->addfileform->addfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл більше 10 МБ!");
+            $this->setError("Файл больше 10 МБ!");
             return;
         }
 

@@ -212,7 +212,7 @@ class ProdReceipt extends \App\Pages\Base
         $item = Item::load($id);
 
         if ($item == null) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
 
@@ -223,7 +223,7 @@ class ProdReceipt extends \App\Pages\Base
                $ids= array_keys($st->itemlist) ; 
                
                if(!in_array($item->item_id,$ids)) {
-                    $this->setError( "ТМЦ не в перелiку  на  етапi");
+                    $this->setError( "ТМЦ не в списке  этара");
                     return;
           
                }
@@ -235,7 +235,7 @@ class ProdReceipt extends \App\Pages\Base
         $item->quantity = $this->editdetail->editquantity->getDouble();
         $item->price = $this->editdetail->editprice->getDouble();
         if ($item->price == 0) {
-            $this->setWarn("Не вказана ціна");
+            $this->setWarn("Не выбрана цена");
         }
         $item->snumber = $this->editdetail->editsnumber->getText();
         $item->sdate = $this->editdetail->editsdate->getDate();
@@ -243,7 +243,7 @@ class ProdReceipt extends \App\Pages\Base
             $item->sdate = '';
         }
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("Потрібна партія виробника");
+            $this->setError("Нужна партия производителя");
             return;
         }
 
@@ -355,21 +355,21 @@ class ProdReceipt extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("Не введено товар");
+            $this->setError("Не введен товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не выбран склад");
         }
 
 

@@ -94,7 +94,7 @@ class ProdAreaList extends \App\Pages\Base
         $this->_pa->notes = $this->padetail->editpa_notes->getText();
         $this->_pa->disabled = $this->padetail->editdisabled->isChecked() ?1:0;
         if ($this->_pa->pa_name == '') {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
 

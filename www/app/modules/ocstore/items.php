@@ -378,7 +378,7 @@ class Items extends \App\Pages\Base
             $i++;
         }
 
-        $this->setSuccess("Загружено {$i} товарів");
+        $this->setSuccess("Загружено {$i} товаров");
     }
 
 }

@@ -258,7 +258,7 @@ class ServiceAct extends Document
                         "total"           => H::fa($this->amount)
         );
         if (strlen($this->headerdata['gar']) > 0) {
-            $header['gar'] = 'Гарантія: ' . $this->headerdata['gar'];
+            $header['gar'] = 'Гарантия: ' . $this->headerdata['gar'];
         }
         $detail = array();
         $i = 1;

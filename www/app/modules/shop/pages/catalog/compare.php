@@ -45,8 +45,8 @@ class Compare extends Base
         $options = \App\System::getOptions('shop');
         $attrvalues=[];
         $nodata = "Н/Д";
-        $yes = "Є";
-        $no = "Немає";
+        $yes = "Есть";
+        $no = "Нет";
         $cat_id = \App\Filter::getFilter("ProductCatalog")->cat_id;
         $attributes = Helper::getProductAttributeListByGroup($cat_id);
         foreach ($attributes as $attr) {

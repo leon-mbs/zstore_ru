@@ -204,7 +204,7 @@ class OfficeDoc extends \App\Pages\Base
         }
         $this->_doc->notes = $this->docform->edittitle->getText();
         if (strlen($this->_doc->notes) == 0) {
-            $this->setError('Не введено назву');
+            $this->setError('Не введено название');
             return;
         }
 
@@ -237,7 +237,7 @@ class OfficeDoc extends \App\Pages\Base
 
         $file = $this->docform->editfile->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("Файл більше 10 МБ!");
+            $this->setError("Файл больше 10 МБ!");
             return;
         }
 
@@ -361,7 +361,7 @@ class OfficeDoc extends \App\Pages\Base
     public function savecustOnClick($sender) {
         $custname = trim($this->editcust->editcustname->getText());
         if (strlen($custname) == 0) {
-            $this->setError("Не введено назву");
+            $this->setError("Не введено название");
             return;
         }
         $cust = new \App\Entity\Customer();
@@ -371,7 +371,7 @@ class OfficeDoc extends \App\Pages\Base
         $cust->phone = \App\Util::handlePhone($cust->phone);
 
         if (strlen($cust->phone) > 0 && strlen($cust->phone) != H::PhoneL()) {
-            $this->setError("Довжина номера телефона повинна бути " . \App\Helper::PhoneL() . " цифр");
+            $this->setError("Длина номера  телефона должна  быть  " . \App\Helper::PhoneL() . " цифр");
             return;
         }
 
@@ -379,7 +379,7 @@ class OfficeDoc extends \App\Pages\Base
         if ($c != null) {
             if ($c->customer_id != $cust->customer_id) {
 
-                $this->setError("Вже існує контрагент з таким телефоном");
+                $this->setError("Уже есть контрагент с таким телефоном");
                 return;
             }
         }

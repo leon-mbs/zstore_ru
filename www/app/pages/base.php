@@ -856,7 +856,7 @@ class Base extends \Zippy\Html\WebPage
 
 
         if ($item->checkUniqueArticle()==false) {
-           return json_encode(array('error'=>'Такий артикул вже існує'), JSON_UNESCAPED_UNICODE);
+           return json_encode(array('error'=>'Такой артикул  уже  есть'), JSON_UNESCAPED_UNICODE);
         }
 
         if (strlen($item->item_code) == 0 ){
@@ -868,7 +868,7 @@ class Base extends \Zippy\Html\WebPage
         $cnt = \App\Entity\Item::findCnt("item_id <> {$item->item_id} and itemname={$itemname} and item_code={$code} ");
         if ($cnt > 0) {
 
-            return json_encode(array('error'=>'ТМЦ з такою назвою і артикулом вже існує'), JSON_UNESCAPED_UNICODE);
+            return json_encode(array('error'=>'ТМЦ с таким названием и артикулом  уже  существует'), JSON_UNESCAPED_UNICODE);
 
         }
 
@@ -935,7 +935,7 @@ class Base extends \Zippy\Html\WebPage
             $info['discount']  = $c->getDiscount()  ;
             $info['bonus']  = $c->getBonus()  ;
             if (doubleval($info['discount']) > 0) {
-                $info['disctext'] =  "Постояннпя скидка {$info['discount']}%";
+                $info['disctext'] =  "Постоянная скидка {$info['discount']}%";
                 $info['bonus'] =0;
             } else {
                 if ($info['bonus'] > 0) {

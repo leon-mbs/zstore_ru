@@ -222,7 +222,7 @@ class CustItems extends \App\Pages\Base
 
     
         if ($this->_item->customer_id == 0) {
-            $this->setError('Не обрано постачальника');
+            $this->setError('Не выбран  поставщик');
             return;
         }
 
@@ -335,26 +335,26 @@ class CustItems extends \App\Pages\Base
         $colqty =  $this->importform->colqty->getValue();
         $colcomment =  $this->importform->colcomment->getValue();
         if ( $colcustcode === '0') {
-            $this->setError('Не вказано колонку з кодом постачальника');
+            $this->setError('Не выбрана  колонка с  кодом поставщика');
             return;
         }
         if ($colcustname === '0') {
-            $this->setError('Не вказано колонку з назвою');
+            $this->setError('Не выбрана  колонка с  названием');
             return;
         }
         if ($colprice === '0') {
-            $this->setError('Не вказано колонку з ціною');
+            $this->setError('Не выбрана  колонка с  кодом');
             return;
         }
         if ($cust == 0) {
-            $this->setError('Не обрано постачальника');
+            $this->setError('Не выбран поставщик');
             return;
         }
 
         $file =  $this->importform->filename->getFile();
         if (strlen($file['tmp_name']) == 0) {
 
-            $this->setError('Не обрано файл');
+            $this->setError('Не выбран файл');
             return;
         }
         $ci_createitem=\App\System::getOption('common','ci_createitem')  ;
@@ -437,7 +437,7 @@ class CustItems extends \App\Pages\Base
             $cnt++;
 
         }
-        $this->setSuccess("Імпортовано {$cnt} ТМЦ");
+        $this->setSuccess("Импортировано {$cnt} ТМЦ");
         $this->itemtable->listform->itemlist->Reload();
 
         $this->itemtable->setVisible(true);
@@ -478,7 +478,7 @@ class CustItems extends \App\Pages\Base
     public function cartOnClick($sender) {
         $ci =  $sender->getOwner()->getDataItem();
         if(intval($ci->cartqty)==0)  {
-            $this->setError('Не задана кiлькiсть ') ;
+            $this->setError('Не задано количество  ') ;
             return   ;
         }
       
@@ -565,7 +565,7 @@ class CustItems extends \App\Pages\Base
        $fh = fopen($tempFilePath, 'w');
       
       
-       $line ="Постачальник;Найменування;Код;Штрих-код;Бренд;Склад;Кiл.;Цiна;Примiтка;";
+       $line ="Поставщик;Наименование;Код;Штрих-код;Бренд;Склад;Кол.;Цiна;Примечание;";
        $line = mb_convert_encoding($line, "windows-1251", "utf-8");
        fwrite($fh, $line . PHP_EOL);      
        
@@ -708,7 +708,7 @@ class CustItems extends \App\Pages\Base
         $json = str_replace("\r","",$json) ;
         $data=json_decode($json,true) ;
         if(!is_array($data)) {
-            $this->setError("Невiрний json") ;
+            $this->setError("Неверный json") ;
             return;
         }
         
@@ -775,7 +775,7 @@ class CustItems extends \App\Pages\Base
             $cnt++;
 
         }
-        $this->setSuccess("Імпортовано {$cnt} ТМЦ"); 
+        $this->setSuccess("Импортировано {$cnt} ТМЦ"); 
          
         $this->xmlp->setVisible(false);
         $this->xmlp->importformx->setVisible(false);

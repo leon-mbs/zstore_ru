@@ -40,7 +40,7 @@ class RetCustIssue extends \App\Pages\Base
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
 
-            $this->setWarn('Повернення слід створювати на основі прибуткової накладної');
+            $this->setWarn('Возврат следует делать на основании приходной накладной');
         }
 
         $this->add(new Form('docform'));
@@ -220,7 +220,7 @@ class RetCustIssue extends \App\Pages\Base
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("Не обрано товар");
+            $this->setError("Не выбран товар");
             return;
         }
 
@@ -397,7 +397,7 @@ class RetCustIssue extends \App\Pages\Base
         $payed = $this->docform->payed->getText();
         $total = $this->docform->total->getText();
         if ($payed > $total) {
-            $this->setWarn('Внесена сума більше необхідної');
+            $this->setWarn('Внесена сумма больше необходимой');
         } else {
             $this->goAnkor("tankor");
         }
@@ -409,27 +409,27 @@ class RetCustIssue extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('Введіть номер документа');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('Не створено унікальный номер документа');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
             $this->setError("Не введено товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("Не обрано склад");
+            $this->setError("Не выбран склад");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("Якщо внесена сума більше нуля, повинна бути обрана каса або рахунок");
+            $this->setError("Если внесена  сумма  больше  нуля  нужно указать денежный счет");
         }
         if ($this->_doc->headerdata['comission']==1 && $this->_doc->payed > 0) {
-            $this->setError("Оплата не  вноситься якщо Комісія ");
+            $this->setError("Оплата не  вносится если  комиссия ");
         }
 
         return !$this->isError();

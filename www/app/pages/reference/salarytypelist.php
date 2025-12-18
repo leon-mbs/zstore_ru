@@ -124,12 +124,12 @@ class SalaryTypeList extends \App\Pages\Base
 
         $code = intval($this->_st->salcode);
         if ($code < 100 || $code > 999) {
-            $this->setError('Невірний код');
+            $this->setError('Неверний код');
             return;
         }
         $c = SalType::getFirst("salcode=" . $this->_st->salcode);
         if ($c != null && $isnew) {
-            $this->setError('Код вже існує');
+            $this->setError('Код уже  существует');
             return;
 
         }
@@ -147,7 +147,7 @@ class SalaryTypeList extends \App\Pages\Base
         $coderesult = $this->optform->optresult->getValue();
 
         if($codebaseincom==0) {
-           $this->setError('Не вказано поле  основної зарплати') ;
+           $this->setError('Не указано поле  основной зарплаты') ;
            return;
         }
         
@@ -175,20 +175,20 @@ class SalaryTypeList extends \App\Pages\Base
         $opt['coderesult'] = $this->optform->optresult->getValue();
         $opt['codebaseincom'] = $this->optform->optbaseincom->getValue();
         if($opt['codebaseincom']==0) {
-           $this->addAjaxResponse("toastr.error('Не вказано поле  основної зарплати')");
+           $this->addAjaxResponse("toastr.error('Не указано поле  основгой зарплаты')");
            return;
         }
         if($opt['coderesult']==0) {
-           $this->addAjaxResponse("toastr.error('Не вказано поле до видачi')");
+           $this->addAjaxResponse("toastr.error('Не указано поле К выдаче')");
            return;
         }
         if($opt['codeall']==0) {
-           $this->addAjaxResponse("toastr.error('Не вказано поле всього нараховано')");
+           $this->addAjaxResponse("toastr.error('Не указано поле Всего начислено')");
            return;
         }
         System::setOptions('salary', $opt);
 
-        $this->addAjaxResponse("toastr.success('Збережено')");
+        $this->addAjaxResponse("toastr.success('Сохранено')");
 
     }
 
@@ -199,7 +199,7 @@ class SalaryTypeList extends \App\Pages\Base
         System::setOptions('salary', $opt);
 
 
-        $this->addAjaxResponse("toastr.success('Збережено')");
+        $this->addAjaxResponse("toastr.success('Сохранено')");
 
     }
 
