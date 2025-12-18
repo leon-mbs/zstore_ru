@@ -1,11 +1,11 @@
 <html>
    <head>
-          <title> Заявка постачальнику</title>
+          <title> Заявка поставщику</title>
     </head>
     <body>
          
  
-       <h3> Заявка постачальнику </h3>
+       <h3> Заявка поставщику </h3>
        
          
            <form class="row" zippy="docform" >
@@ -52,14 +52,14 @@
            
             </div>    
              <div class="col-10  col-lg-8">
-                    <a  zippy="addrow" class="btn btn-info  ">Добавить позицію</a>
+                    <a  zippy="addrow" class="btn btn-info  ">Добавить позицию</a>
 
                     <table class="table  table-sm">
                         <tr>
 
                             <th>Наименование</th>
                             <th>Артикул</th>
-                            <th>Код постачальника</th>
+                            <th>Код поставщика</th>
                             <th>Ед.</th>
                             <th  > </th>
                             <th class="text-right">Кол.</th>
@@ -100,8 +100,8 @@
                
                     <input type="button" zippy="backtolist" value="Отменить"   class="btn btn-outline-secondary  ">
                      &nbsp;<input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc"   type="submit" value="На виконання" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="apprdoc"   type="submit" value="На затвердження" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="execdoc"   type="submit" value="На выполнение" class="btn btn-outline-primary  ">
+                    &nbsp;<input zippy="apprdoc"   type="submit" value="На утверждение" class="btn btn-outline-primary  ">
 
                
                </div>  
@@ -112,24 +112,24 @@
             <div class="col-12 col-md-4 col-xl-3">
        
            <form zippy="editdetail"  >
-            <h4>Введення товару </h4>
+            <h4>Ввод товара </h4>
     
 
                 <div class="form-group">
                           <div class="input-group  ">
                               <input  placeholder="Начните вводить..." class="form-control " zippy="edititem"/>
                           <div class="input-group-append">
-                             <a title="Добавить новий" class="btn btn-success" zippy="addnewitem" >+</a>
+                             <a title="Добавить новый" class="btn btn-success" zippy="addnewitem" >+</a>
                         </div>                    
                      </div>                    
                  
-                    <a zippy="openitemsel">Вiдкрити довiдник</a>  
+                    <a zippy="openitemsel">Открыть справочник</a>  
                     <br>  На складі: <span zippy="qtystock"></span>
                                         
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-7 col-form-label" for="editquantity">Кількість</label>
+                    <label class="col-7 col-form-label" for="editquantity">Количество</label>
                     <div class="col-4" >
                     <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"    required="on" 
                            pattern="[0-9,\.]+"    />
@@ -152,11 +152,11 @@
                     <input class="form-control " zippy="editcustcode"  />
                     
                     </div>
-                    <small>Наприклад, код з прайсу продавця</small>
+                    <small>Например  код с  прайса продавца</small>
                 </div>
               
                 <div class="form-group">
-                    <label for="editdesc">Коментар </label>
+                    <label for="editdesc">Коментарий </label>
                     <input   class="form-control" type="text" zippy="editdesc"        >
 
                 </div>
@@ -177,7 +177,7 @@
             <div class="col-12 col-md-4 col-xl-3">
             
        <form zippy="editnewitem">
-            <h3>&nbsp;Новий товар </h3>
+            <h3>&nbsp;Новый товар </h3>
                                  
                     <div class="form-group">
                         <label for="editnewitemname">Название </label>
@@ -188,12 +188,12 @@
                         <input zippy="editnewitemcode" class="form-control" type="text"  />
                     </div>
                      <div class="form-group">
-                        <label for="editnewitembrand">Виробник</label>
+                        <label for="editnewitembrand">Бренд</label>
                         <input list="editnewitembrand" zippy="editnewitembrand" class="form-control" autocomplete="off"    />
                         
                     </div>
                    <div class="form-group">
-                        <label for="editnewitemmsr">Ед. вим.</label>
+                        <label for="editnewitemmsr">Ед. изм.</label>
                         <input zippy="editnewitemmsr" class="form-control" type="text"   />
                     </div>
                     
@@ -218,7 +218,7 @@
          <div class="row"> 
             <div class="col-12 col-md-4 col-xl-3">
          <form zippy="editcust">
-            <h5>&nbsp;Новий постачальник </h5>
+            <h5>&nbsp;Новий поставщик </h5>
 
         
                     <div class="form-group">

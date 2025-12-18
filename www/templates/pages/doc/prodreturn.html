@@ -1,14 +1,14 @@
 <html>
    <head>
-          <title> Повернення з виробництва</title>
+          <title> Возврат с  производства</title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>Повернення з виробництва </h3>
-            <small>Повернення на склад  невикористаних матеріалів та  комплектуючих </small>
+            <h3>Возврат с  производства </h3>
+            <small>Возврат на склад  неиспользованых ресурсов  </small>
            
             <div class="row">
                 <div class="col-12 col-md-3">
@@ -36,7 +36,7 @@
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
-                        <label for="parea">Виробнича ділянка</label>
+                        <label for="parea">Производственный участок</label>
                         <select class="form-control" zippy="parea">
                             <option value="0">Не выбрано</option>
                         </select>
@@ -61,7 +61,7 @@
                             <th>Название</th>
                             <th>Код</th>
                             <th>Ед.</th>
-                           <th>{{#usesnumber}}Серія {{/usesnumber}}</th>
+                           <th>{{#usesnumber}}Серия {{/usesnumber}}</th>
                         
 
 
@@ -100,7 +100,7 @@
             </div>
         </form>
         <form zippy="editdetail">
-            <h4>Введення ТМЦ </h4>
+            <h4>Ввод ТМЦ </h4>
           <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -113,14 +113,14 @@
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
-                        <label for="editserial">Серія виробника </label>
+                        <label for="editserial">Серия  </label>
                         <input class="form-control " zippy="editserial"/>
 
                     </div>
 
                     {{/usesnumber}}
                     <div class="form-group">
-                        <label for="editquantity">Кількість</label>
+                        <label for="editquantity">Количество</label>
                         <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 

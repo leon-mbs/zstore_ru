@@ -1,6 +1,6 @@
 <html>
     <head>
-          <title> Офiсний документ</title>
+          <title> Офисный документ</title>
     </head>
     <body>
 
@@ -13,9 +13,9 @@
  
                 <div class="col-12 col-md-4 col-xl-3">
                   <div class="form-group">
-                        <label for="edittitle"> Название (тип) документу</label>
+                        <label for="edittitle"> Название (тип) документа</label>
                         <input class="form-control" type="text" zippy="edittitle"  >
-                        <small>Наприклад: Заява, Звiт, Угода...</small>
+                        <small>Например: Заявление, Отчет, Приказ...</small>
                         
                  </div>                 
                     <div class="form-group row">
@@ -45,7 +45,7 @@
                             <a href="return false; void(0)" zippy="cinfo" class="btn btn-success"><i class="fa fa-info-circle"></i></a>
                         </div>                                                      
                     </div> 
-                    <small>Якщо документ зв'язаний з контрагентом</small>         
+                    <small>Если документ связан с  контрагентом</small>         
                                     
                   </div>          
                     <div class="form-group">
@@ -53,15 +53,15 @@
                         <select class="form-control"  zippy="emp" >  
                            <option value="0">Не вказаний</option>
                         </select>
-                        <small>Якщо документ зв'язаний зi спiвробiтником</small>         
+                        <small>Если документ связан с  сотрудником</small>         
                     </div>               
                    <div class="form-group row">
-                         <div class="col-auto"><label for="bonus">Премiя:</label></div>
+                         <div class="col-auto"><label for="bonus">Премия:</label></div>
                          <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="bonus" ></div>
                          <div class="col-auto"><label for="fine">&nbsp;&nbsp;Штраф:</label></div>
                          <div class="col-auto"> <input style="width:75px" pattern="[0-9\.]+" class="form-control"  zippy="fine" ></div>
                          <div class="w-100"></div>
-                         <small data-label="bonus"> Додаються  на  особовий  рахунок</small>                       
+                         <small data-label="bonus"> Добавляются  на  лицевой счет</small>                       
                          
                     </div> 
                                  
@@ -73,7 +73,7 @@
                         </select>
                     </div>               
                    <div class="form-group">
-                        <label for="editcomment">Коментар, примiтка</label>
+                        <label for="editcomment">Коментарий, примечание</label>
                         <textarea class="form-control"  zippy="editcomment" >  
                         </textarea>
 
@@ -86,16 +86,16 @@
                 
                 <div class="col-12 col-md-8 col-xl-6">
                     <div class="form-group">
-                        <label for="doccontent">Змiст</label>
+                        <label for="doccontent">Содержание</label>
                         <textarea    class="form-control" zippy="doccontent"></textarea>
                     </div>
                      <div class="form-group">
-                        <label for="doctags">Теги</label>
+                        <label for="doctags">Тэги</label>
                         <div    zippy="doctags" >  </div>
-                        <small>Вводяться по  Enter</small>
+                        <small>Вводятся по  Enter</small>
                     </div>   
                      <div class="form-group">
-                        <label for="editfile"> Оригiнал (файл, скан) документу</label>
+                        <label for="editfile"> Оригинал (файл, скан) документа</label>
                         <input class="form-control" type="file" zippy="editfile"  >
                     
                         
@@ -107,11 +107,11 @@
                 <div class="col-12 col-md-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-secondary mr-2">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-primary mr-2">
-                    <input zippy="inprocdoc" type="submit" value="На виконання" class="btn btn-primary  ">
-                    <input zippy="execdoc" type="submit" value="Виконано" class="btn btn-primary  ">
+                    <input zippy="inprocdoc" type="submit" value="На выполнение" class="btn btn-primary  ">
+                    <input zippy="execdoc" type="submit" value="Выполнено" class="btn btn-primary  ">
                      &nbsp;
                     <input zippy="editaccess" type="checkbox" >
-                    <label class="form-check-label" for="editaccess"> Задати права  доступу</label>
+                    <label class="form-check-label" for="editaccess"> Задать права  доступа</label>
                 </div>
             </div>
            
@@ -119,7 +119,7 @@
         </form>     
       
          <form zippy="editcust">
-            <h3>&nbsp;Новий конрагент </h3>
+            <h3>&nbsp;Новый конрагент </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -140,9 +140,9 @@
                         <label for="editemail">Тип</label>
                         <select class="form-control" type="email" zippy="edittype">
                            <option value="0">Не указано</option>
-                           <option value="1">Покупець</option>
+                           <option value="1">Покупатель</option>
                            <option value="2">Поставщик</option>
-                           <option value="3">Лiд</option>
+                           <option value="3">Лид</option>
                         </select>                        
                     </div>
 
@@ -157,12 +157,12 @@
         </form>
 
           <form zippy="accessform">
-            <h3>&nbsp;Права доступу </h3>
-            <small>Якщо не  задано використувуються права заданi в ролях</small><br>
+            <h3>&nbsp;Права доступа </h3>
+            <small>Если не  задано используются права заданные в  ролях</small><br>
             <span zippy="accdocname">  </span>
             <div class="row">
               <div class="col-12 col-md-6 col-xl-4">
-                <h5>&nbsp;Право перегляду </h5>
+                <h5>&nbsp;Право просмотра </h5>
             
             
                 <div class="form-group row">
@@ -185,7 +185,7 @@
                   </table>
                </div>           
              
-            <h5>&nbsp;Право редагування </h5>
+            <h5>&nbsp;Право ркдактирования </h5>
                 <div class="form-group row">
                      <div class="col-auto">
                        <select class="form-control" zippy="acceditusers">
@@ -202,8 +202,8 @@
                      <tr zippy="acceditlist">  <td zippy="accedituser">  </td><td class="text-right" > <a zippy="deledituser"><i class="fa fa-trash"></i></a> </td></tr>
                   </table>
                </div>                   
-            <h5>&nbsp;Мають пiдписати (затвердети) </h5>
-            <small>Документ буде затверджено пiсдя пiдпису всiх з перелiку   </small>
+            <h5>&nbsp;Должны подписать (утвердить) </h5>
+            <small>Документ будет утвержден после  подписи всех из  списка    </small>
                 <div class="form-group row">
                      <div class="col-auto">
                        <select class="form-control" zippy="accapprusers">
@@ -241,7 +241,7 @@
             
                 $('#doccontent').summernote({
                     height: 400,
-                    lang: 'uk-UA',
+                    lang: 'ru-RU',
 
                     callbacks: {
                         onEnter: function (e) {

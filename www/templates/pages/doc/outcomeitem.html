@@ -1,12 +1,12 @@
 <html>
     <head>
-          <title> Списання ТМЦ</title>
+          <title> Списание ТМЦ</title>
     </head>
     <body>
 
 
         <form zippy="docform" enctype="multipart/form-data">
-            <h3> Списання ТМЦ</h3>
+            <h3> Списание ТМЦ</h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -29,31 +29,31 @@
                 </div>
                 <div class="col-12 col-md-3">
                     <div class="form-group  ">
-                        <label for="store">Зi складу <small class="text-danger">*</small></label>
+                        <label for="store">Со склада <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="store">
                             <option value="0">Не выбрано</option>
                         </select>
                     </div>
                     {{#storeemp}}
                      <div class="form-group  ">
-                        <label for="storeemp">Зi спiвробiтника</label>
+                        <label for="storeemp">С сотрудника</label>
                         <select class="form-control  " zippy="storeemp">
                             <option value="0">Не выбрано</option>
                         </select>
-                        <small> Матерiально вiдповiдальна  особа</small>
+                        <small> Материально-ответственное лицо</small>
                     </div> 
                       {{/storeemp}}           
 
                     {{#usebranch}}
 
                     <div class="form-group  ">
-                        <label for="tostore">Оприходувати на склад iншої фiлiї</label>
+                        <label for="tostore">Оприходовать на  склад другого  филиала</label>
                         <select class="form-control" zippy="tostore">
                             <option value="0">Не выбрано</option>
                         </select>
-                        <small class="form-text text-muted">При проведеннi буде створено документ 'Оприходування на склад'.
-                            Цей документ не буде проведено та йому не буде присвоєно автора, поки
-                            користувач, який має право роботи з цiльовою фiлiєю, не збереже новостворений документ. </small>
+                        <small class="form-text text-muted">При проведении будет создан документ 'Оприходование на склад'. 
+                            Этот документ не будет проведен и ему не будет присвоен автор, пока 
+                            пользователь, имеющий право работы с целевой филиалом, не сохранит новый документ. </small>
                     </div>
                     {{/usebranch}}                
                 </div>
@@ -82,7 +82,7 @@
 
                            
                             <th   class="text-right">Кол.</th>
-                            <th   class="text-right">На суму</th>
+                            <th   class="text-right">На сумму</th>
 
                             <th  ></th>
                         </tr>
@@ -133,23 +133,23 @@
         <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
              <form zippy="editdetail">
-        <h4>Введення товару </h4>
+        <h4>Ввод товара </h4>
                 <div class="form-group">
                     <label for="edititem">Наименование</label>
                     <input     class="form-control" zippy="edititem" placeholder="Начните вводить... ">
-                   <a zippy="openitemsel">Відкрити довідник</a>
+                   <a zippy="openitemsel">Открыть справочник</a>
                     <br>
-                    Наявність: <span zippy="qtystock"></span>
+                    Наличие: <span zippy="qtystock"></span>
 
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
                    {{^usesnumberitem}}
-                        <label for="editsnumber">Серія (партія) виробника </label>
+                        <label for="editsnumber">Серия (партия) производителя </label>
                          {{/usesnumberitem}}
                          {{#usesnumberitem}}
-                        <label for="editsnumber">Серійний номер </label>
+                        <label for="editsnumber">Серийный номер </label>
                          {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
@@ -157,7 +157,7 @@
                 </div>
                 {{/usesnumber}}
                 <div class="form-group">
-                    <label for="editquantity">Кількість</label>
+                    <label for="editquantity">Количество</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
                             required="on"  pattern="[0-9,\.]+"/>

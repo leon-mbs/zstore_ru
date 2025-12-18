@@ -1,31 +1,31 @@
 <html>
     <head>
-          <title> Перемiщення ТМЦ</title>
+          <title> Перемещение ТМЦ</title>
     </head>
     <body>
 
 
         <form zippy="docform" enctype="multipart/form-data">
-            <h3> Перемiщення ТМЦ</h3>
+            <h3> Перемещение ТМЦ</h3>
             {{#usebranch}}
-            <small>Переміщення між філіями  виконуєтся документом Списання ТМЦ</small>
+            <small>Перемещение между филиалами  осуществляется документом  Списание ТМЦ</small>
             {{/usebranch}}
             <div class="row">
                 <div class="col-12 col-md-3">
 
                     <div class="form-group  ">
-                        <label for="store">Зi складу <small class="text-danger">*</small></label>
+                        <label for="store">Со  склада <small class="text-danger">*</small></label>
                         <select class="form-control" zippy="store">
                             <option value="0">Не выбрано</option>
                         </select>
                     </div>
                      {{#storeemp}}
                      <div class="form-group  ">
-                        <label for="storeemp">Зi спiвробiтника</label>
+                        <label for="storeemp">С сотрудника</label>
                         <select class="form-control  " zippy="storeemp">
                             <option value="0">Не выбрано</option>
                         </select>
-                        <small> Матерiально вiдповiдальна  особа</small>
+                        <small> Материально-ответственное лицо</small>
                     </div> 
                       {{/storeemp}}                     
                     <div class="form-group  ">
@@ -37,11 +37,11 @@
                     </div>
             {{#storeemp}}
                      <div class="form-group  ">
-                        <label for="tostoreemp">На спiвробiтника</label>
+                        <label for="tostoreemp">На сотрудника</label>
                         <select class="form-control  " zippy="tostoreemp">
                             <option value="0">Не выбрано</option>
                         </select>
-                        <small> Матерiально вiдповiдальна  особа</small>
+                        <small> Материально-ответственное лицо</small>
                     </div> 
                       {{/storeemp}}                      
                     <div class="form-group  ">
@@ -73,10 +73,10 @@
 
                     </div>
                     {{/usescanner}}
-                    &nbsp; <a class="btn btn-info  " zippy="addrow">Добавить позицію</a>
+                    &nbsp; <a class="btn btn-info  " zippy="addrow">Добавить ТМЦ</a>
 
                     {{#usesnumberitem}}
-                       &nbsp;&nbsp;  <a zippy="opensn"  >Ввод за  серійними номерами</a>
+                       &nbsp;&nbsp;  <a zippy="opensn"  >Ввод по  серийным номерам</a>
                     {{/usesnumberitem}}                    
                     
                     <table class="table table-sm">
@@ -84,7 +84,7 @@
                             <th>Название</th>
                             <th>Артикул</th>
                             <th>Ед.</th>
-                             <th>{{#usesnumber}}Серія {{/usesnumber}}</th>
+                             <th>{{#usesnumber}}Серия {{/usesnumber}}</th>
                  
                             <th width="40" class="text-right">Кол.</th>
 
@@ -131,12 +131,12 @@
             <div class="col-12 col-md-4">
                
                  <form zippy="editdetail">
-                  <h4>Введення товару </h4>
+                  <h4>Ввод товара </h4>
                 <div class="form-group">
                     <label for="edititem">Наименование</label>
                     <input    class="form-control" zippy="edititem" placeholder="Начните вводить... ">
-                     <a zippy="openitemsel">Відкрити довідник</a>
-                  <br>  Наявність: <span zippy="qtystock"></span>
+                     <a zippy="openitemsel">Открыть справочник</a>
+                  <br>  Наличие: <span zippy="qtystock"></span>
 
 
                 </div>
@@ -144,10 +144,10 @@
                 <div class="form-group">
 
                          {{^usesnumberitem}}
-                        <label for="editsnumber">Серія (партія) виробника </label>
+                        <label for="editsnumber">Серия (партия) производителя </label>
                          {{/usesnumberitem}}
                          {{#usesnumberitem}}
-                        <label for="editsnumber">Серійний номер </label>
+                        <label for="editsnumber">Серийный номер </label>
                          {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
@@ -155,7 +155,7 @@
                 </div>
                 {{/usesnumber}}
                 <div class="form-group">
-                    <label for="editquantity">Кількість</label>
+                    <label for="editquantity">Количество</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
                             required="on"  pattern="[0-9,\.]+"/>
@@ -179,7 +179,7 @@
    
     
      <form zippy="editsnitem">
-            <h3>&nbsp;Ввод за  серійними номерами</h3>
+            <h3>&nbsp;Ввод за серийными номерами</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -188,9 +188,9 @@
                         <input  autofocus="on"   placeholder="Начните вводить..." class="form-control " zippy="editsnitemname"  required="on" />
                     </div>
                     <div class="form-group">
-                        <label for="editsn">Серійні номери</label>
+                        <label for="editsn">Серийные  номера</label>
                         <textarea style="height:400px;" class="form-control" type="text" zippy="editsn"> </textarea>
-                        <small>По номеру в  рядку</small>
+                        <small>По номеру в  строке</small>
                     </div>
           
                

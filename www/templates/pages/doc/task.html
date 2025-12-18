@@ -1,17 +1,17 @@
 <html>
     <head>
-          <title> Наряд на виконання робіт</title>
+          <title> Производственный  наряд</title>
     </head>
 
     <body>
 
 
         
-            <h3> Наряд на виконання робіт
+            <h3> Производственный  наряд
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-                    data-placement="bottom" data-content="Документ, що фіксує виконання виробничих завдань.
-                   Для списання витратних матеріалів на підставі наряду, можна створити документ  
-                   'Списання на виробництво'."></i>
+                    data-placement="bottom" data-content="Документ, фиксирующий выполнение производственных задач. 
+                    Для списания расходных материалов на основании наряда можно создать документ 
+                    'Списание на производство'."></i>
 
             </h3>
 
@@ -26,7 +26,7 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="parea">Виробнича ділянка</label>
+                        <label for="parea">Производственный участок</label>
                         <select class="form-control" zippy="parea">
                             <option value="0">Не выбрано</option>
                         </select>
@@ -35,7 +35,7 @@
 
                 
                     <div class="form-group">
-                        <label for="document_date"> Дата початку</label>
+                        <label for="document_date"> Дата начала</label>
                         <div class="input-group">
                             <input   class="form-control"   zippy="document_date"  required="on" >
                             <span class="input-group-text">:</span>
@@ -44,12 +44,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="taskhours">Кол. годин</label>
+                        <label for="taskhours">Кол. часов</label>
 
                         <input style="width:100px;" pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="taskhours">
                     </div>
                    <div class="form-group">
-                        <label for="customer">Замовник</label>
+                        <label for="customer">Заказчик</label>
                         <input placeholder="Начните вводить..." class="form-control" type="text" zippy="customer">
                     </div>
                     <div class="form-group  ">
@@ -72,7 +72,7 @@
                   <div class="col-12  ">
 
 
-                    <h6><b>Роботи</b></h6>
+                    <h6><b>Работы</b></h6>
       <div class="card">
 
              <form zippy="editdetail" class="form-inline">
@@ -86,7 +86,7 @@
                         <input class="form-control mr-2" type="text" zippy="editqty" pattern="[0-9\.]+" value="1"
                                style="width: 75px;">
  
-                        <label for="editdesc">Коментар  </label>
+                        <label for="editdesc">Коментарий  </label>
                         <input class="form-control  mr-2" type="text" zippy="editdesc"                          >
  
 
@@ -119,7 +119,7 @@
                   <div class="col-12  ">
 
 
-                    <h6><b>Готова продукцiя</b></h6>
+                    <h6><b>Готовая продукция</b></h6>
    <div class="card">
 
              <form zippy="editdetailprod" class="form-inline">
@@ -131,7 +131,7 @@
                    <input class="form-control mr-2" type="text" zippy="editqtyprod" pattern="[0-9\.]+" value="1"
                                style="width: 75px;">
       
-                        <label for="editdescprod">Коментар  </label>
+                        <label for="editdescprod">Коментарий  </label>
                         <input class="form-control  mr-2" type="text" zippy="editdescprod"                          >
  
 
@@ -164,7 +164,7 @@
                   <div class="col-12  ">
 
 
-                    <h6><b>Виконавці</b></h6>
+                    <h6><b>Исполнителя</b></h6>
                   
       <form zippy="editdetail3" class="form-inline">
                     <select zippy="editemp" class="form-control mr-2  ">
@@ -194,7 +194,7 @@
                   <div class="col-12 ">
 
               
-                     <h6><b>Устаткування</b></h6>
+                     <h6><b>Оборудование</b></h6>
                      
                <form zippy="editdetail4" class="form-inline">
                  <select zippy="editeq" class="form-control select2">

@@ -3,7 +3,7 @@
 
     <tr>
         <td></td>
-        <td valign="top"><b>Покупець</b></td>
+        <td valign="top"><b>Покупатель</b></td>
      <td colspan="5"> {{customer_name}}</b> 
           {{#phone}} Тел. {{phone}}  {{/phone}} 
         </td>
@@ -12,7 +12,7 @@
     <tr>
         <td></td>
 
-        <td valign="top"><b>Продавець</b></td>
+        <td valign="top"><b>Продавец</b></td>
       <td colspan="7"> {{firm_name}} 
         {{#fphone}} Тел.  {{fphone}}  {{/fphone}} 
           
@@ -24,7 +24,7 @@
     <tr>
 
         <td></td>
-        <td><b> Продавець</b></td>
+        <td><b> Продавец</b></td>
         <td colspan="5"> {{fop_name}} </td>
 
     </tr> 
@@ -39,7 +39,7 @@
     {{#order}}
     <tr>
         <td></td>
-        <td><b>Замовлення</b></td>
+        <td><b>Заказ</b></td>
         <td colspan="5">{{order}}</td>
     </tr>
     {{/order}}
@@ -70,13 +70,13 @@
     {{#ship_number}}
     <tr>
         <td></td>
-        <td><b>№ декларацiї</b></td>
+        <td><b>№ декларации</b></td>
         <td colspan="4">{{ship_number}}</td>
     </tr>
     {{/ship_number}}
     <tr>
         <td></td>
-        <td><b>Дата відправки</b></td>
+        <td><b>Дата отправик</b></td>
         <td colspan="5">{{sent_date}}</td>
     </tr>
     <tr>
@@ -86,13 +86,13 @@
     </tr>
     <tr>
         <td></td>
-        <td><b>Відповідальний</b></td>
+        <td><b>Ответственный</b></td>
         <td colspan="5"> {{emp_name}}</td>
     </tr>
     {{#ship_amount}}
     <tr>
         <td></td>
-        <td><b>Вартiсть доставки</b></td>
+        <td><b>Стоимость доставки</b></td>
         <td colspan="5"> {{ship_amount}}</td>
     </tr>
     {{/ship_amount}}

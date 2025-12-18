@@ -1,12 +1,12 @@
 <html>
    <head>
-          <title> Авансовий звiт</title>
+          <title> Авансовый отчет</title>
     </head>
     <body>
 
 
         <form zippy="docform" enctype="multipart/form-data">
-            <h3> Авансовий звiт</h3>
+            <h3> Авансовый отчет</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group row">
@@ -19,38 +19,38 @@
                   
                       
                     <div class="form-group  ">
-                        <label for="emp">Вiд спiвробiтника</label>
+                        <label for="emp">От сотрудника</label>
                         <select class="form-control  " zippy="emp">
                             <option value="0">Не выбрано</option>
                         </select>
                        
                     </div>
                     <div class="form-group  ">
-                        <label data-label="exmf" for="exmf">Каса</label>
+                        <label data-label="exmf" for="exmf">Касса</label>
                         <select class="form-control" zippy="exmf">
 
                         </select>
                     </div>
                     <div class="form-group row">
-                        <label  class="col-5 col-form-label" data-label="examount" for="examount"> Сумма повернення</label>
+                        <label  class="col-5 col-form-label" data-label="examount" for="examount"> Сумма возврата</label>
                          <div class="col-5 ">
                             <input class="form-control qtyprice" type="text" zippy="examount" pattern="[0-9,\.]+">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label  class="col-5 col-form-label" data-label="examount" for="spentamount"> Сумма витрат</label>
+                        <label  class="col-5 col-form-label" data-label="examount" for="spentamount"> Сумма расхода</label>
                         <div class="col-5 ">
                           <input  class="form-control qtyprice" type="text" zippy="spentamount" pattern="[0-9,\.]+">
                         </div>   
-                        <small>Наприклад на вiдряження</small>
+                        <small>Например на  командировку</small>
                                          
                     </div>                      
                    <div class="form-group  ">
-                        <label for="spenttype">Тип  витрат</label>
+                        <label for="spenttype">Тип  затрат</label>
                         <select class="form-control  " zippy="spenttype">
                             
                         </select>
-                       <small>Якщо задана  сума</small> 
+                       <small>Если задана сумма</small> 
                     </div>       
                    
 
@@ -71,11 +71,11 @@
                     </div>
                        {{#storeemp}}
                      <div class="form-group  ">
-                        <label for="storeemp">На спiвробiтника</label>
+                        <label for="storeemp">На сотрудника</label>
                         <select class="form-control  " zippy="storeemp">
                             <option value="0">Не выбрано</option>
                         </select>
-                        <small> Матерiально вiдповiдальна  особа</small>
+                        <small> Материально ответственное  лицо</small>
                     </div> 
                       {{/storeemp}}
                     <div class="form-group">
@@ -102,14 +102,14 @@
                     {{/usescanner}}
                     <a zippy="addrow" class="btn btn-info  ">Добавить товар</a>
                            {{#usesnumberitem}}
-                       &nbsp;&nbsp;  <a zippy="opensn"  >Ввод за  серійними номерами</a>
+                       &nbsp;&nbsp;  <a zippy="opensn"  >Ввод за  серийными номерами</a>
                     {{/usesnumberitem}}     
                     <table class="table table-sm">
                         <tr>
                             <th>Название</th>
                             <th>Код</th>
                             <th>Ед.</th>
-                             <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                             <th>{{#usesnumber}}Серия, дата{{/usesnumber}}</th>
                         
                             <th width="40" class="text-right">Кол.</th>
                             <th class="text-right">Цена</th>
@@ -154,25 +154,25 @@
 
 
           <form zippy="editsnitem">
-            <h3>&nbsp;Ввод за  серійними номерами</h3>
+            <h3>&nbsp;Ввод за  серийными номерами</h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
                         <label for="editsnitemname">Название </label>
                         <input  autofocus="on"   placeholder="Начните вводить..." class="form-control " zippy="editsnitemname"  required="on" />
-                         <small>В довіднику номенклатури треба вказати що даний ТМЦ обліковується  за  серійним номером</small>
+                         <small>В справочнике номенклатуры. Нужно отметить в номенклатуре  что данный товар  учитывается  за сериями</small>
                        
                     </div>
                     <div class="form-group">
-                        <label for="editsn">Серійні номери</label>
+                        <label for="editsn">Серийные  номера</label>
                         <textarea style="height:400px;" class="form-control" type="text" zippy="editsn"> </textarea>
-                        <small>По номеру в  рядку</small>
+                        <small>По номеру в  строке</small>
                     </div>
           
                      <div class="form-group">
                         <label for="editsnprice">Цена </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsnprice"  required="on"                                pattern="[0-9,\.\s]+"                               style="width: 100px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editsnprice"  required="on"      pattern="[0-9,\.\s]+"                               style="width: 100px;">
                     </div>
                     
                     <div class="form-group">
@@ -187,23 +187,23 @@
 
     </form>
     <form zippy="editdetail">
-        <h4>Введення товару </h4>
+        <h4>Ввод товара </h4>
         <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
 
                 <div class="form-group">
                     <label for="edititem">Наименование</label>
                     <input   class="form-control" zippy="edititem" placeholder="Начните вводить...  ">
-                    <a   zippy="addnewitem">Добавить новий</a>
+                    <a   zippy="addnewitem">Добавить новый</a>
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
                          {{^usesnumberitem}}
-                        <label for="editsnumber">Серія (партія) виробника </label>
+                        <label for="editsnumber">Серия, партия производителя </label>
                          {{/usesnumberitem}}
                          {{#usesnumberitem}}
-                        <label for="editsnumber">Серійний номер </label>
+                        <label for="editsnumber">Серийный номер </label>
                          {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"                           />
@@ -212,14 +212,14 @@
                 </div>
                    {{#usesnumberdate}}
                 <div class="form-group">
-                    <label for="editsdate">Придатний до </label>
+                    <label for="editsdate">Годен до </label>
                     <input class="form-control " zippy="editsdate"/>
 
                 </div>
                    {{/usesnumberdate}}
                 {{/usesnumber}}
                 <div class="form-group">
-                    <label for="editquantity">Кількість</label>
+                    <label for="editquantity">Количество</label>
 
                     <input style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
                             required="on"  pattern="[0-9,\.]+"/>
@@ -245,7 +245,7 @@
     </form>
     
     <form zippy="editnewitem">
-            <h3>&nbsp;Новий товар </h3>
+            <h3>&nbsp;Новый товар </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -258,7 +258,7 @@
                         <input class="form-control" type="text" zippy="editnewitemcode"/>
                     </div>
                     <div class="form-group">
-                        <label for="editnewbrand">Виробник, бренд</label>
+                        <label for="editnewbrand">Производитель, бренд</label>
                         <input autocomplete="off"   class="form-control" type="text" zippy="editnewbrand"/>
 
 
@@ -272,7 +272,7 @@
 
                     </div>
                   <div class="form-group">
-                        <label for="editnewmsr">Ед. вим.</label>
+                        <label for="editnewmsr">Ед. изм.</label>
                         <input class="form-control" type="text" zippy="editnewmsr"/>
                     </div>
                     

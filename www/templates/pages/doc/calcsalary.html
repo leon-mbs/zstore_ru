@@ -1,11 +1,11 @@
 <html>
     <head>
-          <title> Нарахування зарплати</title>
+          <title> Начисление зарплаты</title>
     </head>
     <body>
       <div class="row">
         <div class="col-12" id="vapp">
-             <h3> Нарахування зарплати</h3>
+             <h3> Начисление зарплаты</h3>
            
        {{={| |}=}}   
    
@@ -22,45 +22,32 @@
                         <input class="form-control" type="date" v-model="doc.document_date"  required="on" >
                     </div>
                      <div class="form-group  ">
-                        <label for="department">Вiддiл </label>
+                        <label for="department">Отдел </label>
                         <input  list="dlist" class="form-control" v-model="doc.department">
                          <datalist id="dlist">
                              <option v-for="dep in deps"  v-bind:label="dep"  v-bind:value="dep" >
                          </datalist>                                  
                     </div>
           
-                      {|#useacc|}
-                     <div class="form-group">
-                        <label for="acccode">Бух. рахунок                        </label>
-                        <select v-model="doc.acccode"  class="form-control"    >
-                            
-                            <option value="91">Загальновиробничі витрати</option>
-                            <option value="23">Виробництво</option>
-                            <option value="92">Адміністративні витрати</option>
-                            <option value="93">Витрати на збут</option>
-                            <option value="94">Інші витрати операційної діяльності</option>
-                        </select>
-                        
-                    </div>
-                     {|/useacc|}
+                 
                 </div>
                 <div id="formd" class="col-12 col-md-4 col-xl-3">
                     <div class="form-group  ">
-                        <label for="year">Рiк</label>
+                        <label for="year">Год</label>
                         <select v-on:change="hch()" class="form-control" v-model="doc.year">
                              <option v-for="year in years "  v-bind:value="year.key">{{year.value}}</option>
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="month">Мiсяць</label>
+                        <label for="month">Месяц</label>
                         <select v-on:change="hch()" class="form-control" v-model="doc.month">
                             <option v-for="month in monthes "  v-bind:value="month.key">{{month.value}}</option>
                        </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="daysmon">Кол. роб. днiв </label>
+                        <label for="daysmon">Кол. раб. дней </label>
                         <input v-on:change="hch()" style="width:100px;"  type="number"  required="on"   class="form-control" v-model="doc.daysmon">
-                        <small>Количество робочих днiв в  мiсяцi</small>
+                        <small>Количество  рабочих дней в  месяц</small>
                     </div>
                      <div class="form-group  ">
                         <label for="notes">Примечание </label>
@@ -104,7 +91,7 @@
                 
                 
             </div>
-            <a v-on:click.prevent="recalc()">Перерахувати</a>
+            <a v-on:click.prevent="recalc()">Пересчитать</a>
            <table class="table table-sm">
                 <tr>
                  <th>
@@ -184,7 +171,7 @@
               year:0 ,
               month:0 ,
               daysmon:1,
-              acccode:91,
+             
               department:""
           },
         
@@ -355,7 +342,7 @@
                            $('#formd').hide()
                        }
                         
-                       this.acccode = data.acccode 
+                       
                        this.deps = data.deps                 
                   });
               

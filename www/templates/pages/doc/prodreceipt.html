@@ -1,6 +1,6 @@
 <html>
    <head>
-          <title> Оприбуткування з виробництва</title>
+          <title> Оприходование с производства</title>
     </head>
     <body>
 
@@ -20,11 +20,11 @@
                         </select>
                     </div>
                    <div class="form-group  ">
-                        <label data-label="emp" for="emp">Виконавець </label>
+                        <label data-label="emp" for="emp">Исполнитель </label>
                         <select class="form-control  " zippy="emp">
                             <option value="0">Не указано</option>
                         </select>
-                        <small data-label="emp"> Для нарахування  зарплати при вiдрядному виробництвi</small>
+                        <small data-label="emp"> Для начмсления заоплаты при сдельной оплате</small>
                     </div>                    
             
                 </div>
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="parea">Виробнича ділянка</label>
+                        <label for="parea">Произвлдственный участок</label>
                         <select class="form-control" zippy="parea">
                             <option value="0">Не выбрано</option>
                         </select>
@@ -52,14 +52,14 @@
             </div>
             <div class="row">
                 <div class="col-10">
-                    <a zippy="addrow" class="btn btn-info  ">Добавить позицію</a>
+                    <a zippy="addrow" class="btn btn-info  ">Добавить позицию</a>
                     <table class="table  table-sm">
                         <tr>
 
                             <th>Наименование</th>
                             <th>Код</th>
                             <th>Ед.</th>
-                              <th>{{#usesnumber}}Серія, дата{{/usesnumber}}</th>
+                              <th>{{#usesnumber}}Серия, дата{{/usesnumber}}</th>
                  
 
                             <th class="text-right">Кол.</th>
@@ -114,8 +114,8 @@
 
 
         <form zippy="editdetail">
-            <h4>Введення ТМЦ </h4>
-            <small>ТМЦ  має мати тип  Готова продукція обо Напівфабрикат </small>
+            <h4>Ввод ТМЦ </h4>
+            <small>ТМЦ  должно иметь тип Матеоиалы и комплектующие или  Полуфабрикаты </small>
             <div class="row">
                 <div class="col-4">
 
@@ -129,25 +129,25 @@
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
-                        <label for="editsnumber">Серія виробника </label>
+                        <label for="editsnumber">Серия производителя </label>
                         <input class="form-control " zippy="editsnumber"/>
 
                     </div>
                     <div class="form-group">
-                        <label for="editsdate">Дата випуску серії </label>
+                        <label for="editsdate">Дата выпуска  серии </label>
                         <input class="form-control " zippy="editsdate"/>
 
                     </div>
                     {{/usesnumber}}
                     <div class="form-group">
-                        <label for="editquantity">Кількість</label>
+                        <label for="editquantity">Количество</label>
                         <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 100px;"/>
                     </div>
 
 
                     <div class="form-group">
-                        <label for="editprice">Облікова ціна </label>
+                        <label for="editprice">Учетная цена </label>
                         <input class="form-control qtyprice" type="text" zippy="editprice"  required="on"  pattern="[0-9,\.]+"
                                style="width: 100px;">
                     </div>

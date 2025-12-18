@@ -1,13 +1,13 @@
 <html>
     <head>
-          <title> Замовлення (Кафе) </title>
+          <title> Заказ (Кафе) </title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>Замовлення (Кафе) </h3>
+            <h3>Заказ (Кафе) </h3>
 
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
@@ -28,7 +28,7 @@
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="customer">Покупець</label>
+                        <label for="customer">Покупатель</label>
                         <div class="input-group  ">
 
                         <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
@@ -51,13 +51,13 @@
                         <input style="width:120px;" class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
-                        <label for="pos">POS термінал</label>
+                        <label for="pos">POS терминал</label>
                         <select class="form-control" zippy="pos">
                             <option value="0">Не выбрано</option>
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="payment">Каса, рахунок</label>
+                        <label for="payment">Касса, счет</label>
                         <select class="form-control" zippy="payment">
                             <option value="0">Не выбрано</option>
                         </select>
@@ -89,7 +89,7 @@
 
 
                             <th class="text-right">Кол.</th>
-                            <th class="text-right">Знижка,%</th>
+                            <th class="text-right">Скидка,%</th>
                             <th class="text-right">Цена</th>
 
                             <th class="text-right">Сумма</th>
@@ -125,7 +125,7 @@
                        <tr style="font-weight: bolder;" >
 
 
-                            <td colspan="6" class="text-right">Знижка:</td>
+                            <td colspan="6" class="text-right">Скидка:</td>
 
 
                             <td zippy="totaldisc" class="text-right"></td>
@@ -135,7 +135,7 @@
 
                         <tr style="font-weight: bolder;">
 
-                            <td colspan="6" class="text-right"><span data-label="paybonus">Бонуси:</span></td>
+                            <td colspan="6" class="text-right"><span data-label="paybonus">Бонусы:</span></td>
 
 
 
@@ -164,7 +164,7 @@
 
                         <tr style="font-weight: bolder;">
 
-                            <td colspan="6" class="text-right"><span data-label="exchange">Решта:</span></td>
+                            <td colspan="6" class="text-right"><span data-label="exchange">Сдача:</span></td>
 
 
                             <td zippy="exchange" class="text-right"></td>
@@ -188,7 +188,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Знижка</h5>
+                            <h5 class="modal-title">Скидка</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -211,7 +211,7 @@
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Бонуси</h5>
+                            <h5 class="modal-title">Бонусы</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -281,7 +281,7 @@
              <input zippy="editpureprice" type="hidden">
              <input zippy="editdisc" type="hidden">
 
-            <h4>Введення товару </h4>
+            <h4>Ввод товара </h4>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -296,7 +296,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="editquantity">Кількість</label>
+                        <label for="editquantity">Количество</label>
                         <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
@@ -322,7 +322,7 @@
         </form>
 
         <form zippy="editcust">
-            <h3>&nbsp;Новий клієнт </h3>
+            <h3>&nbsp;Новый клиент </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 

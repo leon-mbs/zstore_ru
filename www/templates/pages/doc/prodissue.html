@@ -1,13 +1,13 @@
 <html>
    <head>
-          <title> Списання на виробництво</title>
+          <title> Списание на  производство</title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>Списання на виробництво </h3>
+            <h3>Списание на  производство </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
@@ -15,7 +15,7 @@
                         <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="form-group  ">
-                        <label for="store">Зі складу</label>
+                        <label for="store">Со склада</label>
                         <select class="form-control" zippy="store">
                             <option value="0">Не встановлено</option>
                         </select>
@@ -34,7 +34,7 @@
                         <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
-                        <label for="parea">Виробнича ділянка</label>
+                        <label for="parea">Производственный участок</label>
                         <select class="form-control" zippy="parea">
                             <option value="0">Не выбрано</option>
                         </select>
@@ -72,7 +72,7 @@
 
 
                             <th class="text-right">Кол.</th>
-                            <th class="text-center">Наявність</th>
+                            <th class="text-center">Наличие</th>
 
 
                             <th  ></th>
@@ -88,7 +88,7 @@
 
                             <td zippy="quantity" class="text-right"></td>
                             <td  class="text-right text-nowrap">
-                               <span zippy="qtyon"></span> &nbsp;&nbsp;  <small zippy="toorder" title="Добавить в  заявку постачальнику" style="cursor:pointer"></small> 
+                               <span zippy="qtyon"></span> &nbsp;&nbsp;  <small zippy="toorder" title="Добавить в  заявку поставщику" style="cursor:pointer"></small> 
                                &nbsp;&nbsp;
                             </td>
 
@@ -114,7 +114,7 @@
         </form>
         <form zippy="editdetail">
             <h4>Введення ТМЦ </h4>
-           <small>ТМЦ  має мати тип Матеріали та комплектуючі або Напівфабрикат </small>
+           <small>ТМЦ  должно иметь Тип Материалы и комплектующие или  Полуфабрикаты </small>
           <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
@@ -122,19 +122,19 @@
                         <label for="edittovar">Название</label>
                         <input   placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
 
-                        Наявність : <span zippy="qtystock"></span>
+                        Наличие : <span zippy="qtystock"></span>
 
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
-                        <label for="editserial">Серія виробника </label>
+                        <label for="editserial">Серия </label>
                         <input class="form-control " zippy="editserial"/>
 
                     </div>
 
                     {{/usesnumber}}
                     <div class="form-group">
-                        <label for="editquantity">Кількість</label>
+                        <label for="editquantity">Количество</label>
                         <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 

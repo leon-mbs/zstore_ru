@@ -131,7 +131,7 @@ class CalcSalary extends \App\Pages\Base
         $this->_doc->headerdata['daysmon'] = $post->doc->daysmon;
         $this->_doc->headerdata['year'] = $post->doc->year;
         $this->_doc->headerdata['month'] = $post->doc->month;
-        $this->_doc->headerdata['acccode'] = $post->doc->acccode;
+     
         $this->_doc->headerdata['department'] = $post->doc->department;
         $mlist = \App\Util::getMonth();
         $this->_doc->headerdata['monthname'] = $mlist[$post->doc->month] ;
@@ -421,7 +421,7 @@ class CalcSalary extends \App\Pages\Base
         $ret['doc']['daysmon']   =   $this->_doc->headerdata['daysmon'] ;
         $ret['doc']['year']   =   $this->_doc->headerdata['year'] ;
         $ret['doc']['month']   =   $this->_doc->headerdata['month'] ;
-        $ret['doc']['acccode']   =   $this->_doc->headerdata['acccode'] ?? 91;
+      
         $ret['doc']['department']   =   $this->_doc->headerdata['department'] ??'';
 
 
