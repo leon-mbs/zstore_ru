@@ -120,9 +120,7 @@ class Item extends \ZCL\DB\Entity
         $this->fromdate = intval($xml->fromdate[0]);
         $this->printqty = intval($xml->printqty[0]);
       
-        $this->isnds = (int)$xml->isnds[0];
-        $this->nds = (string)$xml->nds[0];
-
+      
        
         
         parent::afterLoad();
@@ -238,9 +236,7 @@ class Item extends \ZCL\DB\Entity
             $this->detail .= base64_encode(serialize($this->reclist));
             $this->detail .= "</reclist>";
         }
-        $this->detail .= "<isnds>{$this->isnds}</isnds>";
-        $this->detail .= "<nds>{$this->nds}</nds>";
-
+       
 
         $this->detail .= "</detail>";
 
@@ -1184,35 +1180,6 @@ class Item extends \ZCL\DB\Entity
         return $image->image_id;       
     }
      
-     /**
-    * коеффициоет НДС на  который  умножается  цена
-    * 
-    * @param mixed $revert   возвращает  обратную  величину (наприме  если   20% (0.2)  возвращает 16.67% (0.1667) )
-    */
-    public   function nds($revert = false) {
-        $nds = 0 ;
-      
-        if($this->isnds==2){
-           
-            $nds = doubleval($this->nds) / 100;
-            if ($revert) {
-                $nds = 1 - 100 / (100 + doubleval($this->nds));
-            }           
-        }
-        if($this->isnds==0){
-            
-           $cat= Category::load($this->cat_id); 
-           if($cat != null) {
-              $nds = doubleval($cat->nds) / 100;
-              if ($revert) {
-                  $nds = 1 - 100 / (100 + doubleval($cat->nds));
-              } 
-              
-           }
-        }
-        
-        return $nds;
-    }
- 
+  
        
 }

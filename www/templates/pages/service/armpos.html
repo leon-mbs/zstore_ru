@@ -458,7 +458,7 @@
                     <div class="col-6">
                            <div class="form-group  ">
                              {{^freg}}
-                           <input   zippy="print" type="button" value="Друк " class="btn  btn-primary">
+                           <input   zippy="print" type="button" value="Печать " class="btn  btn-primary">
                               {{/freg}}         
                            
                             &nbsp;&nbsp;<input type="button" value="Новый чек " zippy="newdoc" class="btn  btn-info">
@@ -806,11 +806,7 @@
         
            
           
-            function check_checkfisc(ele) {
-                      document.getElementById('dialogwait').showModal()
-
-                return true;
-            }
+          
             function check_tocancel(ele) {
                 return confirm("Отменить чек?")
             }

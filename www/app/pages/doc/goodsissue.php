@@ -67,8 +67,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->docform->add(new TextInput('edittotaldisc'));
         $this->docform->add(new SubmitButton('btotaldisc'))->onClick($this, 'onTotaldisc');
         $this->docform->add(new Label('totaldisc'));
-        $this->docform->add(new Label('totalnds'));
-
+      
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
         
@@ -595,8 +594,7 @@ class GoodsIssue extends \App\Pages\Base
 
             $this->setWarn('Выбрано  больше  товара  чем  в  наличии');
         }
-        $item->pricenonds= $item->price - $item->price * $item->nds(true);
- 
+       
         
         if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
             
@@ -714,8 +712,7 @@ class GoodsIssue extends \App\Pages\Base
         $this->_doc->payed = doubleval($this->docform->payed->getText());
         $this->_doc->headerdata['payed'] = $this->_doc->payed;
         $this->_doc->headerdata['fop'] = $this->docform->fop->getValue();
-        $this->_doc->headerdata['nds'] = $this->docform->totalnds->getText();
-    
+        
 
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
@@ -833,26 +830,18 @@ class GoodsIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-        $nds = 0;
+        
 
         foreach ($this->_itemlist as $item) {
             $item->amount = H::fa($item->price * $item->quantity);
  
-            if($item->pricenonds < $item->price) {
-                $nds = $nds + doubleval($item->price - $item->pricenonds) * $item->quantity;                
-            }
+             
      
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
       
-        if($this->_tvars['usends'] != true) {
-           $nds=0; 
-        }
-      
-        if($nds>0) {
-            $this->docform->totalnds->setText(H::fa($nds));            
-        }
+     
       
 
     }
@@ -863,14 +852,11 @@ class GoodsIssue extends \App\Pages\Base
 
         $total = doubleval($this->docform->total->getText());
         $totaldisc = doubleval($this->docform->totaldisc->getText());
-        $totalnds = doubleval($this->docform->totalnds->getText());
-
+      
         if($totaldisc > 0) {
             $total = $total - $totaldisc;
         }
-        if($totalnds>0) {
-            $total = $total + $totalnds;
-        }
+       
 
         $this->docform->payamount->setText(H::fa($total));
         $prepaid = doubleval($this->_doc->headerdata['prepaid']??0) ;

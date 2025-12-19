@@ -141,7 +141,7 @@
 
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кол.</th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ск. %</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Цена  {{#nds}} (без НДС)  {{/nds}}</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Цена    </th>
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сумма</th>
     </tr>
     {{#_detail}}
@@ -153,7 +153,7 @@
 
         <td align="right">{{quantity}}</td>
         <td align="right">{{disc}}</td>
-        <td align="right">{{price}}  {{#nds}} ({{pricenonds}})  {{/nds}} </td>
+        <td align="right">{{price}}   </td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
@@ -170,12 +170,7 @@
         <td align="right">{{totaldisc}}</td>
     </tr>
     {{/totaldisc}}
-   {{#nds}}
-    <tr style="font-weight: bolder;">
-        <td colspan="7" align="right">В т.ч. НДС:</td>
-        <td align="right">{{nds}}</td>
-    </tr>
-    {{/nds}}
+ 
 
    {{#payamount}}
     <tr style="font-weight: bolder;">

@@ -41,12 +41,7 @@
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Всего:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-    {{#nds}}
-    <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="5" align="right">НДС:</td>
-        <td style="border-top:1px #000 solid;" align="right">{{nds}}</td>
-    </tr>
-      {{/nds}}
+ 
    <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Оплачено:</td>
         <td style="border-top:1px #000 solid;" align="right">{{payed}}</td>

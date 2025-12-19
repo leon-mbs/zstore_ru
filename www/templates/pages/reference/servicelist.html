@@ -108,15 +108,7 @@
                         <input zippy="edithours" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
-                  {{#usends}}   
- 
-                <div class="form-group  row">
-                    <label class="col-5 col-form-label" for="editnds">НДС, %</label>
-                    <div class="col-7">
-                        <input zippy="editnds" style="width: 75px" pattern="[0-9,\.]+" class="form-control"/>
-                    </div>
-                </div>                        
-                         {{/usends}}                  
+                      
                 
                 <div class="form-group row">
                     <label class="col-5 col-form-label" for="editmsr">Ед. измерения</label>
@@ -192,7 +184,7 @@
                  <a zippy="eback"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>  <br>
                         <div>
 
-                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
                         <a href="/index.php?p=App/Pages/ShowReport&arg=xls/servicelist" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
                         <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/servicelist" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i></a>
 

@@ -81,7 +81,8 @@ class NoLiq extends \App\Pages\Base
             $item=[];
             $item['qty'] = H::fqty($qty);
             $item['store'] = $_it['storename'];
-            
+            $item['cell']  = $i->cell;
+   
             $item['itemname']  = $i->itemname;
             $item['item_code']  = $i->item_code;
             $item['cat_name']  = $i->cat_name;

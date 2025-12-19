@@ -153,8 +153,7 @@ class OrderFood extends Document
                          "addbonus"           => $addbonus > 0 ? H::fa($addbonus) : false,
                         "delbonus"           => $delbonus > 0 ? H::fa($delbonus) : false,
                         "allbonus"           => $allbonus > 0 ? H::fa($allbonus) : false,
-                       "docqrcode"       => $this->getQRCodeImage(),
-                       "docqrcodeurl"     =>  $this->getQRCodeImage(true),
+                    
 
                         "payamount" => H::fasell($this->payamount)
         );
@@ -251,7 +250,7 @@ class OrderFood extends Document
                 }
             }
         }
-       $this->DoAcc() ;    
+      
          
     }
 
@@ -372,7 +371,7 @@ class OrderFood extends Document
             $io->save();
 
       }          
-        $this->DoAcc() ;    
+             
         
     }
 
@@ -420,7 +419,7 @@ class OrderFood extends Document
             $b->save();
         }
         
-         $this->DoAcc() ;    
+          
        
     }
      

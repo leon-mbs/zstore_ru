@@ -161,9 +161,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->add(new CheckBox('editdelimage'));
         $this->itemdetail->add(new DropDownChoice('edittype', Item::getTypes(),Item::TYPE_TOVAR));
         $this->itemdetail->add(new DropDownChoice('editprintqty', array(), 1));
-        $this->itemdetail->add(new DropDownChoice('editisnds',[],0))->onChange($this, 'onNds');;
-        $this->itemdetail->add(new TextInput('editnds'))->setVisible(false);
-  
+       
 
         $this->itemdetail->add(new SubmitButton('save'))->onClick($this, 'save');
         $this->itemdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
@@ -339,9 +337,7 @@ class ItemList extends \App\Pages\Base
         $this->itemdetail->editmanufacturer->setText($this->_item->manufacturer);
         $this->itemdetail->editcountry->setText($this->_item->country);
         $this->itemdetail->editmanufacturer->setDataList(Item::getManufacturers());
-        $this->itemdetail->editisnds->setValue($this->_item->isnds ??0);
-        $this->itemdetail->editnds->setText($this->_item->nds);
- 
+      
 
         $this->itemdetail->editdescription->setText($this->_item->description);
         $this->itemdetail->editcode->setText($this->_item->item_code);
@@ -520,9 +516,7 @@ class ItemList extends \App\Pages\Base
         $this->_item->description = $this->itemdetail->editdescription->getText();
         $this->_item->disabled = $this->itemdetail->editdisabled->isChecked() ? 1 : 0;
         $this->_item->useserial = $this->itemdetail->edituseserial->isChecked() ? 1 : 0;
-        $this->_item->nds = $this->itemdetail->editnds->getText();
-        $this->_item->isnds = $this->itemdetail->editisnds->getValue();
-
+       
         $this->_item->isweight = $this->itemdetail->editisweight->isChecked() ? 1 : 0;
         $this->_item->noprice = $this->itemdetail->editnoprice->isChecked() ? 1 : 0;
         $this->_item->noshop = $this->itemdetail->editnoshop->isChecked() ? 1 : 0;
@@ -1423,11 +1417,7 @@ class ItemList extends \App\Pages\Base
          
     }
     
-    public function onNds($sender) {
-        $id = $sender->getValue();
-        $this->itemdetail->editnds->setVisible($id==2);
-   
-    }
+    
      
 }
 

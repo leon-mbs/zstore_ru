@@ -38,13 +38,13 @@
    {{/examount}}  
   {{#spentamount}}
     <tr>
-         <td><b>Сумма затрат:</b> </td> 
+         <td><b>Сумма расходов:</b> </td> 
        <td colspan="5">
              {{spentamount}}
         </td>
     </tr>
    <tr>
-         <td><b>Тип затрат:</b> </td> 
+         <td><b>Тип расходов:</b> </td> 
        <td colspan="5">
              {{spenttypename}}
         </td>

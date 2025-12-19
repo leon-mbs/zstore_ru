@@ -124,23 +124,23 @@
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Выручка (отпускная цена на количество) минус затраты основной деятельности (затраты на закупку)"></i>
+               title="Выручка (отпускная цена на количество) минус расходы основной деятельности (расходы на закупку)"></i>
         </td>
     </tr>
     <tr>
-        <td>Переменные  затраты :</td>
+        <td>Переменные  расходы :</td>
         <td align="right"> {{tvc}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Затраты основной деятельности"></i>
+               title="Расходы основной деятельности"></i>
         </td>
     </tr>
     <tr>
-        <td>Операционные затраты:</td>
+        <td>Операционные расходы:</td>
         <td align="right">{{OP}}  </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Все затраты минус  переменные  затраты "></i>
+               title="Все расходы минус  переменные  расходы "></i>
         </td>
     </tr>
     <tr>

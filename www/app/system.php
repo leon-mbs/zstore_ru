@@ -315,7 +315,7 @@ class System
             $data = @json_decode($v, true);
         }   
         */
-        $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
+        $v = @file_get_contents("https://ru.zippy.com.ua/updates/version.json");
         $data = @json_decode($v, true);
    
         return $data;     

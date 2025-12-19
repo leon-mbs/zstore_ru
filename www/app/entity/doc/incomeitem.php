@@ -32,8 +32,7 @@ class IncomeItem extends Document
 
         }
  
-        $this->DoAcc() ;
-     
+        
         return true;
     }
 

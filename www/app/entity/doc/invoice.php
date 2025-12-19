@@ -32,7 +32,7 @@ class Invoice extends \App\Entity\Doc\Document
                               "tovar_code" => $item->item_code,
                               "quantity"   => H::fqty($item->quantity),
                               "price"      => H::fa($item->price),
-                              "pricenonds"      => H::fa($item->pricenonds),
+                            
                               "msr"        => $item->msr,
                               "amount"     => H::fa($item->quantity * $item->price)
               );
@@ -75,7 +75,7 @@ class Invoice extends \App\Entity\Doc\Document
         }
 
  
-        $header["nds"] = false;
+         
         $header["phone"] = false;
         $header["fphone"] = false;
         $header["isfop"] = false;
@@ -84,9 +84,7 @@ class Invoice extends \App\Entity\Doc\Document
         $header["finn"] = false;
         $cust = \App\Entity\Customer::load($this->customer_id);
 
-        if ($this->getHD('nds',0) > 0) {
-            $header["nds"] = H::fa($this->getHD('nds' )) ;
-        }
+       
         if (strlen($cust->phone) > 0) {
             $header["phone"] = $cust->phone;
         }

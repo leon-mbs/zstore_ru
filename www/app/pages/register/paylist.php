@@ -144,9 +144,9 @@ class PayList extends \App\Pages\Base
         $row->del->setAttribute('onclick', "delpay({$doc->pl_id})");
         
 
-     //   if($doc->meta_name=='IncomeMoney' || $doc->meta_name=='OutcomeMoney' ) {
+        if($doc->meta_name=='IncomeMoney' || $doc->meta_name=='OutcomeMoney' ) {
            $row->del->setVisible(false);
-    //    }
+        }
         
         $row->add(new ClickLink('print'))->onClick($this, 'printOnClick', true);
 
@@ -268,7 +268,7 @@ class PayList extends \App\Pages\Base
 
         $header = array();
         $header['document_number'] = $doc->document_number;
-        $header['firm_name'] = $doc['firm_name'] ;
+        $header['firm_name'] = $doc->headerdata['firm_name'] ;
         $header['customer_name'] = $doc->customer_name;
         $list = Pay::find("document_id=" . $pay->document_id, "pl_id");
         $all = 0;

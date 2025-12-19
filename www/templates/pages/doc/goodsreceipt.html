@@ -95,12 +95,12 @@
 
                     </div>
                      {{^useval}} 
-                     {{^usends}} 
+                   
                     <div class="form-check">
                         <input zippy="comission" type="checkbox" class="form-check-input">
                         <label class="form-check-label" for="comission">Товары на  комиссию</label> 
                     </div>                 
-                     {{/usends}} 
+                     
                      {{/useval}} 
                 </div>
                 <div class="col-12 col-md-3">
@@ -151,8 +151,7 @@
  
                             <th class="text-right">Кол.</th>
                             <th class="text-right">Цена</th>
-                            <th class="text-right">  {{#usends}} Цена с НДС {{/usends}}</th>
-
+                           
                             <th class="text-right">Сумма</th>
 
                             <th  ></th>
@@ -169,9 +168,7 @@
                             <td class="text-right" zippy="quantity"></td>
 
                             <td zippy="price" class="text-right"></td>
-                            <td  class="text-right">
-                             {{#usends}} <span zippy="pricends"></span> {{/usends}}
-                            </td>
+                           
 
                             <td zippy="amount" class="text-right"></td>
 
@@ -180,30 +177,30 @@
                             </td>
                         </tr>
                         <tr style="font-weight: bolder;" id="tankor">
-                            <td colspan="10" class="text-right">На сумму:</td>
+                            <td colspan="9" class="text-right">На сумму:</td>
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
                         {{^prepaid}}
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="nds" colspan="10" class="text-right">НДС:</td>
+                            <td data-label="nds" colspan="9" class="text-right">НДС:</td>
                             <td zippy="nds" class="text-right"></td>
                             <td data-label="nds">
-                             {{^usends}} 
+                           
                                  <a href="javascript:void(0);" data-toggle="modal" data-target="#modalnds"><i class="fa fa-edit"></i></a> 
-                             {{/usends}}
+                            
                                         </td>
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td data-label="disc" colspan="10" class="text-right">Скидка:</td>
+                            <td data-label="disc" colspan="9" class="text-right">Скидка:</td>
                             <td zippy="disc" class="text-right"></td>
                             <td data-label="disc"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
                                         class="fa fa-edit"></i></a></td>
                         </tr>
                        {{/prepaid}}
                           <tr style="font-weight: bolder;">
-                            <td data-label="delivery" colspan="10" class="text-right">Доставка:</td>
+                            <td data-label="delivery" colspan="9" class="text-right">Доставка:</td>
                             <td zippy="delivery" class="text-right"></td>
                             <td data-label="delivery"><a href="javascript:void(0);" data-toggle="modal" data-target="#modaldelivery"><i    class="fa fa-edit"></i></a></td>
                         </tr>
@@ -211,21 +208,21 @@
  
                         
                         <tr style="font-weight: bolder;">
-                            <td data-label="payamount" colspan="10" class="text-right">Всего:</td>
+                            <td data-label="payamount" colspan="9" class="text-right">Всего:</td>
                             <td zippy="payamount" class="text-right"></td>
                             <td data-label="payamount"><a href="javascript:void(0);" data-toggle="modal"
                                                           data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
                         </tr>
                      {{#prepaid}}
                        <tr style="font-weight: bolder;">
-                            <td data-label="prepaid" colspan="10" class="text-right">Предоплата:</td>
+                            <td data-label="prepaid" colspan="9" class="text-right">Предоплата:</td>
                             <td   class="text-right">  {{prepaid}}</td>
                             <td>  </td>
                         </tr>
                         {{/prepaid}}
 
                         <tr style="font-weight: bolder;">
-                            <td data-label="payed" colspan="10" class="text-right">Внесено оплату:</td>
+                            <td data-label="payed" colspan="9" class="text-right">Внесено оплату:</td>
                             <td zippy="payed" class="text-right"></td>
                             <td data-label="payed"><a href="javascript:void(0);" data-toggle="modal"
                                                       data-target="#modalpayed"><i class="fa fa-edit"></i></a></td>
@@ -287,6 +284,7 @@
                                     <input type="submit" value="OK" zippy="bnds" class="ml-2 btn btn-info  ">
 
                                 </div>
+                                <small>Для удобства  ввода  если  поставщик-плательщик НДС</small>
                             </div>
                         </div>
 
@@ -332,7 +330,7 @@
                           <div class="form-group  ">
                                 <label for="editdeliverytype"  >Тип доставки</label>
                                 <select class="form-control" zippy="editdeliverytype">
-                                    <option value="1">Отнести к  общим затратам</i> </option>
+                                    <option value="1">Отнести к  общим расходам</i> </option>
                                     <option value="2">Распределить на себестоимость</i> </option>
                                    <option value="3">Компенсировать поставщику</option>
                                     <option value="4">Оплата сторонней службе </option>

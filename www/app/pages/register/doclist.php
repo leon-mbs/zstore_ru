@@ -264,7 +264,7 @@ class DocList extends \App\Pages\Base
         $row->setAttribute('data-did', $doc->document_id);
         
         $row->add(new ClickLink('qr'))->onClick($this, 'QrOnClick', true);
-        $row->qr->setVisible( (strlen($doc->headerdata['hash']??'') > 0 ) || strlen(  $doc->getFiscUrl()) > 0   ) ;
+        $row->qr->setVisible( (strlen($doc->headerdata['hash']??'') > 0 )    ) ;
         if( !in_array($doc->meta_name,['POSCheck']) ){
            $row->qr->setVisible(false);    
         }  
@@ -808,11 +808,7 @@ class DocList extends \App\Pages\Base
               
             $doc=$sender->owner->getDataItem();
             $url =_BASEURL . 'doclink/' . $doc->headerdata['hash'] ;
-            $furl = $doc->getFiscUrl() ;
-            
-            if(strlen($furl)>0) {
-               $url =  $furl;
-            }
+         
             if(strlen($url)==0) {
                 return;
             }

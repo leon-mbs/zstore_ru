@@ -514,12 +514,10 @@ class ARMFood extends \App\Pages\Base
       
       
         if($doc->state <5) {
-           $row->checkfisc->setVisible(false);
+        
            $row->checkfr->setVisible(false);
         }
-        if($this->_pos->usefisc != 1) {
-           $row->checkfisc->setVisible(false);
-        }
+        
  
         if($this->_pos->usefreg != 1) {
            $row->checkfr->setVisible(false);

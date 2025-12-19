@@ -310,7 +310,7 @@ class Order extends \App\Entity\Doc\Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-       $this->DoAcc() ;
+       
              
     }
     /**

@@ -86,7 +86,7 @@ class POSCheck extends Document
                         "totaldisc"       => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
                         "prepaid"         => $this->headerdata['prepaid'] > 0 ? H::fa($this->headerdata['prepaid']) : false   ,
 
-                        "docqrcode"       => $this->getQRCodeImage(),
+                      
                         "payamount"       => H::fasell($this->payamount)
         );
         if($this->headerdata['payment'] ?? null  >0) {
@@ -192,9 +192,7 @@ class POSCheck extends Document
                         "trans"           => $this->headerdata["trans"] > 0 ? $this->headerdata["trans"] : false,
                         "checkslogan"          => strlen($this->headerdata["checkslogan"]??'') > 0 ? $this->headerdata["checkslogan"] : false,
                    
-                        "isdocqrcode"     =>  $common['printoutqrcode']==1,
-                        "docqrcodeurl"     =>  $this->getQRCodeImage(true),
-                        "docqrcode"       => $this->getQRCodeImage(),
+                         
                         "payed"           => $pp > 0 ? H::fasell($pp) : false,
                         "payamount"       => $this->payamount > 0 ? H::fasell($this->payamount) : false
         );
@@ -429,7 +427,7 @@ class POSCheck extends Document
             }
         }
  
-          $this->DoAcc() ;    
+       
      
         return true;
     }
@@ -481,7 +479,7 @@ class POSCheck extends Document
             $b->optype = \App\Entity\CustAcc::BUYER;
             $b->save();
         }
-        $this->DoAcc() ;    
+          
        
     }
 

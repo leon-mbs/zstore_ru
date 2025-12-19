@@ -95,7 +95,7 @@
 
         <div class="row" zippy="tpanel">
             <div class="col-12 col-xl-10">
-                <small>Отмена  платеэа  производится  кассовым ордером  или  перепроведением соответствующего документа</small>
+                <small>Отмена  платежа  производится  методом  сторно  пользователями  роли admins. Оплата кассовыми ордерами  отменяется отменый документа  </small>
 
                 <br><a zippy="csv"><i  class="fa fa-upload" ></i> Экспорт в Excel</a>
                 <a zippy="import" class="ml-4"><i  class="fa fa-download" ></i> Импорт выписок</a>
@@ -138,7 +138,7 @@
                         <td zippy="notes"></td>
 
                         <td class="text-nowrap">
-                            <a zippy="print" title="Друкувати квитанцiю про оплату"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
+                            <a zippy="print" title="Печатать квитанцию об оплате"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
                             <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
                             &nbsp;&nbsp; <a href="javascript:void(0);" zippy="del" title="Отмена  оплаты"><i class="fa fa-trash"></i></a>
 
@@ -184,7 +184,7 @@
                             <div class="form-group">
 
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
-                                <input zippy="save" type="submit" value="Выполнить" class="btn btn-primary  ">
+                                <input   type="submit" value="Выполнить" class="btn btn-primary  ">
                             </div>
                         </form>
                     </div>
@@ -319,7 +319,6 @@
                 $('#dform').modal()
             }
         </script>
-
-
+ 
     </body>
 </html>

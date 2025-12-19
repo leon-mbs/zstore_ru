@@ -348,7 +348,7 @@ GROUP BY c.customer_name,
         $da = $common['actualdate'] ?? 0 ;
 
         if($da>$pdate) {
-            $this->setError("Нельзя добавлять оплату раньше  " .date('Y-m-d', $da);
+            $this->setError("Нельзя добавлять оплату раньше  " .date('Y-m-d', $da) );
             return;
              
         }

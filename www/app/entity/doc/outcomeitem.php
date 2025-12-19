@@ -37,8 +37,7 @@ class OutcomeItem extends Document
 
             }
         }
-        $this->DoAcc() ;
- 
+        
         return true;
     }
 

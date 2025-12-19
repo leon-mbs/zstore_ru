@@ -196,7 +196,7 @@
                         </tr>
                         <tr><td colspan="9">
                                 <a class="text-danger" zippy="deleteall" title="Удалить (деактивировать)"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;
-                                <a  zippy="printall" title="Друк етикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  
+                                <a  zippy="printall" title="Печать этикеток"><i class="fa fa-print"></i></a>&nbsp;&nbsp;  
                                 <a zippy="priceall">Сменить цены</a>&nbsp;&nbsp;
                                 Перемiстити в <select   zippy="allcat"><option value="0">Не указано </option></select>
                             </td> </tr>                 
@@ -318,25 +318,7 @@
                                     
                                 </div>
                             </div>
-                         {{#usends}}      
-                            
-                        <div class="form-group row">
-                            <label class="col-5 col-form-label" for="editisnds">Использование НДС</label>
-                            <div class="col-5">
-                                <select class="form-control" zippy="editisnds">
-                                    <option value="0">По категории</option>
-                                    <option value="1">Без НДС</option>
-                                    <option value="2">Как указано</option>
-                                </select>
-                            </div>
-                        </div>
-                         <div class="form-group row">
-                            <label  class="col-5 col-form-label" for="editnds">Ставка НДС,%</label>
-                             <div class="col-4">
-                               <input style="width:75px"  pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editnds"/>
-                            </div>  
-                        </div> 
-                         {{/usends}}     
+                          
                               {{#useprod}}   
                              <div class="form-group row">
                                 <label class="col-5 col-form-label" for="editzarp">Сумма оплаты 

@@ -51,8 +51,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->add(new TextInput('editprice3'));
         $this->categorydetail->add(new TextInput('editprice4'));
         $this->categorydetail->add(new TextInput('editprice5'));
-        $this->categorydetail->add(new TextInput('editnds'));
-        
+          
         $this->add(new Form('categoryprice'))->setVisible(false);
         $this->categoryprice->add(new Label('catprname')) ;
         $this->categoryprice->add(new SubmitButton('savecp'))->onClick($this, 'savepriceOnClick');
@@ -236,8 +235,7 @@ class CategoryList extends \App\Pages\Base
         $this->categorydetail->editprice3->setText($this->_category->price3);
         $this->categorydetail->editprice4->setText($this->_category->price4);
         $this->categorydetail->editprice5->setText($this->_category->price5);
-        $this->categorydetail->editnds->setText($this->_category->nds);
-
+       
         if ($this->_category->image_id > 0) {
             $this->categorydetail->editdelimage->setChecked(false);
             $this->categorydetail->editdelimage->setVisible(true);
@@ -284,8 +282,7 @@ class CategoryList extends \App\Pages\Base
         $this->_category->price3 = $this->categorydetail->editprice3->getText();
         $this->_category->price4 = $this->categorydetail->editprice4->getText();
         $this->_category->price5 = $this->categorydetail->editprice5->getText();
-        $this->_category->nds = $this->categorydetail->editnds->getText();
-
+       
         //delete image
         if ($this->categorydetail->editdelimage->isChecked()) {
             if ($this->_category->image_id > 0) {

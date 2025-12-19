@@ -46,8 +46,7 @@ class Category extends \ZCL\DB\Entity
         else {
            $this->cflist=[]; 
         }
-        $this->nds = (string)($xml->nds[0]);
-    
+      
         parent::afterLoad();
     }
 
@@ -79,8 +78,7 @@ class Category extends \ZCL\DB\Entity
         $flist  = serialize($this->cflist);        
         
         $this->detail .= "<cflist><![CDATA[{$flist}]]></cflist>";
-        $this->detail .= "<nds>{$this->nds}</nds>";
-      
+        
         $this->detail .= "</detail>";
 
         return true;

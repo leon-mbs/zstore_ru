@@ -41,7 +41,7 @@
   {{#notes}}
     <tr>
         <td></td>
-        <td valign="top"><b>Коментарий</b></td>
+        <td valign="top"><b>Комментарий</b></td>
         <td colspan="5">{{notes}}</td>
     </tr>
     {{/notes}}    

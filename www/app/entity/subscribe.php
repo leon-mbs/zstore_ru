@@ -624,7 +624,7 @@ class Subscribe extends \ZCL\DB\Entity
             }
 
         }
-        $header['taxurl'] = $doc->getFiscUrl();
+     
         if(strlen($doc->headerdata['hash'])>0) {
 
             $header['docurl'] = _BASEURL . 'doclink/' . $doc->headerdata['hash'];

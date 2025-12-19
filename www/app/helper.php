@@ -375,7 +375,7 @@ class Helper
     }
 
     /**
-     * список  файдов  пррепленных  к  объекту
+     * список  файлов  прикрепленных  к  объекту
      *
      * @param mixed $item_id
      * @param mixed $item_type
@@ -1335,7 +1335,7 @@ class Helper
      
             
         $migration700 = \App\Helper::getKeyVal('migration700'); 
-        if($migration6180 != "done"  ) {
+        if($migration700 != "done"  ) {
             Helper::log("Миграция 700");
          
             \App\Helper::setKeyVal('migration700', "done");           

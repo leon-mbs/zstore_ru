@@ -489,9 +489,7 @@ class Document extends \ZCL\DB\Entity
             if($onlystate == false) {
                 $doc->onState($state, $oldstate);
             
-                if($state >4 ) {
-                   $doc->DoAcc();   
-                }
+                
                 
             }
             // подписка  на  смену  статуса

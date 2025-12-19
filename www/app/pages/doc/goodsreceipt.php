@@ -19,7 +19,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
-use Zippy\Html\Form\TextArea;se Zippy\Html\Form\TextArea;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Panel;
@@ -341,7 +341,7 @@ class GoodsReceipt extends \App\Pages\Base
         $row->add(new Label('custcode', $item->custcode));
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
-        $row->add(new Label('pricends', H::fa($item->pricends)));
+     
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
         $row->add(new Label('sdate', $item->sdate > 0 ? \App\Helper::fd($item->sdate) : ''));
@@ -582,8 +582,7 @@ class GoodsReceipt extends \App\Pages\Base
             $this->setWarn("Не выбрана цена");
         }
 
-        $item->pricends= $item->price + $item->price * $item->nds();
-        
+       
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         $item->sdate = $this->editdetail->editsdate->getDate();
 
@@ -861,21 +860,16 @@ class GoodsReceipt extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
-        $nds = 0;
+       
 
         foreach ($this->_itemlist as $item) {
             $item->amount = doubleval($item->price) * $item->quantity;
             $total = $total + $item->amount;
-            if($item->pricends > $item->price) {
-                $nds = $nds + doubleval($item->pricends-$item->price) * $item->quantity;                
-            }
+           
 
         }
         $this->docform->total->setText(H::fa($total));
-        if($this->_tvars['usends'] != true) {
-           $nds=0; 
-        }
-      
+        
         if($nds>0) {
             $this->docform->nds->setText(H::fa($nds));            
         }
@@ -950,6 +944,7 @@ class GoodsReceipt extends \App\Pages\Base
             }
             if ($this->_doc->headerdata['comission']==1  ) {
                 $this->setError("Нельзя валюту и комиссию"); 
+            }
             if ($this->_doc->getHD('nds',0) >0  ) {
                 $this->setError("Нельзя валюту и НЛС ");
             }

@@ -1294,7 +1294,7 @@ class ARMPos extends \App\Pages\Base
             }            
             
 
-            if($this->_pos->usefreg == 1  ) {
+            if($this->pos->usefreg == 1  ) {
                     $this->_doc->headerdata["passfisc"] = 1;
                       
                     $this->_doc->save();
@@ -1326,7 +1326,7 @@ class ARMPos extends \App\Pages\Base
 
        
   
-        if($this->_pos->usefreg == 1  ) {
+        if($this->pos->usefreg == 1  ) {
               $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
         } 
     }
@@ -1353,12 +1353,10 @@ class ARMPos extends \App\Pages\Base
         $row->add(new Label('checkfr' ))->setVisible(($doc->headerdata['passfisc'] ?? 0) == 1) ;
         $row->checkfr->setAttribute("onclick","fiscFR({$doc->document_id})")  ;
         if($doc->state <5) {
-           $row->checkfisc->setVisible(false);
+       
            $row->checkfr->setVisible(false);
         }
-        if($this->pos->usefisc != 1) {
-           $row->checkfisc->setVisible(false);
-        }
+       
         if($this->pos->usefreg != 1) {
            $row->checkfr->setVisible(false);
         }
