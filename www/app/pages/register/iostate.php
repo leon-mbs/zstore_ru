@@ -37,7 +37,7 @@ class IOState extends \App\Pages\Base
         if (false == \App\ACL::checkShowReg('IOState')) {
             App::RedirectHome() ;
         }
-        $this->_tvars['bmode'] = false;
+      
         $this->_tvars['totalin'] = "";
         $this->_tvars['totalout'] = "";
         $this->_tvars['totaldiff'] = "";

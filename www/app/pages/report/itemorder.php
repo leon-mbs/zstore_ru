@@ -63,26 +63,33 @@ class ItemOrder extends \App\Pages\Base
         $total = 0;
         $items = array();
 
-        foreach (Document::findYield($where) as $doc) {
+      foreach (Document::findYield($where) as $doc) {
 
             foreach ($doc->unpackDetails('detaildata') as $item) {
-                if (!isset($items[$item->itemname])) {
-                    $items[$item->itemname] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0,'code'=>$item->item_code);
-                 }
-                $items[$item->itemname]['qty'] += $item->quantity;
+                
+                
+                if (!isset($items[$item->item_id])) {
+                    
+                    $items[$item->item_id] = array('itemname' => $item->itemname, 'msr' => $item->msr, 'qty' => 0,'code'=>$item->item_code);
+                }
+                $items[$item->item_id]['qty'] += $item->quantity;
                 $total += ($item->price * $item->quantity);
             }
         }
 
-        $names = array_keys($items);
-        sort($names);  //сортируем по  алфавиту
-
-        foreach ($names as $name) {
-            $item = $items[$name];
-
+        
+        usort($items,  function ($a, $b) {
+            return $a['itemname'] > $b['itemname'];
+        });  
+        
+        foreach ($items as $item) {
+            
             if( doubleval($item['qty']) > 0) {
                 $detail[] = array('name' => $item['itemname'], 'msr' => $item['msr'], 'code' => $item['code'], 'qty' => H::fqty($item['qty']));                
-            }        }
+            }
+
+        }
+
 
 
         $header = array(

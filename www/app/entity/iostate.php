@@ -16,8 +16,8 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_OTHER_INCOME = 2;     //прочие доходы
     public const TYPE_FIN          = 3;     //доходы от  фин.  деятельности
  //   public const TYPE_CANCEL_CUST  = 5;     //отмена  платежа  покупки
- //   public const TYPE_INEQ         = 6;     //ввод в  экплуатацию ОС
-  //  public const TYPE_INVEQ        = 7;     //ремонт и восстановдение ОС
+    public const TYPE_INEQ         = 6;     //ввод в  экплуатацию ОС
+    public const TYPE_INVEQ        = 7;     //ремонт и восстановдение ОС
 
     //внебалансовые доходы (для  статистики)
     public const TYPE_OVER      = 30;     //излишки при инвентаризации
@@ -41,7 +41,7 @@ class IOState extends \ZCL\DB\Entity
     public const TYPE_ADS              = 63;    //   расходы на  маркетинг
     public const TYPE_BILL_OUTCOME     = 64;    //расходы на  комуналку
     public const TYPE_OUTSERVICE       = 65;    //расходы на услуги
-  //  public const TYPE_AMOR             = 67;    // амортизация ОС
+    public const TYPE_AMOR             = 67;    // амортизация ОС
      public const TYPE_PROD             = 68;    // прямые производственные  затраты
   //   public const TYPE_ADVANCEREP       = 69;    // Подотчет сотрудниу
 
@@ -109,7 +109,7 @@ class IOState extends \ZCL\DB\Entity
             $list[self::TYPE_FIN] = "Доходы о  финансовых операций";
           //  $list[self::TYPE_CANCEL_CUST] = "Скасування платежу закупівлі";
             $list[self::TYPE_OTHER_INCOME] = "Прочие  доходы";
-         //  $list[self::TYPE_INEQ] = "Інші доходи";
+         
         }
 
         if ($type == 2 ||   $type == 0  ) {
@@ -139,10 +139,10 @@ class IOState extends \ZCL\DB\Entity
  
  
         if (  $type == 0) {
-         //   $list[self::TYPE_INEQ] = "Ввод ОЗ в  експлуатацію ";
-       //     $list[self::TYPE_INVEQ] = "Ремонт та відновлення ОЗ";
+            $list[self::TYPE_INEQ] = "Ввод ОС в  эксплуатацию ";
+            $list[self::TYPE_INVEQ] = "Ремонт и восстановление ОС";
             $list[self::TYPE_OUTEQ] = "Списание ОС";
-        //    $list[self::TYPE_AMOR] = "Амортизація ОЗ";
+            $list[self::TYPE_AMOR] = "Амортизация ОС";
             $list[self::TYPE_LOST] = "Потери при инвентаризации";
             $list[self::TYPE_TRASH] = "Отходы производства";
             $list[self::TYPE_OVER] = "Излишки при инвентаризации";
