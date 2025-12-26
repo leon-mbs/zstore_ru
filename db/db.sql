@@ -1563,8 +1563,9 @@ INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VA
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Операции с ОС и НМА', 'EQ', '', 0);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Перемещение  между этапами', 'ProdMove', 'Производство', 1);
 INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 1, 'Авансовый отчет', 'AdvanceRep', 'Касса и платежи',   0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES(  2, 'Закрытие дня', 'EndDay', 'Касса и платежи',     0);
-INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES(  3, 'Замены ТМЦ', 'SubstItems', 'Склад',     0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Закрытие дня', 'EndDay', 'Касса и платежи',     0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 3, 'Замены ТМЦ', 'SubstItems', 'Склад',     0);
+INSERT INTO metadata (meta_type, description, meta_name, menugroup, disabled) VALUES( 2, 'Ограничения системмы', 'Toc', 'Аналитика', 0);
 
  
    
