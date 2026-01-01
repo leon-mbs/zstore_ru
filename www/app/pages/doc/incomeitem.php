@@ -303,8 +303,7 @@ class IncomeItem extends \App\Pages\Base
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
-
+         
             if ($file['size'] > 0) {
                 $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
                 $this->_doc->headerdata["scan"] = $id;
@@ -322,7 +321,7 @@ class IncomeItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-           $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -385,6 +384,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editprice->setText(H::fa($price));
 
     }
+
     public function onOpensn($sender) {
         $this->docform->setVisible(false) ;
         $this->editsnitem->setVisible(true) ;
@@ -396,7 +396,7 @@ class IncomeItem extends \App\Pages\Base
 
     } 
     
-   public function savesnOnClick($sender) {
+    public function savesnOnClick($sender) {
         $common = \App\System::getOptions("common");
 
         $id = $this->editsnitem->editsnitemname->getKey();
@@ -497,7 +497,6 @@ class IncomeItem extends \App\Pages\Base
 
         $this->docform->detail->Reload();
     }
-
  
     //добавление нового товара
     public function addnewitemOnClick($sender) {

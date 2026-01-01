@@ -184,15 +184,7 @@ class Base extends \Zippy\Html\WebPage
             $this->_tvars["showmodmenu"] = false;
         }
 
-        /*
-        if ($this->_tvars["isadmins"]) {  //для  роли админов  видны  все  разделы  меню
-            $this->_tvars["showdocmenu"] = true;
-            $this->_tvars["showrepmenu"] = true;
-            $this->_tvars["showregmenu"] = true;
-            $this->_tvars["showrefmenu"] = true;
-            $this->_tvars["showsermenu"] = true;
-            $this->_tvars["showmodmenu"] = true;
-        }   */
+     
  
         //скрыть  боковое  меню
         $this->_tvars["hidesidebar"] = $user->hidesidebar == 1 ? 'hold-transition   sidebar-collapse' : 'hold-transition sidebar-mini sidebar-collapse';
@@ -244,18 +236,16 @@ class Base extends \Zippy\Html\WebPage
 
     //вывод ошибки,  используется   в дочерних страницах
 
-    public function setError($msg ) {
+    public function setError($msg,$log=false ) {
+        if($log) {
+            \App\Helper::logerror($msg) ;
+        }
         $msg = str_replace("'", "`", $msg) ;
-
-
         System::setErrorMsg($msg);
     }
 
     public function setErrorTopPage($msg) {
-        $msg = str_replace("'", "`", $msg) ;
-        $msg = str_replace("\"", "`", $msg) ;
-
-        System::setErrorMsg($msg, true);
+       System::setErrorMsg($msg,true );
     }
 
     public function setSuccess($msg ) {
@@ -276,12 +266,7 @@ class Base extends \Zippy\Html\WebPage
         System::setInfoMsg($msg);
     }
  
-    public function setInfoTopPage($msg) {
-        $msg = str_replace("'", "`", $msg) ;
-        $msg = str_replace("\"", "`", $msg) ;
-
-        System::setInfoMsg($msg, true);
-    }
+  
 
     final protected function isError() {
         return (strlen(System::getErrorMsg()) > 0 || strlen(System::getErrorMsg()) > 0);
@@ -323,7 +308,6 @@ class Base extends \Zippy\Html\WebPage
         
         $this->setError('');
         $this->setErrorTopPage('');
-        $this->setInfoTopPage('');
      
         $this->setSuccess('');
         $this->setInfo('');

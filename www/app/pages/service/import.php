@@ -452,7 +452,7 @@ class Import extends \App\Pages\Base
             }
             $doc->packDetails('detaildata', $itlist);
             $doc->amount = H::fa($amount);
-            $doc->payamount = $amount;
+            $doc->payamount = 0;
           
             $doc->headerdata['payed'] = 0;
             $doc->notes = 'Импорт с Excel';

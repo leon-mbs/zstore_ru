@@ -9,17 +9,20 @@
 <ul class="nav nav-tabs">
   
   <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Печатная форма</a>
+    <a class="nav-link active" data-toggle="tab" href="#tprint"><i class="fa fa-print"></i> Форма A4</a>
+  </li>
+  <li class="nav-item" v-show="docdata.exports.pos">
+    <a class="nav-link  " data-toggle="tab" href="#tprintpos"><i class="fa fa-print"></i> Чековая  форма</a>
   </li>
   
   <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Связанные документы <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tdocs"><i class="fa fa-project-diagram"></i> Прикрепленные документы <span   class="badge badge-pill badge-info" v-show="doccnt>0" v-text="doccnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Коментартт  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tcomm"><i class="fa fa-comments"></i> Коментарии  <span   class="badge badge-pill badge-info" v-show="msgcnt>0" v-text="msgcnt"> </span></a>
   </li>
  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#tfiles"><i class="fa fa-paperclip"></i> Прикрепленные  файлы <span   class="badge badge-pill badge-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
+    <a class="nav-link" data-toggle="tab" href="#tfiles"><i class="fa fa-paperclip"></i> Прикрепленные файлы <span   class="badge badge-pill badge-info" v-show="filescnt>0" v-text="filescnt"> </span></a>
   </li>
  <li class="nav-item">
     <a class="nav-link" data-toggle="tab" href="#thist"><i class="fa fa-calendar-alt"></i> История изменений</a>
@@ -40,21 +43,23 @@
         <a v-show="docdata.exports.word" :href="word"  target="_blank" title="Экспорт в Word"><i class="fa fa-file-word mr-2"></i>   </a>
         <a v-show="docdata.exports.excel"  :href="excel"   target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i>  </a>
         <a v-show="docdata.exports.pdf"   :href="pdf"  target="_blank" title="Экспорт в PDF"> <i class="fa fa-file-pdf mr-2"></i>  </a>
-        <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Отправка  по  e-mail "> <i class="fa fa-envelope mr-2"></i>  </a>
-       
-        <span v-show="docdata.exports.pos">
-       
-       <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Печать на  чевовом принтиере"> <i class="fas fa-cash-register mr-1"></i></a>
-       <a v-else   onclick=" printpos()" title="Печать на чековый принтер"><i class="fas fa-cash-register mr-1"></i> </a>
-         </span>            
+        <a v-show="docdata.exports.email" v-on:click.prevent="sendmail"     title="Отправка  по  e-male "> <i class="fa fa-envelope mr-2"></i>  </a>
+         
+               
        
        <br>
                     
 
         <div id="preview" v-html="docdata.html" >  
         </div>
-        <div id="previewpos" style="display:none;" v-html="docdata.htmlpos" >
-        </div> 
+     
+  </div>
+   <div class="tab-pane      " id="tprintpos"> 
+        <a v-if="docdata.usemobileprinter" :href="printpos" target="_blank" title="Печать на чековом принтере"> <i class="fas fa-cash-register mr-1"></i></a>
+       <a v-else   onclick=" printpos()" title="Печать на чековом принтере"><i class="fas fa-print mr-1"></i> </a>
+       <br>    
+       <div id="previewpos"   v-html="docdata.htmlpos" >
+        </div>  
   </div>
   
   <div class="tab-pane  " id="tdocs">
@@ -75,9 +80,9 @@
             <hr>
             <form onsubmit="return  false"     >
 
-                <label for="addrel">Добавить дочерний документ:</label>
+                <label for="addrel">Добавить длчерний документ:</label>
                 <div style="width:200px" class="form-group">
-                    <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Начните вводить номер..."></typeahead>   
+                    <typeahead v-model="childdocid" ref="docth"  :onquery="ontext"    placeholder="Начните  вводить номер..."></typeahead>   
 
                 </div>
 
@@ -223,7 +228,8 @@
                                 </tr>
                             </table>
                         </div>
-                   
+                    
+                        
                     </div>
   </div>
   <div class="tab-pane  " id="tscan" v-show="docdata.isscan">
@@ -233,8 +239,7 @@
        
  
 </div>
-           
-  
+               
         </div>
         
         
@@ -246,14 +251,12 @@
             var _docid =0
         
             function printform() {
-                $('#previewpos').attr('style', 'display:none');
-                $('#preview').attr('style', 'display:block');
+      
                 $('#preview').printThis();
             }
 
             function printpos() {
-                $('#preview').attr('style', 'display:none');
-                $('#previewpos').attr('style', 'display:block');
+          
                 {{^printserver}}
                   $('#previewpos').printThis();
                 {{/printserver}}
@@ -272,7 +275,7 @@
                       if(data.error  != "") {
                           toastr.error(data.error)
                       } else {
-                         //Отправить на принтер 
+                         //відправляємо на принтер 
                          sendPS("["+data.buf+"]" )                             
                           
                       }
@@ -296,8 +299,8 @@
                   docdata:{
                       paylist:[] ,
                       entrylist:[] ,
-                      exports:{} ,
-                      qr:{}
+                      exports:{}  
+                      
                   } ,
                   reldocs:[] ,
                   childdocid:0,
@@ -400,19 +403,9 @@
                    
                   
                } 
-               ,
-             
+                  ,
            
-             copycb:function( ){
- 
-            
-                if(navigator.clipboard){
-                    navigator.clipboard.writeText(this.docdata.qr.url);
-                }else alert('Ваш браузер не поддерживает Clipboard'); 
-  
-      
-                  
-               }   ,
+     
            
                opendoc:function(id){
                    
