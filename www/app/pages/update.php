@@ -219,7 +219,7 @@ class Update extends \App\Pages\Base
             @unlink($archive) ;
     
    
-            @file_put_contents($archive, file_get_contents( "https://ru.zippy.com.ua/download/vendor81.zip")) ;
+            @file_put_contents($archive, file_get_contents( "https://ru.zippy.com.ua/download/vendor.zip")) ;
         
      
             
