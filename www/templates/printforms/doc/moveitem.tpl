@@ -10,14 +10,30 @@
         </td>
 
     </tr>
-
+    {{#storeemp}}
+    <tr>
+        <td colspan="4">
+            <b>С сотрудника:</b> {{storeemp}}
+        </td>
+    </tr>
+ 
+    {{/storeemp}}  
+   {{#tostoreemp}}
+    <tr>
+        <td colspan="4">
+            <b>На сотрудника:</b> {{tostoreemp}}
+        </td>
+    </tr>
+ 
+    {{/tostoreemp}}  
      <tr>
         <td colspan="4">{{{notes}}}</td>
     </tr>
 
     <tr style="font-weight: bolder;">
 
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Название</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
@@ -29,6 +45,7 @@
     <tr>
 
         <td>{{item_name}}</td>
+        <td>{{item_code}}</td>
 
         <td align="right">{{snumber}}</td>
         <td>{{msr}}</td>

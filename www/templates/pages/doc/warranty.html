@@ -13,11 +13,11 @@
                 <div class="col-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
 
                     <div class="form-group">
@@ -44,7 +44,7 @@
                             <th class="text-right">Кол.</th>
                             <th class="text-right">Цена</th>
                             <th class="text-right">Сумма</th>
-                            <th>Серийный номер</th>
+                            <th>Ссерийнй номер</th>
                             <th>Гарантия</th>
                             <th  ></th>
                         </tr>
@@ -68,35 +68,35 @@
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  ">
                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Закрыть" class="btn btn-outline-info  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="Выполнить" class="btn btn-outline-info  ">
 
                 </div>
             </div>
         </form>
         <form zippy="editdetail">
-            <h4>Введение товара </h4>
+            <h4>Ввод товара </h4>
             <div class="row">
                 <div class="col-4">
                     <div class="form-group">
                         <label for="edittovar">Название</label>
-                        <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
+                        <input   placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
 
 
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Количество</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Цена </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
                     <div class="form-group">
-                        <label for="editsn">Серийный номер</label>
+                        <label for="editsn">Серинйый номер</label>
                         <input class="form-control" type="text" zippy="editsn">
 
                     </div>
@@ -106,8 +106,9 @@
 
                     </div>
                     <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-outline-secondary mr-2">
                         <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-outline-secondary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-outline-secondary ">
+                        
                     </div>
 
 
@@ -115,7 +116,7 @@
             </div>
 
         </form>
-
+ 
 
     </body>
 </html>

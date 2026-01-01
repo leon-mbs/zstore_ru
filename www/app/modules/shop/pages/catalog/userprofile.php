@@ -17,7 +17,6 @@ use App\Entity\Customer;
 
 class UserProfile extends Base
 {
-
     public $c;
 
     public function __construct() {
@@ -30,7 +29,7 @@ class UserProfile extends Base
             return;
         }
         $this->c  = Customer::load($id);
-        
+
         $form = new Form('profileform');
         $form->onSubmit($this, 'onsubmit');
         $form->add(new TextInput('email', $this->c->email));
@@ -38,9 +37,9 @@ class UserProfile extends Base
         $form->add(new TextInput('firstname', $this->c->firstname));
         $form->add(new TextInput('lastname', $this->c->lastname));
         $form->add(new TextArea('address', $this->c->address));
-        $this->add($form); 
- 
- 
+        $this->add($form);
+
+
 
         //форма   пароля
 
@@ -48,7 +47,7 @@ class UserProfile extends Base
         $form->add(new TextInput('userpassword'));
         $form->add(new TextInput('confirmpassword'));
         $form->onSubmit($this, 'onsubmitpass');
-    
+
 
     }
 
@@ -61,14 +60,14 @@ class UserProfile extends Base
         $this->c->lastname = $sender->lastname->getText();
         $this->c->customer_name = $this->c->firstname.' '.$this->c->lastname;
         if (strlen($this->c->phone) > 0 && strlen($this->c->phone) != H::PhoneL()) {
-            $this->setError("tel10", H::PhoneL());
+            $this->setError("Длина номера телефона должна быть ".\App\Helper::PhoneL()." цифр");
             return;
         }
         if (!$this->isError()) {
 
             $this->c->save();
-            $this->setSuccess('saved');
-             
+            $this->setSuccess('Сохранено');
+
         }
     }
 
@@ -79,14 +78,14 @@ class UserProfile extends Base
         $confirm = $sender->confirmpassword->getText();
 
         if ($pass == '') {
-            $this->setError('enterpassword');
+            $this->setError('Введите пароль');
         } else {
             if ($confirm == '') {
-                $this->setError('confirmpass');
+                $this->setError('Подтвердите пароль');
             } else {
                 if ($confirm != $pass) {
 
-                    $this->setError('invalidconfirm');
+                    $this->setError('Неверное подтверждение');
                 }
             }
         }
@@ -94,10 +93,10 @@ class UserProfile extends Base
 
         if (!$this->isError()) {
             $this->c->passw = (\password_hash($pass, PASSWORD_DEFAULT));
-        
+
             $this->c->save();
- 
-    
+
+
 
         }
 

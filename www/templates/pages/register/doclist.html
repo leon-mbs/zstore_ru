@@ -5,63 +5,130 @@
     </head>
    <body>
         <div class="row">
-            <div class="col-12 col-xl-11">
-
+            <div class="col-12  ">
+                
                 <h3>Журнал документов
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-content="Общий журнал для всех документов с возможностью их отмены и удаления.
-                       Более детальное управление статусами проводится в соответствующих специализированных журналах."></i>
+                       data-placement="bottom" data-content="Общий журнал для всех документов с возможностью их отмены и удаления. 
+Более подробное управление статусами проводится в соответствующих специализированных журналах."></i>
                 </h3>
 
 
-                <div class="navbar nav  ">
-                    <form zippy="filter" class="form-inline ">
-                        <label for="searchnumber">№ </label>
-                        <input placeholder="Поиск..." class="form-control mr-2" type="text" zippy="searchnumber"
-                               autocomplete="off" autofocus  onkeydown="onBarCode()"         style="width:175px" title="Если поиск по номеру, другие элементы фильтра игнорируются">
-
-                        <label for="from">С </label>
-                        <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
-
-
-                        <label for="to"> по </label>
-                        <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
-
-                        <label for="status"> Статус </label>
-                        <select class="form-control mr-2" zippy="status">
+      <div class="card  ">
+                    <form zippy="filter" class="row   g-2 align-items-center">
+                      <div class="col-auto">
+                       <div class="  row no-gutters"> 
+                        <label class="col-auto mt-2" for="searchnumber">№ </label>
+                        <div class="col-auto">
+                           <input autofocus="on" placeholder="Поиск..." class="form-control  " type="search" zippy="searchnumber"
+                               autocomplete="off"    onkeydown="onSearch()" style="width:125px" title="При поиске по номеру остальные элементы фильтра  игнорируются">
+                         </div>
+                       </div>
+                      </div>
+                       <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                             <label class="col-auto mt-2" for="from">С </label>
+                             <div class="col-auto">
+                                <input type="text" class="form-control    " zippy="from" style="width:110px">
+                             </div>
+                         </div>
+                      </div>
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                               <label class="col-auto mt-2" for="to"> по </label>
+                               <div class="col-auto">
+                                  <input type="text" class="form-control   " style="width:110px" zippy="to">
+                              </div>
+                         </div>
+                        </div>
+                        <div class="col-auto">   
+                          <div class=" row no-gutters"> 
+                        <label class="col-auto mt-2" for="status"> Статус </label>
+                             <div class="col-auto">
+                                <select class="form-control  " zippy="status">
+                                    <option value="0">Не указано</option>
+                                </select>
+                            </div>
+                           </div>
+                           </div>
+                        <div class="col-auto"> 
+                            <div class=" row no-gutters"> 
+ 
+                        <label class="col-auto mt-2" for="doctype"> Тип </label>
+                                   <div class="col-auto">
+                    <select class="form-control    " zippy="doctype">
                             <option value="0">Не указано</option>
                         </select>
+                           </div>
+                           </div>
+                           </div>
+                           <div class="col-auto"> 
+                                <div class=" row  no-gutters"> 
+                                <label class="col-auto mt-2" for="searchcust"> Контрагент </label>
+                                             <div class="col-auto">
+                                  <input placeholder="Начните вводить..." class="form-control mr-1" type="text" zippy="searchcust">
 
-                        <label for="doctype"> Тип </label>
-                        <select class="form-control mr-sm-1  " zippy="doctype">
-                            <option value="0">Не установлено</option>
+                           </div>
+                           </div>
+                           </div>
+                        
+                           <div class="col-auto"> 
+                               <div class=" row no-gutters"> 
+                               <label class="col-auto mt-2" for="author"> Автор </label>
+                                                            <div class="col-auto">
+                               <select class="form-control    " zippy="author">
+                                        <option value="0">Не выбрано</option>
+                                    </select>
+                             </div>
+                           </div>
+                           </div>
+                           
+                       <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="store">Склад</label>
+                               <div class="col-auto">
+                        <select class="form-control mr-sm-2" zippy="store">
+                            <option value="0">Не выбрано</option>
                         </select>
-                        <label for="searchcust"> Контрагент </label>
-                        <input placeholder="Начните вводить..." class="form-control mr-1" type="text" zippy="searchcust">
-
-                        <label for="author"> Ответственный </label>
-                        <select class="form-control    " zippy="author">
-                            <option value="0">Не выбран</option>
+                         </div>
+                        </div>
+                        </div>                           
+                           
+                      <div class="col-auto"> 
+                           <div class=" row no-gutters"> 
+                      <label class="col-auto mt-2" for="mfund">Счет</label>
+                               <div class="col-auto">
+                        <select class="form-control mr-sm-2" zippy="mfund">
+                            <option value="0">Не выбрано</option>
                         </select>
-                        <input class="form-control ml-2  mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту"   >
+                         </div>
+                        </div>
+                        </div>                           
+                           
+                           <div class="col-auto"> 
+                        <input class="form-control ml-2  mr-2" type="search" zippy="searchtext" placeholder="Поиск по контенту"   >
 
+                           </div>
+                           <div class="col-auto"> 
 
                         <input type="submit" class="  ml-2  mr-2  btn btn-outline-success  " value="ОК">
-                        <a zippy="erase" title="Скинуть фильтр"><i class="fa fa-eraser"></i></a>
-
+                        <a zippy="erase" title="Сбросить фильтр"><i class="fa fa-eraser"></i></a>
+                           
+                       </div>
+     
 
                     </form>
                 </div>
                 <a zippy="csv">Экспорт в Excel</a>
                 <table class="table   table-sm  table-hover   ">
-                    <tr>
+                  <thead>  <tr>
                         <th></th>
 
                          <th class="text-nowrap  "><a zippy="sortdoc">Тип документа</a></th>
-                        <th class="text-nowrap  "><a zippy="sortnum">Номер</a></th>
-                        <th class="text-nowrap  "><a zippy="sortdate">Дата</a></th>
-                        <th class="text-nowrap  "><a zippy="sortcust">Контрагент</a></th>
+                        <th  ><a zippy="sortnum">Номер</a></th>
+                        <th  ><a zippy="sortdate">Дата</a></th>
+                        <th ><a zippy="sortcust">Контрагент</a></th>
                         <th class="text-right   "><a zippy="sortamount">Сумма</a></th>
                         <th  > Статус </th>
                         {{#usebranch}}
@@ -78,17 +145,17 @@
                         <th></th>
                         <th></th>
                         <th></th>
-                    </tr>
-                  
+                    </tr>  </thead>
+                    <tbody>
                         <tr zippy="doclist">
                             <td>
-                           <a  zippy="tofav"><i title="Добавить в избранное" zippy="top" class="far fa-star"  ></i></a>
-                            <a  zippy="fromfav"><i title="Удалить из избранного" zippy="nottop" class="fas fa-star"  ></i></a>
+                           <a  zippy="tofav"><i title="Добавить в обране" zippy="top" class="far fa-star"  ></i></a>
+                            <a  zippy="fromfav"><i title="Удалить з обраного" zippy="nottop" class="fas fa-star"  ></i></a>
                             </td>
                            
-                            <td zippy="name"></td>
-                            <td zippy="number"></td>
-                            <td style="white-space:   nowrap" zippy="date"></td>
+                            <td class="text-nowrap  "><a zippy="name"></a></td>
+                            <td class="text-nowrap  "><a zippy="number"></a></td>
+                            <td   class="text-nowrap" zippy="date"></td>
                             <td zippy="cust"></td>
                             <td zippy="amount" class="text-right  "></td>
 
@@ -99,15 +166,17 @@
 
                             <td><a zippy="parentdoc"></a></td>
                             <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i></td>
-                            <td><i zippy="hasscan" class="far fa-image" title="Прикреплено скан оригинала"></i></td>
+                            <td><i zippy="hasscan" class="far fa-image" title="Прикреплено скан  оригинала"></i></td>
 
                             <td><i zippy="isplanned" class="fa fa-calendar-alt" title="Запланирован"></i></td>
-                            <td><i zippy="waitapp" class="fa fa-gavel" title="Ожидает утверджения "></i></td>
-
+                            <td><i zippy="waitapp" class="fa fa-gavel" title="Ожидает утверждения "></i></td>
+                         <td  >
+                                <a zippy="qr" title="Внешняя ссылка  на  документ"><i class="fa fa-link"></i></a> &nbsp; &nbsp;
+                            </td>
 
                             <td style="white-space:   nowrap"> &nbsp;&nbsp;
                                 <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i> </a>
-                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="Редактирование"><i class="fa fa-edit"/> </a>
+                              &nbsp; &nbsp; &nbsp; &nbsp;   <a zippy="edit" title="Редактирование"><i class="fa fa-edit"></i> </a>
                                 <a zippy="cancel" title="Отменить выполнение"><i class="fa fa-undo"></i> </a>
 
                             </td>
@@ -116,7 +185,7 @@
                             </td>
                             <td>
                                 <div class="btn-group" zippy="basedon">
-                                    <button title="Создать на основании" type="button"
+                                    <button title="Создать на  основании" type="button"
                                             class="btn btn-outline-secondary btn-sm  dropdown-toggle" data-toggle="dropdown">
                                         Создать <span class="caret"></span>
                                     </button>
@@ -126,33 +195,32 @@
                                 </div>
                             </td>
                         </tr>
-                  
+                    </tbody>
                 </table>
 
-                <div zippy="pag"></div>
+                <div style="width:50%" zippy="pag"></div>
 
 
-                <div class="navbar nav">
+                <div class=" card">
                     <form zippy="statusform" class="form-inline ">
-                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатить</a>
-                        <button zippy="bap" class="btn btn-success  mr-2"><i class="fas fa-thumbs-up"></i> Утвердить</button>
-                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Отклонить</button>
-                        <input class="form-control mr-4" zippy="refcomment" placeholder="Комментарий к отклонению">
                          <label data-label="mstates" for="mstates"> Статус </label>
                          <select zippy="mstates" class="form-control mr-2">
                          <option value="0">Не выбрано</option>
                          </select>
                          <button zippy="bstatus" class="btn btn-success  mr-2"> Применить</button>
-                         <label data-label="musers" for="mstates"> Ответственный </label>
+                         <label data-label="musers" for="musers"> Ответственный </label>
                          <select zippy="musers" class="form-control mr-2">
-                         <option value="0">Не выбран</option>
+                         <option value="0">Не выбрано</option>
                          </select>
                          <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
+                         &nbsp;&nbsp;<a zippy="btopay" class="  btn btn-primary  mr-2 ">Оплатить</a>
+                        <button zippy="bap" class="btn btn-primary  mr-2"><i class="fas fa-thumbs-up"></i> Утвердить</button>
+                        <button zippy="bref" class="btn btn-danger  mr-2"><i class="fas fa-thumbs-down"></i> Отклонить</button>
+                        <input class="form-control mr-4" zippy="refcomment" placeholder="Комментарий к отклонентю">
                          
-                         
-                         
-                         <a zippy="bprint" class="btn btn-success  mr-2 ml-4"><i class="fa fa-print"></i> Печать этикеток</a>
-                      
+                         <button zippy="bprint" class="btn btn-success  mr-2 ml-4"><i class="fa fa-print"></i> Печать этикеток</button>
+                         &nbsp;<input data-label="bprint" zippy="print1" type="checkbox" > <span data-label="bprint">По одной  на  позицию</span>
+                        <button zippy="bcopy" class="btn btn-info  ml-2"><i class="fas fa-copy"></i> Копия</button>                         
                     </form>
                 </div>
 
@@ -183,12 +251,40 @@
                 </div>
             </div>
         </div>
+    <div id="modalqr" class="modal fade  " tabindex="-1" role="dialog"                    aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered   ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body  ">
+                          <table class="table table-sm">
+                          <tr><td align="center">
+                            <h5 >Ссылка  на  документ</h5>
+                           </td></tr>
+                          <tr><td align="center">
+                          <div class="mb-2" id="imagelink" > </div>
+                          </td></tr>
+                          
+                          <tr><td align="center">
+                          <a  class="btn btn-info  " id="urllink"  >  Открыть ссылку        </a>
 
+                           <button onclick="copycplink()" class="btn btn-success   "    title="Копировать в  клипборд" >Копировать </button>
+                          </td></tr> </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>         
+   
         <script>
-            $('#searchnumber').focus();
+            
 
+            function onSearch( ) {
 
-            function onBarCode(ele) {
 
                 if (event.key === 'Enter' || event.keyCode == 13) {
                     // alert($('#barcode').val());
@@ -200,6 +296,28 @@
             function check_delete() {
                 return confirm("Удалить документ?")
             }
+            
+  function  copycplink() 
+   {
+                var url= $('#urllink').attr('href') ;
+             
+                if(navigator.clipboard){
+                    navigator.clipboard.writeText(url);
+                }else alert('Ваш браузер не поддерживает Clipboard'); 
+  
+      
+                  
+               }             
+            
         </script>
     </body>
 </html>
+
+
+
+
+
+
+
+
+

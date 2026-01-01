@@ -1,0 +1,78 @@
+<html>
+ <head>
+        <title>  Планировщик  </title>
+
+    </head>
+
+    <body>
+ 
+        <div class="row">
+            <div class="col-12 col-md-8 col-xl-6"  >
+                <h3>Планировщик               </h3>
+              <small>Для отправки  email и подписок за расписанием следует использовать внешний менеджер   
+                    <br>   
+                   Адрес  {{{url}}}   <a href="https://ru.zippy.com.ua/zstoreusage#cron">Детальнее...</a>  </small>
+                
+                <table class="ctable mb-2">
+                      <tr>
+                      <td>Активирован</td> 
+                      <td>
+                          <a  zippy="ton" ><i class="fa fa-toggle-on text-success"></i></a>
+                          <a  zippy="toff"><i class="fa fa-toggle-off"></i></a> 
+                       </td> 
+                      <td>  </td> 
+                    </tr>
+                    <tr>
+                      <td>Последний запуск запуск</td> 
+                      <td> {{lasttime}} </td> 
+                      <td>  <a href="javascript:void(0);" onclick="startcron()" >Перезапустить</a> </td> 
+                    </tr>
+                </table>
+                 <h5>Очередь заданий</h5>
+                 <a zippy="update" >Оновить</a>
+                <table class="table table-sm mt-2  ">
+                    <tr  zippy="nlist">
+
+                        <td>  <span zippy="ndate" > </span>   </td>
+                        <td>  <span zippy="ntype" > </span> </td>
+
+                       
+                        <td>
+                        <a title="Запустить" zippy="nexec"><i class="fa fa-cog"></i></a>   &nbsp;&nbsp;&nbsp;&nbsp;
+                        <a title="Удалить" zippy="ndel"><i class="fa fa-trash"></i></a> 
+                            </td>
+
+
+                    </tr>
+                </table>
+                <div zippy="pag"></div>              
+
+      
+            </div>
+
+
+
+        </div>
+ 
+<script>
+
+   function check_delall() {
+       return confirm("Очистиить?")
+   }  
+   
+   function startcron() {
+
+      fetch('/crontab.php')           
+
+   }
+      function check_nexec(ele){
+            
+            document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }
+</script>    
+          
+    </body>
+
+</html>

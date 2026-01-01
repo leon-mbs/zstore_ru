@@ -10,23 +10,18 @@
                 <h3>Журнал зарплат </h3>
 
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline ">
 
-
                         <label for="searchnumber"> № </label>
-
                         <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
-
-                      
-
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
                     </form>
                 </div>
 
                 <a href="/index.php?p=App/Pages/Doc/CalcSalary" class="btn btn-info mt-2 mb-3">Создать Начисление</a>
-                <a href="/index.php?p=App/Pages/Doc/OutSalary" class="btn btn-info mt-2 mb-3">Создать выплату</a>
+                <a href="/index.php?p=App/Pages/Doc/OutSalary" class="btn btn-info mt-2 mb-3">Создать Выплату</a>
                 <br> <a zippy="csv">Экспорт в Excel</a>
 
                 <table class="table   table-sm   ">
@@ -34,7 +29,7 @@
 
                         <th>Номер</th>
                         <th>Дата</th>
-                        <th>Год</th>
+                        <th>Рiк</th>
                         <th>Месяц</th>
                         <th class="text-right">Сумма</th>
 
@@ -48,7 +43,7 @@
                     </tr>
                     <tr zippy="doclist">
 
-                        <td zippy="number"></td>
+                        <td ><a zippy="document_number"></a></td>
                         <td class="text-nowrap" zippy="date"></td>
                         <td zippy="year"></td>
                         <td zippy="month"></td>
@@ -70,7 +65,7 @@
 
                 </table>
 
-                <div zippy="pag">
+                <div zippy="pag" style="width:60%">
                 </div>
                 <a id="dankor"></a>
             </div>
@@ -80,12 +75,7 @@
 
         <div class="row" zippy="statuspan">
             <div class="col-12">
-
-                
-
-
-                <div zippy="docview"></div>
-
+                 <div zippy="docview"></div>
             </div>
         </div>
 

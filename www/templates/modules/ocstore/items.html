@@ -3,13 +3,13 @@
         <div class="row">
             <div class="col-12 col-xl-10">
             
-            <h3>Экспорт товаров в магазин</h3>
+            <h3>Экспорт товаров  в  магазин</h3>
                 &nbsp;&nbsp;&nbsp;<small><i class="fa fa-exclamation-triangle text-danger"></i>Спецсимволы (типа <b> &amp; ' " `</b>)
-                    в названии или описании может вызвать проблемы с выгрузкой</small>
+                    в названии или описании могут вызвать проблемы с  выгрузкой</small>
 
             <br><a zippy="checkconn"><i class="fa   fa-sync"></i> Проверить соединение</a>        
                 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline ">
 
                         <label for="searchcat">Категория</label>
@@ -19,9 +19,10 @@
                         </select>
 
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Загрузить">
-                        <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
+                      
+
 
                     </form>
                 </div>
@@ -57,20 +58,21 @@
                         <label for="ecat">Категория в магазине </label>
  
                         <select class="   mr-2" zippy="ecat">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не задана</option>
                         </select>
 
-                        &nbsp;<input onclick="$('#loader2').removeAttr('style')" type="submit"
+                        &nbsp;<input onclick="document.getElementById('dialogwait').showModal()" type="submit"
                                      class="  btn btn-outline-success btn-sm  " value="Отправить">
-                        <img id="loader2" style="display:none" src="/assets/images/ajax-loader.gif">
+                         
+
                     </div>
                 </form>
             </div>
             <div class="col-12 col-md-8  ">
 
-                <h3>Обновление цен и количества</h3>
+                <h3>Обновление  цен и количеств</h3>
 
-                <div class="navbar nav">
+                <div class="card">
                             
                   <form zippy="upd" class="form-inline ">
                       <label for="updcat">Категория</label>
@@ -79,10 +81,11 @@
                             <option value="0">Все</option>
                         </select>
                     <a zippy="updateqty" class="  btn btn-outline-success  ">Обновить количество</a>
-                    <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+
                     &nbsp;&nbsp;
                     <a zippy="updateprice" class="  btn btn-outline-success  ">Обновить цены</a>
-                    <img id="loader4" style="display:none" src="/assets/images/ajax-loader.gif">
+                     
+
 
                      </form>
                 </div>
@@ -90,23 +93,24 @@
 
             <div class="col-12 col-md-8  ">
 
-                <h3>Импорт товаров из магазина </h3>
+                <h3>Импорт товаров  с магазина </h3>
 
-                <div class="navbar nav">
+                <div class="card">
                     
                     <form zippy="importform" class="form-inline ">
 
                          <div class="form-check">
 
                             <input   class="form-check-input" type="checkbox" zippy="createcat">
-                            <label class="form-check-label mr-1" for="createcat">Создать категорию как в магазине</label>
-                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Категория должна быть указана как главная"></i>
+                            <label class="form-check-label mr-1" for="createcat">Создавать категории  как  в  магазине</label>
+                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" title="Категория должна быть указана как  главная"></i>
                         </div>
 
 
                         <input zippy="getitems" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Загрузить">
-                        <img id="loader6" style="display:none" src="/assets/images/ajax-loader.gif">
+                   
+
 
                     </form>
 
@@ -117,17 +121,17 @@
 
             function check_updateqty() {
 
-                $('#loader3').removeAttr('style');
+                 document.getElementById('dialogwait').showModal()
             }
 
             function check_updateprice() {
 
-                $('#loader4').removeAttr('style');
+               document.getElementById('dialogwait').showModal()
             }
 
             function check_getitems() {
 
-                $('#loader6').removeAttr('style');
+                document.getElementById('dialogwait').showModal()
             }
 
             function chclick() {

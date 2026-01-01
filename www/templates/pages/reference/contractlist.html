@@ -1,14 +1,16 @@
 <html>
     <head>
-   
-           <title> Контракты</title>
-      </head>
+      <title> Договора</title>
+    </head>
+         
+ 
     <body>
         <div class="row">
-            <div class="col-12   col-xl-10">
+            <div class="col-12  col-md-10 col-xl-8">
                 <div zippy="contracttable">
-                    <h3>Контракты </h3>
-                    <div class="navbar nav">
+                    <h3>Договора </h3>
+                    <small><i class="fa fa-info-circle"></i> В  документах выбираются  договора  со  статусом в Работе  </small>
+                    <div class="card">
 
                         <form zippy="filter" class="form-inline">
 
@@ -18,14 +20,11 @@
                             <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="searchcust"/>
 
 
-                            <label for="searchcomp">Компания</label>
-                            <select zippy="searchcomp" class="form-control mr-sm-2">
-                                <option value="0">Не указана</option>
-                            </select>
+                          
 
                             <div class="form-check">
 
-                                <input title="Показать и неактуальные" class="form-check-input" type="checkbox" zippy="showdis">
+                                <input title="Показать также неактуальные" class="form-check-input" type="checkbox" zippy="showdis">
                                 <label class="form-check-label mr-sm-3" for="showdis">Все</label>
                             </div>
 
@@ -40,14 +39,15 @@
                             <th>Срок</th>
                             <th>Контрагент</th>
 
-                            <th>Компания</th>
-                            <th>Ответственный</th>
-
+                            
+                            <th>Статус</th>
+                           <th class="text-right"  >Сумма</th>
+                         
                      
                            
-                            <th></th>
-                            <th></th>
-                            <th></th>
+                        
+                         
+                       
                             <th></th>
 
 
@@ -55,19 +55,18 @@
                             <th></th>
                         </tr>
                         <tr zippy="contractlist">
-                            <td zippy="contract_number"></td>
+                            <td  ><a zippy="contract_number"></a> </td>
                             <td class="text-nowrap" zippy="term"></td>
                             <td zippy="customer"></td>
 
-                            <td zippy="firm"></td>
-                            <td zippy="emp"></td>
+                          
+                            <td zippy="state"></td>
+                            <td class="text-right" zippy="amount"></td>
                          
 
 
-                            <td zippy="shortdesc"></td>
-                            <td><i zippy="hasnotes" class="far fa-sticky-note" data-toggle="tooltip" data-placement="left"></i>
-                            </td>
-                            <td><a zippy="scanlink" title="Скачать скан"> <i class="fa fa-paperclip"></i> </a></td>
+                            <td ><small zippy="shortdesc"></small></td>
+                           
                             <td><a zippy="show" title="Документы"><i class="fa fa-eye"></i> &nbsp;&nbsp;</a></td>
 
                             <td><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;
@@ -82,76 +81,70 @@
             </div>
         </div>
 
-        <form zippy="contractdetail" enctype="multipart/form-data">
+        <form zippy="contractdetail"  >
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
-                        <label for="editcontract_number">Номер</label>
-                        <input required="required" class="form-control" zippy="editcontract_number"/>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editcontract_number">Номер</label>
+                        <div class="col-7  ">
+                            <input autofocus="on"    required="on"  class="form-control" zippy="editcontract_number"/>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editcreatedon">Дата начала</label>
-                        <input style="width: 120px;" required="required" class="form-control" zippy="editcreatedon"/>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editcreatedon">Дата начала</label>
+                      <div class="col-7  ">
+                         <input style="width: 120px;"  required="on"  class="form-control" zippy="editcreatedon"/>
+                     </div>
                     </div>
-                    <div class="form-group">
-                        <label for="editenddate">Дата окончания</label>
-                        <input style="width: 120px;" required="required" class="form-control" zippy="editenddate"/>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editenddate">Дата окончания</label>
+                       <div class="col-7  ">
+                        <input style="width: 120px;"  required="on"  class="form-control" zippy="editenddate"/>
+                     </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-5 col-form-label" for="editamount">Сумма</label>
+                       <div class="col-7  ">
+                        <input style="width: 120px;"     class="form-control" zippy="editamount"/>
+                     </div>
+                    </div>
+                     <div class="form-group">
+                        <label for="editcust">Контрагент</label>
+                        <input placeholder="Начните вводить..." class="form-control" zippy="editcust"/>
+                    </div>
+
+                   
+                  
+
                     <div class="form-group">
-                        <label required="required" for="editshortdesc">Короткое описание, назначение</label>
+                        <label for="editemp">Ответственный</label>
+                        <select zippy="editemp" class="form-control  ">
+                            <option value="0">Не указано</option>
+                        </select>
+                    </div>   
+
+
+                     
+                </div>
+                <div class="col-12 col-md-4 col-xl-3">
+                   
+                      <div class="form-group">
+                        <label  required="on"  for="editshortdesc">Короткое описание, назначение</label>
                         <input class="form-control" zippy="editshortdesc"/>
                     </div>
                     <div class="form-group">
                         <label for="editdesc">Детальное описание</label>
                         <textarea style="height:200px" class="form-control" zippy="editdesc"></textarea>
                     </div>
-
-
-                    <div class="form-check">
-                        <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Закрытый</label>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4 col-xl-3">
-                    <div class="form-group">
-                        <label for="editcust">Контрагент</label>
-                        <input placeholder="Начните вводить..." class="form-control" zippy="editcust"/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editcomp">Компания</label>
-                        <select zippy="editcomp" class="form-control">
-                            <option value="0">Не указана</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="editctype">Тип Договора</label>
-                        <select zippy="editctype" class="form-control  ">
-                            <option value="0">Не выбрано</option>
-                            <option value="1">Договор с клиентом</option>
-                            <option value="2">Договор с поставщиком</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="editemp">Ответственный</label>
-                        <select zippy="editemp" class="form-control  ">
-                            <option value="0">Не указан</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-
-                        <label for="scan"> &nbsp; &nbsp;Скан документа</label>
-
-                        <input class="form-control" type="file" zippy="scan">
-
-                    </div>
+                   
+                
                  
                 </div>
 
                 <div class="col-12">
-                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary mr-2 ">
+                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">
+                    
                 </div>
             </div>
         </form>
@@ -161,53 +154,114 @@
             <div class="col-12 ">  
                 <h5 zippy="cname"></h5>
                 <a zippy="back">К списку</a>
+               <div class="card ">  
+              
+                    <form zippy="statusform" class="form-inline ">
+                         <label data-label="mstates" for="mstates"> Статус </label>
+                         <select zippy="mstates" class="form-control mr-2">
+                        
+                         </select>
+                         <button zippy="bstatus" class="btn btn-success  mr-2"> Застосувати</button>
+                         <label data-label="musers" for="mstates"> Ответственный </label>
+                         <select zippy="musers" class="form-control mr-2">
+                         <option value="0">Не выбрано</option>
+                         </select>
+                         <button zippy="buser" class="btn btn-success  mr-2"> Перевести</button>
+                      </form>
+              
+              </div>
             </div>
-            <div class="col-12 col-md-8 col-xl-6 card">    
-                <h4>Документы</h4>                
+            <div class="col-12 col-md-8 col-xl-3  "> 
+                       <h5> Коментарии </h5>
+                        <table class="table table-sm">
+                            <tr zippy="dw_msglist">
+                                <td>
+                                    <span><b zippy="msguser"></b> <span zippy="msgdate" class="text-muted float-right"></span></span>
+
+                                    <p zippy="msgdata"></p>
+                                </td>
+                                <td valign="top" style="width: 30px;"><a zippy="delmsg"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <form zippy="addmsgform">
+                            <div class="form-group">
+                                <label for="addmsg">Комментарий</label>
+                                <textarea  required="on"  class="form-control" zippy="addmsg"
+                                          style=" height:120px;"></textarea>
+                            </div>
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
+                        </form>  
+            </div>
+            <div class="col-12 col-md-8 col-xl-3  "> 
+                      <h5> Прикрепленные файлы </h5>
+                        <table class="table table-sm">
+                            <tr zippy="dw_files">
+                                <td><a zippy="filename" target="_blank"></a></td>
+                                <td style="width: 30px;"><a zippy="delfile"><i class="fa fa-trash"></i></a></td>
+                            </tr>
+                        </table>
+                        <hr>
+                        <form zippy="addfileform" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="addfile">Выбрать файл</label>
+                                <input type="file" class="form-control"  required="on"  zippy="addfile">
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="adddescfile">Описание </label>
+                                <input class="form-control" zippy="adddescfile">
+                            </div>
+
+
+                            <input class="btn btn-outline-success  " type="submit" value="Добавить">
+
+                        </form>   
+            </div>
+               
+            <div class="col-12 col-md-4 col-xl-3  ">    
+                 <pre zippy="showdesc"></pre> 
+            
+                <details>
+                        <summary  >Документы</summary>
+                             
                 <table class="table table-sm">
-                    <tr>
-                        <th>Тип</th>
-                        <th>Номер</th>
-                        <th>Дата</th>
-                        <th class="text-right">Сумма</th>
+                    
+                    {{#dtable}}
+                    <tr  >
+                        <td  > {{dtype}}</td>
+                        <td  >{{dnum}}</td>
+                        <td   class="text-nowrap">{{ddate}}</td>
+                        <td   class="text-right">{{dsumma}}</td>
 
                     </tr>
-
-                    <tr zippy="dtable">
-                        <td zippy="dtype"></td>
-                        <td zippy="dnum"></td>
-                        <td zippy="ddate" class="text-nowrap"></td>
-                        <td zippy="dsumma" class="text-right"></td>
-
-                    </tr>
-
+                     {{/dtable}}
                 </table>
-                <div zippy="dpag"></div>
-            </div>     
-            <div class="col-12 col-md-4 col-xl-3 card ml-4">  
-                <h4>Платежи</h4> 
+              
+                </details>
+                  <details>
+                        <summary  >Платежи</summary>
+               
+                 
                 <table class="table table-sm">
-                    <tr>
-                        <th>Счет</th>
-                        <th>Дата</th>
-                        <th class="text-right">Сумма</th>
-                        <th> </th>
-                    </tr>
-                    <tr zippy="ptable">
-                        <td zippy="pmfname"></td>
+                    {{#ptable}}
+                    <tr  >
+                        <td  >{{pmfname}}</td>
 
-                        <td zippy="pdate" class="text-nowrap"></td>
-                        <td zippy="psumma" class="text-right"></td>
-                        <td zippy="pnotes"></td> 
+                        <td   class="text-nowrap">{{pdate}}</td>
+                        <td   class="text-right">{{psumma}}</td>
+                        <td  >{{pnotes}}</td> 
                     </tr>
-
+                    {{/ptable}}
                 </table>
-                <div zippy="ppag"></div>    
+                
+                </details>
             </div>
         </div>
 
-    </div>
 
 
+    
 </body>
 </html>

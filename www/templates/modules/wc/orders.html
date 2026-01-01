@@ -1,6 +1,5 @@
 <html>
-    <head>
-    </head>
+  
     <body>
         <div class="row">
             <div class="col-12 col-xl-10   ">
@@ -9,15 +8,19 @@
                 <a zippy="checkconn"><i class="fa   fa-sync"></i> Проверить соединение</a>
  
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline ">
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+  <label for="eistatus">Статус в магазине </label>
+                        <select class="form-control  mr-2" zippy="eistatus">
+
+                        </select>
+
+                    
+                        <input onclick="       document.getElementById('dialogwait').showModal() " type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Загрузить">
-                         <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Заказы должны быть в статусе Pending"></i>
-                  
-                        <div id="loader1" style="display:none" class="spinner-border spinner-border-sm"></div>
+                       
+                       
                     </form>
                 </div>
 
@@ -30,7 +33,7 @@
                         <th>Дата</th>
 
                         <th>Клиент</th>
-                        <th class="text-right">Сумма</th>
+                        <th class="text-right">Сума</th>
                         <th> Комментарий</th>
 
 
@@ -49,7 +52,7 @@
                     </tr>
 
                 </table>
-                <div class="navbar nav">
+                <div class="card">
                     <a zippy="importbtn" class="  btn btn-outline-success  ">Импортировать</a>
 
                 </div>
@@ -57,7 +60,7 @@
             <div class="col-12 col-xl-10    ">
 
                 <h3>Экспорт статусов в магазин</h3>
-                <div class="navbar nav">
+                <div class="card">
                     <a zippy="refreshbtn" class="  btn btn-outline-success  ">Обновить</a>
 
                 </div>
@@ -92,15 +95,20 @@
 
 
                     <div class="ml-2 form-group row  ">
-                        <label for="estatus">Статус в магазине </label>
+                         <div class="col-auto">
+                            <label for="estatus">Статус в магазине </label>
+                         </div>
+                         <div class="col-auto">
+                        <select class="form-control  mr-2" zippy="estatus">
 
-                        <select class="  mr-2" zippy="estatus">
-                            <option value="0">Не выбрано</option>
                         </select>
+                         </div>
 
-                        <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
+                         <div class="col-auto">
+                        <input onclick=" document.getElementById('dialogwait').showModal() " type="submit" class="  btn btn-outline-success  "
                                value="Отправить">
-                        <div id="loader3" style="display:none" class="spinner-border spinner-border-sm"></div>
+
+                         </div>
 
                     </div>
                 </form>

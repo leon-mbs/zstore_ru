@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
     <tr>
         <td colspan="2">
-          {{#isfinished}}  Акт выполненных работ {{/isfinished}} 
+          {{#isfinished}}  Акт выполненвх работ {{/isfinished}} 
           {{^isfinished}}  Квитанция к {{/isfinished}} 
         
         
@@ -41,14 +41,14 @@
         <td colspan="2"> {{device}}</td>
     </tr>
     <tr>
-        <td colspan="2"> С/Н {{serial}}</td>
+        <td colspan="2"> с/н {{serial}}</td>
     </tr>
     {{/isdevice}}
 
     {{#iswork}}
 
     <tr>
-        <td colspan="2">Работы:</td>
+        <td colspan="2">Роботи:</td>
     </tr>
     {{#slist}}
     <tr>

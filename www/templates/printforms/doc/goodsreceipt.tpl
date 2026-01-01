@@ -6,16 +6,7 @@
         <td><b>Поставщик</b></td>
         <td colspan="6">{{customer_name}}</td>
     </tr>
-    {{#isfirm}}
-    <tr>
-        <td></td>
-
-        <td valign="top"><b>Покупатель</b></td>
-        <td colspan="6">{{firm_name}}</td>
-
-    </tr>
-    {{/isfirm}}
-    {{#iscontract}}
+     {{#iscontract}}
     <tr>
 
         <td></td>
@@ -25,12 +16,31 @@
 
 
     </tr>
-    {{/iscontract}}
+    {{/iscontract}}   
+    {{#ispayreq}}
+    <tr>
+
+        <td></td>
+
+        <td colspan="7"> Платежные  реквизиты:<br>  {{payreq}}  </td>
+
+    </tr>
+    {{/ispayreq}}      
+    {{#isfirm}}
+    <tr>
+        <td></td>
+
+        <td valign="top"><b>Покупатель</b></td>
+        <td colspan="6">{{firm_name}}</td>
+
+    </tr>
+    {{/isfirm}}
+
    {{#outnumber}}
     <tr>
         <td></td>
 
-        <td valign="top"><b>Внеш. номер</b></td>
+        <td valign="top"><b>Вн. номер</b></td>
         <td colspan="6">{{outnumber}}</td>
 
     </tr>
@@ -38,18 +48,29 @@
     <tr>
         <td></td>
 
-        <td valign="top"><b>Склад</b></td>
+        <td valign="top"><b>На склад</b></td>
         <td colspan="6">{{storename}}</td>
 
     </tr>
-    
+   {{#storeemp}}
+    <tr>
+  
+     <td></td>
+
+        <td valign="top"><b>На сотрудника</b></td>
+        <td colspan="6">{{storeemp}}</td>
+  
+       
+    </tr>
+ 
+    {{/storeemp}}      
     <tr>
         <td></td>
         <td><b>Основание</b></td>
         <td colspan="6">{{basedoc}}</td>
     </tr>
     <tr>
-        <td colspan="9">{{{notes}}}</td>
+        <td colspan="8">{{{notes}}}</td>
     </tr>
     
      {{#isval}}
@@ -62,8 +83,8 @@
     </tr>
     {{/isval}}    
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
-            <br> Накладная № {{document_number}} от {{date}} <br><br>
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
+            <br> Приходная накладная № {{document_number}} от {{date}} <br><br>
         </td>
     </tr>
 
@@ -71,8 +92,9 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Артикул</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Штрих-код</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"></th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Штрих код</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Код пост.</th>
+
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
         <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кол.</th>
@@ -85,7 +107,8 @@
         <td>{{itemname}}</td>
         <td>{{itemcode}}</td>
         <td>{{barcode}}</td>
-        <td align="right">{{snumber}}</td>
+        <td>{{custcode}}</td>
+
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>

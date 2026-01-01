@@ -4,13 +4,13 @@
 
     </head>
     <body>
-        <div class="row">
+        <div zippy="listpan" class="row">
             <div class="col-12 col-xl-10">
 
                 <h3>Журнал услуг  </h3>
 
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -38,25 +38,32 @@
                         <th>Номер</th>
                         <th>Дата</th>
                         <th>Клиент</th>
+                        <th> </th>
                         <th class="text-right">Сумма</th>
 
                         <th>Статус</th>
 
-
+                            <th></th>
                         <th>Примечание</th>
+                   
                         <th></th>
 
 
                     </tr>
                     <tr zippy="doclist">
 
-                        <td zippy="number"></td>
+                        <td  ><a zippy="number"></a></td>
                         <td class="text-nowrap" zippy="date"></td>
                         <td zippy="customer"></td>
+                        <td zippy="customerphone"></td>
                         <td zippy="amount" class="text-right"></td>
 
 
                         <td class="text-nowrap" zippy="state"></td>
+       <td>
+                            <i  zippy="ispay"   class="fa fa-credit-card "></i>
+                        </td>
+                                        
                         <td zippy="onotes"></td>
 
                         <td class="text-nowrap">
@@ -82,19 +89,21 @@
         <div class="row" zippy="statuspan">
             <div class="col-12">
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="statusform" class="form-inline ">
 
-                        <button zippy="binproc" type="submit" class="  btn btn-success  mr-2 ">На исполнение</button>
-                        <button zippy="bfin" type="submit" class="  btn btn-success  mr-2 ">Исполнено</button>
-                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатить</a>
+                        <button zippy="binproc" type="submit" class="  btn btn-success  mr-2 ">На выполнение</button>
+                        <button zippy="bfin" type="submit" class="  btn btn-success  mr-2 ">Выполнено</button>
+                        <a zippy="btopay" class="  btn btn-success  mr-2 ">Оплатити</a>
+                        <button zippy="bpos" class="btn btn-info  mr-2">   Чек     </button>
+ 
 
-                        {{#hideblock}}
-                        <button zippy="bttn" type="submit" class="  btn btn-info mr-2 "    title="Накладная на комплектующие, оплачиваемые заказчиком">Накладная                        </button>
-                        {{/hideblock}}
-                        
-                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Создать наряд</button>
-                        <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Заказ анулирован</button>
+                        <button zippy="binvoice" type="submit" class="  btn btn-info mr-2 "  >Счет  </button>
+                        <button zippy="bwarranty" type="submit" class="  btn btn-info mr-2 "  >Гар. талон  </button>
+                          {{#useprod}}
+                        <button zippy="btask" type="submit" class=" btn btn-info mr-2 ">Наряд</button>
+                         {{/useprod}}
+                        <button zippy="bref" type="submit" class="  btn btn-danger mr-2 ">Аннулировано</button>
 
 
                     </form>
@@ -106,6 +115,97 @@
             </div>
         </div>
 
+       <div zippy="editpan" class="row"  >
+          <div  class="col-12 col-md-10 col-xl-8"  >
+               <table class="table  table-sm">
+                    <tr>
+                        <th>Название</th>
+                 
+                        <th> </th>
+                        <th class="text-right">Кол.</th>
+
+                        <th class="text-right"><i class="fa fa-gift"></i>,%</th>
+                        <th class="text-right">Цена</th>
+                        <th class="text-right">Сумма</th>
+
+                        <th  ></th>
+                           
+                    </tr>
+                    <tr><td colspan="8">
+                         <form zippy="sform" class="form-inline" >
+                               Работа  
+                               <select zippy="sser" class="form-control select2">
+                                  <option value="0">Не вибрана</option>                                  
+                               </select>
+                               &nbsp;Комментарий
+                               <input  type="text"  class="form-control" zippy="sdesc"  >
+                               &nbsp;Кол.
+                               <input  required="on"  style="width:100px"  type="text"  class="form-control priceqty" zippy="sqty"  >
+                               &nbsp;Цена
+                               <input  required="on"  style="width:100px"  type="text"  class="form-control priceqty" zippy="sprice"  >
+                               &nbsp;
+                              <input  zippy="ssubmit" type="submit"  value="+" class="btn btn-success"   >
+                         </form>
+                    </td></tr> 
+                     <tr zippy="slist"   >
+                                <td zippy="rsservice_name"></td>
+                              
+                                <td zippy="rsdesc"></td>
+                                <td zippy="rsquantity" class="text-right"> </td>
+                                <td zippy="rsdisc"  class="text-right"></td>
+                                <td zippy="rsprice"  class="text-right"></td>
+                                <td zippy="rsamount"  class="text-right"></td>
+
+
+                                <td> <a  zippy="rsdel" ><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        <tr><td colspan="8">
+                          <form zippy="iform" class="form-inline" >
+                               ТМЦ  
+                               <input zippy="iitem"  class="form-control">
+                              {{#usesnumberitem}}
+                                &nbsp;с/н  
+                               <input zippy="isn"  class="form-control">
+                               {{/usesnumberitem}}
+                               &nbsp;Кол.
+                               <input  required="on"  style="width:100px"  type="text"  class="form-control priceqty" zippy="iqty"  >
+                               &nbsp;Цена
+                               <input  required="on"  style="width:100px"  type="text"  class="form-control priceqty" zippy="iprice"  >
+                           
+                              <input  zippy="isubmit" type="submit"  value="+" class="btn btn-success"   >
+                            </form>                    
+                        </td></tr>           
+                             <tr zippy="ilist" >
+                                <td zippy="riname"  ></td>
+                                <td zippy="ricode"   ></td>
+                            
+
+                                <td zippy="riquantity"  class="text-right"></td>
+
+                                <td  zippy="ridisc" class="text-right"></td>
+                                <td  zippy="riprice" class="text-right"></td>
+                                <td  zippy="riamount" class="text-right"></td>
+
+
+                                <td> <a  zippy="ridel"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>                 
+                             <tr style="font-weight: bolder;">
+                                <td colspan="5" class="text-right">На сумму:</td>
+                                <td zippy="etotal"  class="text-right"></td>
+                                <td></td>
+                            </tr>                                 
+                      <tr><td colspan="7">
+                          <a zippy="closeedit"  class="btn btn-outline-info mr-2">Отменить</a>
+                          <a zippy="saveedit" class="btn btn-success ">Сохранить</a>
+                    </td></tr>           
+                                           
+                    
+                    
+               </table>
+         </div>
+       </div>
 
     </body>
 </html>

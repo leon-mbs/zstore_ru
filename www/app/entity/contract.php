@@ -11,9 +11,15 @@ namespace App\Entity;
  */
 class Contract extends \ZCL\DB\Entity
 {
-
+    public const STATE_NEW=0 ;
+    public const STATE_NEGOTIATE=2 ;
+    public const STATE_SHIFTED=4 ;
+    public const STATE_INWORK=6 ;
+    public const STATE_CLODED=8 ;
+    
     protected function init() {
         $this->contract_id = 0;
+        $this->state = 0;
         $this->createdon = time();
     }
 
@@ -25,11 +31,11 @@ class Contract extends \ZCL\DB\Entity
 
         $this->shortdesc = (string)($xml->shortdesc[0]);
         $this->desc = (string)($xml->desc[0]);
-        $this->emp_name = (string)($xml->emp_name[0]);
-//        $this->pay = (int)($xml->pay[0]);
-        $this->file_id = (int)($xml->file_id[0]);
-        $this->emp_id = (int)($xml->emp_id[0]);
-        $this->ctype = (int)($xml->ctype[0]);
+        $this->username = (string)($xml->username[0]);
+    
+        $this->user_id = (int)($xml->user_id[0]);
+        $this->creator_id = (int)($xml->creator_id[0]);
+     
         $this->enddate = (int)($xml->enddate[0]);
 
         parent::afterLoad();
@@ -39,7 +45,7 @@ class Contract extends \ZCL\DB\Entity
 
         $docs = $this->getDocs();
         if (count($docs) > 0) {
-            return \App\Helper::l("iscontractdocs");
+            return "Имеются  документы  с этим договором";
         }
         return "";
     }
@@ -47,29 +53,27 @@ class Contract extends \ZCL\DB\Entity
     protected function beforeSave() {
         parent::beforeSave();
         $this->details = "<details>";
-        //упаковываем  данные  
+        //упаковываем  данные
         $this->details .= "<shortdesc><![CDATA[{$this->shortdesc}]]></shortdesc>";
         $this->details .= "<desc><![CDATA[{$this->desc}]]></desc>";
-        $this->details .= "<emp_name><![CDATA[{$this->emp_name}]]></emp_name>";
-    //    $this->details .= "<pay>{$this->pay}</pay>";
-        $this->details .= "<file_id>{$this->file_id}</file_id>";
-        $this->details .= "<emp_id>{$this->emp_id}</emp_id>";
-        $this->details .= "<ctype>{$this->ctype}</ctype>";
+        $this->details .= "<username><![CDATA[{$this->username}]]></username>";
+         
+        $this->details .= "<creator_id>{$this->creator_id}</creator_id>";
+        $this->details .= "<user_id>{$this->user_id}</user_id>";
+       
         $this->details .= "<enddate>{$this->enddate}</enddate>";
         $this->details .= "</details>";
 
         return true;
     }
 
-    public static function getList($c, $f = 0) {
+    public static function getList($c ) {
 
         $ar = array();
 
         if ($c > 0) {
-            $where = "disabled <> 1 and customer_id={$c} ";
-            if ($f > 0) {
-                $where .= " and firm_id =  " . $f;
-            }
+            $where = " state=6 and  customer_id={$c} ";
+     
             $res = Contract::find($where, 'contract_number');
             foreach ($res as $k => $v) {
                 $ar[$k] = $v->contract_number . ' ' . $v->shortdesc;
@@ -88,14 +92,14 @@ class Contract extends \ZCL\DB\Entity
         $c = \App\ACL::getBranchConstraint();
         if (strlen($c) > 0) {
             $br = " {$c} and ";
-        }    
+        }
 
         $ar = array();
 
         $where = "  customer_id={$this->customer_id}  and {$br}     content like '%<contract_id>{$this->contract_id}</contract_id>%'  ";
 
-        $res = \App\Entity\Doc\Document::find($where, 'document_id asc');
-        foreach ($res as $k => $v) {
+        
+        foreach (\App\Entity\Doc\Document::findYield($where, 'document_id asc') as $k => $v) {
             $ar[$k] = $v;
         }
 
@@ -114,9 +118,9 @@ class Contract extends \ZCL\DB\Entity
         if (strlen($c) > 0) {
             $brd = " {$c} and ";
             $brmf = "  mf_id in( select mf_id from mfund  where {$c} )  and ";
-        }    
+        }
 
-        $ar = array();   
+        $ar = array();
 
         $where = " {$brmf} document_id in (select document_id from  documents where {$brd} customer_id={$this->customer_id} and  content like '%<contract_id>{$this->contract_id}</contract_id>%'  )";
 
@@ -129,6 +133,15 @@ class Contract extends \ZCL\DB\Entity
         return $ar;
     }
 
- 
+    public  static function getStates() {
+        $ret=[];
+        $ret[Contract::STATE_NEW]='Новый';
+        $ret[Contract::STATE_NEGOTIATE]='Переговоры';
+        $ret[Contract::STATE_SHIFTED]='отложен';
+        $ret[Contract::STATE_INWORK]='В работе';
+        $ret[Contract::STATE_CLODED]='Закоыт';
+        
+        return  $ret;
+    }
 
 }

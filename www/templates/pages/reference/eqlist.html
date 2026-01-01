@@ -1,22 +1,27 @@
 <html>
     <head>
-           <title> Оборудование и основные средства </title>
+           <title> Основные  фонды и оборудовние </title>
    </head>
 
     <body>
         <div class="row">
-
+        
             <div class="col-12 col-md-10 col-xl-8" zippy="itemtable">
-                <h3>Оборудование и основные средства </h3>
-                <div class="navbar nav  ">
+                <h3>Основные  фонды и оборудовние </h3>
+                <div class="card  ">
                     <form zippy="filter" class="form-inline">
 
                         <label for="searchkey">Поиск</label>
                         <input class="form-control mr-sm-2" type="text" zippy="searchkey">
-                        <label for="searchemp">мат. ответственный</label>
+                        <label for="searchtype">Тип</label>
+
+                        <select class="form-control mr-sm-2  " zippy="searchtype">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                       <label for="searchemp">мат. ответственный</label>
 
                         <select class="form-control mr-sm-2  " zippy="searchemp">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                         <div class="form-check">
 
@@ -30,149 +35,160 @@
                 </div>
                 <a zippy="addnew" class="btn btn-primary  ">Добавить</a>
                 <table class="table table-bordered  table-sm  ">
-                    <tr>
-                        <th>Наименование</th>
-
-                        <th>Инв. номер</th>
-                        <th>Сер. номер</th>
-
-
-                        <th style="width:100px"></th>
-                    </tr>
+           
                     <tr zippy="eqlist">
                         <td zippy="eq_name"></td>
-
-                        <td zippy="code"></td>
-                        <td zippy="serial"></td>
-
-                        <td aling="center">
-                            <a zippy="use" title="Использование"><i class="fa fa-eye"></i></a>
-                            &nbsp;<a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
-                            &nbsp;<a zippy="delete" title="Изъять"><i class="fa fa-trash"></i></a>
+                        {{#usebranch}}
+                        <td zippy="branch"></td>
+                        {{/usebranch}}
+                     
+                        <td zippy="invnumber"></td>
+                        <td zippy="pa_name"></td>
+                        <td ><small zippy="notes"></small></td>
+                        <td  >
+                             <a zippy="view" title="Просмотр  операций"><i class="fa fa-gavel"></i></a>
+                       </td>
+                        <td  >
+                             <a zippy="barcode" title="Печать штрих-кода инвентарного номера"><i class="fa fa-barcode"></i></a>
+                       </td>
+                        <td  >
+                    
+                         <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                         &nbsp;    &nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 </table>
                 <div zippy="pag"></div>
             </div>
 
-          
-
-            <div zippy="usetable" class="col-12 col-md-8 col-xl-6">
-
-
-                <a zippy="back"><i class="fa fa-arrow-circle-left"></i> К списку</a>
-                <h3 zippy="usename"></h3>
-
-                <table class="table table-bordered  table-sm  ">
-                    <tr>
-                        <th>Наряд</th>
-
-                        <th>Участок</th>
-
-
-                    </tr>
-                    <tr zippy="uselist">
-
-
-                        <td zippy="usetask"></td>
-                        <td zippy="useplace"></td>
-
-                    </tr>
-                </table>
-
-            </div>
-
-        </div>
- 
+            <div class="col-12  ">
+             
             <form zippy="itemdetail" >
              <h4>Редактирование </h4>
-               <div class="row">
-                <div class="col-12 col-md-4 col-xl-3">
+              <div class="row">
+               <div class="col-12 col-md-4 col-xl-3">
                 <div class="form-group  ">
                     <label   for="editname">Наименование</label>
-                   
-                        <input required="required" class="form-control" zippy="editname"/>
-                    
+                    <input  autofocus="on"    required="on"  class="form-control" zippy="editname"/>
                 </div>
               
-                    <div class="form-check">
-                        <input zippy="editeq" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editeq">Оборудование</label>
-                    </div>
+             
+               {{#usebranch}}
+                <div class="form-group">
+                    <label for="editbranch">Филиал</label>
+                    <select class="form-control" zippy="editbranch">
+                        <option value="0">Не выбрано</option>
+                    </select>
+                </div>
+                {{/usebranch}}
                
-                <div class="form-group  ">
-                    <label   for="editemp">Мат. ответственный</label>
-                    
-                        <select class="form-control  " zippy="editemp">
-                            <option value="0">Не задано</option>
-                        </select>
-                    
-                </div>
                  <div class="form-group  ">
-                    <label   for="editpa">Произв. участок</label>
-                    
-                        <select class="form-control  " zippy="editpa">
-                            <option value="0">Не задано</option>
-                        </select>
-                   <small class="form-text text-muted">Если постоянно установлено на конкретном производственном участке</small>
-                    
-                </div>
-   
+                    <label   for="edittype">Тип</label>
+                    <select class="form-control  " zippy="edittype">
+                      
+                    </select>
+                </div>                
+    
 
                 <div class="form-group  ">
                     <label   for="editdescription">Описание</label>
-                    
-                        <textarea class="form-control" zippy="editdescription"></textarea>
-                  
-
+                    <textarea class="form-control" zippy="editdescription"></textarea>
                 </div>
                
                   
-                    <div class="form-check">
-                        <input zippy="editdisabled" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="editdisabled">Не используется</label>
-                    </div>
+                 <div class="form-check">
+                    <input zippy="editdisabled" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="editdisabled">Не используется</label>
+                </div>
              
-                <div class="form-group">
-                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-secondary  "></td>
-                </div>
+           
                </div> 
-                 <div class="col-12 col-md-3 col-xl-2">
+               <div class="col-12 col-md-3 col-xl-2">
                  <div class="form-group  ">
-                    <label   for="editcode">Инвентарный номер</label>
-                  
-                        <input class="form-control" zippy="editcode"/>
-                   
+                    <label   for="editemp">Мат. ответственный</label>
+                    <select class="form-control  " zippy="editemp">
+                        <option value="0">Не указано</option>
+                    </select>
+                </div>                 
+                 <div class="form-group  ">
+                    <label    for="editinvnumber">Инвентарный номер</label>
+                    <input required="on" class="form-control" zippy="editinvnumber"/>
                 </div>
-                <div class="form-group  ">
+                 <div class="form-group  ">
                     <label   for="editserial">Серийный номер</label>
-                   
-                        <input class="form-control" zippy="editserial"/>
-                     
+                    <input class="form-control" zippy="editserial"/>
                 </div>
-                <div class="form-group  ">
-                    <label   for="editenterdate">Введено в эксплуатацию</label>
-                    
-                        <input class="form-control" zippy="editenterdate"/>
-                   
-                </div>
-                <div class="form-group  ">
-                    <label   for="editbalance">Балансовая стоимость</label>
-                   
-                        <input pattern="[0-9,\.]+" style="width: 100px;" class="form-control qtyprice" zippy="editbalance"/>
-                        <small class="form-text text-muted">Закупочная цена минус амортизация</small>
-                 
-               
-                </div>
-                </div>
+                
              </div>
+              
+              <div class="col-12">
+                    <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-secondary mr-2 ">
+                    <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">
+                    
+                </div>    
+                </div>    
             </form>
-  
-             <script>               
-         function check_delete() {
+            </div>
+        
+        <div class="w-100"></div>
+        <div zippy="infopan" class="col-12 col-md-10 col-xl-8  ">
+          <a zippy="backd"><i class="fa fa-arrow-alt-circle-left"></i> к списку</a>
+          <h5 zippy="oname"> </h5>
+          <a zippy="addop" class="btn  btn-info btn-sm" >  Добавить</a>                 
+          <br><a zippy="showall"   >  Показать перемещения</a>                 
+      
+      
+           <table class="ctable">
+             {{#oplist}}
+             <tr>
+                <td>{{opdate}}</td>
+                <td>{{number}}</td>
+                <td>{{opname}}</td>
+                <td align="right"> {{amount}}</td>
+
+                <td  >{{det}}</td>
+                <td  >{{notes}}</td>
+             </tr>
+               {{/oplist}}
+             <tr style="font-weight:bolder">
+                 <td align="right"   colspan="3">Балансовая стоимость: </td>  
+                 <td align="right" >{{total}} </td>  
+          
+                 <td colspan="2">   </td>  
+              </tr> 
+           </table>
+         
+       </div>    
+  <div id="pform" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <table>
+                            <tr>
+                                <td align="center" id="tag"></td>
+                            </tr>
+                            <tr>
+                                <td align="center"><a href="javascript:void(0)"
+                                                      onclick="$('#tag').printThis();$('#pform').modal('hide')"
+                                                      class="btn btn-success  ">Печать</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>            
+           
+   </div>         
+            
+        <script>               
+             function check_delete() {
                 return confirm("Удалить?")
-            }
+             }
+      
+             function check_showall() {
+                document.getElementById('dialogwait').showModal()      
+             }
         </script>     
 
     </body>

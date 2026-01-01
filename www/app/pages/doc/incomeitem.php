@@ -15,6 +15,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -24,12 +25,15 @@ use Zippy\Html\Link\SubmitLink;
  */
 class IncomeItem extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
     private $_basedocid = 0;
 
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
 
@@ -47,15 +51,14 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
-        $this->docform->add(new DropDownChoice('emp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name")))->onChange($this, 'OnEmp');
-        $this->docform->add(new DropDownChoice('exmf', \App\Entity\MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new TextInput('examount'));
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(3), 0));
-
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+ 
+       
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
-
+        $this->editdetail->edititem->onChange($this, 'OnChangeItem', true);
+ 
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
         $this->editdetail->add(new TextInput('editsnumber'));
@@ -65,8 +68,8 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitLink('addnewitem'))->onClick($this, 'addnewitemOnClick');
 
-        
-       //добавление нового товара
+
+        //добавление нового товара
         $this->add(new Form('editnewitem'))->setVisible(false);
         $this->editnewitem->add(new TextInput('editnewitemname'));
         $this->editnewitem->add(new TextInput('editnewitemcode'));
@@ -75,19 +78,28 @@ class IncomeItem extends \App\Pages\Base
         $this->editnewitem->add(new Button('cancelnewitem'))->onClick($this, 'cancelnewitemOnClick');
         $this->editnewitem->add(new DropDownChoice('editnewcat', \App\Entity\Category::getList(), 0));
         $this->editnewitem->add(new SubmitButton('savenewitem'))->onClick($this, 'savenewitemOnClick');
-        
-        
-        
+
+        $this->add(new Form('editsnitem'))->setVisible(false);
+        $this->editsnitem->add(new AutocompleteTextInput('editsnitemname'))->onText($this, 'OnAutocompleteItem');
+        $this->editsnitem->editsnitemname->onChange($this, 'OnChangeItem', true);
+        $this->editsnitem->add(new TextInput('editsnprice'));
+        $this->editsnitem->add(new TextArea('editsn'));
+        $this->editsnitem->add(new Button('cancelsnitem'))->onClick($this, 'cancelrowOnClick');
+        $this->editsnitem->add(new SubmitButton('savesnitem'))->onClick($this, 'savesnOnClick');
+        $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
+
+
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
+            if($this->_doc->state== Document::STATE_NEW) {
+                $this->_doc->document_date = time() ;               
+            }
             $this->docform->document_date->setDate($this->_doc->document_date);
 
-            $this->docform->mtype->setValue($this->_doc->headerdata['mtype']);
+
             $this->docform->store->setValue($this->_doc->headerdata['store']);
-            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
-            $this->docform->exmf->setValue($this->_doc->headerdata['exmf']);
-            $this->docform->examount->setText($this->_doc->headerdata['examount']);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
             $this->docform->notes->setText($this->_doc->notes);
 
             $this->_itemlist = $this->_doc->unpackDetails('detaildata');
@@ -121,7 +133,7 @@ class IncomeItem extends \App\Pages\Base
 
         $this->docform->detail->Reload();
         $this->calcTotal();
-        $this->OnEmp($this->docform->emp);
+        
     }
 
     public function detailOnRow($row) {
@@ -148,9 +160,11 @@ class IncomeItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        $id = $item->item_id;
+        $rowid =  array_search($item, $this->_itemlist, true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($id => $this->_itemlist[$id]));
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+        $this->calcTotal();
+
         $this->docform->detail->Reload();
     }
 
@@ -160,6 +174,8 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->setVisible(false);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setValue('');
+        $this->_rowid = -1;
+
     }
 
     public function editOnClick($sender) {
@@ -175,7 +191,7 @@ class IncomeItem extends \App\Pages\Base
         $this->editdetail->editsnumber->setText($item->snumber);
         $this->editdetail->editsdate->setDate($item->sdate);
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
     }
 
     public function saverowOnClick($sender) {
@@ -184,22 +200,22 @@ class IncomeItem extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не выбран товар");
             return;
         }
 
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetail->editquantity->getText();
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
+        $item->price = $this->editdetail->editprice->getDouble();
 
         if ($item->price == 0) {
-            $this->setWarn("no_price");
+            $this->setWarn("Не выбрана цена");
         }
 
         $item->snumber = trim($this->editdetail->editsnumber->getText());
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Нужна  партия производителя");
             return;
         }
         $item->sdate = $this->editdetail->editsdate->getDate();
@@ -207,27 +223,17 @@ class IncomeItem extends \App\Pages\Base
             $item->sdate = '';
         }
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Нужна  партия производителя");
             return;
         }
 
 
-        $tarr = array();
-
-        foreach ($this->_itemlist as $k => $value) {
-
-            if ($this->_rowid > 0 && $this->_rowid == $k) {
-                $tarr[$item->item_id] = $item;    // заменяем
-            } else {
-                $tarr[$k] = $value;    // старый
-            }
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+            $this->_itemlist[$this->_rowid] = $item;
         }
 
-        if ($this->_rowid == 0) {        // в конец
-            $tarr[$item->item_id] = $item;
-        }
-        $this->_itemlist = $tarr;
-        $this->_rowid = 0;
 
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
@@ -247,7 +253,8 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->setVisible(true);
         $this->editdetail->edititem->setKey(0);
         $this->editdetail->edititem->setText('');
-
+        $this->editsnitem->setVisible(false);
+    
         $this->editdetail->editquantity->setText("1");
     }
 
@@ -259,18 +266,16 @@ class IncomeItem extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
         $file = $this->docform->scan->getFile();
         if ($file['size'] > 10000000) {
-            $this->setError("filemore10M");
+            $this->setError("Файл больше 10 МБ!");
             return;
         }
 
-        $this->_doc->headerdata['mtype'] = $this->docform->mtype->getValue();
+
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
-        $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
-        $this->_doc->headerdata['empname'] = $this->docform->emp->getValueName();
-        $this->_doc->headerdata['exmf'] = $this->docform->exmf->getValue();
-        $this->_doc->headerdata['examount'] = $this->docform->examount->getText();
-
+        $this->_doc->headerdata['storeemp'] = $this->docform->storeemp->getValue();
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
+       
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -281,7 +286,7 @@ class IncomeItem extends \App\Pages\Base
         }
 
         $isEdited = $this->_doc->document_id > 0;
- 
+
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
         try {
@@ -301,13 +306,10 @@ class IncomeItem extends \App\Pages\Base
 
 
             if ($file['size'] > 0) {
-                H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
                 $id = H::addFile($file, $this->_doc->document_id, 'Скан', \App\Entity\Message::TYPE_DOC);
-                $imagedata = getimagesize($file["tmp_name"]);
-                if ($imagedata[0] > 0) {
-                    $this->_doc->headerdata["scan"] = $id;
-                    $this->_doc->save();
-                }
+                $this->_doc->headerdata["scan"] = $id;
+                $this->_doc->save();
+                 
             }
 
             $conn->CommitTrans();
@@ -320,7 +322,7 @@ class IncomeItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+           $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -344,22 +346,22 @@ class IncomeItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не выбран склад");
         }
 
 
@@ -375,19 +377,103 @@ class IncomeItem extends \App\Pages\Base
         $text = trim($sender->getText());
         return Item::findArrayAC($text);
     }
+ 
+    public function OnChangeItem($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
+        $price = $item->getLastPartion($this->docform->store->getValue(), "", true);
+        $this->editdetail->editprice->setText(H::fa($price));
 
+    }
+    public function onOpensn($sender) {
+        $this->docform->setVisible(false) ;
+        $this->editsnitem->setVisible(true) ;
+        $this->editsnitem->editsnitemname->setKey(0);
+        $this->editsnitem->editsnitemname->setText('');
+
+        $this->editsnitem->editsn->setText("");
+        $this->editsnitem->editsnprice->setText("");
+
+    } 
+    
+   public function savesnOnClick($sender) {
+        $common = \App\System::getOptions("common");
+
+        $id = $this->editsnitem->editsnitemname->getKey();
+        $name = trim($this->editsnitem->editsnitemname->getText());
+        if ($id == 0) {
+            $this->setError("Не выбран товар");
+            return;
+        }
+        
+        $price = doubleVal($this->editsnitem->editsnprice->getText());
+        if ($price == 0) {
+
+            $this->setError("Не выбрана цена");
+            return;
+        }
+        $sns =  $this->editsnitem->editsn->getText();
+
+        $list = [];
+        foreach(explode("\n", $sns) as $s) {
+            $s = trim($s);
+            if(strlen($s) > 0) {
+                $list[] = $s;
+            }
+        }
+        if (count($list) == 0) {
+
+            $this->setError("Не указаны серийные номера");
+            return;
+        }
+        
+        
+        if($common['usesnumber'] == 3 ){
+            
+            $temp_array = array_unique($list);
+            if(sizeof($temp_array) < sizeof($list)) {
+                $this->setError("Серийный номер  должен быть уникальным для  изделия");    
+                return;
+            }           
+            
+        }        
+        
+        
+        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+
+        foreach($list as $s) {
+            ++$next;
+            $item = Item::load($id);
+
+            $item->quantity = 1;
+            $item->price = $price;
+            $item->snumber = trim($s);
+            $item->rowid = $next;
+            $this->_itemlist[$next] = $item;
+
+        }
+
+
+
+        $this->docform->detail->Reload();
+        $this->calcTotal();
+      
+
+        $this->editsnitem->setVisible(false);
+        $this->docform->setVisible(true);
+
+
+    }
+     
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
         $this->docform->barcode->setText('');
-         $code0 = $code;
-       $code = ltrim($code,'0');
+    
 
-        $code = Item::qstr($code);
-        $code0 = Item::qstr($code0);
+        $item = Item::findBarCode($code );
 
-        $item = Item::getFirst("    (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0}  )");
         if ($item == null) {
-            $this->setError('noitem');
+            $this->setError('Не найден ТМЦ  с таким  кодом');
             return;
         }
 
@@ -412,28 +498,21 @@ class IncomeItem extends \App\Pages\Base
         $this->docform->detail->Reload();
     }
 
-    public function OnEmp($sender) {
-        if ($sender->getValue() > 0) {
-            $this->docform->examount->setVisible(true);
-            $this->docform->exmf->setVisible(true);
-        } else {
-            $this->docform->examount->setVisible(false);
-            $this->docform->exmf->setVisible(false);
-        }
-    }
-     //добавление нового товара
+ 
+    //добавление нового товара
     public function addnewitemOnClick($sender) {
         $this->editnewitem->setVisible(true);
         $this->editdetail->setVisible(false);
 
         $this->editnewitem->clean();
         $this->editnewitem->editnewbrand->setDataList(Item::getManufacturers());
+        $this->editnewitem->editnewitemcode->setText( Item::getNextArticle());
     }
 
     public function savenewitemOnClick($sender) {
         $itemname = trim($this->editnewitem->editnewitemname->getText());
         if (strlen($itemname) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено название");
             return;
         }
         $item = new Item();
@@ -441,20 +520,12 @@ class IncomeItem extends \App\Pages\Base
         $item->item_code = $this->editnewitem->editnewitemcode->getText();
         $item->msr = $this->editnewitem->editnewmsr->getText();
 
-        if (strlen($item->item_code) > 0) {
-            $code = Item::qstr($item->item_code);
-            $cnt = Item::findCnt("  item_code={$code} ");
-            if ($cnt > 0) {
-                $this->setError('itemcode_exists');
-                return;
-            }
+        if ($item->checkUniqueArticle()==false) {
+              $this->setError('Такой артикул уже  существует');
+              return;
+        }  
 
-        } else {
-            if (\App\System::getOption("common", "autoarticle") == 1) {
-
-                $item->item_code = Item::getNextArticle();
-            }
-        }
+  
 
 
         $item->manufacturer = $this->editnewitem->editnewbrand->getText();

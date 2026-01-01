@@ -13,7 +13,7 @@
     </tr>
     <tr>
         <td></td>
-        <td valign="top"><b>IНН</b></td>
+        <td valign="top"><b>ИНН</b></td>
         <td colspan="5">{{inn}}</td>
     </tr>
     <tr>
@@ -70,17 +70,24 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="6" align="right">Вместе:</td>
+        <td style="border-top:1px #000 solid;" colspan="6" align="right">Всего:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
  
-    {{#isdisc}}
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/isdisc}}
+    {{/totaldisc}}
+   {{#prepaid}}
+    <tr style="font-weight: bolder;">
+        <td colspan="6" align="right">Предоплата:</td>
+        <td align="right">{{prepaid}}</td>
+    </tr>
+    {{/prepaid}} 
+
    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">К оплате:</td>

@@ -1,13 +1,13 @@
 <html>
    <head>
-        <title> Отчет по продажам   </title>
+        <title> Отчет  по продажам   </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Отчет по продажам</h3>
-                <div class="navbar nav">
+                <h3>Отчет  по продажам</h3>
+                <div class="card">
                     <form zippy="filter" class="form-inline">
 
                         <label for="from">С</label>
@@ -18,14 +18,14 @@
 
                         <label for="emp">менеджер</label>
                         <select class="form-control mr-sm-2" zippy="emp">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не выбрано</option>
                         </select>
 
                         <label for="type">тип</label>
                         <select class="form-control mr-sm-2" zippy="type"> </select>
-                        <label for="cat" data-label="cat">категория</label>
+                        <label for="cat" data-label="cat">категорiя</label>
                         <select class="form-control mr-sm-2" zippy="cat">
-                            <option value="0">Не выбрана</option>
+                            <option value="0">Не выбран</option>
                         </select>
                         <label for="salesource" data-label="salesource">Источник продаж</label>
                         <select class="form-control mr-2" zippy="salesource">
@@ -33,9 +33,10 @@
                         </select>
 
 
-                        <label for="cust" data-label="cust">покупатель</label>
+                        <label for="cust" data-label="cust">Покупатель</label>
                         <input class="form-control mr-sm-2" zippy="cust" placeholder="Начните вводить...">
-                         <label for="brand" data-label="brand">бренд</label>
+                     
+                        <label for="brand" data-label="brand">бренд</label>
                         <input class="form-control mr-sm-2" zippy="brand"  >
 
 
@@ -49,12 +50,12 @@
                 <div zippy="detail">
                     <div>
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/outcome" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/showreport/pdf/outcome" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/outcome" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/outcome" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
                                                                                  
 
                     </div>
-                    <div zippy="preview" class="table-responsive-sm">
+                    <div zippy="preview"  >
                     </div>
 
                 </div>

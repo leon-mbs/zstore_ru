@@ -10,38 +10,66 @@
                 <h3>Журнал закупок </h3>
 
 
-                <div class="navbar nav">
-                    <form zippy="filter" class="form-inline ">
+                <div class="card">
+                    <form zippy="filter" class="row   g-2 align-items-center">
+                       <div class="col-auto">
+                        <div class="  row no-gutters"> 
 
+                             <label class="col-auto mt-2" for="searchnumber"> № </label>
+                           <div class="col-auto">
 
-                        <label for="searchnumber"> № </label>
-
-                        <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                            <input class="form-control mr-2" type="text" zippy="searchnumber" style="width:100px">
+                          </div>
+                       </div>
+                      </div>
+                       <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                         <label class="col-auto mt-2" for="status"> Статус </label>
+                              <div class="col-auto">
 
                         <select class="form-control mr-2" zippy="status">
                         </select>
-
-                        <label for="searchcomp">Покупатель</label>
-                        <select zippy="searchcomp" class="form-control mr-sm-2">
-                            <option value="0">Не выбран</option>
+                           </div>
+                       </div>
+                      </div>
+                     
+                       <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                   
+                        <label class="col-auto mt-2" for="fstore"> склад </label>
+                                <div class="col-auto">
+                     <select class="form-control mr-2" zippy="fstore">
+                            <option value="0">Не выбрано</option>
                         </select>
-                    
-                        <label for="fstore"> склад </label>
-                        <select class="form-control mr-2" zippy="fstore">
-                            <option value="0">Не выбран</option>
-                        </select>
-                                
+                           </div>
+                       </div>
+                      </div>
 
+                       <div class="col-auto">  
+                          <div class=" row no-gutters"> 
+                       
+                        <label class="col-auto mt-2"   for="searchcust">Контрагент</label>
+                          <div class="col-auto">
+                            <input placeholder="Начните вводить..."  class="form-control mr-2" zippy="searchcust" >
+                         </div>
+                        </div>
+                       </div>
+                      
+                       <div class="col-auto">  
+                          
 
                         <input class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту" ]>
-
+                         </div>
+                       
+                         <div class="col-auto">  
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
-
+                        </div>
+                      
                     </form>
                 </div>
-                <a href="/index.php?p=App/Pages/Doc/GoodsReceipt" class="btn btn-info mt-2 mb-3">Создать НН</a>
-                <br><a zippy="csv">Експорт в Excel</a>
+                <a href="/index.php?p=App/Pages/Doc/GoodsReceipt" class="btn btn-info mt-2 mb-3">Создать ПН</a>
+                <br><a zippy="csv">Экспорт в Excel</a>
 
                 <table class="table   table-sm   ">
                     <tr>
@@ -51,7 +79,7 @@
 
                         <th>Поставщик</th>
 
-                        <th>Покупатель</th>
+                     
 
                         <th class="text-right">Сумма</th>
 
@@ -71,13 +99,13 @@
 
                         <td zippy="customer"></td>
 
-                        <td zippy="firm"></td>
+                     
 
                         <td zippy="amount" class="text-right"></td>
 
                         <td class="text-nowrap" zippy="state"></td>
-                        <td style="width:20px" ><i zippy="ispay" title="Ожидает оплаты" class="fa fa-credit-card"></i></td>
-                        <td style="width:20px" ><i zippy="istruck" title="Ожидает поставки" class="fa fa-truck"></i></td>
+                        <td style="width:20px" ><i zippy="ispay" title="Ожидает оплату" class="fa fa-credit-card"></i></td>
+                        <td style="width:20px" ><i zippy="istruck" title="Ожидает поставку" class="fa fa-truck"></i></td>
                                      
                         <td zippy="onotes"></td>
 
@@ -104,11 +132,12 @@
         <div class="row" zippy="statuspan">
             <div class="col-12">
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="statusform" class="form-inline ">
-                        <button zippy="bttn" class="btn btn-primary  mr-2"><i class="fa fa-truck"></i> Создать приход</button>
-                        <button zippy="bret" class="btn btn-primary  mr-2"><i class="fa fa-undo"></i> Создать возврат
-                        </button>
+                        <button zippy="bttn" class="btn btn-primary  mr-2">Создать приход</button>
+                        <button zippy="bret" class="btn btn-primary  mr-2">Создать возврат </button>
+
+                       
 
 
                     </form>

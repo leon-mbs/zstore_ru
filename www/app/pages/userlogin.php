@@ -6,27 +6,27 @@ use App\Application as App;
 use App\Entity\User;
 use App\Helper;
 use App\System;
-use Zippy\Html\Form\TextInput as TextInput;
+use Zippy\Html\Form\TextInput ;
 
 class UserLogin extends \Zippy\Html\WebPage
 {
-    
     private $cntlogin = 0;
 
     public function __construct() {
         parent::__construct();
-        
-        System::clean() ;
+
+     //   System::clean() ;
         System::getSession()->clean();
 
-        
+
         $common = System::getOptions('common');
         \App\Session::getSession()->clipboard = null;
 
         $form = new \Zippy\Html\Form\Form('loginform');
-        $form->add(new TextInput('userlogin'));
-        $form->add(new TextInput('userpassword'));
+        $form->add(new TextInput('userlog'));
+        $form->add(new TextInput('userpasswo'));
         $form->add(new TextInput('capchacode'));
+
         $form->add(new \Zippy\Html\Form\CheckBox('remember'));
         $form->add(new \ZCL\Captcha\Captcha('capcha'));
         $form->onSubmit($this, 'onsubmit');
@@ -34,48 +34,29 @@ class UserLogin extends \Zippy\Html\WebPage
         $this->add($form);
         $this->setError('');
 
-         
-        $this->_tvars['curversion'] = \App\System::CURR_VERSION ;
 
-        //проверка  новой версии        
-        $this->_tvars['isnewversion'] = false;
+      //  $this->_tvars['curversion'] = \App\System::CURR_VERSION ;
 
-        
-        $phpv =   phpversion()  ;
-        $phpv = substr(str_replace('.','',$phpv),0,2) ;
-        $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv  ;
-        $v = @file_get_contents("https://ru.zippy.com.ua/checkver.php".$nocache);
-        $data = @json_decode($v, true);
-        
-      //  $v = @file_get_contents("https://ru.zippy.com.ua/version.json?t=" . time());
-     //   $v = @json_decode($v, true);
-        if (strlen($data['version']) > 0) {
-            $c = (int)str_replace(".", "", str_replace("v", "",  \App\System::CURR_VERSION));
-            $n = (int)str_replace(".", "", str_replace("v", "", $data['version']));
-
-            if ($n > $c) {
-                $this->_tvars['isnewversion'] = true;
-            }
-
-            $this->_tvars['newversion'] = $data['version'];
-        }
 
         $this->_tvars['appname'] = $common['shopname'];
         $this->_tvars['capcha'] = $common['capcha'] == 1;
+
+        $this->_tvars['cron']  =  \App\System::useCron() ;
+          
     }
 
     public function onsubmit($sender) {
         global $logger, $_config;
 
         $this->setError('');
-        $login = $sender->userlogin->getText();
-        $password = $sender->userpassword->getText();
-        $sender->userpassword->setText('');
+        $login = $sender->userlog->getText();
+        $password = $sender->userpasswo->getText();
+        $sender->userpasswo->setText('');
         if ($this->_tvars['capcha'] == true) {
             $entercode = $sender->capchacode->getText();
             $capchacode = $sender->capcha->getCode();
             if (strlen($entercode) == 0 || $entercode != $capchacode) {
-                $this->setError("invalidcapcha");
+                $this->setError("Неверный код капчи");
                 $this->counter();
 
                 return;
@@ -83,11 +64,11 @@ class UserLogin extends \Zippy\Html\WebPage
         }
         if ($login == '') {
 
-            $this->setError('enterlogin');
+            $this->setError('Введите логин');
         } else {
             if ($password == '') {
 
-                $this->setError('enterpassword');
+                $this->setError('Введите пароль');
             }
         }
 
@@ -97,23 +78,27 @@ class UserLogin extends \Zippy\Html\WebPage
 
             if ($user instanceof User) {
                 \App\Session::getSession()->clean();
-                $user->lastlogin = time();
+                $user->lastactive = time();
                 $user->save();
                 System::setUser($user);
                 $_SESSION['user_id'] = $user->user_id; //для  использования  вне  Application
                 $_SESSION['userlogin'] = $user->userlogin; //для  использования  вне  Application
                 //App::$app->getResponse()->toBack();
                 if ($this->loginform->remember->isChecked()) {
-                    setcookie("remember", $user->user_id . '_' . md5($user->user_id . $_config['common']['salt']), time() + 60 * 60 * 24 * 30);
-                }   else {
+                    setcookie("remember", $user->user_id . '_' . md5($user->user_id . Helper::getSalt()), time() + 60 * 60 * 24 * 14);
+                } else {
                     setcookie("remember", '', 0);
                 }
-                if ($_COOKIE['branch_id'] ??0 > 0) {
+                if (($_COOKIE['branch_id'] ?? 0) > 0) {
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
+             
+                \App\System::checkUpdate()  ;
+                
+                
                 $modules = \App\System::getOptions("modules");
 
-                if ($modules['shop'] == 1) {
+                if (($modules['shop'] ?? 0)== 1) {
                     App::Redirect('\App\Pages\Main');
                 } else {
                     App::RedirectHome();
@@ -121,13 +106,13 @@ class UserLogin extends \Zippy\Html\WebPage
                 return;
             } else {
 
-                $this->setError('invalidlogin');
+                $this->setError('Неверный логин или пароль');
 
                 $this->counter();
             }
         }
 
-        $sender->userpassword->setText('');
+        $sender->userpasswo->setText('');
     }
 
     public function beforeRequest() {
@@ -140,31 +125,29 @@ class UserLogin extends \Zippy\Html\WebPage
 
     public function setError($msg) {
 
-        $msg = Helper::l($msg);
+
         $this->_tvars['alerterror'] = $msg;
     }
 
     private function counter() {
         $this->cntlogin++;
         if ($this->cntlogin == 5) {
-            $msg = Helper::l("extralogin");
+            $msg = "Много неудачных авторизаций";
             $t = $this->loginform->userlogin->getText()  ;
             $t = htmlspecialchars($t) ;
             $msg .= '<br>' . $t. ', ';
-            $msg .= $_SERVER['HTTP_HOST'] . ' ' . $_SERVER['SERVER_ADDR'];
-    
+            $msg .= $_SERVER['REMOTE_ADDR'] ;
+         
             \App\Entity\Notify::toSystemLog($msg) ;
             \App\Entity\Notify::toAdmin($msg) ;
-   
-            
-            $this->setError('invalidloginalert');
+
+
+            $this->setError('Много неудачных авторизаций. Уведомлен  администратор системы');
             $this->loginform->setVisible(false);
-            if (strlen($admin->email) > 0) {
-                Helper::sendLetter(   $admin->email, $msg, "Zippy Store alert");
-            }
+
         }
 
-        //  $this->_tvars['alerterror'] = ''; 
+        //  $this->_tvars['alerterror'] = '';
     }
 
 }

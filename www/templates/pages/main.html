@@ -1,16 +1,17 @@
 <html>
     <head>
-        <link rel="stylesheet" href="/assets/css/chart.css">
-
- 
+      <title>Дашборд</title>
+      
        
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
     </head>
 
     <body>
-        {{#winfo}}
+        {{#dashboard}}
+  
 
-          <div class="row  "  >
+        <div class="row  "  >
             <div class="col-6 col-sm-4 col-lg-2 ">
                <div class="small-box bg-info">
                   <div class="inner">
@@ -39,7 +40,7 @@
                <div class="small-box bg-info">
                   <div class="inner">
                     <h4>{{bibeznal}}</h4>
-                    <p>Безналичные</p>
+                    <p>Безнал</p>
                   </div>
              </div>
             </div>
@@ -64,13 +65,12 @@
       
 
         </div>
-        {{/winfo}}
-
-        {{#wgraph}}
+   
 
         <div class="row">
+
             <div   class="col-12  col-lg-4   ">
-                <div   class="card ">
+                <div    class="card pb-3">
 
 
                         <div style="width:100%" id="paystructure"></div>
@@ -82,7 +82,7 @@
   
  
            <div   class="col-12  col-lg-4 ">
-                <div   class="card ">
+                <div    class="card pb-3">
                     
                         <div style="width:100%" id="paycompare"></div>
                   
@@ -90,27 +90,125 @@
             </div>
          
           <div   class="col-12  col-lg-4 ">
-                <div   class="card ">
-                    
+                <div    class="card pb-3">
+                   
 
-                        <div style="width:100%" id="sellstat"></div>
-                    
+                        <div style="width:100%;" id="sellstat"></div>
+                     
                 </div>    
             </div>
         </div>     
-        {{/wgraph}}    
+     
+        {{/dashboard}}    
 
         <div class="row">  
 
+           <div   class="col-12 col-lg-6 ">
+ 
+         
 
-            {{#wsdate}}
-            <div   class="col-12 col-lg-6 ">
 
                 <div   class="card ">
                     <div   class="card-body">
-                        <h4>Просроченные товары</h4>
+                        <h4>Последние документы</h4>
+                        <small>Недавно измененные документы</small>
+                        <br><a zippy="rdcsv">Экспорт у Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                                <th>Номер</th>
+                                <th>Тип</th>
+                                <th>Статус</th>
+                                <th class="text-right">Сумма</th>
+                                <th>Изменил</th>
+                                <th>Изменено</th>
+                                
+
+                            </tr>
+                            <tr zippy="rdoclist">
+                               <td><a zippy="wrd_number"></a></td>
+                                <td zippy="wrd_type"></td>
+                                <td zippy="wrd_state"></td>
+                                <td class="text-right" zippy="wrd_amount"></td>
+                                <td zippy="wrd_user"></td>
+                                <td zippy="wrd_date"></td>
+                                
+                            </tr>
+                        </table>
+                        <div zippy="wrpag"></div>    
+                    </div>
+                </div>
+             </div> 
+           <div   class="col-12 col-lg-6 ">
+           
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Мои документы</h4>
+                        <small>Документы, созданные текущим пользоваталем</small>
+                        <br><a zippy="mdcsv">Экспорт в Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                                <th>Номер</th>
+                                <th>Тип</th>
+                                <th>Дата</th>
+                                <th class="text-right">Сумма</th>
+
+                            </tr>
+                            <tr zippy="mdoclist">
+                                <td><a zippy="wmd_number"></a></td>
+                                <td zippy="wmd_type"></td>
+                                <td zippy="wmd_date"></td>
+                                <td class="text-right" zippy="wmd_amount"></td>
+                            </tr>
+                        </table>
+                        <div zippy="wmpag"></div>    
+                    </div>
+                </div>
+
+            
+            </div>   
+            
+  {{#dashboard}}            
+               
+             <div   class="col-12 col-lg-6 ">
+    
+         
+                <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Критическое  количество </h4>
+                        <small>Товары для которых задано минимальное  количество и наличие меньше минимального</small>
+                        <br><a zippy="mqcsv">Экспорт у Excel</a>
+                        <table class="table   table-sm">
+                            <tr>
+                              
+                           
+                                <th>Товар</th>
+                                <th>Код</th>
+                                <th>Поставил</th>
+
+                                <th class="text-right">Факт</th>
+                                <th class="text-right">Мин.</th>
+                            </tr>
+                            <tr zippy="mqlist">
+                               
+                                <td zippy="wmq_itemname"></td>
+                                <td zippy="wmq_item_code"></td>
+                                <td zippy="wmq_cust"></td>
+                                <td zippy="wmq_qty" class="text-right"></td>
+                                <td zippy="wmq_minqty" class="text-right"></td>
+                            </tr>
+                        </table>             
+                        <div zippy="mqpag"></div>        
+                    </div>
+                </div>
+           </div>    
+            <div   class="col-12 col-lg-6 ">
+                   
+            {{#usesnumberdate}}
+                   <div   class="card ">
+                    <div   class="card-body">
+                        <h4>Просроченi товары</h4>
+                        <small>Товары для которых закончился  срок  годности</small>
                         <br><a zippy="sdcsv">Экспорт в Excel</a>
-                        <small>Товары для которых закончился срок годности</small>
                         <table class="table   table-sm">
                             <tr>
 
@@ -132,122 +230,19 @@
 
                     </div>
                 </div>
-            </div>
-            {{/wsdate}}
-            {{#wminqty}}
-            <div   class="col-12 col-lg-6 ">
-
-                <div   class="card ">
-                    <div   class="card-body">
-                        <h4>Минимальное количество </h4>
-                        <small>Товары для которых задано минимальное количество на складе и актуальное количество меньше заданого</small>
-                        <br><a zippy="mqcsv">Экспорт в Excel</a>
-                        <table class="table   table-sm">
-                            <tr>
-                                  <th>Склад</th>
-                           
-                                <th>Товар</th>
-                                <th>Код</th>
-
-                                <th class="text-right">Факт</th>
-                                <th class="text-right">Мин.</th>
-                            </tr>
-                            <tr zippy="mqlist">
-                                <td zippy="wmq_storename"></td>
-           
-                                <td zippy="wmq_itemname"></td>
-                                <td zippy="wmq_item_code"></td>
-                                <td zippy="wmq_qty" class="text-right"></td>
-                                <td zippy="wmq_minqty" class="text-right"></td>
-                            </tr>
-                        </table>             
-                        <div zippy="mqpag"></div>        
-                    </div>
-                </div>
-            </div>      
-            {{/wminqty}}
-
-
-            {{#wrdoc}}
-            <div   class="col-12 col-lg-6 ">
-
-                <div   class="card ">
-                    <div   class="card-body">
-                        <h4>Недавние документы</h4>
-                        <small>Документы с недавно измененным статусом</small>
-                        <br><a zippy="rdcsv">Экспорт в Excel</a>
-                        <table class="table   table-sm">
-                            <tr>
-                                <th>Номер</th>
-                                <th>Тип</th>
-                                <th>Статус</th>
-                                <th class="text-right">Сумма</th>
-                                <th>Сменил</th>
-                                <th>Дата</th>
-                                
-
-                            </tr>
-                            <tr zippy="rdoclist">
-                               <td><a zippy="wrd_number"></a></td>
-                                <td zippy="wrd_type"></td>
-                                <td zippy="wrd_state"></td>
-                                <td class="text-right" zippy="wrd_amount"></td>
-                                <td zippy="wrd_user"></td>
-                                <td zippy="wrd_date"></td>
-                                
-                            </tr>
-                        </table>
-                        <div zippy="wrpag"></div>    
-                    </div>
-                </div>
-            </div>      
-            {{/wrdoc}}
-               {{#wmdoc}}
-            <div   class="col-12 col-lg-6 ">
-
-                <div   class="card ">
-                    <div   class="card-body">
-                        <h4>Мои документы</h4>
-                        <small>Документы, созданные текущим пользователем</small>
-                        <br><a zippy="mdcsv">Экспорт в Excel</a>
-                        <table class="table   table-sm">
-                            <tr>
-                                <th>Номер</th>
-                                <th>Тип</th>
-                                <th>Дата</th>
-                                <th class="text-right">Сумма</th>
-
-                            </tr>
-                            <tr zippy="mdoclist">
-                                <td><a zippy="wmd_number"></a></td>
-                                <td zippy="wmd_type"></td>
-                                <td zippy="wmd_date"></td>
-                                <td class="text-right" zippy="wmd_amount"></td>
-                            </tr>
-                        </table>
-                        <div zippy="wmpag"></div>    
-                    </div>
-                </div>
-            </div>      
-            {{/wmdoc}}
-
+         
+            {{/usesnumberdate}}
+            
+                     
       
         </div>
-            {{#isadmins}}
-           <div class="row justify-content-center">
-            
-            <div class="col-12 pl-4"  >
-               <small>  Версия программы v{{curversion}}. Версия БД v{{curversionbd}}  </small>
-            </div>
-        </div>
-           {{/isadmins}}
-
-     
-
-
-
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+        
+   {{/dashboard}}         
+      </div>
+   
+ 
+ 
+     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart'], 'language': 'ru'});
       google.charts.setOnLoadCallback(drawChart);
 
@@ -263,7 +258,7 @@
       
       function drawChart() {
 
-        //структура видатків
+        //структура расходов
           
         var psdata = google.visualization.arrayToDataTable( 
         
@@ -275,17 +270,17 @@
         
         
         var psoptions = {
-          title: 'Структура расходов  за шесть месяцев]' ,
-          sliceVisibilityThreshold: 0.03,         
+          title: 'Структура расходов за год' ,
+          sliceVisibilityThreshold: 0.025,         
           backgroundColor: {
             "fill":bgcolor 
           } , 
           titleTextStyle:{
              "color":fontcolor ,"bold":true
           } ,
-                   
+                      
           chartArea:{
-               "left":10 , "right":60
+              "left":10 , "right":60
           } ,
                   
           legendTextStyle:{
@@ -295,7 +290,7 @@
         };
 
   
-       //старвнение
+       //срвнение
         var pschart = new google.visualization.PieChart(document.getElementById('paystructure'));
 
         pschart.draw(psdata, psoptions);
@@ -323,7 +318,9 @@
           titleTextStyle:{
              "color":fontcolor ,"bold":true
           } ,
-                   
+            chartArea : {
+                     
+          },               
       
                   
           legendTextStyle:{
@@ -366,6 +363,9 @@
           title: 'Реализация',
           curveType: 'function',
           legend: { position: 'bottom' } ,
+          chartArea : {
+                      
+          },
           backgroundColor: {
             "fill":bgcolor 
           } , 
@@ -406,7 +406,7 @@
         
         
       }
-    </script
+    </script>
   
     </body>
 </html>

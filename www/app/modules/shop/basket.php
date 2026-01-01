@@ -3,49 +3,64 @@
 namespace App\Modules\Shop;
 
 use App\System;
+use App\Modules\Shop\Entity\Product;
 
 //класс  корзины
 class Basket implements \Zippy\Interfaces\DataSource
 {
-
     public $list = array();
 
     public static function getBasket() {
-      
+
         $basket = System::getSession()->productbasket;
-        if (!($basket instanceof Basket)) {
+        if (!( $basket instanceof Basket)) {
             $basket = new Basket();
-            $cl = @unserialize($_COOKIE['shop_cart'] );
-            if(is_array($cl)){
-               foreach($cl as $k=>$v){
-                  $item=\App\Entity\Item::load($k) ;
-                  if($item !=null && $item->disabled !=1){
-                      $item->quantity = $v;
-                      $basket->addProduct($item) ;
-                  }
-               }
-                  
+
+            $cl = json_decode($_COOKIE['shop_cart'] ??"", true);
+            if(is_array($cl)) {
+                foreach($cl as $p) {
+                    $item=Product::load($p['item_id']) ;
+                    if($item !=null && $item->disabled !=1) {
+                        $item->quantity = $p['quantity'];
+                        $basket->addProduct($item) ;
+                    }
+                }
+
             }
             System::getSession()->productbasket = $basket;
         }
+
+
         return $basket;
     }
 
     public function addProduct($product) {
-        if (isset($this->list[$product->item_id])) {
-            $this->list[$product->item_id]->quantity++;
+
+        $p = new \App\DataItem();
+        $p->price  =   $product->getPriceFinal();
+        $p->quantity  = $product->quantity;
+        $p->itemname  = $product->itemname;
+        $p->item_id   = $product->item_id;
+        $p->image_url   = $product->getImageUrl();
+
+        if (isset($this->list[$p->item_id])) {
+            $this->list[$p->item_id]->quantity++;
         } else {
-            $this->list[$product->item_id] = $product;
+            $this->list[$p->item_id] = $p;
         }
         $this->sendCookie();
-        
+        \App\Helper::insertstat(\App\Helper::STAT_CARD_SHOP, 0, 0) ;
+
     }
+
+
+
 
     public function deleteProduct($product_id) {
 
-        $this->list_ = array_values($this->list);
+        $list_ = $this->list;
         $this->list = array();
-        foreach ($this->list_ as $p) {
+        foreach ($list_ as $p) {
             if ($p->item_id == $product_id) {
                 continue;
             }
@@ -53,13 +68,18 @@ class Basket implements \Zippy\Interfaces\DataSource
         }
         $this->sendCookie();
     }
-    public function sendCookie(){
+    public function sendCookie() {
         $cl= array();
-        foreach($this->list as $it){
-           $cl[$it->item_id] =$it->quantity;                 
+        foreach($this->list as $it) {
+            $cl[] = array(
+              "item_id"=>$it->item_id,
+              "quantity"=>$it->quantity,
+              "price"=>$it->price  ,
+              "itemname"=>$it->itemname
+            );
         }
-        
-        setcookie('shop_cart',serialize($cl),0 ) ;
+
+        setcookie('shop_cart', json_encode($cl), time() + 60 * 60 * 24 * 30) ;
     }
     public function isEmpty() {
         return count($this->list) == 0;
@@ -68,7 +88,7 @@ class Basket implements \Zippy\Interfaces\DataSource
     public function Empty() {
         $this->list = array();
         $this->sendCookie();
-        
+
     }
 
     // реализация  DataSource

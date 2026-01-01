@@ -8,9 +8,9 @@
         <form zippy="docform">
             <h3> Инвентаризация
                 <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body" data-toggle="popover"
-                   data-placement="bottom" data-content="Документ позволяет ввести текущее количество на складе и внести коррективы
-                   в зависимости от разницы в ту или другую сторону. Фактичское количество может 
-                   видеть администратор при просмотре документа"></i>
+                   data-placement="bottom" data-content="Документ позволяет ввести текущее количество на складе и внести коррективы 
+                        в зависимости от разницы в ту или иную сторону. Фактическое количество может 
+                        видеть администратор при просмотре документа"></i>
             </h3>
 
             <div class="row">
@@ -25,20 +25,37 @@
                             <option value="0">Не выбрано</option>
                         </select>
                     </div>
+             {{#storeemp}}
+                     <div class="form-group  ">
+                        <label for="storeemp">Сотрудник</label>
+                        <select class="form-control  " zippy="storeemp">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                        <small> Материально-ответственное лицо</small>
+                    </div> 
+                      {{/storeemp}}                    
                     <div class="form-group  ">
                         <label for="store">Категория</label>
                         <select class="form-control" zippy="category">
-                            <option value="0">Не выбрана</option>
+                            <option value="0">Не выбрано</option>
                         </select>
-                        <a zippy="loadall">Загрузить все ТМЦ со склада</a>
+                        
                     </div>
 
-
+                    <div class="form-group  ">
+                        <label for="brand">Бренд </label>
+                        <input class="form-control" type="text" zippy="brand">
+                   </div>
+                    <div class="form-group  ">
+                        <a zippy="loadall">Загрузить все ТМЦ со склада</a>
+                   </div>
                 </div>
+              
+                 
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
 
                     <div class="form-group  ">
@@ -49,7 +66,7 @@
                     </div>
                     <div class="form-check">
                         <input zippy="autoincome" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="autoincome">Автоматически оприходовать остатки </label>
+                        <label class="form-check-label" for="autoincome">Автоматически оприходовать излишек </label>
 
                     </div>
                     <div class="form-check">
@@ -59,63 +76,66 @@
                     </div>
                     <div class="form-check">
                         <input zippy="reserved" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="reserved">Учесть зарезервирванные </label>
-
+                        <label class="form-check-label" for="reserved">Учесть зарезервированные </label>
+                         <br><small>Если зарезервированный товар остается на складе неотмеченным физически как резерв </small>
                     </div>
-                </div>
+                </div>                                 
             </div>
             <div class="row">
                 <div class="col-12 col-md-8 col-xl-6">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autocomplete="off" autofocus="on"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
                         
-                         {{#usemobilescanner}}  
-                        &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
-                                                       title="Сканировать мобильным устройством"
-                                                       style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
-                      {{/usemobilescanner}}  
+                   
                     </div>
                     {{/usescanner}}
-                    &nbsp; <a zippy="addrow" class="btn  btn-info">Добавить товар</a>
+                    &nbsp; <a zippy="addrow" class="btn  btn-info">Добавить ТМЦ</a>
 
-                    <table class="table table-sm">
+                    <table class="table table-sm mt-2">
                         <tr>
-                            <th>Название</th>
-                            <th>Артикул</th>
+                            <th> <i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style="width:30px;cursor:pointer" title="Снять/Выставить флаг"
+                                    class="fa fa-check-double "></i></th>
+                            <th> <a zippy="sortname">Название</a> </th>
+                            <th><a zippy="sortcode">Артикул</a></th>
 
-                            {{#usesnumber}}
-                            <th>Серия</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
-                            <!--     <th width="40"  class="text-right" >Кiл. </th> -->
+                           <th>{{#usesnumber}}Серия, дата{{/usesnumber}}</th>
+                           <th width="40"  class="text-right" >Кол. </th> 
 
-                            <th width="40" class="text-center">Кол.</th>
+                            <th width="40" class="text-center">Факт. кол.</th>
 
 
-                            <th width="50"></th>
+
                         </tr>
                         <tr zippy="detail">
+                            <td><input tabindex="-1"  zippy="seldel" class="seldel" type="checkbox"></td>
+                     
                             <td zippy="item"></td>
-                                                   <td zippy="item_code"></td>
+                            <td zippy="item_code"></td>
 
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
-                            <!--    <td zippy="quantity"  class="text-right" ></td>-->
+                              <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                        
+                             <td zippy="quantity"  class="text-right" ></td> 
 
                             <td class="text-center">
-                                <input class=" qtyprice"   pattern="[0-9,\.]+" style="width:75px;" zippy="qfact">
+                                <input class="form-control qtyprice"   pattern="[0-9,\.]+" style="width:100px;" zippy="qfact">
 
                             </td>
 
 
-                            <td><a tabindex="-1" zippy="delete"><i class="fa fa-trash"></i></a></td>
 
 
                         </tr>
+                         
+                        <tr><td >
+                            <a class="text-danger" zippy="delall" title="Удалить"><i class="fa fa-trash"></i></a>
+                          </td> 
+                         <td colspan="4"></td>   
+                         
+                            </tr>                 
+                       
                     </table>
 
 
@@ -131,22 +151,22 @@
             </div>
 
 
-        </p>
+
 
     </form>
     <form zippy="editdetail">
-        <h4>Введение товара </h4>
+        <h4>Ввод ТМЦ </h4>
         <div class="row">
             <div class="col-12 col-md-4">
 
                 <div class="form-group">
                     <label for="edititem">Наименование</label>
-                    <input class="form-control" zippy="edititem" placeholder="Начните вводить... ">
+                    <input   class="form-control" zippy="edititem" placeholder="Начните вводить...  ">
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editserial">Партия поставщика</label>
+                    <label for="editserial">Серия поставщика</label>
                     <div>
                         <input type="text" zippy="editserial" class="form-control"
                                />
@@ -157,161 +177,26 @@
                     <label for="editquantity">Количество</label>
                     <div>
                         <input style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
-                               required="required" pattern="[0-9,\.]+"/>
+                                required="on"  pattern="[0-9,\.]+"/>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Отменить" class="btn   btn-outline-secondary">
+                    <input type="button" zippy="cancelrow" value="Отменить" class="btn   btn-outline-secondary  mr-2">
+                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">
+                    
                 </div>
             </div>
         </div>
 
     </form>
 
-    <div id="modalscanner" class="modal  ">
-        <div class="modal-dialog modal-dialog-centered  modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Сканирование</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
-                        <b>Настройка камеры <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
-                    </a>
-                    <div id="collapcescanner" class="collapse  ">
-                        <form class="controls">
-                            <div class="row reader-config-group">
-                                <div class="col-12 col-sm-6">
-
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Тип кода</label>
-                                        <div class="col-sm-7">
-
-                                            <select id="decoder_readers" name="decoder_readers" class="form-control">
-                                                <option value="code_128" selected="selected">Code 128</option>
-                                                <option value="code_39">Code 39</option>
-                                                <option value="code_39_vin">Code 39 VIN</option>
-                                                <option value="ean">EAN</option>
-                                                <option value="ean_extended">EAN-extended</option>
-                                                <option value="ean_8">EAN-8</option>
-                                                <option value="upc">UPC</option>
-                                                <option value="upc_e">UPC-E</option>
-                                                <option value="codabar">Codabar</option>
-                                                <option value="i2of5">Interleaved 2 of 5</option>
-                                                <option value="2of5">Standard 2 of 5</option>
-                                                <option value="code_93">Code 93</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Разрешение</label>
-                                        <div class="col-sm-7">
-
-                                            <select id="input-stream_constraints" name="input-stream_constraints"
-                                                    class="form-control">
-                                                <option value="320x240">320px</option>
-                                                <option selected="selected" value="640x480">640px</option>
-                                                <option value="800x600">800px</option>
-                                                <option value="1280x720">1280px</option>
-                                                <option value="1600x960">1600px</option>
-                                                <option value="1920x1080">1920px</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Patch-Size</label>
-                                        <div class="col-sm-7">
-
-                                            <select name="locator_patch-size" class="form-control">
-                                                <option value="x-small">x-small</option>
-                                                <option value="small">small</option>
-                                                <option selected="selected" value="medium">medium</option>
-                                                <option value="large">large</option>
-                                                <option value="x-large">x-large</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Workers</label>
-                                        <div class="col-sm-7">
-
-                                            <select name="numOfWorkers" class="form-control">
-                                                <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option selected="selected" value="4">4</option>
-                                                <option value="8">8</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-6">
-
-
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Half-Sample</label>
-                                        <div class="col-sm-7">
-
-                                            <input type="checkbox" checked="checked" name="locator_half-sample"/>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Камера</label>
-                                        <div class="col-sm-7">
-
-                                            <select name="input-stream_constraints" id="deviceSelection"
-                                                    class="form-control">
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Zoom</label>
-                                        <div class="col-sm-7">
-
-                                            <select name="settings_zoom" class="form-control">
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-5 col-form-label">Подсветка</label>
-                                        <div class="col-sm-7">
-
-                                            <input type="checkbox" name="settings_torch"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <br><br>
-                    Код: <span id="scancode"></span>&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-sm btn-success" onclick="mcode()">Добавить</button>
-                    <br>
-                    <br>
-
-                    <div id="interactive" class="viewport"></div>
-
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
+    
     <script>
         $(document).ready(function () {
-
-            $('#barcode').focus();
-
-
+ 
+ 
+             
             var val = sessionStorage.getItem('decoder_readers');
             if (val != null) {
                 $('#decoder_readers').val(val);
@@ -321,7 +206,7 @@
                 $('#stream_constraints').val(val);
             }
 
-
+            $("#edititem").focus()   
         });
 
         function onBarCode(ele) {
@@ -332,17 +217,14 @@
             }
         }
 
-
-        function mcode() {
-            var code = $('#scancode').text();
-            if (code == "")
-                return;
-
-            sessionStorage.setItem('decoder_readers', $('#decoder_readers').val());
-            sessionStorage.setItem('stream_constraints', $('#stream_constraints').val());
-            $('#barcode').val(code);
-            $('#addcode').click()
+        function check_loadall(ele) {
+            document.getElementById('dialogwait').showModal()
+            return true;
+            
         }
+
+
+  
 
 
      

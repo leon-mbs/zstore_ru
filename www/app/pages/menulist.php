@@ -17,16 +17,15 @@ use Zippy\Html\Panel;
 
 class MenuList extends \App\Pages\Base
 {
-
     private $metadatads;
-    public  $pricelist = array();
+    public $pricelist = array();
 
     public function __construct() {
         parent::__construct();
         if (System::getUser()->userlogin != 'admin') {
-            System::setErrorMsg(H::l('onlyadminpage'));
+            System::setErrorMsg('К странице  имеет доступ  только  администратор');
             App::RedirectError();
-            return false;
+            return  ;
         }
 
 
@@ -39,6 +38,11 @@ class MenuList extends \App\Pages\Base
         $this->listpan->filter->add(new CheckBox('frep'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('freg'))->setChecked(true);
         $this->listpan->filter->add(new CheckBox('fser'))->setChecked(true);
+     
+        $conn = \ZDB\DB::getConnect()  ;
+        $gr=$conn->GetCol(" select distinct  menugroup from metadata where coalesce(menugroup,'') <>'' order  by menugroup ") ;
+     
+        $this->listpan->filter->add(new DropDownChoice('fgr',$gr,'all'));
 
         $this->listpan->add(new ClickLink('addnew'))->onClick($this, 'addnewOnClick');
         $this->listpan->add(new DataView('metarow', $this->metadatads, $this, 'metarowOnRow'))->Reload();
@@ -48,7 +52,7 @@ class MenuList extends \App\Pages\Base
         $this->editpan->editform->add(new TextInput('meta_id'));
         $this->editpan->editform->add(new TextInput('edit_description'));
         $this->editpan->editform->add(new TextInput('edit_meta_name'));
-        $this->editpan->editform->add(new TextInput('edit_menugroup'));
+        $this->editpan->editform->add(new TextInput('edit_menugroup'))->setDataList($gr);
 
         $this->editpan->editform->add(new CheckBox('edit_disabled'));
 
@@ -58,7 +62,7 @@ class MenuList extends \App\Pages\Base
 
     public function filterOnSubmit($sender) {
 
-        $where = "1<>1 ";
+        $where = "(1<>1 ";
         if ($this->listpan->filter->fdoc->isChecked()) {
             $where .= " or meta_type = 1";
         }
@@ -71,11 +75,19 @@ class MenuList extends \App\Pages\Base
         if ($this->listpan->filter->fref->isChecked()) {
             $where .= " or meta_type = 4";
         }
+        
         if ($this->listpan->filter->fser->isChecked()) {
             $where .= " or meta_type = 5";
         }
-
-
+        
+        $where .= " ) ";
+        
+        $rg=$this->listpan->filter->fgr->getValue()  ;
+        if($rg != 'all')  {
+             $rgn=$this->listpan->filter->fgr->getValueName()  ;
+             $where .= " and menugroup = '{$rgn}' ";
+           
+        }
         $this->metadatads->setWhere($where);
 
         $this->listpan->metarow->Reload();
@@ -103,19 +115,19 @@ class MenuList extends \App\Pages\Base
         $title = '';
         switch($item->meta_type) {
             case 1:
-                $title = H::l('md_doc');
+                $title = 'Документ';
                 break;
             case 2:
-                $title = H::l('md_rep');
+                $title = 'Отчет';
                 break;
             case 3:
-                $title = H::l('md_reg');
+                $title = 'Журнал';
                 break;
             case 4:
-                $title = H::l('md_ref');
+                $title = 'Справочник';
                 break;
             case 5:
-                $title = H::l('md_ser');
+                $title = 'Сервисная страница';
                 break;
         }
 
@@ -150,6 +162,7 @@ class MenuList extends \App\Pages\Base
         $item->save();
 
         $this->listpan->metarow->Reload();
+        \App\Session::getSession()->menu = [];
     }
 
     public function toffOnClick($sender) {
@@ -158,6 +171,7 @@ class MenuList extends \App\Pages\Base
         $item->save();
 
         $this->listpan->metarow->Reload();
+        \App\Session::getSession()->menu = [];
     }
 
     public function rowdeleteOnClick($sender) {
@@ -165,6 +179,7 @@ class MenuList extends \App\Pages\Base
         \App\Entity\MetaData::delete($item->meta_id);
 
         $this->listpan->metarow->Reload();
+        \App\Session::getSession()->menu = [];
     }
 
     public function editformOnSubmit($sender) {
@@ -192,6 +207,8 @@ class MenuList extends \App\Pages\Base
         $this->editpan->editform->edit_description->setText('');
         $this->editpan->editform->edit_meta_name->setText('');
         $this->editpan->editform->edit_menugroup->setText('');
+
+        \App\Session::getSession()->menu = [];
     }
 
 }

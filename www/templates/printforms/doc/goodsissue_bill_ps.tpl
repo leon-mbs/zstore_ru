@@ -5,6 +5,11 @@
 <text>от {{date}}</text>
 <align>left</align>
 <text>Продавец: {{firm_name}}</text>
+
+    {{#isbank}}
+<text>{{bank}}</text>
+<text>р/с {{bankacc}}</text>    
+   {{/isbank}}
 <text>Тел. {{phone}}</text>
 <text>Покупатель: {{customer_name}}</text>
 <separator>-</separator>

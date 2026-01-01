@@ -5,93 +5,138 @@
       
 
         <div class="row ">
-            <div class="col-12    col-md-6   col-xl-4   ">
-                <h4>Настройки</h4>
+            <div class="col-12    col-md-7   col-xl-5   ">
+                <h4>Настройка</h4>
                 <small><i class="fa fa-exclamation-triangle"></i>
-                Прямой переход в каталог [адрессайта]/shop, 
-                прямой переход на склад [адрессайта]/store
+                Прямой переход к каталогу [адрессайта]/shop, 
+                Прямой переход к складу [адрессайта]/store
                 </small>
                 <form zippy="shop" enctype="multipart/form-data">
-                    <div class="form-group   ">
-                        <label  for="shopname">Название магазина</label>
-                     
+                    <div class="form-group  row ">
+                        <label  class="col-6 col-form-label"  for="shopname">Название магазина</label>
+                           <div class="col-6">
                             <input required="required" class="form-control " zippy="shopname"/>
-                         
+                           </div>
                     </div>
-                    <div class="form-group   ">
-                        <label   for="logo">Логотип</label>
-                      
+                    <div class="form-group  row ">
+                        <label  class="col-6 col-form-label"   for="logo">Логотип</label>
+                         <div class="col-6">
                             <input  accept="image/png,image/jpeg" type="file" class="form-control " zippy="logo"/>
-                     
+                          </div>
                     </div>
 
 
 
 
-                    <div class="form-group    ">
-                        <label   for="shopdefpricetype">Тип цены </label>
-                      
+                    <div class="form-group  row  ">
+                        <label  class="col-6 col-form-label"   for="shopdefpricetype">Тип цены </label>
+                           <div class="col-6">
                             <select class="form-control" zippy="shopdefpricetype">
                             </select>
-                         
+                          </div> 
                     </div>
-                 <div class="form-group  ">
-                        <label for="salesource">Источник продаж</label>
-                        <select class="form-control" zippy="salesource">
-                            <option value="0">Не выбрано</option>
+                    
+                  <div class="form-group  row ">
+                        <label class="col-6 col-form-label"  for="defmf">Касса по  умолчанию</label>
+                        <div class="col-6">
+                            <select class="form-control" zippy="defmf">
+                                <option value="0">Не выбрана</option>
+                            </select>
+                            <small class="form-text text-muted">Есои  оплата на стороне  ИМ </small>
+                        </div> 
+                    </div>
+                    
+                <div class="form-group row  ">
+                        <label class="col-6 col-form-label" for="defstore">Склад по умолчанию   </label>
+                       <div class="col-6">
+                        <select class="form-control" zippy="defstore">
+                            <option value="0">Не выбран</option>
+
                         </select>
+                       </div>  
+
+                    </div>
+            
+                 <div class="form-group  row">
+                        <label  class="col-6 col-form-label"  for="salesource">Источник продаж</label>
+                         <div class="col-6">
+                        <select class="form-control" zippy="salesource">
+                            <option value="0">Не выбран</option>
+                        </select>
+                          </div>
                     </div>                    
                      
-                    <div class="form-group   ">
-                        <label   for="shopordertype">Формировать по заказу 
-                            
-                        </label>
+                    <div class="form-group  row ">
+                     <div class="col-6">
+                        <label     for="shopordertype">Формувати  по  заказу             </label>
                              <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title=" В кассовом чеке нет доставки. В кафе не показываются фильтры и отзывы. В доставке только адрес в городе, заданный в настройках кафе"></i>
-                          
+                                   title=" В кассовом  чеке  нет  доставки. В кафе не показываются  фильтпы и отзывы. В доставке                                    только  адрес из настроек  кафе "></i>
+                               </div>     
+                             <div class="col-6">
                             <select class="form-control " zippy="shopordertype">
 
-                                <option value='0'>Обычный заказ</option>
-                                <option value='1'>Кассовый чек</option>
-                                <option value='2'>Заказ кафе</option> 
+                                <option value="0">Обычный заказ</option>
+                                <option value="1">Кассовый чек </option>
+                                <option value="2">Заказ кафе</option> 
 
                             </select>
-                            
+                            </div>  
                        
                     </div>
-                    {{#usebranch}}
-                    <div class="form-group   ">
-                        <label   for="shopdefbranch">Филиал </label>
+                      
+                       {{#usebranch}}
+                    <div class="form-group  row ">
+                     <div class="col-6">
+                        <label      for="shopdefbranch">Филиал </label>
                               <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Филиал, с которого создаются документы "></i>
-                       
+                                   title=" Филиал, на  который создаются документы "></i>
+                        </div>              
+                           <div class="col-6">
                             <select class="form-control" zippy="shopdefbranch">
-                                <option value="0">Не выбрано</option>
+                                <option value="0">Не указан</option>
                             </select>
-                            
+                            </div>  
                       
                     </div>
                     {{/usebranch}}
-              
+                       <div class="form-group  row ">
+                     <div class="col-6">
+                        <label      for="shopdefuser">Пользователь </label>
+                              <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Пользователь, на  которого создаются  заказы. Должен  иметь права  на  обработку документа  типа Заказ. "></i>
+                        </div>              
+                           <div class="col-6">
+                            <select class="form-control" zippy="shopdefuser">
+                                
+                            </select>
+                            </div>  
+                      
+                    </div>         
 
-                    <div class="form-group   ">
-                        <label   for="email">E-mail для обратной связи</label>
-                  
+                    <div class="form-group  row ">
+                        <label class="col-6 col-form-label"   for="email">E-mail для  связи</label>
+                               <div class="col-6">
                             <input class="form-control " zippy="email"/>
-                       
+                            </div>
                     </div>
     
-                  <div class="form-group   ">
-                        <label   for="phone">Телефон для заказов</label>
-                        
+                  <div class="form-group  row ">
+                        <label class="col-6 col-form-label"  for="phone">Телефон  для  заказа</label>
+                              <div class="col-6">
                             <input class="form-control " zippy="phone"/>
-                        
+                          </div>
                   </div>
-                  <div class="form-group   ">
-                        <label   for="currencyname">Денежная единица</label>
-          
-                            <input class="form-control " zippy="currencyname"/>
-                      
+                  <div class="form-group row ">
+                        <label  class="col-6 col-form-label"  for="currencyname">Денежная единица</label>
+                          <div class="col-6">
+                            <input style="width:100px" class="form-control " zippy="currencyname"/>
+                            </div>
+                    </div>
+                 <div class="form-group row ">
+                        <label  class="col-6 col-form-label"  for="pagesize">Товаров на  странице </label>
+                          <div class="col-6">
+                            <input  style="width:100px" type="number" class="form-control " zippy="pagesize"/>
+                            </div>
                     </div>
                    
                    
@@ -103,22 +148,33 @@
                     </div>
                     <div class="form-check">
                         <input zippy="usefeedback" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usefeedback">Показывать отзывы </label>
+                        <label class="form-check-label" for="usefeedback">Показывать  отзывы </label>
 
                     </div>
-               
+                    <div class="form-check">
+                        <input zippy="nouseimages" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="nouseimages">Не показывать изображения  </label>
+
+                    </div>
+                    <div class="form-check">
+                        <input zippy="noshowempty" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="noshowempty">Не показывать  если нет на  складе </label>
+
+                    </div>
+              
+         
                     <div class="form-check">
                         <input zippy="uselogin" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="uselogin">Вход в каталог только разрешенным покупателям </label>
+                        <label class="form-check-label" for="uselogin">Вход в  каталог только разрешенным  покупателям </label>
                          <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Для доступа в каталог контрагент должен быть залогиненым и иметь разрешение (чекер в справочнике контрагентов) "></i>
+                                   title="Для  доступа  в  катало контрагент должен  быть залогинен и должен иметь разрешение (чекер в справочнике  контрагентов) "></i>
                         
                     </div>
                     <div class="form-check">
                         <input zippy="usemainpage" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="usemainpage">Выставить каталог как главную страницу </label>
+                        <label class="form-check-label" for="usemainpage">Выставить каталог  как  главную страницу </label>
                          <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Каталог будет открываться при переходе на главную страницу сайта. Переход в учетную систему по адресу /store "></i>
+                                   title=" Каталог будет открыватся при переходе на главную страницу   сайта. Переход в  CRM по  адресу /store "></i>
                           
                         
                     </div>
@@ -139,21 +195,11 @@
                                           
             </div>
            
-        
+         
            
-       
-            
             
         </div>
-        
-        
-        
-        
-  
-        <script>
- 
-
-        </script>
+    
 
     </body>
 </html>

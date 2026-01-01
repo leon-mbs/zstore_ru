@@ -2,9 +2,7 @@
 
 
 $_config = array('common'=>[],'db'=>[],'smtp'=>[],'dbpg_example'=>[]) ;
- 
-$_config['common']['salt']     = 'qwerty';
-$_config['common']['loglevel'] = 100  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;
+$_config['common']['loglevel'] = 200  ;//DEBUG = 100,INFO = 200,WARNING = 300,ERROR = 400;
  
 $_config['db']['host'] = 'localhost'  ;
 $_config['db']['name'] = 'zstoreru'  ;

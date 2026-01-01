@@ -1,13 +1,13 @@
 <table class="ctable" cellspacing="0" cellpadding="1">
       <tr  style="font-weight: bolder;">
         <td align="center" colspan="{{cols}}">
-            <h3 style="font-size: 16px;">OLAP анализ '{{type}}' з {{from}} по {{to}}</h3>
+            <h3 style="font-size: 16px;">OLAP анализ '{{type}}' с {{from}} по {{to}}</h3>
         </td>
     </tr>
     <tr>
 
         <td align="center" colspan="{{cols}}">
-            Период з {{from}} по {{to}} <br> <br>
+            Период с {{from}} по {{to}} <br> <br>
         </td>
     </tr>    
     <tr><th> </th>

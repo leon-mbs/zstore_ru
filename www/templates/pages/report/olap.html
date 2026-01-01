@@ -27,12 +27,14 @@
                             <div class="col-7">
                                  <select class="form-control  " zippy="sttype"> 
                                      <option value="0">Не выбран</option>
-                                     <option value="1">Продажа, доход</option>
+                                     <option value="1">Продажа, выручка</option>
                                      <option value="2">Продажа, прибыль</option>
                                      <option value="3">Закупка</option>
-                                     <option value="4">Услуги</option>
+                                     <option value="4">Услуги, выручка</option>
+                                     <option value="7">Услуги, прибыль</option>
 
-                                     <option value="5">Денежные  счета</option>
+                                     <option value="5">Платежи</option>
+                                     <option value="6">Кол. продажных документов</option>
                                  </select>
                            </div>
                         </div>
@@ -53,7 +55,7 @@
                            </div>
                         </div>
                         <div class="form-group">
-                               <input   type="submit" value="Вперед &gt;" class="btn btn-primary  ">
+                               <input   type="submit" value="Далее &gt;" class="btn btn-primary  ">
                                 
                         </div>
                  </form>
@@ -61,7 +63,7 @@
                 <div class="col-12">                
                 <div zippy="reppan">
                     <a class="btn btn-info mb-2" zippy="back">&lt; Назад</a> 
-                    <br><b style="font-size:larger">Срез по:</b>
+                    <br><b style="font-size:larger">Срез (фильтр) по:</b>
                     
                         <form zippy="filter" class="row" >
                              <div class="col-12 col-md-6  col-xl-4">
@@ -121,17 +123,7 @@
                                    </div>
                                 </div>
                                  {{/document_date}}
-                                 {{#firm_name}}
-              
-                                <div class="form-group row">
-                                    <label class="col-5 col-form-label" for="slfirm_name">Фирма</label>
-                                    <div class="col-7">
-                                         <select class="form-control  select2 " zippy="slfirm_name"> 
-                                           <option value="0">Не указано</option>                                  
-                                         </select>
-                                   </div>
-                                </div>
-                                 {{/firm_name}}
+                         
                                   {{#username}}
                                 <div class="form-group row">
                                     <label class="col-5 col-form-label" for="slusername">Сотрудник</label>
@@ -196,8 +188,8 @@
                     <div zippy="detail">
                         <div>
 
-                            <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Друк"><i class="fa fa-print mr-2"></i></a>
-                            <a href="/showreport/xls/olap" target="_blank" title="Експорт у Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                            <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                            <a href="/index.php?p=App/Pages/ShowReport&arg=xls/olap" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
 
 
                         </div>

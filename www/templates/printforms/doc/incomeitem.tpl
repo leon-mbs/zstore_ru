@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="6" align="center">
-            <b> Оприходование ТМЦ № {{document_number}} от {{date}}</b> <br>
+            <b> Отприходование ТМЦ № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
 
@@ -10,18 +10,16 @@
             <b>На склад:</b> {{to}}
         </td>
     </tr>
-    {{#emp}}
+   {{#storeemp}}
     <tr>
         <td colspan="6">
-            <b>Сотрудник:</b> {{emp}}
+            <b>На сотрудника:</b> {{storeemp}}
         </td>
     </tr>
-    <tr>
-        <td colspan="6">
-            <b>Сумма:</b> {{examount}}
-        </td>
-    </tr>
-    {{/emp}}
+ 
+    {{/storeemp}}    
+ 
+
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>

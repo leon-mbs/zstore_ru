@@ -13,6 +13,14 @@
         </td>
     </tr>
 
+    {{#department}}  
+   <tr>
+        <td  colspan="{{colspan}}">
+            <b>Отдел:</b> {{department}}  
+        </td>
+    </tr>
+    {{/department}}  
+    
     <tr>
         <td  colspan="{{colspan}}">
             {{{notes}}}
@@ -20,7 +28,7 @@
     </tr>
     <tr>
         <td>
-            <b>ФИО</b>
+            <b>П I Б</b>
         </td>
         {{#stnames}}
         <td class="text-right">

@@ -12,24 +12,24 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
-use \Zippy\Html\Form\CheckBox;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
+use Zippy\Html\Form\File;
 
 //POS терминалы
 class PosList extends \App\Pages\Base
 {
-
     private $_pos;
     private $_blist;
 
     public function __construct() {
         parent::__construct();
         if (System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('onlyadminsaccess'));
+            System::setErrorMsg("К странице  имеют доступ только  пользователи роли admins  ");
             \App\Application::RedirectError();
-            return false;
+            return  ;
         }
         $this->_blist = \App\Entity\Branch::getList(\App\System::getUser()->user_id);
 
@@ -39,31 +39,43 @@ class PosList extends \App\Pages\Base
 
         $this->add(new Form('posdetail'))->setVisible(false);
         $this->posdetail->add(new DropDownChoice('editbranch', $this->_blist, 0));
-        $this->posdetail->add(new DropDownChoice('editcomp', \App\Entity\Firm::getList(), 0));
-
+       
         $this->posdetail->add(new TextInput('editpos_name'));
 
-        $this->posdetail->add(new CheckBox('edittesting'));
-        $this->posdetail->add(new CheckBox('editusefisc'));
-        $this->posdetail->add(new TextInput('editposinner'));
-        $this->posdetail->add(new TextInput('editfisc'));
-        $this->posdetail->add(new TextInput('editfiscalnumber'));
+
+        
         $this->posdetail->add(new TextInput('editaddress'));
+     
         $this->posdetail->add(new TextInput('editpointname'));
+ 
+     
+
         $this->posdetail->add(new TextArea('editcomment'));
 
+        $this->posdetail->add(new CheckBox('editusefreg'));
+        $this->posdetail->add(new TextArea('editscriptfreg'));
+             
         $this->posdetail->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
         $this->posdetail->add(new Button('cancel'))->onClick($this, 'cancelOnClick');
+        
+  
+        
+        $modules = System::getOptions('modules');
+
+        $this->_tvars["loadkey"] = ($modules['ppo'] == 1 || $modules['vdoc'] == 1 ) ;
+        
     }
 
     public function poslistOnRow($row) {
         $item = $row->getDataItem();
 
+        $row->add(new Label('pos_id', $item->pos_id));
         $row->add(new Label('pos_name', $item->pos_name));
-        $row->add(new Label('branch_name', $this->_blist[$item->branch_id] ?? 0));
+        $row->add(new Label('branch_name', $this->_blist[$item->branch_id]??''));
         $row->add(new Label('comment', $item->comment));
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+      
     }
 
     public function deleteOnClick($sender) {
@@ -86,15 +98,14 @@ class PosList extends \App\Pages\Base
         $this->posdetail->setVisible(true);
         $this->posdetail->editpos_name->setText($this->_pos->pos_name);
         $this->posdetail->editbranch->setValue($this->_pos->branch_id);
-        $this->posdetail->editcomp->setValue($this->_pos->firm_id);
-        $this->posdetail->editaddress->setText($this->_pos->address);
-        $this->posdetail->editpointname->setText($this->_pos->pointname);
-        $this->posdetail->editposinner->setText($this->_pos->fiscallocnumber);
-        $this->posdetail->editfisc->setText($this->_pos->fiscalnumber);
-        $this->posdetail->editfiscalnumber->setText($this->_pos->fiscdocnumber);
-        $this->posdetail->edittesting->setChecked($this->_pos->testing);
-        $this->posdetail->editusefisc->setChecked($this->_pos->usefisc);
 
+        $this->posdetail->editaddress->setText($this->_pos->address);
+
+        $this->posdetail->editpointname->setText($this->_pos->pointname);
+        
+          $this->posdetail->editusefreg->setChecked($this->_pos->usefreg);
+        $this->posdetail->editscriptfreg->setText($this->_pos->scriptfreg);
+    
         $this->posdetail->editcomment->setText($this->_pos->comment);
     }
 
@@ -105,6 +116,7 @@ class PosList extends \App\Pages\Base
         $this->posdetail->clean();
         $b = \App\System::getBranch();
         $this->posdetail->editbranch->setValue($b > 0 ? $b : 0);
+         
         $this->_pos = new Pos();
     }
 
@@ -117,35 +129,31 @@ class PosList extends \App\Pages\Base
         $this->_pos->pos_name = $this->posdetail->editpos_name->getText();
 
         $this->_pos->branch_id = $this->posdetail->editbranch->getValue();
-        $this->_pos->firm_id = $this->posdetail->editcomp->getValue();
 
         $this->_pos->address = $this->posdetail->editaddress->getText();
+       
         $this->_pos->pointname = $this->posdetail->editpointname->getText();
-        $this->_pos->fiscallocnumber = $this->posdetail->editposinner->getText();
-        $this->_pos->fiscalnumber = $this->posdetail->editfisc->getText();
-        $this->_pos->fiscdocnumber = $this->posdetail->editfiscalnumber->getText();
-        $this->_pos->testing = $this->posdetail->edittesting->isChecked() ? 1 : 0;
-        $this->_pos->usefisc = $this->posdetail->editusefisc->isChecked() ? 1 : 0;
-
+     
+        
+        $this->_pos->usefreg = $this->posdetail->editusefreg->isChecked() ? 1 : 0;
+        $this->_pos->scriptfreg = $this->posdetail->editscriptfreg->getText();
+  
         if ($this->_pos->pos_name == '') {
-            $this->setError("entername");
+            $this->setError("Не задано  название");
             return;
         }
-        if ($this->_pos->firm_id == 0) {
-            $this->setError("noselfirm");
-            return;
-        }
+     
         if ($this->_tvars['usebranch'] == true && $this->_pos->branch_id == 0) {
 
-            $this->setError("selbranch");
+            $this->setError("Не выбран  филиал");
             return;
         }
         $fn = intval($this->_pos->fiscdocnumber);
 
-        if( ($fn >0) == false) {
-           $this->_pos->fiscdocnumber = 1;
+        if(($fn >0) == false) {
+            $this->_pos->fiscdocnumber = 1;
         }
-        
+
         $this->_pos->comment = $this->posdetail->editcomment->getText();
 
         $this->_pos->save();
@@ -157,6 +165,33 @@ class PosList extends \App\Pages\Base
     public function cancelOnClick($sender) {
         $this->postable->setVisible(true);
         $this->posdetail->setVisible(false);
+       
     }
 
+    //PPO
+    public function ppoOnClick($sender) {
+
+        $this->_pos = $sender->owner->getDataItem();
+
+        $this->postable->setVisible(false);
+       
+
+        
+    }
+    public function delOnClick($sender) {
+
+        $this->_pos->ppoowner =  ''  ;
+        $this->_pos->ppocert = ''  ;
+        $this->_pos->ppokey =  ''  ;
+        $this->_pos->ppokeyid =  ''  ;
+        $this->_pos->save();
+        $this->postable->setVisible(true);
+        $this->posdetail->setVisible(false);
+
+        $this->postable->poslist->Reload();
+
+    }
+
+ 
+     
 }

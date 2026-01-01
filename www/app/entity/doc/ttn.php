@@ -13,7 +13,6 @@ use App\System;
  */
 class TTN extends Document
 {
-
     public function generateReport() {
 
 
@@ -47,11 +46,11 @@ class TTN extends Document
         }
 
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
 
         $printer = System::getOptions('printer');
 
-      
+
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
@@ -60,7 +59,7 @@ class TTN extends Document
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "store_name"      => $this->headerdata["store_name"],
 
-                        "weight"          => $weight > 0 ? H::l("allweight", $weight) : '',
+                        "weight"          => $weight > 0 ? "Загальна вага {$weight} кг" : '',
                         "ship_address"    => strlen($this->headerdata["ship_address"]) > 0 ? $this->headerdata["ship_address"] : false,
                         "ship_number"     => strlen($this->headerdata["ship_number"]) > 0 ? $this->headerdata["ship_number"] : false,
                         "delivery_name"   => $this->headerdata["delivery_name"],
@@ -70,7 +69,7 @@ class TTN extends Document
                         "emp_name"        => $this->headerdata["emp_name"],
                         "document_number" => $this->document_number,
                         "phone"           => $this->headerdata["phone"],
-                        "email"           => $this->headerdata["email"],
+                       
                         "total"           => H::fa($this->amount),
         );
 
@@ -80,8 +79,20 @@ class TTN extends Document
         if ($this->headerdata["delivery_date"] > 0) {
             $header['delivery_date'] = H::fd($this->headerdata["delivery_date"]);
         }
-        $header['outnumber'] = strlen($this->headerdata['outnumber']) > 0 ? $this->headerdata['outnumber'] : false;
-
+        $header['outnumber'] = strlen($this->headerdata['outnumber']??'') > 0 ? $this->headerdata['outnumber'] : false;
+        $header["fphone"] = false;
+        $header["isfop"] = false;
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
+        } 
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+         }
         $report = new \App\Report('doc/ttn.tpl');
 
         $html = $report->generate($header);
@@ -121,10 +132,10 @@ class TTN extends Document
         }
 
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $printer = System::getOptions('printer');
         $style = "";
-        if (strlen($printer['pdocfontsize']) > 0 || strlen($printer['pdocwidth']) > 0) {
+        if (strlen($printer['pdocfontsize']??'') > 0 || strlen($printer['pdocwidth']??'') > 0) {
             $style = 'style="font-size:' . $printer['pdocfontsize'] . 'px;width:' . $printer['pdocwidth'] . ';"';
 
         }
@@ -145,7 +156,7 @@ class TTN extends Document
             $header['sent_date'] = H::fd($this->headerdata["sent_date"]);
         }
 
-
+     
         $report = new \App\Report('doc/ttn_bill.tpl');
 
         $html = $report->generate($header);
@@ -155,7 +166,8 @@ class TTN extends Document
 
     public function Execute() {
         //$conn = \ZDB\DB::getConnect();
-
+       $lost = 0;
+      
 
         if ($this->headerdata['nostore'] == 1) {
             return;
@@ -165,29 +177,35 @@ class TTN extends Document
         if ($this->parent_id > 0) {
             $parent = Document::load($this->parent_id);
             if ($parent->meta_name == 'GoodsIssue' || $parent->meta_name == 'POSCheck') {
-                return; //проводки выполняются  в  РН 
+                return; //проводки выполняются  в  РН
             }
         }
 
 
         foreach ($this->unpackDetails('detaildata') as $item) {
+            $onstore = H::fqty($item->getQuantity($this->headerdata['store'])) ;
+            $required = $item->quantity - $onstore;
 
 
             //оприходуем  с  производства
-            if ($item->autoincome == 1 && $item->item_type == Item::TYPE_PROD) {
+            if ($required >0 && $item->autoincome == 1 && ($item->item_type == Item::TYPE_PROD) || $item->item_type == Item::TYPE_HALFPROD) {
 
                 if ($item->autooutcome == 1) { //комплекты
                     $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                     foreach ($set as $part) {
-
+                       
                         $itemp = \App\Entity\Item::load($part->item_id);
-                        if($itemp == null)  continue;
-                        $itemp->quantity = $item->quantity * $part->qty;
-                      
-                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
-                            throw new \Exception(H::l("nominus", H::fqty($itemp->getQuantity($this->headerdata['store'])), $itemp->itemname));
+                        if($itemp == null) {
+                            continue;
                         }
-                      
+                        $itemp->quantity = $required * $part->qty;
+
+                        if (false == $itemp->checkMinus($itemp->quantity, $this->headerdata['store'])) {
+                            throw new \Exception("На складе всего ".$itemp->getQuantity($this->headerdata['store']) ." ТМЦ {$itemp->itemname}. Списание  в  минус запрещено");
+
+                        }
+                     
+
                         $listst = \App\Entity\Stock::pickup($this->headerdata['store'], $itemp);
 
                         foreach ($listst as $st) {
@@ -196,6 +214,9 @@ class TTN extends Document
                             $sc->tag=Entry::TAG_TOPROD;
 
                             $sc->save();
+                            
+                               
+                            
                         }
                     }
                 }
@@ -204,19 +225,19 @@ class TTN extends Document
                 $price = $item->getProdprice();
 
                 if ($price == 0) {
-                    throw new \Exception(H::l('noselfprice', $item->itemname));
+                    throw new \Exception('Не рассчатана сеьестоимость готовой продукции '. $item->itemname);
                 }
                 $stock = \App\Entity\Stock::getStock($this->headerdata['store'], $item->item_id, $price, $item->snumber, $item->sdate, true);
 
-                $sc = new Entry($this->document_id, $item->quantity * $price, $item->quantity);
+                $sc = new Entry($this->document_id, $required * $price, $required);
                 $sc->setStock($stock->stock_id);
-               $sc->tag=Entry::TAG_FROMPROD;
+                $sc->tag=Entry::TAG_FROMPROD;
 
                 $sc->save();
             }
 
             if (false == $item->checkMinus($item->quantity, $this->headerdata['store'])) {
-                throw new \Exception(H::l("nominus", H::fqty($item->getQuantity($this->headerdata['store'])), $item->itemname));
+                throw new \Exception("На складе всего ".$item->getQuantity($this->headerdata['store']) ." ТМЦ {$item->itemname}. Списание в  минус запрещено");
             }
 
             //продажа
@@ -231,42 +252,98 @@ class TTN extends Document
                 $sc->save();
             }
         }
-
+ 
+        
+        $this->DoBalans() ;
+          
+   
         return true;
     }
 
-    public function onState($state,$oldstate) {
+    public function onState($state, $oldstate) {
 
-        if ($state == Document::STATE_INSHIPMENT) {
+        
+        if ($state == Document::STATE_INSHIPMENT || $state == Document::STATE_READYTOSHIP ) {
+              
+            if($this->parent_id > 0) {
+                 $order = Document::load($this->parent_id);
+                 $order = $order->cast() ;
+                
+                 if($order->meta_name == 'Invoice' && $order->parent_id > 0) {
+                      $order = Document::load($order->parent_id);
+                      $order = $order->cast() ;
+                      
+                 }
+                 if($order->meta_name == 'Order' && $order->state > 4) {
+
+                     if( count( $order->getNotSendedItem() ) >0 ) return;
+                                
+                    
+                     if($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP) {
+                        $order->updateStatus(Document::STATE_INSHIPMENT);
+                     }                            
+                           
+                                       
+                }   
+            }  
+        }
+                
+        
+        if ($state == Document::STATE_DELIVERED) {
+                                          
             //расходы на  доставку
-            if ($this->headerdata['ship_amount'] > 0) {
-                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['ship_amount'], H::getDefMF()   );
-                if ($payed > 0) {
-                    $this->payed = $payed;
-                }
+            if ($this->headerdata['ship_amount'] > 0 && $this->headerdata['payseller'] == 1) {
+                $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, 0 - $this->headerdata['ship_amount'], H::getDefMF());
+               // $this->payed = $payed;
+               // $this->DoBalans() ;
+            }
+            
+            if ($this->headerdata['ship_amount'] > 0  ) {   //расходы на  доставку
+               
                 \App\Entity\IOState::addIOState($this->document_id, 0 - $this->headerdata['ship_amount'], \App\Entity\IOState::TYPE_SALE_OUTCOME);
 
             }
+            
+            if($this->parent_id > 0) {
+                $order = Document::load($this->parent_id);
+                $order = $order->cast() ;
+                
+                if($order->meta_name == 'Order' && $order->state > 4) {
+
+                    if( count( $order->getNotSendedItem() ) >0 ) return;
+                    
+                    
+                    if($this->headerdata['moneyback'] >0  ) { //обратная  доставка  денег
+                         $mf = intval($order->headerdata['payment'] );
+                         if($mf==0)  {
+                            $mf = \App\Helper::getDefMF()  ;
+                         }
+                       
+                         if($order->state == Document::STATE_WP  || ($order->getHD('paytype')==2 && $order->getHD('waitpay')==1  )  )    {
+                             $order->payed = \App\Entity\Pay::addPayment($order->document_id, $this->document_date, $this->headerdata['moneyback'], $mf);
+                             $order->setHD('waitpay',0) ;
+                             $order->save();
+                             $order->DoBalans() ;
+                             if( $order->payed >= $order->payamount   )  {
+                                $order->updateStatus(Document::STATE_PAYED);
+                             }
+                         }
+                         
+                         
+                    }
+                    
+                    
+                    if( $order->payed >= $order->payamount   )  {
+                        $order->updateStatus(Document::STATE_CLOSED);
+                    }
+                        
+                     
+                }
+            }            
+            
         }
-        $common = \App\System::getOptions("common");
-
-        if ($this->parent_id > 0) {
-            $order = Document::load($this->parent_id);
-
-            $list = $order->getChildren('TTN');
-
-            if (count($list) == 1 && $common['numberttn'] <> 1) {   //только  эта  ТТН
-                if ($state == Document::STATE_DELIVERED && ($order->state == Document::STATE_INSHIPMENT || $order->state == Document::STATE_READYTOSHIP || $order->state == Document::STATE_INPROCESS)) {
-                    $order->updateStatus(Document::STATE_DELIVERED);
-                }
-                if ($state == Document::STATE_INSHIPMENT && ($order->state == Document::STATE_INPROCESS || $order->state == Document::STATE_READYTOSHIP)) {
-                    $order->updateStatus(Document::STATE_INSHIPMENT);
-                }
-                if ($state == Document::STATE_READYTOSHIP && $order->state == Document::STATE_INPROCESS) {
-                    $order->updateStatus(Document::STATE_READYTOSHIP);
-                }   
-            }
-        }     
+        
+      
     }
 
     public function getRelationBased() {
@@ -284,7 +361,29 @@ class TTN extends Document
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF);
     }
-  
-  
-   
+
+    /**
+    * @override
+    */
+    public function DoBalans() {
+          $conn = \ZDB\DB::getConnect();
+          $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+
+          if(($this->customer_id??0) == 0) {
+              return;
+          }
+       
+           //тмц
+            if($this->amount >0) {
+                $b = new \App\Entity\CustAcc();
+                $b->customer_id = $this->customer_id;
+                $b->document_id = $this->document_id;
+                $b->amount = 0-$this->amount;
+                $b->optype = \App\Entity\CustAcc::BUYER;
+                $b->save();
+            }
+             
+    }
+ 
+
 }

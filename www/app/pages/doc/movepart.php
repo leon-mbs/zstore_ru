@@ -26,12 +26,15 @@ use Zippy\Html\Link\SubmitLink;
  */
 class MovePart extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
-    public function __construct($docid = 0, $tostock = 0) {
+     /**
+    * @param mixed $docid     редактирование
+    * @param mixed $tostock  создание на  основании
+    */
+   public function __construct($docid = 0, $tostock = 0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -90,7 +93,7 @@ class MovePart extends \App\Pages\Base
         $this->_doc->headerdata['fromstockname'] = $this->docform->fromstock->getText();
         $this->_doc->headerdata['tostock'] = $this->docform->tostock->getkey();
         $this->_doc->headerdata['tostockname'] = $this->docform->tostock->getText();
-        $this->_doc->headerdata['qty'] = $this->docform->qty->getText();
+        $this->_doc->headerdata['qty'] = H::fa($this->docform->qty->getText());
 
 
         $this->_doc->document_number = $this->docform->document_number->getText();
@@ -127,7 +130,7 @@ class MovePart extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -142,14 +145,14 @@ class MovePart extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
 
@@ -158,13 +161,13 @@ class MovePart extends \App\Pages\Base
         $to = Stock::load($this->docform->tostock->getKey());
 
         if ($from == null || $to == null) {
-            $this->setError("noselpart");
+            $this->setError("Не выбрана партия");
         }
         if ($from->stock_id == $to->stock_id) {
-            $this->setError("thesamestock");
+            $this->setError("Одинаковые партии");
         }
         if ($from->item_id != $to->item_id) {
-            $this->setError("diffitem");
+            $this->setError("Разные ТМЦ");
         }
 
 
@@ -186,6 +189,9 @@ class MovePart extends \App\Pages\Base
         }
         if (strlen($st->snumber) > 0) {
             $str = $str . ', ' . $st->snumber;
+        }
+        if (strlen($st->emp_id) > 0) {
+            $str = $str . ', ' . $st->emp_name;
         }
         $str = $str . ', ' . H::fa($st->partion);
         $str = $str . ', ' . H::fqty($st->qty);

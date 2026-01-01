@@ -1,8 +1,8 @@
 <table class="ctable" border="0" cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="9">
-            Состояние складов
+        <td align="center" colspan="{{$colspan}}">
+           Состояние складоы  на  {{date}} 
         </td>
     </tr>
  
@@ -11,18 +11,28 @@
 
         <th style="border: solid black 1px">Наименование</th>
         <th style="border: solid black 1px">Артикул</th>
-        {{#stores}}
+        <th style="border: solid black 1px">Бренд</th>
+        <th style="border: solid black 1px">Mин. кол.</th>
+        {{#cfnames}}
         <th style="border: solid black 1px">{{value}} </th>
-        {{/stores}}
+        {{/cfnames}}
+        {{#storescol}}
+        <th style="border: solid black 1px">{{value}} </th>
+        {{/storescol}}
     </tr>
     {{#_detail}}       
     <tr>
 
         <td>{{itemname}}</td>
         <td>{{item_code}}</td>
-        {{#stlist}}
+        <td>{{brand}}</td>
+        <td align="right">{{minqty}}</td>
+        {{#cfcol}}
+          <td align="right">{{val}}</td>
+        {{/cfcol}}
+        {{#stlistcol}}
           <td align="right">{{qty}}</td>
-        {{/stlist}}
+        {{/stlistcol}}
     </tr>
     {{/_detail}}
    

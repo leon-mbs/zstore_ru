@@ -1,22 +1,22 @@
 <html>
     <head>
-          <title> Товарно-транспортная накладная</title>
+          <title> Товарно-транспортая накладная</title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>Товарно-транспортная накладная </h3>
+            <h3>Товарно-транспортая накладная </h3>
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="form-group">
                         <label for="order">Заказ</label>
-                        <input readonly="readonly" class="form-control-plaintext" type="text" zippy="order">
+                        <input readonly  class="form-control-plaintext" type="text" zippy="order">
 
                         <small zippy="notesfromorder"></small>
                     </div>
@@ -35,17 +35,19 @@
                         <input zippy="phone" class="form-control">
 
                     </div>
-                    <div class="form-group  ">
-                        <label for="email">E-mail</label>
+                   <div class="form-group  ">
+                        <label for="fop" data-label="fop"  >Указать ИП</label>
+                        <select class="form-control" zippy="fop">
+                            <option value="0">Не выбрано</option>
+                        </select>
 
-                        <input zippy="email" class="form-control">
 
-                    </div>
+                  </div>
 
                     <div class="form-check">
                         <input zippy="nostore" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="nostore">Не проводить по складу</label>
-                        <br><small>Указывается, если, например, товар производится под заказ и по складу не проводится</small>
+                        <label class="form-check-label" for="nostore">Не производить по складу</label> 
+                       <br><br>Если например проведен расходной накладной</small>
                     </div>
 
                     <div class="form-group  ">
@@ -60,7 +62,7 @@
                 <div class="col-12 col-md-4  col-xl-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="document_date" required="required">
+                        <input style="width:120px;" class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="salesource">Источник продаж</label>
@@ -69,14 +71,9 @@
                         </select>
                     </div>
 
+           
                     <div class="form-group  ">
-                        <label for="firm">Продавец</label>
-                        <select class="form-control" zippy="firm">
-                            <option value="0">Не выбран</option>
-                        </select>
-                    </div>
-                    <div class="form-group  ">
-                        <label for="store">Со склада</label>
+                        <label for="store">Со  склада</label>
 
                         <select class="form-control" zippy="store">
                             <option value="0">Не выбрано</option>
@@ -84,7 +81,7 @@
                     </div>
 
                     <div class="form-group  ">
-                        <label for="pricetype">Тип цены</label>
+                        <label for="pricetype">Тип цени</label>
                         <select class="form-control" zippy="pricetype">
                         </select>
                     </div>
@@ -94,17 +91,17 @@
 
                         </select>
                     </div>
-                    <div class="form-group  ">
+
+
+
+                </div>
+                <div class="col-12 col-md-4  col-xl-3">
+                       <div class="form-group  ">
                         <label data-label="emp" for="emp">Ответственный за доставку</label>
                         <select class="form-control  " zippy="emp">
                             <option value="0">Не указано</option>
                         </select>
                     </div>
-
-
-                </div>
-                <div class="col-12 col-md-4  col-xl-3">
-
                     <div class="form-group">
                         <label data-label="ship_address" for="ship_address">Адрес доставки</label>
                         <textarea class="form-control" type="text" zippy="ship_address"></textarea>
@@ -112,20 +109,25 @@
                     <div class="form-group">
                         <label data-label="ship_number" for="ship_number">Номер декларации</label>
                         <input class="form-control" type="text" zippy="ship_number">
+                      
                     </div>
                     <div class="form-group">
-                        <label data-label="ship_amount" for="ship_amount">Сумма затрат за доставку</label>
+                        <label data-label="ship_amount" for="ship_amount">Стоимость</label>
                         <input class="form-control qtyprice" type="text" zippy="ship_amount" pattern="[0-9,\.]+">
                     </div>
+                     <div class="form-check">
+                        <input zippy="payseller" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="payseller">Оплачивает  продавец</label>
 
+                    </div>
 
                     <div class="form-group">
-                        <label data-label="sent_date" for="sent_date"> Дата отправки</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="sent_date" required="required">
+                        <label data-label="sent_date" for="sent_date">Ориетировочная дата  отправки</label>
+                        <input style="width:120px;" class="form-control" type="text" zippy="sent_date"  required="on" >
                     </div>
                     <div class="form-group">
-                        <label data-label="delivery_date" for="delivery_date"> Дата доставки</label>
-                        <input style="width:120px;" class="form-control" type="text" zippy="delivery_date" required="required">
+                        <label data-label="delivery_date" for="delivery_date">Ориетировочная дата доставки</label>
+                        <input style="width:120px;" class="form-control" type="text" zippy="delivery_date"  required="on" >
                     </div>
 
                 </div>
@@ -134,14 +136,10 @@
                 <div class="col-12  col-xl-10">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
+                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus="on"    type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
-                       {{#usemobilescanner}}  
-                        &nbsp; &nbsp; &nbsp; &nbsp; <i id="mobilescanner" data-toggle="modal" data-target="#modalscanner"
-                                                       title="Сканировать мобильным устройством"
-                                                       style="cursor:pointer;font-size:28px" class="fa fa-mobile-alt"></i>
-                                    {{/usemobilescanner}}  
+                 
                     </div>
                     {{/usescanner}}
 
@@ -153,10 +151,8 @@
                             <th>Название</th>
                             <th>Код</th>
                             <th>Ед.</th>
-                            {{#usesnumber}}
-                            <th>Серия</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
+                           <th>{{#usesnumber}}Серия, дата{{/usesnumber}}</th>
+                        
 
 
                             <th class="text-right">Кол.</th>
@@ -170,10 +166,8 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
+                            <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                        
 
 
                             <td zippy="quantity" class="text-right"></td>
@@ -190,10 +184,10 @@
                             <td></td>
                             <td></td>
                             <td></td>
-                            {{#usesnumber}}
+                         
+
                             <td></td>
-                            <td></td>
-                            {{/usesnumber}}
+                         
 
 
                             <td class="text-right"></td>
@@ -210,13 +204,11 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Готово к отправке" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="senddoc" type="submit" value="Отправить" class="btn btn-outline-success  ">
-                    {{#np}}
-                    &nbsp;<input zippy="sendnp" type="submit" value="Отправить НП" class="btn btn-outline-success  ">            
-                    {{/np}}
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  mr-2 ">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  mr-2 ">
+                    <input zippy="execdoc" type="submit" value="Готово к отправке" class="btn btn-outline-primary  mr-2 ">
+                    <input zippy="senddoc" type="submit" value="Отправить" class="btn btn-outline-success  mr-2 ">
+                   
 
 
                 </div>
@@ -227,19 +219,18 @@
         <div class="row">
             <div class="col-12 col-md-4 col-xl-3">
                 <form zippy="editdetail">
-                    <h4>Введение товара </h4>
+                    <h4>Ввод товара </h4>
 
 
                     <div class="form-group">
                         <label for="edittovar">Название</label>
-                        <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
-                        <a zippy="openitemsel">Открыть справочник</a>
+                        <input     placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>                        <a zippy="openitemsel">Открыть справочник</a>
                         <br>Наличие: <span zippy="qtystock"></span>
 
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
-                        <label for="editserial">Серия производителя </label>
+                        <label for="editserial">Серия (серийний  номер)  </label>
                         <input class="form-control " zippy="editserial"/>
 
                     </div>
@@ -247,22 +238,23 @@
                     {{/usesnumber}}
                     <div class="form-group">
                         <label for="editquantity">Количество</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
 
                     <div class="form-group">
                         <label for="editprice">Цена </label>
-                        <input class="form-control qtyprice" type="text" zippy="editprice" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editprice"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-outline-secondary  mr-2">
                         <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-outline-secondary ">
+                        
                     </div>
 
 
@@ -282,7 +274,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Название </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
+                        <input class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editphone">Телефон</label>
@@ -295,154 +287,20 @@
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-outline-secondary mr-2">
                         <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-outline-secondary ">
+                        
                     </div>
                 </div>
             </div>
         </form>
-        <div id="modalscanner" class="modal  ">
-            <div class="modal-dialog modal-dialog-centered  modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Сканирование</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <a data-toggle="collapse" href="#collapcescanner" aria-expanded="false" aria-controls="collapseExample">
-                            <b>Настройка камеры <i style="font-size:smaller" class="fa fa-angle-down"></i></b>
-                        </a>
-                        <div id="collapcescanner" class="collapse  ">
-                            <form class="controls">
-                                <div class="row reader-config-group">
-                                    <div class="col-12 col-sm-6">
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Тип кода</label>
-                                            <div class="col-sm-7">
-
-                                                <select id="decoder_readers" name="decoder_readers" class="form-control">
-                                                    <option value="code_128" selected="selected">Code 128</option>
-                                                    <option value="code_39">Code 39</option>
-                                                    <option value="code_39_vin">Code 39 VIN</option>
-                                                    <option value="ean">EAN</option>
-                                                    <option value="ean_extended">EAN-extended</option>
-                                                    <option value="ean_8">EAN-8</option>
-                                                    <option value="upc">UPC</option>
-                                                    <option value="upc_e">UPC-E</option>
-                                                    <option value="codabar">Codabar</option>
-                                                    <option value="i2of5">Interleaved 2 of 5</option>
-                                                    <option value="2of5">Standard 2 of 5</option>
-                                                    <option value="code_93">Code 93</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Разрешение</label>
-                                            <div class="col-sm-7">
-
-                                                <select id="input-stream_constraints" name="input-stream_constraints"
-                                                        class="form-control">
-                                                    <option value="320x240">320px</option>
-                                                    <option selected="selected" value="640x480">640px</option>
-                                                    <option value="800x600">800px</option>
-                                                    <option value="1280x720">1280px</option>
-                                                    <option value="1600x960">1600px</option>
-                                                    <option value="1920x1080">1920px</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Patch-Size</label>
-                                            <div class="col-sm-7">
-
-                                                <select name="locator_patch-size" class="form-control">
-                                                    <option value="x-small">x-small</option>
-                                                    <option value="small">small</option>
-                                                    <option selected="selected" value="medium">medium</option>
-                                                    <option value="large">large</option>
-                                                    <option value="x-large">x-large</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Workers</label>
-                                            <div class="col-sm-7">
-
-                                                <select name="numOfWorkers" class="form-control">
-                                                    <option value="0">0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option selected="selected" value="4">4</option>
-                                                    <option value="8">8</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Half-Sample</label>
-                                            <div class="col-sm-7">
-
-                                                <input type="checkbox" checked="checked" name="locator_half-sample"/>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Камера</label>
-                                            <div class="col-sm-7">
-
-                                                <select name="input-stream_constraints" id="deviceSelection"
-                                                        class="form-control">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Zoom</label>
-                                            <div class="col-sm-7">
-
-                                                <select name="settings_zoom" class="form-control">
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-5 col-form-label">Подсветка</label>
-                                            <div class="col-sm-7">
-
-                                                <input type="checkbox" name="settings_torch"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <br><br>
-                        Код: <span id="scancode"></span>&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-sm btn-success" onclick="mcode()">Добавить</button>
-                        <br>
-                        <br>
-
-                        <div id="interactive" class="viewport"></div>
-
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
+     
 
         {{#usescanner}}
         <script>
             $(document).ready(function () {
 
-                $('#barcode').focus();
-
+                   
 
                 var val = sessionStorage.getItem('decoder_readers');
                 if (val != null) {
@@ -452,7 +310,8 @@
                 if (val != null) {
                     $('#stream_constraints').val(val);
                 }
-
+                  $("#edittovar").focus()    
+ 
 
             });
 
@@ -465,17 +324,7 @@
             }
 
 
-            function mcode() {
-                var code = $('#scancode').text();
-                if (code == "")
-                    return;
-
-                sessionStorage.setItem('decoder_readers', $('#decoder_readers').val());
-                sessionStorage.setItem('stream_constraints', $('#stream_constraints').val());
-                $('#barcode').val(code);
-                $('#addcode').click()
-            }
-
+       
 
          
 

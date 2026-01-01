@@ -1,7 +1,6 @@
 <?php
+
 namespace App\Entity;
-
-
 
 use App\Helper as H;
 use App\System;
@@ -14,19 +13,27 @@ use App\System;
  */
 class Subscribe extends \ZCL\DB\Entity
 {
-
     //типы  событий
-    const EVENT_DOCSTATE = 1;
+    public const EVENT_DOCSTATE = 1;
+    public const EVENT_NEWCUST  = 2;
+    public const EVENT_ENDDAY   = 3;
+    
     //типы сообщений
-    const MSG_NOTIFY = 1;
-    const MSG_EMAIL  = 2;
-    const MSG_SMS    = 3;
-    const MSG_VIBER  = 4;
-    const MSG_BOT  = 5;
+    public const MSG_NOTIFY = 1;
+    public const MSG_EMAIL  = 2;
+    public const MSG_SMS    = 3;
+    public const MSG_VIBER  = 4;
+    public const MSG_BOT    = 5;
+
     //типы  получателей
-    const RSV_CUSTOMER  = 1;
-    const RSV_DOCAUTHOR = 2;
-    const RSV_USER      = 3;
+    public const RSV_CUSTOMER  = 1;
+    public const RSV_DOCAUTHOR = 2;
+    public const RSV_USER      = 3;
+    public const RSV_WH        = 4;
+    public const RSV_SYSTEM    = 5;
+    public const RSV_DOCRESP   = 6;
+    public const RSV_TG        = 7;
+    public const RSV_EMAIL     = 8;
 
     protected function init() {
         $this->sub_id = 0;
@@ -42,11 +49,14 @@ class Subscribe extends \ZCL\DB\Entity
         $this->statename = (string)($xml->statename[0]);
         $this->doctypename = (string)($xml->doctypename[0]);
         $this->msgsubject = (string)($xml->msgsubject[0]);
+        $this->url = (string)($xml->url[0]);
+        $this->chat_id = (string)($xml->chat_id[0]);
         $this->username = (string)($xml->username[0]);
         $this->user_id = (int)($xml->user_id[0]);
         $this->state = (int)($xml->state[0]);
         $this->doctype = (int)($xml->doctype[0]);
         $this->attach = (int)($xml->attach[0]);
+        $this->html = (int)($xml->html[0]);
 
         parent::afterLoad();
     }
@@ -62,56 +72,118 @@ class Subscribe extends \ZCL\DB\Entity
         $this->detail .= "<user_id>{$this->user_id}</user_id>";
         $this->detail .= "<state>{$this->state}</state>";
         $this->detail .= "<attach>{$this->attach}</attach>";
+        $this->detail .= "<html>{$this->html}</html>";
         $this->detail .= "<doctype>{$this->doctype}</doctype>";
         $this->detail .= "<doctypename>{$this->doctypename}</doctypename>";
         $this->detail .= "<statename>{$this->statename}</statename>";
         $this->detail .= "<username>{$this->username}</username>";
         $this->detail .= "<msgsubject>{$this->msgsubject}</msgsubject>";
+        $this->detail .= "<url>{$this->url}</url>";
+        $this->detail .= "<chat_id>{$this->chat_id}</chat_id>";
 
         $this->detail .= "</detail>";
 
         return true;
     }
 
+    //типы  подписок 
     public static function getEventList() {
         $list = array();
-        $list[self::EVENT_DOCSTATE] = H::l("sb_docstate");
+        $list[self::EVENT_DOCSTATE] = "Смена статуса документа";
+        $list[self::EVENT_NEWCUST]  = "Новый контрагент";
+        $list[self::EVENT_ENDDAY]   = "Конец рабочего дня";
+
 
         return $list;
     }
 
-    public static function getMsgTypeList() {
-        
+    //типы  соотбщений по  типу получателя 
+    public static function getMsgTypeList($rt=0) {
+        $rt = intval($rt);
+        if($rt==0)  return [];
+
         $sms = \App\System::getOptions('sms')  ;
+
+        $list = array();
+        $list[self::MSG_NOTIFY] = "Текст";
+      
+        $list[self::MSG_EMAIL] = "E-mail";
+
+        if($sms['smstype'] > 0) {
+            $list[self::MSG_SMS] = "SMS";
+        }
+
+        if($sms['smstype']==2) {
+            $list[self::MSG_VIBER] =  "Viber";
+        }
+
+        if(strlen(\App\System::getOption("common", 'tbtoken'))>0) {
+            $list[self::MSG_BOT] = "Телеграм";
+        }
+      
         
+        if($rt==self::RSV_CUSTOMER) {
+           unset($list[self::MSG_NOTIFY])  ;
+        }
+        
+        if($rt==self::RSV_WH || $rt==self::RSV_SYSTEM) {
+           unset($list[self::MSG_EMAIL])  ;
+           unset($list[self::MSG_VIBER])  ;
+           unset($list[self::MSG_BOT])  ;
+           unset($list[self::MSG_SMS])  ;
+        }
+     
+        if($rt==self::RSV_TG ) {
+           unset($list[self::MSG_EMAIL])  ;
+           unset($list[self::MSG_VIBER])  ;
+ 
+           unset($list[self::MSG_SMS])  ;
+           unset($list[self::MSG_NOTIFY])  ;
+        }
+     
+        if($rt==self::RSV_EMAIL ) {
+           unset($list[self::MSG_BOT])  ;
+           unset($list[self::MSG_VIBER])  ;
+ 
+           unset($list[self::MSG_SMS])  ;
+           unset($list[self::MSG_NOTIFY])  ;
+        }
+     
+    
+
+        return $list;
+    }
+
+    
+    //типы  получателей по  типу подписок 
+    public static function getRecieverList($et=0) {
+        $et = intval($et);
+        if($et==0)  return [];
+
+
         $list = array();
-        $list[self::MSG_NOTIFY] = H::l("sb_msgnotify");
-        $list[self::MSG_EMAIL] = H::l("sb_msgemail");
-        $list[self::MSG_SMS] = H::l("sb_msgsms");
-        $list[self::MSG_SMS] = H::l("sb_msgsms");
+        if($et==self::EVENT_DOCSTATE) {
+           $list[self::RSV_DOCAUTHOR] = "Автор документа";
+           $list[self::RSV_DOCRESP] = "Ответственный за документ";
+           $list[self::RSV_CUSTOMER] = "Контрагент документа";
+        }
+        if($et==self::EVENT_NEWCUST) {
+           $list[self::RSV_CUSTOMER] = "Контрагент";
+        }
+        $list[self::RSV_SYSTEM] = "Системный лог";
+        $list[self::RSV_USER] = "Пользователь системы";
+        $list[self::RSV_WH] = "Web Hook";
+        $list[self::RSV_EMAIL] = "E-mail";
        
-        if(($sms['smstype'] ?? -1)==2) {
-            $list[self::MSG_VIBER] =  H::l("sb_msgviber");            
+        if(strlen(\App\System::getOption("common", 'tbtoken'))>0) {
+            $list[self::RSV_TG] = "Телеграм";
         }
-        if(strlen(\App\System::getOption("common",'tbtoken'))>0) {
-            $list[self::MSG_BOT] = H::l("sb_msgbot");
-
-        }
-
-
+        
+         
         return $list;
     }
 
-    public static function getRecieverList() {
-        $list = array();
-        $list[self::RSV_CUSTOMER] = H::l("sb_rsvcust");
-        $list[self::RSV_DOCAUTHOR] = H::l("sb_rsvda");
-        $list[self::RSV_USER] = H::l("sb_rsvuser");
-
-        return $list;
-    }
-
-    //изменение  состояние  документа
+    //изменение  состояния  документа
     public static function onDocumentState($doc_id, $state) {
         $doc = \App\Entity\Doc\Document::load($doc_id);
 
@@ -124,91 +196,329 @@ class Subscribe extends \ZCL\DB\Entity
                 continue;
             }
 
-            $cnt = $doc->checkStates(array($state));
-            if ($cnt > 1) {
-               // continue;
-            }
-
-            $ret = '';
-            $phone = '';
-            //  $viber='';
-            $email = '';
-            $notify = 0;
+            $options=[];
+            $c=null;
+            $u=null;
+            
+            
             if ($sub->reciever_type == self::RSV_CUSTOMER) {
                 $c = \App\Entity\Customer::load($doc->customer_id);
-                if ($c != null && $c->nosubs != 1) {
-                    $phone = $c->phone;
-                    $viber = $c->viber;
-                    $email = $c->email;
-                    $chat_id = $c->chat_id;
+                if($c->nosubs == 1) {
+                   $c=null; 
                 }
             }
             if ($sub->reciever_type == self::RSV_DOCAUTHOR) {
+                $u = \App\Entity\User::load($doc->headerdata['author']);
+            }
+            if ($sub->reciever_type == self::RSV_DOCRESP) {
                 $u = \App\Entity\User::load($doc->user_id);
-                if ($u != null) {
-                    $phone = $u->phone;
-                    $viber = $u->viber;
-                    $email = $u->email;
-                    $chat_id = $u->chat_id;
-                    $notify = $doc->user_id;
+            }
+            if ($sub->reciever_type == self::RSV_USER) {
+                $u = \App\Entity\User::load($sub->user_id);
+                
+                if($doc->branch_id > 0 && $u->rolename != 'admins') {
+                    $blist =  explode(',',$u->aclbranch) ; 
+                    if(in_array($doc->branch_id,$blist)==false) {
+                       continue; 
+                    }
+                }
+                
+            }   
+         
+               
+            if ($c != null  ) {
+                $options['phone'] = $c->phone;
+                $options['viber'] = $c->viber;
+                $options['email'] = $c->email;
+                $options['chat_id'] = $c->chat_id;
+            }
+            
+            if ($u != null) {
+                $options['phone'] = $u->phone;
+                $options['viber'] = $u->viber;
+                $options['email'] = $u->email;
+                $options['chat_id'] = $u->chat_id;
+                $options['notifyuser'] = $u->user_id;
+            }  
+            if ($sub->reciever_type == self::RSV_TG) {
+                $options['chat_id'] = $sub->chat_id;;
+            }
+                      
+            $options['doc']  = $doc;
+            
+            $text = $sub->getTextDoc($doc);
+            
+            
+            $text = $sub->sendmsg($text,$options);
+            
+            
+ 
+
+        }
+    }
+
+    //Новый контрагент
+    public static function onNewCustomer($customer_id) {
+        $c = \App\Entity\Customer::load($customer_id);
+ 
+        $list = self::find('disabled <> 1 and sub_type= ' . self::EVENT_NEWCUST);
+        foreach ($list as $sub) {
+            $options=[];
+         
+            $u=null;
+            
+            
+            if ($sub->reciever_type == self::RSV_CUSTOMER) {
+                if($c->nosubs == 1) {
+                   continue;
                 }
             }
             if ($sub->reciever_type == self::RSV_USER) {
                 $u = \App\Entity\User::load($sub->user_id);
-                if ($u != null) {
-                    $phone = $u->phone;
-                    $viber = $u->viber;   
-                    $email = $u->email;
-                     $chat_id = $u->chat_id;
-                   $notify = $sub->user_id;
-                }
-            }
-            $text = $sub->getText($doc);
-            if (strlen($phone) > 0 && $sub->msg_type == self::MSG_SMS) {
-                $ret =   self::sendSMS($phone, $text);
-            }
-            if (strlen($email) > 0 && $sub->msg_type == self::MSG_EMAIL) {
-              $ret =   self::sendEmail($email, $text, $sub->msgsubject,$sub->attach==1 ? $doc :null);
+            }   
+            
+               
+            if ($c != null  ) {
+                $options['phone'] = $c->phone;
+                $options['viber'] = $c->viber;
+                $options['email'] = $c->email;
+                $options['chat_id'] = $c->chat_id;
             }
             
-            if(strlen($viber)==0) $viber = $phone;
-            if(strlen($viber)>0 && $sub->msg_type == self::MSG_VIBER) {
-                $ret =   self::sendViber($viber,$text) ;
-            }
-            if(strlen($chat_id)>0 && $sub->msg_type == self::MSG_BOT) {
-                $ret =   self::sendBot($chat_id,$text) ;
-            }
-            if ($notify > 0 && $sub->msg_type == self::MSG_NOTIFY) {
-                self::sendNotify($notify, $text);
-            }
-            
-            if(strlen($ret)>0) {
-            \App\Helper::logerror($ret); 
-            $n = new \App\Entity\Notify();
-            $n->user_id = \App\Entity\Notify::SYSTEM;
-            $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
-            $n->message = $ret;
-
-            $n->save();                          
+            if ($u != null) {
+                $options['phone'] = $u->phone;
+                $options['viber'] = $u->viber;
+                $options['email'] = $u->email;
+                $options['chat_id'] = $u->chat_id;
+                $options['notifyuser'] = $u->user_id;
             }            
+//      
+            if ($sub->reciever_type == self::RSV_TG) {
+                $options['chat_id'] = $sub->chat_id;;
+            }
             
+            $text = $sub->getTextCust($c);
+            
+            
+            $sub->sendmsg($text,$options);
+ 
         }
     }
 
+    //конец дня (задается  в  планировщике)
+    public static function onEndDay( ) {
+        $list = self::find('disabled <> 1 and sub_type= ' . self::EVENT_ENDDAY);
+        foreach ($list as $sub) {
+            $options=[];
+            $options['phone'] = '';
+            $options['viber'] = '';
+            $options['email'] = '';
+            $options['chat_id'] = '';
+            $options['notifyuser'] = '';
+            $options['chat_id'] = '';
+            $options['email'] = '';
+            
+       
+            $u=null;
+          
+            if ($sub->reciever_type == self::RSV_USER) {
+                $u = \App\Entity\User::load($sub->user_id);
+            }   
+    
+            if ($u != null) {
+                $options['phone'] = $u->phone;
+                $options['viber'] = $u->viber;
+                $options['email'] = $u->email;
+                $options['chat_id'] = $u->chat_id;
+                $options['notifyuser'] = $u->user_id;
+            }            
+//      
+            if ($sub->reciever_type == self::RSV_TG) {
+                $options['chat_id'] = $sub->chat_id;;
+            }
+            if ($sub->reciever_type == self::RSV_EMAIL) {
+                $options['email'] = $sub->email;;
+            }
+            
+            $text = $sub->getTextEndDay();
+            
+            
+            $sub->sendmsg($text,$options);
+            
+            
+ 
+
+        }
+  
+    }
+
+    
+    private    function sendmsg($text, $options=[]){
+        $ret='';    
+        if ($options['notifyuser'] > 0 && $this->msg_type == self::MSG_NOTIFY) {
+                self::sendNotify($options['notifyuser'], $text);
+            }
+            if (  $this->reciever_type== self::RSV_SYSTEM) {
+                self::sendNotify(\App\Entity\Notify::SYSTEM, $text);
+            }
+
+            if (strlen($options['phone']) > 0 && $this->msg_type == self::MSG_SMS) {
+                $ret =   self::sendSMS($options['phone'], $text);
+            }
+            if (strlen($options['email']) > 0 && $this->msg_type == self::MSG_EMAIL) {
+                // отправляем  в  очередь если  включен  планировщик
+                if(System::useCron()) {
+                    $task = new  \App\Entity\CronTask();
+                    $task->tasktype=\App\Entity\CronTask::TYPE_SUBSEMAIL;
+                    $task->taskdata= serialize(array(
+                       'email'=>$options['email'] ,
+                       'subject'=>$this->msgsubject ,
+                       'text'=>$text ,
+                       'document_id'=> $this->attach==1 ?  $options['doc']->document_id : 0
+                    ));
+
+                    $task->save();
+                } else {
+                    $ret =   self::sendEmail($options['email'], $text, $this->msgsubject, $this->attach==1 ? $options['doc'] : null);
+                }
+
+            }
+
+            if(strlen($options['viber'])==0) {
+                $options['viber'] = $options['phone'];
+            }
+            if(strlen($options['viber'])>0 && $this->msg_type == self::MSG_VIBER) {
+                $ret =   self::sendViber($options['viber'], $text) ;
+            }
+            if(strlen($options['chat_id'])>0 && $this->msg_type == self::MSG_BOT) {
+                $ret =   self::sendBot($options['chat_id'], $text, $this->attach==1 ? $options['doc'] : null,$this->html==1) ;
+            }
+         
+            if($this->reciever_type == self::RSV_WH) {
+                $ret =   self::sendHook($this->url, $text) ;
+            }
+
+            if(strlen($ret)>0) {
+                \App\Helper::logerror($ret);
+                $n = new \App\Entity\Notify();
+                $n->user_id = \App\Entity\Notify::SYSTEM;
+                $n->sender_id = \App\Entity\Notify::SUBSCRIBE;
+                $n->message = $ret;
+
+                $n->save();
+                
+            }         
+    }    
+    
+    /**
+     * возвращает текст  с  учетом разметки
+     *
+     * @param mixed $c
+     */
+    private function getTextCust($c) {
+        $this->msgtext = str_replace('{', '{{', $this->msgtext);
+        $this->msgtext = str_replace('}', '}}', $this->msgtext);
+        $common = \App\System::getOptions("common");
+
+        $header = array();
+        $header['customer_id'] = $c->customer_id;
+        $header['customer_name'] = $c->customer_name;
+       
+       
+        try {
+            $m = new \Mustache_Engine();
+            $text = $m->render($this->msgtext, $header);
+
+            return $text;
+        } catch(\Exception $e) {
+            return "Ошибка разметки";
+        }        
+    }
+ /**
+     * возвращает текст  с  учетом разметки
+     *
+     * @param mixed $c
+     */
+    private function getTextEndDay( ) {
+        $this->msgtext = str_replace('{', '{{', $this->msgtext);
+        $this->msgtext = str_replace('}', '}}', $this->msgtext);
+        $common = \App\System::getOptions("common");
+        $conn =   \ZDB\DB::getConnect();
+
+        $header = array();
+     
+
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and  paydate = CURDATE() and mf_id  in (select mf_id  from mfund where detail not like '%<beznal>1</beznal>%' )";
+        $header['day_nal']= H::fa($conn->GetOne($sql));
+        $sql = "select coalesce(sum(amount),0)  from paylist_view where  paytype <=1000 and  paydate = CURDATE() and mf_id  in (select mf_id  from mfund where detail like '%<beznal>1</beznal>%' )";
+        $header['day_beznal']= H::fa($conn->GetOne($sql));
+       
+        $sql = "  select   sum(0-e.quantity*e.outprice) as summa 
+              from entrylist_view  e
+              join documents_view d on d.document_id = e.document_id
+              where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              and d.meta_name in ('GoodsIssue','ServiceAct' ,'POSCheck', 'TTN','OrderCust','OrderFood')           
+              AND  e.document_date = CURDATE() ";             
+              
+        $header['day_summa']= H::fa( abs(  $conn->GetOne($sql) ) );
+        $sql = " select   sum(0-e.quantity*e.outprice) as summa 
+              from entrylist_view  e
+              join documents_view d on d.document_id = e.document_id
+              where   (e.tag = 0 or e.tag = -1  or e.tag = -4) 
+              and d.meta_name in ( 'ReturnIssue' )           
+              AND  e.document_date = CURDATE() ";             
+              
+        $header['day_return']= H::fa( abs( $conn->GetOne($sql) ));
+        
+        
+      /*  
+ //минимальное количество
+            $header['minqtylist']  = [];
+   
+            $sql = "select coalesce(t.qty,0) as onstoreqty, i.minqty,i.itemname as name,i.item_code as code    from 
+           items  i 
+          left join (select  item_id, coalesce(sum( qty),0) as qty   from  store_stock       group by  item_id    ) t
+               on t.item_id = i.item_id
+           
+            where i.disabled  <> 1 and  coalesce(t.qty,0) < i.minqty and i.minqty>0 order  by  i.itemname ";
+            $rs = $conn->Execute($sql);
+  
+            foreach($rs as $row) {
+               $header['minqtylist'][]= $row; 
+            }
+  
+          */
+        try {
+            $m = new \Mustache_Engine();
+            $text = $m->render($this->msgtext, $header);
+
+            return $text;
+        } catch(\Exception $e) {
+            return "Ошибка разметки";
+        }        
+    }
+   
     /**
      * возвращает текст  с  учетом разметки
      *
      * @param mixed $doc
      */
-    public function getText($doc) {
+    private function getTextDoc($doc) {
         //в  разметке  одинарные
         $this->msgtext = str_replace('{', '{{', $this->msgtext);
         $this->msgtext = str_replace('}', '}}', $this->msgtext);
+        
+        $common = \App\System::getOptions("common");
 
         $header = array();
 
+
+        $header['document_id'] = $doc->document_id;
+        $header['customer_id'] = $doc->customer_id;
         $header['document_number'] = $doc->document_number;
+        $header['doc_dn'] = intval(preg_replace('/[^0-9]/', '', $doc->document_number));
         $header['document_date'] = \App\Helper::fd($doc->document_date);
+        $header['document_type'] = $doc->meta_desc;
         $header['amount'] = \App\Helper::fa($doc->amount);
         $header['forpay'] = \App\Helper::fa($doc->payamount);
         $header['customer_name'] = $doc->customer_name;
@@ -220,42 +530,80 @@ class Subscribe extends \ZCL\DB\Entity
         $header['source'] = '';
         $header['payed'] = '';
         $header['credit'] = '';
-        $header['device'] = $doc->headerdata['device'];
-        $header['ttnnp'] = $doc->headerdata['ship_number'];
-        if (strlen($doc->headerdata['device']) > 0 && strlen($doc->headerdata['devsn']) > 0) {
+        $header['payurl'] = '';
+        $header['orderno'] = '';
+       // $header['botname'] = $common['tbname'] ??'';
+        $header['device'] = $doc->headerdata['device'] ??'';
+        $header['ttnnp'] = $doc->headerdata['ship_number'] ??'';
+        if (strlen($doc->headerdata['device']??'') > 0 && strlen($doc->headerdata['devsn']??'') > 0) {
             $header['device'] .= " (" . $doc->headerdata['devsn'] . ")";
         }
 
-   
-        if ($doc->headerdata['payment'] > 0) {
+
+        if ($doc->getHD('payment',0) > 0) {
             $mf = \App\Entity\MoneyFund::load($doc->headerdata['payment']);
             $header['mf'] = $mf->mf_name;
-            if(strlen($mf->bank)>0)   {
-                $header['mf'] = $mf->bank;    
-                $header['mfacc'] = $mf->bankacc;    
+            if(strlen($mf->bank)>0) {
+                $header['mf'] = $mf->bank;
+                $header['mfacc'] = $mf->bankacc;
             }
-            
+
             if ($mf->beznal == 1) {
-                $header['nal'] = \App\Helper::l("cbeznal");
+                $header['nal'] = "Безнал";
             } else {
-                $header['nal'] = \App\Helper::l("cnal");
+                $header['nal'] = "Наличные";
             }
         } else {
             if ($doc->payamount > 0 && $doc->headerdata['payed'] == 0) {
-                $header['mf'] = H::l("credit");
+                $header['mf'] = "Постоплата (кредит)";
             }
             if ($doc->payamount == 0) {
-                $header['mf'] = H::l("prepaid");
+                $header['mf'] = "Предоплата";
             }
         }
-        if ($doc->headerdata['payed'] == 0 && $doc->payamount > 0) {
-            $header['mf'] = \App\Helper::l("credit");
+        if($doc->meta_name == 'POSCheck') {
+
+            if(doubleval($doc->headerdata['payedcard']) ==0 &&  $doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0) {
+                $header['nal'] = "Наличные";
+                $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
+                $header['mf'] = $mf->mf_name;
+
+            }
+            if(doubleval($doc->headerdata['payed']) ==0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+                $header['nal'] = "Безнал";
+                $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
+                $header['mf'] = $mfb->mf_name;
+                if(strlen($mfb->bank)>0) {
+                    $header['mf'] = $mfb->bank;
+                    $header['mfacc'] = $mfb->bankacc;
+                }
+
+            }
+            if($doc->headerdata['mfnal']  >0 && $doc->headerdata['payed'] > 0 && $doc->headerdata['mfbeznal']  >0 && $doc->headerdata['payedcard'] > 0) {
+                $mf = \App\Entity\MoneyFund::load($doc->headerdata['mfnal']);
+                $mfb = \App\Entity\MoneyFund::load($doc->headerdata['mfbeznal']);
+                $header['mf'] = $mf->mf_name." + ".$mfb->mf_name;
+                if(strlen($mfb->bank)>0) {
+                    $header['mf'] =  $mf->mf_name." + ".$mfb->bank;
+                    $header['mfacc'] = $mfb->bankacc;
+                }
+
+
+                $header['nal'] = "Комбинированая";
+            }
+
         }
-        if ($doc->headerdata['payed'] == 0 && $doc->payamount == 0) {
-            $header['mf'] = \App\Helper::l("prepaid");
+
+        $payed= doubleval($doc->headerdata['payed']) + doubleval($doc->headerdata['payedcard']) ;
+
+        if ($payed == 0 && $doc->payamount > 0) {
+            $header['mf'] = "Постоплата (кредит)";
         }
-        if ($doc->headerdata['payed'] > 0) {
-            $header['payed'] = \App\Helper::fa($doc->headerdata['payed']);
+        if ($payed == 0 && $doc->payamount == 0) {
+            $header['mf'] = "Предоплата";
+        }
+        if ($payed > 0) {
+            $header['payed'] = \App\Helper::fa($payed);
         }
 
         if ($doc->headerdata['pos']) {
@@ -268,19 +616,56 @@ class Subscribe extends \ZCL\DB\Entity
         }
         if ($doc->customer_id > 0) {
             $cust = \App\Entity\Customer::load($doc->customer_id) ;
+         
+            $header['customer_name'] = $cust->customer_name;  
             $dolg = $cust->getDolg();
             if($dolg >0) {
-               $header['credit'] = \App\Helper::fa($dolg);    
+                $header['credit'] = \App\Helper::fa($dolg);
             }
-            
+
         }
-        $header['taxurl'] = $doc->getFiscUrl();
+     
         if(strlen($doc->headerdata['hash'])>0) {
 
-           $header['docurl'] = _BASEURL . 'doclink/' . $doc->headerdata['hash'];
-            
+            $header['docurl'] = _BASEURL . 'doclink/' . $doc->headerdata['hash'];
+
         }
         $header['docview'] = _BASEURL . 'doclist/' . $doc->document_id;
+
+       
+
+        if($doc->meta_name == 'Order') {
+           $header['orderno'] = $doc->document_number;
+           if($doc->getHD('outnumber','') !=''){
+               $header['orderno'] = $doc->getHD('outnumber' ) ;
+           }
+        }           
+        
+        if($doc->parent_id >0)  {
+            $basedoc=\App\Entity\Doc\Document::load($doc->parent_id)->cast();
+            if($basedoc->meta_name == 'POSCheck') {
+               
+               if($basedoc->parent_id >0)   {
+                   $basebasedoc=\App\Entity\Doc\Document::load($basedoc->parent_id)->cast();
+                   if($basebasedoc->meta_name == 'Order') { //если  чек  на основании заказа
+                      $header['orderno'] = $basebasedoc->document_number;
+                      if($basebasedoc->getHD('outnumber','') !=''){
+                          $header['orderno'] = $basebasedoc->getHD('outnumber' ) ;
+                      }
+                   }   
+               }
+            }           
+            if($basedoc->meta_name == 'Order') {   //если     на основании заказа
+               $header['orderno'] = $basedoc->document_number;
+               if($basedoc->getHD('outnumber','') !=''){
+                   $header['orderno'] = $basedoc->getHD('outnumber' ) ;
+               }
+               
+            }           
+            
+        }
+        
+
 
         $table = array();
         foreach ($doc->unpackDetails('detaildata') as $item) {
@@ -290,7 +675,7 @@ class Subscribe extends \ZCL\DB\Entity
                              'msr'          => $item->msr,
                              'qty'          => \App\Helper::fqty($item->quantity),
                              'price'        => \App\Helper::fa($item->price),
-                             'summa'        => \App\Helper::fa($item->price * $item->quantity)
+                             'summa'        => \App\Helper::fa(doubleval($item->price) * doubleval($item->quantity))
             );
         }
 
@@ -303,23 +688,28 @@ class Subscribe extends \ZCL\DB\Entity
 
             return $text;
         } catch(\Exception $e) {
-            return "Ошибка  разметки";
+            return "Ошибка разметки";
         }
     }
 
-    public static function sendEmail($email, $text, $subject,$doc=null) {
+     
+    
+    public static function sendEmail($email, $text, $subject, $doc=null) {
         global $_config;
+
+       
 
         $emailfrom = $_config['smtp']['emailfrom'];
         if(strlen($emailfrom)==0) {
             $emailfrom = $_config['smtp']['user'];
-            
-        }
 
+        }
+        $filename = '';
+        $f = '';
         try {
 
-            if($doc != null){
-                $filename = strtolower($doc->meta_name ) . ".pdf";
+            if($doc != null) {
+                $filename = strtolower($doc->meta_name) . ".pdf";
                 $html = $doc->cast()->generateReport();
                 $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
                 $dompdf->loadHtml($html);
@@ -330,11 +720,11 @@ class Subscribe extends \ZCL\DB\Entity
 
                 $f = tempnam(sys_get_temp_dir(), "eml");
                 file_put_contents($f, $data);
-                   
+
             }
-            
-            
-            
+
+
+
             $mail = new \PHPMailer\PHPMailer\PHPMailer();
 
             if ($_config['smtp']['usesmtp'] == true) {
@@ -349,7 +739,7 @@ class Subscribe extends \ZCL\DB\Entity
                 }
             }
 
-             
+
             $mail->setFrom($emailfrom);
             $mail->addAddress($email);
             $mail->Subject = $subject;
@@ -357,73 +747,31 @@ class Subscribe extends \ZCL\DB\Entity
             $mail->CharSet = "UTF-8";
             $mail->IsHTML(true);
             if(strlen($filename)>0) {
-               $mail->AddAttachment($f, $filename, 'base64', 'application/pdf');
+                $mail->AddAttachment($f, $filename, 'base64', 'application/pdf');
             }
-           
-          
+
+
             if ($mail->send() === false) {
                 H::logerror($mail->ErrorInfo) ;
-                  return "See log";
+                return "See log";
             } else {
-                //  System::setSuccessMsg(Helper::l('email_sent'));
+                //  System::setSuccessMsg('E-mail відправлено');
             }
         } catch(\Exception $e) {
 
             H::logerror($e->getMessage()) ;
             return "See log";
-            
+
         }
+        return '';
     }
 
     public static function sendViber($phone, $text) {
-    
+
         $sms = System::getOptions("sms");
 
-    
-        if ($sms['smstype'] == 2) {  // sms club
-       
-                   
-                $url = 'https://im.smsclub.mobi/vibers/send';
 
-                $data = json_encode([
-                    'phones' => array($phone),
-                    'message' => $text,
-                    'sender' => $sms['smsclubvan']
-                ]);
-
-                $ch = curl_init();
-
-                curl_setopt_array($ch, [
-                    CURLOPT_URL => $url,
-                    CURLOPT_POSTFIELDS => $data,
-                    CURLOPT_POST => true,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_SSL_VERIFYPEER => FALSE,
-                    CURLOPT_USERPWD => $sms['smsclublogin'] . ':' . $sms['smsclubpass'],
-                    CURLOPT_HTTPHEADER => [
-                        'Content-Type: application/json'
-                    ]
-                ]);
-               
-              
-                $response = curl_exec($ch);
-                
-                $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                
-                
-                $encoded = json_decode($result,true);
-                curl_close($ch);              
-              
-              
-                if ($httpcode >200)   {
-                   return "code ".$httpcode . ' ' .$response;
-                }                
-                              
-                return  ""  ;             
-              
-              
-                    
-        }
+        
     }
 
     public static function sendNotify($user_id, $text) {
@@ -435,12 +783,28 @@ class Subscribe extends \ZCL\DB\Entity
         $n->save();
     }
 
-    public static function sendBot($chat_id, $text) {
-        $bot = new \App\ChatBot( \App\System::getOption("common",'tbtoken')) ;
-        $bot->sendMessage($chat_id, $text)  ;
+    public static function sendBot($chat_id, $text, $doc=null, $ishtml=false) {
+        $bot = new \App\ChatBot(\App\System::getOption("common", 'tbtoken')) ;
+        $bot->sendMessage($chat_id, $text,$ishtml)  ;
+        if($doc!= null) {
+            $filename = strtolower($doc->meta_name) . ".pdf";
+            $html = $doc->cast()->generateReport();
+            $dompdf = new \Dompdf\Dompdf(array('isRemoteEnabled' => true, 'defaultFont' => 'DejaVu Sans'));
+            $dompdf->loadHtml($html);
+
+            $dompdf->render();
+
+            $data = $dompdf->output();
+
+            $f = tempnam(sys_get_temp_dir(), "bot");
+            file_put_contents($f, $data);
+            $bot->sendDocument($chat_id, $f, $filename) ;
+            return '';
+        }
     }
 
-    public static function sendSMS($phone, $text ) {
+    public static function sendSMS($phone, $text) {
+
         try {
             $sms = System::getOptions("sms");
 
@@ -455,7 +819,7 @@ class Subscribe extends \ZCL\DB\Entity
                 $curl = curl_init($url);
                 curl_setopt($curl, CURLOPT_POST, true);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
                 $output = curl_exec($curl);
@@ -473,12 +837,61 @@ class Subscribe extends \ZCL\DB\Entity
                 }
             }
 
-            
           
+            if ($sms['smstype'] == 4) { //кастомный код
+                $text = str_replace("'","`",$text) ;
+                $text = str_replace("\"","`",$text) ;
+                if($sms['smscustlang'] == 'js') {
+                   \App\Application::$app->getResponse()->addJavaScript("sendSMSCust('{$phone}','{$text}')",true) ;
+                }
+                if($sms['smscustlang'] == 'php') {
+                   $code= ' $phone="'.$phone.'" ; $sms="'.$text.'" ; '  .  base64_decode(  $sms['smscustscript'] ) ;  
+                   $ret= eval($code);  
+                   if(strlen($ret??'')>0) {
+                       \App\System::setErrorMsg($ret)  ;
+                   }
+                }
+            }
+
         } catch(\Exception $e) {
 
             return $e->getMessage();
         }
     }
 
+    
+    public static function sendHook($url, $text) {
+
+        try {
+            
+   
+                $curl = curl_init($url);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $text);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+     //           $output = curl_exec($curl);
+                if (curl_errno($curl) > 0) {
+
+                    return 'Curl error: ' . curl_error($curl);
+                }
+                $status_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                if ($status_code >= 300 ) {
+                    return 'http code: ' . $status_code;
+                }
+                if ($status_code == 0 ) {
+                    return 'http code:0 ' ;
+                }
+                 
+                
+                curl_close($curl);
+                return '';
+
+        } catch(\Exception $e) {
+
+            return $e->getMessage();
+        }
+    }
+    
 }

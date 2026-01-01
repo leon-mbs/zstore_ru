@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Товары в дороге на {{date}}
+            Товары в  пути на {{date}}
         </td>
     </tr>
     {{#cust}}
@@ -46,4 +46,4 @@
 
 </table>
 <br> <br>
- 
+

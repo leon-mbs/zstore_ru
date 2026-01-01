@@ -13,7 +13,17 @@
 
         <td colspan="2"> {{firm_name}}</td>
     </tr>
+ 
+    {{#isbank}}
+   <tr>
 
+        <td colspan="2">    {{bank}} </td>
+    </tr>
+  <tr>
+
+        <td colspan="2">р/с {{bankacc}}   </td>
+    </tr>
+    {{/isbank}}
 
     <tr>
         <td colspan="3"> Тел. {{phone}}</td>

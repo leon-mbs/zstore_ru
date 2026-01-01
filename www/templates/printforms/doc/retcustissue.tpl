@@ -3,7 +3,7 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="6" valign="middle">
-            Возрат поставщику № {{document_number}} от {{date}} <br>
+            Возврат поставщику № {{document_number}} от {{date}} <br>
         </td>
     </tr>
     <tr>
@@ -21,9 +21,9 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
 
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сумма</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кол.</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Цена</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сумма</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -38,10 +38,11 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="5" align="right">Вместе:</td>
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">Всего:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-    <tr style="font-weight: bolder;">
+ 
+   <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Оплачено:</td>
         <td style="border-top:1px #000 solid;" align="right">{{payed}}</td>
     </tr>

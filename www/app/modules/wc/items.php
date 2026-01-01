@@ -15,20 +15,19 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Items extends \App\Pages\Base
 {
-
     public $_items = array();
 
     public function __construct() {
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(H::l('noaccesstopage'));
+            System::setErrorMsg("Нет права доступа к странице");
 
-         
+            App::RedirectError();
             return;
         }
         $modules = System::getOptions("modules");
@@ -44,10 +43,10 @@ class Items extends \App\Pages\Base
 
         $this->add(new Form('upd'));
         $this->upd->add(new DropDownChoice('updcat', \App\Entity\Category::getList(), 0));
-        
+
         $this->upd->add(new SubmitLink('updateqty'))->onClick($this, 'onUpdateQty');
         $this->upd->add(new SubmitLink('updateprice'))->onClick($this, 'onUpdatePrice');
-      
+
         $this->add(new ClickLink('getitems'))->onClick($this, 'onGetItems');
 
         $this->add(new ClickLink('checkconn'))->onClick($this, 'onCheck');
@@ -86,11 +85,12 @@ class Items extends \App\Pages\Base
         if ($cat_id > 0) {
             $w .= " and cat_id=" . $cat_id;
         }
-        $items = Item::find($w, "itemname");
-        foreach ($items as $item) {
+        
+        foreach (Item::findYield($w, "itemname") as $item) {
             if (strlen($item->item_code) == 0) {
                 continue;
             }
+            if($item->noshop ==1)  continue;
             if (in_array($item->item_code, $skus)) {
                 continue;
             } //уже  в  магазине
@@ -138,7 +138,7 @@ class Items extends \App\Pages\Base
             );
         }
         if (count($elist) == 0) {
-            $this->setError('noselitem');
+            $this->setError('Не  выбран товар');
             return;
         }
 
@@ -152,8 +152,7 @@ class Items extends \App\Pages\Base
             return;
         }
 
-
-        $this->setSuccess("exported_items", count($elist));
+        $this->setSuccess("Экспортировано ".count($elist)." товаров");
 
         //обновляем таблицу
         $this->filterOnSubmit($this->filter);
@@ -164,11 +163,11 @@ class Items extends \App\Pages\Base
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
         $cat = $this->upd->updcat->getValue();
- 
+
         $page=1;
-        $cnt =1;       
+        $cnt =1;
         while(true) {
-     
+
             try {
                 $data = $client->get('products', array('status' => 'publish' , 'page' => $page, 'per_page' => 100));
             } catch(\Exception $ee) {
@@ -176,45 +175,43 @@ class Items extends \App\Pages\Base
                 return;
             }
              $c = count($data);
-             
-             \App\Helper::log($page*$c); ;            
-             
-                if ($c == 0) {
-                    break;
-                }
-                $page++;
-                
+   
+            if ($c == 0) {
+                break;
+            }
+            $page++;
+
             $skulist = array();
             $skuvarlist = array();
-     
+
             foreach ($data as $p) {
                 if (strlen($p->sku) == 0) {
                     continue;
                 }
                 $skulist[$p->sku] = $p->id;
-                  if(is_array($p->variations)) {
-                        foreach($p->variations as $vid){
-                            $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
-       
-                            if (strlen($var->sku) == 0) {
-                                continue;
-                            }
-                            $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
-                            
+                if(is_array($p->variations)) {
+                    foreach($p->variations as $vid) {
+                        $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
+
+                        if (strlen($var->sku) == 0) {
+                            continue;
                         }
-                  }            
+                        $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
+
+                    }
+                }
             }
             unset($data);
 
-               
-            
-            
+
+
+
             $qty =  count($skulist);
             $qty =  count($skuvarlist);
-            
+
             $elist = array();
-           $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-           foreach ($items as $item) {
+            
+            foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
@@ -238,30 +235,32 @@ class Items extends \App\Pages\Base
                 $this->setErrorTopPage($ee->getMessage());
                 return;
             }
-             
-            
+
+
             foreach ($skuvarlist as $sku => $arr) {
-                 $qty =  $elist[$sku];
-                 if(strlen($qty)==0)$qty=0;
-                 $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'stock_quantity' => (string)$qty ));
-                 $cnt++;
-            }      
+                $qty =  $elist[$sku];
+                if(strlen($qty)==0) {
+                    $qty=0;
+                }
+                $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'stock_quantity' => (string)$qty ));
+                $cnt++;
+            }
         }
-        
-        $this->setSuccess("refreshed_items", $cnt);
+
+        $this->setSuccess("Обновлено {$cnt} товаров");
     }
 
-    //обновление цен в  магазине    
+    //обновление цен в  магазине
     public function onUpdatePrice($sender) {
         $modules = System::getOptions("modules");
         $client = \App\Modules\WC\Helper::getClient();
-          $cat = $this->upd->updcat->getValue();
-    
-       $page=1;
-        $cnt =1;       
+        $cat = $this->upd->updcat->getValue();
+
+        $page=1;
+        $cnt =1;
         while(true) {
-           
-           
+
+
             $skulist = array();
             $skuvarlist = array();
             try {
@@ -271,10 +270,10 @@ class Items extends \App\Pages\Base
                 return;
             }
               $c = count($data);
-                if ($c == 0) {
-                    break;
-                }
-                $page++;
+            if ($c == 0) {
+                break;
+            }
+            $page++;
 
             $sku = array();
             foreach ($data as $p) {
@@ -282,28 +281,28 @@ class Items extends \App\Pages\Base
                     continue;
                 }
                 $skulist[$p->sku] = $p->id;
-                  if(is_array($p->variations)) {
-                        foreach($p->variations as $vid){
-                            $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
-       
-                            if (strlen($var->sku) == 0) {
-                                continue;
-                            }
-                            $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
-                            
+                if(is_array($p->variations)) {
+                    foreach($p->variations as $vid) {
+                        $var = $client->get("products/{$p->id}/variations/{$vid}", array('status' => 'publish'));
+
+                        if (strlen($var->sku) == 0) {
+                            continue;
                         }
-                  }
-                
+                        $skuvarlist[$var->sku]=array("pid"=>$p->id,"vid"=>$vid);
+
+                    }
+                }
+
             }
             unset($data);
 
             $elist = array();
-            $items = Item::find("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : ""));
-            foreach ($items as $item) {
+            
+            foreach (Item::findYield("disabled <> 1  ". ($cat>0 ? " and cat_id=".$cat : "")) as $item) {
                 if (strlen($item->item_code) == 0) {
                     continue;
                 }
-                if ($skulist[$item->item_code] > 0 || is_array($skuvarlist[$item->item_code]) ) {
+                if ($skulist[$item->item_code] > 0 || is_array($skuvarlist[$item->item_code])) {
                     $price = $item->getPrice($modules['wcpricetype']);
                     if ($price > 0) {
                         $elist[$item->item_code] = $price;
@@ -312,7 +311,7 @@ class Items extends \App\Pages\Base
             }
             $data = array('update' => array());
             foreach ($elist as $sku => $price) {
-                 $cnt++;
+                $cnt++;
                 $data['update'][] = array('id' => $skulist[$sku], 'price' => (string)$price, 'regular_price' => (string)$price);
             }
 
@@ -322,18 +321,18 @@ class Items extends \App\Pages\Base
                 $this->setErrorTopPage($ee->getMessage());
                 return;
             }
-            
-           
-            
+
+
+
             foreach ($skuvarlist as $sku => $arr) {
-                 $price =  $elist[$sku];
-                 $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'price' => (string)$price, 'regular_price' => (string)$price));
-                 $cnt++;
-            }      
-        
+                $price =  $elist[$sku];
+                $client->put("products/{$arr['pid']}/variations/{$arr['vid']}", array(  'price' => (string)$price, 'regular_price' => (string)$price));
+                $cnt++;
+            }
+
         }
-        
-        $this->setSuccess("refreshed_items", $cnt);
+
+        $this->setSuccess("Обновлено {$cnt} товаров");
     }
 
     //импорт товара с  магазина
@@ -402,12 +401,7 @@ class Items extends \App\Pages\Base
                             $image = new \App\Entity\Image();
                             $image->content = $im;
                             $image->mime = $imagedata['mime'];
-                            
-                            if($conn->dataProvider=='postgres') {
-                              $image->thumb = pg_escape_bytea($image->thumb);
-                              $image->content = pg_escape_bytea($image->content);
-                                
-                            }
+
                             $image->save();
                             $item->image_id = $image->image_id;
                             break;
@@ -420,7 +414,7 @@ class Items extends \App\Pages\Base
 
                 //вариации
                 if(is_array($product->variations)) {
-                    foreach($product->variations as $vid){
+                    foreach($product->variations as $vid) {
                         $var = $client->get("products/{$product->id}/variations/{$vid}", array('status' => 'publish', 'page' => $page, 'per_page' => 100));
                         if (strlen($var->sku) == 0) {
                             continue;
@@ -430,9 +424,9 @@ class Items extends \App\Pages\Base
                             continue;
                         } //уже  есть с  таким  артикулом
 
-                        
+
                         $item = new Item();
-                      //  $item->wcvar = 1;
+                        //  $item->wcvar = 1;
                         $item->item_code = $var->sku;
                         $item->itemname = $product->name ." (var {$vid})";
                         //   $item->description = $product->short_description;
@@ -454,45 +448,41 @@ class Items extends \App\Pages\Base
                         }
 
 
-                        if ($common['useimages'] == 1 && $var->image !=null ) {
-                       
-                                $im = @file_get_contents($var->image->src);
-                                if (strlen($im) > 0) {
-                                    $imagedata = getimagesizefromstring($im);
-                                    $image = new \App\Entity\Image();
-                                    $image->content = $im;
-                                    $image->mime = $imagedata['mime'];
-                                    if($conn->dataProvider=='postgres') {
-                                      $image->thumb = pg_escape_bytea($image->thumb);
-                                      $image->content = pg_escape_bytea($image->content);
-                                        
-                                    }
+                        if ($common['useimages'] == 1 && $var->image !=null) {
 
-                                    $image->save();
-                                    $item->image_id = $image->image_id;
-                                    break;
-                                }
-                            
+                            $im = @file_get_contents($var->image->src);
+                            if (strlen($im) > 0) {
+                                $imagedata = getimagesizefromstring($im);
+                                $image = new \App\Entity\Image();
+                                $image->content = $im;
+                                $image->mime = $imagedata['mime'];
+                              
+
+                                $image->save();
+                                $item->image_id = $image->image_id;
+                                break;
+                            }
+
                         }
 
-                         $item->save();
-                        $i++;                    
-                        
-                        
-                        
-                        
-                        
+                        $item->save();
+                        $i++;
+
+
+
+
+
                     }
-                    
+
                 }
-                
-                
-                
-                
+
+
+
+
             }
         }
 
-        $this->setSuccess("loaded_items", $i);
+        $this->setSuccess("Загружено {$i} товаров");
     }
 
 }

@@ -1,0 +1,194 @@
+<html>
+  <head>
+     <title>  Страница  администратора  </title>
+ 
+</head>
+<body>
+  
+     
+ <div class="row">
+  <div class="col-12 col-lg-4 col-xl-3  " > 
+          <h5>Конфигурация системмы</h5>  
+         <small>После  изменения настроек  следует перелогинится</small>
+     
+       <form zippy="configform"  class="mb-4"> 
+       
+            <div class="form-check">
+                <input zippy="usebranch" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usebranch">Использование  филиалов </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Филиалы (например торговые точки) используются  для  разделения  доступа к ресурсам. У сотрудников  филиала есть  доступ к  документам складам и кассам только  разрешенных  филиалов ."></i>
+            </div>
+
+            <div class="form-check">
+                <input zippy="usefood" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="usefood">Функциональность кафе </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Включаются АРМ кафе и прочие пункты меню имеющие отношение к  учету в  общепите "></i>
+            </div>
+
+            <div class="form-check">
+                <input zippy="useprod" type="checkbox" class="form-check-input">
+                <label class="form-check-label" for="useprod">Функциональность произврлства </label>
+                <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                   title="Включаются  пункты меню, что касаются производства "></i>
+            </div>
+              
+            
+               
+               
+               
+           
+             <div class="form-group mt-2"> 
+
+             <input zippy="saveconfig" type="submit" value="Сохранить" class="btn btn-info  ">
+            </div>  
+            
+        </form>    
+        
+          <h5>Подключение  модулей</h5>
+            <form zippy="modules">
+
+                            <div class="form-check">
+                                <input zippy="modshop" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modshop"> Онлайн каталог</label>
+                                <a href="https://ru.zippy.com.ua/ext#id3" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modnote" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modnote"> Органайзер (база знаний)</label>
+                                <a href="https://ru.zippy.com.ua/ext#id2" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modissue" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modissue"> Проекты и задачи</label>
+                                <a href="https://ru.zippy.com.ua/ext#id4" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                            <div class="form-check">
+                                <input zippy="modocstore" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modocstore"> Интеграция с опенкарт</label>
+                                <a href="https://ru.zippy.com.ua/ext#id1" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+
+                            <div class="form-check">
+                                <input zippy="modwoocomerce" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="modwoocomerce"> Интеграция с woocomerce</label>
+                                <a href="https://ru.zippy.com.ua/ext#id5" target="_blank"><i class="fa fa-info-circle  "  ></i></a>
+                            </div>
+                          
+                        
+                            <div class="form-group">
+                                <button class="btn btn-info" type="submit">Сохранить</button>
+                            </div>
+                        </form>        
+                      
+    </div>        
+    <div class="col-12 col-lg-4 col-xl-3  "   >
+        <h5>Настройки безовасности</h5>   
+         <form zippy="optionsform"  class="mb-4"> 
+             
+                 <div class="form-check">
+                    <input zippy="capcha" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="capcha">Капча на форме логина</label>
+                  </div> 
+                 <div class="form-check">
+                    <input zippy="noupdate" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="noupdate">Не проверять обновления</label>
+                 <br><small>   Если кастомная версия е есть рисе затереть изменения  </small>
+                  </div> 
+           
+              
+               <div class="form-check mt-4">
+                    <input zippy="checkip" type="checkbox" class="form-check-input">
+                    <label class="form-check-label" for="checkip">Проверять входящие запросы</label>
+                     <br><small>Проверять запросы к  сприптам и  API  на  соответствие заданным ниже IP      </small>
+               </div> 
+               <div class="form-group">
+                   <label for="email">IP адреса</label>
+                   <textarea style="height:100px" class="form-control"   zippy="iplist"> </textarea>
+                   <small>По одному на  строку</small>
+               </div>
+             
+             <div class="form-group"> 
+        
+             <input zippy="save" type="submit" value="Сохранить" class="btn btn-info  ">
+            </div>  
+            
+        </form>   
+       <h5>Отмена документов </h5>  
+           <form zippy="cdoc" class="form-inline" >   
+            
+                   <input required="on" class="form-control" placeholder="Номер документу" zippy="docn"> 
+                   <input type="submit" value="Отменить" class="btn   btn-primary  ">
+                   
+          </form> 
+          <small>Отмена документов которые ньльзя отменить в общем журнале . </small>
+            
+      
+     </div>  
+    <div class="col-12 col-lg-4 col-xl-3  "   >
+             <h5>Проверка  отправки  почты</h5>  
+         <form class="mt-4" zippy="sendform" >
+           
+              <div class="form-group">
+                   <label for="email">Email</label>
+                   <input class="form-control" type="text" zippy="email">
+               </div>
+               <div class="form-group">
+                    <input zippy="sendemail" type="submit" value="Отправить" class="btn   btn-primary  ">
+                 
+               </div>
+               {{#issms}}
+             <div class="form-group">
+                <h5>Проверка  отправки SMS</h5>  
+             </div>
+              <div class="form-group">
+                   <label for="phone">Телефон</label>
+                   <input class="form-control" type="text" zippy="phone">
+               </div>
+               <div class="form-group">
+                    <input zippy="sendphone" type="submit" value="Отправить" class="btn   btn-primary  ">
+                 
+               </div>
+              {{/issms}}               
+             {{#isbot}}
+             <div class="form-group">
+                <h5>Проверка  отправки  в  телеграм</h5>  
+             </div>
+              <div class="form-group">
+                   <label for="chat_id">Chat ID</label>
+                   <input class="form-control" type="text" zippy="chat_id">
+               </div>
+               <div class="form-group">
+                    <input zippy="sendbot" type="submit" value="Отправить" class="btn   btn-primary  ">
+                 
+               </div>
+                 {{/isbot}} 
+     <div class="form-group">
+                <h5>Проверка  структуры базы данных</h5>  
+             </div>               
+              <div class="form-group">
+                    <input zippy="checkdb" type="submit" value="Проверить" class="btn   btn-primary  ">
+                 
+               </div>
+               <div zippy="checkdbanswer"></div>           
+         </form>
+         
+  </div>       
+   
+</div>        
+      <script>
+        function check_sendemail(ele){
+            document.getElementById('dialogwait').showModal()
+          
+            return true;
+       
+        }       
+        function check_checkdb(ele){
+           
+            document.getElementById('dialogwait').showModal()
+            return true;     
+        }       
+      </script>
+</body>
+</html>

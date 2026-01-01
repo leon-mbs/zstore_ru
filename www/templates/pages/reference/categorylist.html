@@ -8,18 +8,18 @@
 
     <body>
         <div class="row">
-            {{#usecattree}}
-            <div class="col-12 col-md-10 col-xl-8">
+                {{#usecattree}}
+               <div class="col-12 col-md-11 col-xl-10">
                 {{/usecattree}}
                 {{^usecattree}}        
-                <div class="col-12 col-md-8 col-xl-6">
-                    {{/usecattree}}    
+                <div class="col-12 col-md-10 col-xl-8">
+                {{/usecattree}}    
                     <div zippy="categorytable">
-                        <h3>Категории товаров
+                        <h3>Категории (группы) товаров
                             <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                                data-toggle="popover"
-                               data-placement="bottom" data-content="Категории предназначены для группировки товаров в Прайс, а также для
-                               задания наценки по умолчанию для товаров, в которих цена и наценка не указаны явно"></i>
+                               data-placement="bottom" data-content="Категории предназначены для группировки товаров в Прайсе, а также для 
+                               определение наценки по умолчанию для товаров, где цена и наценка не указаны явно. Иерархия категрий уминается в справочнике ТМЦ"></i>
 
                         </h3>
                         <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
@@ -30,10 +30,17 @@
                                 {{/useimages}}
                                 <th>Название</th>
                                 {{#usecattree}}
-                                <th class="text-right"> Родительская</th>
+                                <th > Родительская</th>
                                 {{/usecattree}}
-                                <th class="text-right">Кол. ТМЦ </th>
+                                <th colspan="2"  style="width:20px" >  
+                                &nbsp;&nbsp;<i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title=" Порядок вывода  в  меню и онлайн каталоге "></i>
 
+                                 </th>
+                                <th class="text-right"> ТМЦ </th>
+
+                                <th></th>
+                                <th></th>
                                 <th></th>
                             </tr>
                             <tr zippy="categorylist">
@@ -48,50 +55,65 @@
                                 {{#usecattree}}
                                 <td zippy="p_name"></td>
                                 {{/usecattree}}
+                                 <td >
+                                  <a zippy="down"><i class="fa fa-arrow-down"></i></a> 
+                                </td>
+                                <td > 
+                                  <a zippy="up"><i class="fa fa-arrow-up"></i></a> &nbsp;    
+                                 </td> 
                                 <td class="text-right"><span  zippy="qty" class="badge badge-success badge-pill"></span></td>
-
+                                <td> <a zippy="prices" title="Сменить цены">-<i class="fa fa-coins"></i>+ </a>   </td>
+                                <td> <a zippy="cfields" title="Кастомные поля">-<i class="fa fa-list-ul"></i>+ </a>   </td>
                                 <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
-                                    &nbsp;&nbsp;&nbsp;<a                             zippy="delete" title="Изъять"><i class="fa fa-trash"></i></a></td>
+                                    &nbsp;&nbsp;&nbsp;<a zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                             </tr>
                         </table>
-
+                     <div   zippy="pag"></div>
 
                     </div>
 
 
-                </div>
+              
             </div>
-            <div class="row">
-                <div class="col-6 col-md-4">
+         
+        </div>
+    <div class="row">
+                <div class="col-6 col-md-4  col-xl-3">
 
                     <form zippy="categorydetail" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="editcat_name">Название</label>
-                            <input required="required" class="form-control" zippy="editcat_name"/>
+                            <input autofocus="on"    required="on"  class="form-control" zippy="editcat_name"/>
+                        </div>
+                       <div class="form-group">
+                            <label for="editcat_desc">Примечание</label>
+                            <input   class="form-control" zippy="editcat_desc"/>
                         </div>
                         {{#usecattree}}
                         <div class="form-group">
                             <label for="editparent">Родительская</label>
                             <select   class="form-control" zippy="editparent">
-                                <option value="0">Не указана</option>
+                                <option value="0">Не указано</option>
                             </select>
+                            <small>У категории не должно  быть ТМЦ</small>
                         </div>
                         {{/usecattree}}
                         <div class="form-group  ">
-                            <label for="editprice">Наценки в %</label>
+                            <label for="editprice">Нацкеки в %</label>
                             <div>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice1"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice2"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice3"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice4"/>
                                 <input style="width: 100px" pattern="[0-9,\.]+" class="form-control qtyprice" zippy="editprice5"/>
-                                <small class="form-text text-muted">Типы цен задаются в настройках. </small>
+                                <small class="form-text text-muted">Типы  цкн задаются  в  настройках </small>
                             </div>
                         </div>
+                           {{#useimages}}
                         <div class="form-group">
-                            <label for="editparent">Изображения</label>
+                            <label for="editparent">Изображение</label>
                             <input  accept="image/png,image/jpeg" type="file" class="form-control" zippy="editaddfile">
-                            <small>Изображения должны быть квадратными, иначе будут обрезаны</small> 
+                            <small>Изображение должно  быть увадратным (иначе будет  обрезано) и не  больще 1M </small>
                         </div>
                         <div class="form-group">
                             <img zippy="editimage" style="height:128px"><br>
@@ -101,22 +123,109 @@
                                 <span data-label="editdelimage" for="editdelimage">Удалить изображение</span>       
                             </div> 
                         </div> 
+                           {{/useimages}}
+                        {{#shop}}   
                         <div class="form-check">
                             <input zippy="editnoshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="editnoshop">Не показывать в онлайн-каталоге</label>
+                            <label class="form-check-label" for="editnoshop">Не показывать в онлайн каталоге</label>
                         </div>
+                         {{/shop}}
+                            {{#usefood}}  
                         <div class="form-check">
                             <input zippy="editnofastfood" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="editnofastfood">Не показывать в кафе</label>
+                            <label class="form-check-label" for="editnofastfood">Не показывать в общепите</label>
                         </div>
+                          {{/usefood}}  
+                           <div class="form-check">
+                                <input zippy="editnoprice" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="editnoprice">Не показывать в прайсе</label>
+                            </div>
+                           
                         <div class="form-group">
-                            <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">&nbsp;&nbsp;
-                            <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+                            <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary mr-2 ">
+                            <input zippy="save" type="submit" value="Сохранить" class="btn btn-primary  ">
+                            
                         </div>
-                    </form>
+                </form>   
                 </div>
-            </div>
+            </div>       
+        
+        <div class="row">
+            <div class="col-12  col-md-7  col-xl-5">
+                  
+                 <form  zippy="categoryprice">
+                    <h5 zippy="catprname"></h5>  
+                        <div class="form-group row">
+                            <div class="col-auto pt-1"> 
+                            <label for="ptype">Тип цены</label>
+                            </div>
+                             <div class="col-auto"> 
+                            <select   class="form-control" zippy="ptype">
+                               
+                            </select>
+                            </div>
+                        </div>                     
+                    <div class="form-group  ">
+                         <label   for="editprice">Сменить на  сумму  или  процент</label>
+                             <input  required="on"  style="width: 100px"   class="form-control" zippy="chprice"/>
+
+                             <small class="form-text text-muted">Например  5, -2, 3%, -0.5%. </small>
+
+                    </div>              
+                     <div class="form-check">                    
+                           <input type="checkbox"  zippy="rnd">  <label   for="rnd">Округлить до **9 </label>
+                    </div> 
+                    <div class="form-group  ">
+                      <input  zippy="calccp"  type="submit" value="Пересчитать" class="btn btn-primary  ">
+                    </div> 
+                     <table class="ctable"> 
+                     <tr zippy="cplist">
+                       <td zippy="cplname"></td>
+                       <td zippy="cplcode" class="text-nowrap"></td>
+                       <td zippy="cplold" class="text-right"></td>
+                       <td>    <input  pattern="[0-9\.]+" style="width: 100px"   class="form-control" zippy="cplnew"/></td>    
+                       </tr>
+
+                     </table> 
+                     <div class="form-group mt-2 ">
+                                 
+                    <a zippy="backprice" class="btn btn-sucondary  ">Отменить</a>
+                    &nbsp;&nbsp;<input zippy="savecp"  type="submit" value="Сохранить" class="btn btn-success  ">
+                    </div> 
+                    
+ 
+                 </form>
+           </div>
         </div>
+
+      <div class="row">
+            <div class="col-12  col-md-7  col-xl-5">
+                  
+                 <form  zippy="cfform">
+                    <h5 zippy="catprname2"></h5>  
+                    <b class="mt-2">Кастомные поля для ТМЦ  </b>                    
+                    <br><a  zippy="addnewcf"><b>Добавить</b></a>
+
+                       <table class="ctable mt-2">
+                        <tr zippy="cflist">
+                            <td>Код </td>
+                            <td> <input pattern="[a-zA-Z0-9]+"   required="on" class="form-control" style="width:100px;" zippy="cfcode"  ></td>
+                            <td>Название </td>
+                            <td><input required="on" class="form-control" style="width:250px;" zippy="cfname"  > </td>
+                            <td><a zippy="delcf"> <i class="fa fa-trash"></i></a></td>
+                         </tr>    
+                      </table>                       
+                        <div class="form-group mt-2">
+                                <input zippy="cancelc" type="button" value="Отменить" class="btn btn-outline-secondary mr-2 "> 
+                                <input zippy="savec" type="submit" value="Сохранить" class="btn btn-primary  ">
+                                
+                      </div>
+ 
+                 </form>
+           </div>
+        </div>
+        
+        
         <script>
 $(document).ready(function () {
 
@@ -128,7 +237,12 @@ $(document).ready(function () {
 
 });
 
-
+    function check_savecp(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }
         </script>
 
     </body>

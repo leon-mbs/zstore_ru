@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Pos extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->pos_id = 0;
         $this->fiscalnumber = 0;
@@ -24,14 +23,11 @@ class Pos extends \ZCL\DB\Entity
         $this->details .= "<comment><![CDATA[{$this->comment}]]></comment>";
         $this->details .= "<address><![CDATA[{$this->address}]]></address>";
         $this->details .= "<pointname><![CDATA[{$this->pointname}]]></pointname>";
-
-        $this->details .= "<fiscalnumber>{$this->fiscalnumber}</fiscalnumber>";
-        $this->details .= "<fiscallocnumber>{$this->fiscallocnumber}</fiscallocnumber>";
-        $this->details .= "<fiscdocnumber>{$this->fiscdocnumber}</fiscdocnumber>";
-
-        $this->details .= "<usefisc>{$this->usefisc}</usefisc>";
-        $this->details .= "<testing>{$this->testing}</testing>";
-        $this->details .= "<firm_id>{$this->firm_id}</firm_id>";
+     
+     
+        $this->details .= "<usefreg>{$this->usefreg}</usefreg>";
+        $this->details .= "<scriptfreg>".base64_encode($this->scriptfreg) ."</scriptfreg>";
+        
         $this->details .= "</details>";
 
         return true;
@@ -44,21 +40,37 @@ class Pos extends \ZCL\DB\Entity
         $this->comment = (string)($xml->comment[0]);
         $this->address = (string)($xml->address[0]);
         $this->pointname = (string)($xml->pointname[0]);
-        $this->fiscalnumber = (string)($xml->fiscalnumber[0]);
-        $this->fiscallocnumber = (int)($xml->fiscallocnumber[0]);
-        $this->fiscdocnumber = (int)($xml->fiscdocnumber[0]);
-        $this->firm_id = (int)($xml->firm_id[0]);
-
+      
+    
         $this->testing = (int)($xml->testing[0]);
         $this->usefisc = (int)($xml->usefisc[0]);
-        if (strlen($this->fiscdocnumber) == 0) {
+        if (strlen(''.$this->fiscdocnumber ) == 0) {
             $this->fiscdocnumber = 1;
         }
+        
+        $this->usefreg = (int)($xml->usefreg[0]);
+        $this->scriptfreg =    base64_decode( ( (string)($xml->scriptfreg[0])  )  ?? '') ;
+   
+        
         parent::afterLoad();
     }
 
     public static function getConstraint() {
         return \App\ACL::getBranchConstraint();
     }
+    protected function beforeDelete() {
+
+        $cnt= \App\Entity\Doc\Document::findCnt("content like '%<pos>{$this->pos_id}</pos>%'") ;
+
+
+        if($cnt >0) {
+            return "Терминал уже используется в чеках";
+        }
+     
+
+        return "";
+    }
+
+
 
 }

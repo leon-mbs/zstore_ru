@@ -15,7 +15,6 @@ use Zippy\Html\Panel;
  */
 class NoLiq extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
@@ -28,7 +27,7 @@ class NoLiq extends \App\Pages\Base
         $this->filter->add(new DropDownChoice('mqty', array("1" => "1", "3" => "3", "6" => "6", "12" => "12"), 1));
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -39,7 +38,7 @@ class NoLiq extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
- 
+
         $this->detail->setVisible(true);
     }
 
@@ -56,7 +55,8 @@ class NoLiq extends \App\Pages\Base
         $this->data = array();
         $date = strtotime('-' . $mqty . ' month');
 
-        $sql = "select st.msr, st.item_id, st.itemname,st.item_code,st.storename from  store_stock_view  st where st.itemdisabled <> 1  and  st.qty >0 
+        $sql = "select  st.item_id,st.storename,coalesce(sum(st.qty)) as qty from  store_stock_view  st 
+               where st.itemdisabled <> 1  and  st.qty >0 
                {$cstr} and   st.stock_id not  in(select   stock_id    
                from  entrylist_view  
                where    document_date >" . $conn->DBDate($date) . "  and  quantity < 0  AND stock_id  IS  NOT  null) 
@@ -64,21 +64,32 @@ class NoLiq extends \App\Pages\Base
                from  entrylist_view  
                where    document_date <" . $conn->DBDate($date) . "  and  quantity > 0  AND stock_id  IS  NOT  null) 
                 
-               group by st.item_id, st.itemname,st.item_code,st.storename ,st.msr
-               order by st.storename
+               group by st.item_id,st.storename
+               order by st.storename,st.itemname
                  ";
 
         $detail = array();
         $res = $conn->Execute($sql);
-        foreach ($res as $item) {
-            
-            $sql = "  select coalesce(sum(qty),0) as totqty  from  store_stock  where item_id = {$item['item_id']} ";
-    
-            
-            $item['qty'] = H::fqty($conn->GetOne($sql));
-            if($item['qty']  >0 ){
-                $detail[] = $item;                
+        foreach ($res as $_it) {
+            $qty=doubleval($_it['qty']);
+            if($qty <=0){
+                continue;
             }
+           
+            $i = Item::load($_it['item_id']) ;
+            
+            $item=[];
+            $item['qty'] = H::fqty($qty);
+            $item['store'] = $_it['storename'];
+            $item['cell']  = $i->cell;
+   
+            $item['itemname']  = $i->itemname;
+            $item['item_code']  = $i->item_code;
+            $item['cat_name']  = $i->cat_name;
+            $item['price']  = H::fa($i->getPrice() );
+            $item['brand']  = $i->manufacturer;
+            $detail[] = $item;
+      
 
         }
 

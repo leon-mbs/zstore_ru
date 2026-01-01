@@ -5,7 +5,8 @@ namespace App\Pages\Register;
 use App\Application as App;
 use App\Entity\Doc\Document;
 use App\Helper as H;
-use App\Entity\Firm;
+ 
+use App\Entity\Customer;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
@@ -14,6 +15,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -23,27 +25,26 @@ use Zippy\Html\Panel;
  */
 class GRList extends \App\Pages\Base
 {
-
     private $_doc = null;
 
     /**
      *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
      * @return DocList
      */
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('GRList')) {
-            return;
+            App::RedirectHome() ;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
         $this->filter->add(new TextInput('searchnumber'));
         $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l('opened'), 1 => H::l('notexecuted'), 2 => H::l('notpayed'), 3 => H::l('all')), 0));
-        $this->filter->add(new DropDownChoice('searchcomp', Firm::findArray('firm_name', 'disabled<>1', 'firm_name'), 0));
+        $this->filter->add(new DropDownChoice('status', array(0 => 'Открытые',   1 => 'Не оплаченные', 2 => 'Все'), 0));
+
         $this->filter->add(new DropDownChoice('fstore', \App\Entity\Store::getList(), 0));
+        $this->filter->add(new AutocompleteTextInput('searchcust'))->onText($this, 'OnAutoCustomer');
 
         $doclist = $this->add(new DataView('doclist', new GoodsReceiptDataSource($this), $this, 'doclistOnRow'));
 
@@ -56,6 +57,7 @@ class GRList extends \App\Pages\Base
 
         $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bret'))->onClick($this, 'statusOnSubmit');
+
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
@@ -81,21 +83,29 @@ class GRList extends \App\Pages\Base
         $row->add(new Label('amount', H::fa(($doc->payamount > 0) ? $doc->payamount : ($doc->amount > 0 ? $doc->amount : ""))));
 
         $row->add(new Label('customer', $doc->customer_name));
-        $row->add(new Label('ispay'   ))->setVisible(false) ;
-        $row->add(new Label('istruck' ))->setVisible(false) ;
+        $row->add(new Label('ispay'))->setVisible(false) ;
+        $row->add(new Label('istruck'))->setVisible(false) ;
 
-        if($doc->state >=4){
-           if($doc->payamount > 0 &&  $doc->payamount > $doc->payed)  {
-               $row->ispay->setVisible(true);
-           }
-           if($doc->meta_name=='InvoiceCust') {
-               $n = $doc->getChildren('GoodsReceipt');
-               $row->istruck->setVisible(count($n)==0);
-               
-           }
+        if($doc->state >=4) {
+            if($doc->payamount > 0 &&  $doc->payamount > $doc->payed) {
+                $row->ispay->setVisible(true);
+            }
+            if($doc->meta_name=='InvoiceCust') {
+                $n = $doc->getChildren('GoodsReceipt');
+                $row->istruck->setVisible(count($n)==0);
+
+            }
+            if($doc->meta_name=='GoodsReceipt') {
+                if($doc->payamount == ($doc->headerdata['prepaid']??0) )  {
+                   $row->ispay->setVisible(false);    
+                }
+            }            
+            if($doc->state==9) {
+                $row->ispay->setVisible(false);    
+            }            
         }
-        
-        
+
+
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
@@ -105,7 +115,7 @@ class GRList extends \App\Pages\Base
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == @$this->_doc->document_id) {
+        if ($doc->document_id == ($this->_doc->document_id ??0)) {
             $row->setAttribute('class', 'table-success');
         }
     }
@@ -121,7 +131,7 @@ class GRList extends \App\Pages\Base
             $d = $this->_doc->getChildren('GoodsReceipt');
 
             if (count($d) > 0) {
-                $this->setWarn('goodsreceipt_exists');
+                $this->setWarn('Уже  есть  документ Приходная накладная');
             }
             App::Redirect("\\App\\Pages\\Doc\\GoodsReceipt", 0, $this->_doc->document_id);
             return;
@@ -131,15 +141,16 @@ class GRList extends \App\Pages\Base
 
             if (count($d) > 0) {
 
-                $this->setWarn('return_exists');
+                $this->setWarn('Уже  есть документ Возврат');
             }
             App::Redirect("\\App\\Pages\\Doc\\RetCustIssue", 0, $this->_doc->document_id);
             return;
         }
+             
         $this->doclist->Reload(false);
 
         $this->statuspan->setVisible(false);
-        //todo  отослать писмо 
+
 
         $this->updateStatusButtons();
     }
@@ -149,7 +160,8 @@ class GRList extends \App\Pages\Base
         $this->statuspan->statusform->bttn->setVisible($this->_doc->meta_name == 'InvoiceCust');
         $this->statuspan->statusform->bret->setVisible($this->_doc->meta_name == 'GoodsReceipt');
 
-        //новый     
+
+        //новый
         if ($this->_doc->state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bret->setVisible(false);
@@ -204,6 +216,10 @@ class GRList extends \App\Pages\Base
         H::exportExcel($data, $header, 'baylist.xlsx');
     }
 
+    public function OnAutoCustomer($sender) {
+        return Customer::getList($sender->getText(), 2, true);
+    }
+    
 }
 
 /**
@@ -211,7 +227,6 @@ class GRList extends \App\Pages\Base
  */
 class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -221,36 +236,40 @@ class GoodsReceiptDataSource implements \Zippy\Interfaces\DataSource
     private function getWhere() {
         $user = System::getUser();
 
+        $common = System::getOptions("common");
+        $actualdate = $common['actualdate'] ??  strtotime('2023-01-01') ;
+        
         $conn = \ZDB\DB::getConnect();
- 
-        $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue' )  ";
+
+        $actualdate =   $conn->DBDate($actualdate );
+        
+  
+        $where = "   meta_name  in('GoodsReceipt','InvoiceCust',  'RetCustIssue','PayComitent' )   and document_date >= ".$actualdate;
 
         $status = $this->page->filter->status->getValue();
 
         if ($status == 0) {
-            $where .= " and ( (payamount > 0 and payamount > payed) or  (state <>" . Document::STATE_EXECUTED . ")) ";
+            $where .= "  and    state >3 and  state  not in(14,5,9 )        ";
         }
-
+      
         if ($status == 1) {
-            $where .= " and  state <>" . Document::STATE_EXECUTED;
+            $where .= " and state=". Document::STATE_WP;
         }
         if ($status == 2) {
-            $where .= " and  (payamount > 0 and payamount > payed)";
-        }
-        if ($status == 3) {
 
         }
 
-        $comp = $this->page->filter->searchcomp->getValue();
-        if ($comp > 0) {
-            $where = $where . " and firm_id = " . $comp;
+      
+        $cust = $this->page->filter->searchcust->getKey();
+        if ($cust > 0) {
+            $where = $where . " and customer_id = " . $cust;
         }
 
         $store_id = $this->page->filter->fstore->getValue();
         if ($store_id > 0) {
-           $where .= " and   content like '%<store>{$store_id}</store>%' ";
+            $where .= " and   content like '%<store>{$store_id}</store>%' ";
         }
-        
+
         $st = trim($this->page->filter->searchtext->getText());
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');

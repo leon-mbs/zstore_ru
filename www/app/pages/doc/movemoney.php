@@ -22,9 +22,11 @@ use App\Entity\Employee;
  */
 class MoveMoney extends \App\Pages\Base
 {
-
     private $_doc;
 
+    /**
+    * @param mixed $docid     редактирование
+    */
     public function __construct($docid = 0) {
         parent::__construct();
 
@@ -79,7 +81,7 @@ class MoveMoney extends \App\Pages\Base
 
         $this->_doc->amount = H::fa($this->docform->amount->getText());
         $this->_doc->document_number = trim($this->docform->document_number->getText());
-        $this->_doc->document_date = strtotime($this->docform->document_date->getText());
+        $this->_doc->document_date =  $this->docform->document_date->getDate();
         $this->_doc->payment = 0;
         $this->_doc->payed = 0;
         if ($this->checkForm() == false) {
@@ -111,7 +113,7 @@ class MoveMoney extends \App\Pages\Base
                 $this->_doc->document_id = 0;
             }
             $this->setError($ee->getMessage());
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
 
         }
@@ -124,26 +126,26 @@ class MoveMoney extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
 
         if (($this->_doc->amount > 0) == false) {
-            $this->setError("noentersum");
+            $this->setError("Не введено сумму");
         }
 
         if ($this->_doc->headerdata['paymentto'] == 0 || $this->_doc->headerdata['paymentfrom'] == 0) {
-            $this->setError("noselpayment");
+            $this->setError("Не выбран  счет");
         }
         if ($this->_doc->headerdata['paymentto'] == $this->_doc->headerdata['paymentfrom']) {
-            $this->setError("paymentseq");
+            $this->setError("Счета одинаковы");
         }
 
         return !$this->isError();

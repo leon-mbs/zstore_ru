@@ -1,13 +1,13 @@
 <html>
    <head>
-        <title>  Отчет по заработной плате  </title>
+        <title>  Отчет  по  зарплате  </title>
 
     </head>
     <body>
         <div class="row">
             <div class="col-12  col-xl-10">
-                <h3>Отчет по заработной плате </h3>
-                <div class="navbar nav">
+                <h3>Отчет  по  зарплате </h3>
+                <div class="card">
                     <form zippy="filter" class="form-inline">
 
                         <label for="from">С</label>
@@ -17,12 +17,14 @@
                         <label for="to">по</label>
                         <select class="form-control  " zippy="mto"> </select>
                         <select class="form-control mr-sm-2" zippy="yto"> </select>
-                        <label for="emp">сотрудник</label>
+                        <label for="emp">Сотрудник</label>
                         <select class="form-control mr-sm-2" zippy="emp">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не выбрано</option>
                         </select>
+                         <label for="dep">Отдел</label>
+                         <input zippy="dep" class="form-control mr-sm-2 "  >
 
-                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+                         <input class="btn btn-outline-primary  " type="submit" value="ОК">
 
 
                     </form>
@@ -32,8 +34,8 @@
                 <div zippy="detail">
                     <div>
                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/slreport" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/showreport/pdf/slreport" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/slreport" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/slreport" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
 
                     </div>
 

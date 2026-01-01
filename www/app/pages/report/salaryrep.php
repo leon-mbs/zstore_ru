@@ -6,16 +6,17 @@ use App\Entity\Employee;
 use App\Helper as H;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
+use Zippy\Html\Form\TextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
 use App\Entity\SalType;
+
 /**
  *  Отчет по  зарплате
  */
 class SalaryRep extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('SalaryRep')) {
@@ -24,15 +25,18 @@ class SalaryRep extends \App\Pages\Base
 
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
 
-        $this->filter->add(new DropDownChoice('yfrom', \App\Util::getYears(), round(date('Y'))));
-        $this->filter->add(new DropDownChoice('mfrom', \App\Util::getMonth(), round(date('m'))));
-        $this->filter->add(new DropDownChoice('yto', \App\Util::getYears(), round(date('Y'))));
-        $this->filter->add(new DropDownChoice('mto', \App\Util::getMonth(), round(date('m'))));
+        $this->filter->add(new DropDownChoice('yfrom', \App\Util::getYears(), intval(date('Y'))));
+        $this->filter->add(new DropDownChoice('mfrom', \App\Util::getMonth(), intval(date('m'))));
+        $this->filter->add(new DropDownChoice('yto', \App\Util::getYears(), intval(date('Y'))));
+        $this->filter->add(new DropDownChoice('mto', \App\Util::getMonth(), intval(date('m'))));
 
         $this->filter->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name')));
+        $dp =  Employee::getDP()  ;
+        
+        $this->filter->add(new TextInput('dep' ))->setDataList($dp['d']);
 
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
 
@@ -42,7 +46,7 @@ class SalaryRep extends \App\Pages\Base
         $html = $this->generateReport();
         $this->detail->preview->setText($html, true);
 
-  
+
         $this->detail->setVisible(true);
 
         $this->detail->preview->setText($html, true);
@@ -58,16 +62,17 @@ class SalaryRep extends \App\Pages\Base
         $yto = $this->filter->yto->getValue();
         $mto = $this->filter->mto->getValue();
         $mtoname = $this->filter->mto->getValueName();
-       $conn = \ZDB\DB::getConnect();
-
-        $doclist = \App\Entity\Doc\Document::find("meta_name = 'OutSalary' and state >= 5 ");
+        $dep = trim($this->filter->dep->getText());
+     
+        $conn = \ZDB\DB::getConnect();
+         
 
         $detail = array();
 
         $from = strtotime($yfrom . '-' . $mfrom . '-01');
         $to = strtotime($yto . '-' . $mto . '-01 23:59:59');
 
-        foreach ($doclist as $doc) {
+        foreach (\App\Entity\Doc\Document::findYield("meta_name = 'OutSalary' and state >= 5 ") as $doc) {
 
             $date = strtotime($doc->headerdata['year'] . '-' . $doc->headerdata['month'] . '-01');
 
@@ -81,6 +86,11 @@ class SalaryRep extends \App\Pages\Base
 
             foreach ($doc->unpackDetails('detaildata') as $emp) {
 
+                if($dep != "" && $emp->department != $dep) {
+                     continue;
+                }
+                
+                
                 if ($emp_id > 0 && $emp->amount > 0) {
                     if ($emp->employee_id != $emp_id) {
                         continue;
@@ -92,7 +102,7 @@ class SalaryRep extends \App\Pages\Base
                     }
                 } else {
                     if ($emp->amount > 0) {
-                        if (is_array($detail[$emp->employee_id])) {
+                        if (is_array($detail[$emp->employee_id]??null)) {
                             $detail[$emp->employee_id]['v'] += $emp->amount;
                         } else {
                             $detail[$emp->employee_id] = array('k' => $emp->emp_name, 'v' => $emp->amount);
@@ -108,7 +118,7 @@ class SalaryRep extends \App\Pages\Base
         }
 
         //типы начислний
-       $doclist = \App\Entity\Doc\Document::find("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to));
+        
 
         $stlist = SalType::find("disabled<>1", "salcode");
 
@@ -117,8 +127,10 @@ class SalaryRep extends \App\Pages\Base
             $stam[$st->salcode] = 0;
         }
 
-        foreach ($doclist as $doc) {
-
+        foreach (\App\Entity\Doc\Document::findYield("meta_name = 'CalcSalary' and state >= 5 and document_date >= " . $conn->DBDate($from) . " and document_date <= " . $conn->DBDate($to)) as $doc) {
+              if($dep != "" && $doc->getHD('department') != $dep) {
+                     continue;
+              }
 
             foreach ($doc->unpackDetails('detaildata') as $emp) {
                 if ($emp_id > 0 && $emp_id != $emp->employee_id) {
@@ -144,8 +156,8 @@ class SalaryRep extends \App\Pages\Base
                               'name' => $st->salname, 'am' => H::fa($stam[$st->salcode])
             );
         }
-        
-        
+
+
 
         $header = array(
             "_detail"  => array_values($detail),

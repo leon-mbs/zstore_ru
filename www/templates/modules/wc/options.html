@@ -4,7 +4,7 @@
 
         <div class="row  ">
             <div class="col-12  col-sm-10 col-md-6    col-xl-4  ">
-                <h4>Настройка соединения</h4>
+                <h4>Настройка  соединения</h4>
                 <form zippy="cform">
                     <div class="form-group">
                         <label for="site">Адрес сайта</label>
@@ -34,7 +34,7 @@
                  <div class="form-group  ">
                         <label for="salesource">Источник продаж</label>
                         <select class="form-control" zippy="salesource">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не указан</option>
                         </select>
                     </div>                    
                      
@@ -42,18 +42,48 @@
                         <label for="defpricetype">Тип цены </label>
 
                         <select class="form-control" zippy="defpricetype">
-                            <option value='0'>Не выбрано</option>
+                            <option value="0">Не указан</option>
 
                         </select>
 
                     </div>
-   <div class="form-check">
-                        <input zippy="setpayamount" type="checkbox" class="form-check-input">
-                        <label class="form-check-label" for="setpayamount">Ставить статус К оплате </label>
+                     <div class="form-group   ">
+                        <label for="defpaytype">Тип оплаты </label>
+
+                        <select class="form-control" zippy="defpaytype">
+                            <option value="0">Не указан</option>
+
+                        </select>
                         
-                        <br>
+
+                    </div>                    
+                     <div class="form-group   ">
+                        <label for="defmf">Касса  </label>
+
+                        <select class="form-control" zippy="defmf">
+                            <option value="0">Не указана</option>
+
+                        </select>
+                         <small class="form-text text-muted">Обящвикльно если тип оплаты  - предоплата </small>
+  
                     </div>
-                                   
+                      <div class="form-group   ">
+                        <label for="defstore">Склад</label>
+
+                        <select class="form-control" zippy="defstore">
+                            <option value="0">Не указан</option>
+
+                        </select>
+                        <small class="form-text text-muted">Для  автоматического резервирования товара  </small>
+
+                    </div>
+        
+                    <div class="form-check">
+                        <input zippy="insertcust" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="insertcust">Импортировать контрагентов </label>
+                        <small class="form-text text-muted">Импортировать  контрагентов  м с ИМ в справочник  контрагентов.</small>
+                        <br>
+                    </div>                                   
                     <div class="form-group">
                         <input type="submit" value="Сохранить" zippy="save" class="btn   btn-primary mr-2"/>
                         

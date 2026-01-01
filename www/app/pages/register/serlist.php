@@ -4,15 +4,19 @@ namespace App\Pages\Register;
 
 use App\Application as App;
 use App\Entity\Doc\Document;
+use App\Entity\Service;
+use App\Entity\Item;
 use App\Helper as H;
 use App\System;
 use Zippy\Html\DataList\DataView;
 use Zippy\Html\DataList\Paginator;
+use Zippy\Html\DataList\ArrayDataSource;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Panel;
@@ -22,36 +26,40 @@ use Zippy\Html\Panel;
  */
 class SerList extends \App\Pages\Base
 {
-
     private $_doc = null;
+    public $_serlist = [];
+    public $_itemlist = [];
 
     /**
      *
-     * @param mixed $docid Документ  должен  быть  показан  в  просмотре
+
      * @return DocList
      */
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('SerList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
+        $this->add(new Panel('listpan'));
+        $this->listpan->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
 
-        $this->filter->add(new TextInput('searchnumber'));
-        $this->filter->add(new TextInput('searchtext'));
-        $this->filter->add(new DropDownChoice('status', array(0 => H::l("opened"), 1 => H::l("newed"), 2 => H::l("st_inprocess"), 3 => H::l("all")), 0));
+        $this->listpan->filter->add(new TextInput('searchnumber'));
+        $this->listpan->filter->add(new TextInput('searchtext'));
+        $this->listpan->filter->add(new DropDownChoice('status', array(0 => "Открытые", 1 => "Новые", 2 => "Выполняются", 3 => "Все"), 0));
 
-        $doclist = $this->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
+        $doclist = $this->listpan->add(new DataView('doclist', new SerListDataSource($this), $this, 'doclistOnRow'));
 
-        $this->add(new Paginator('pag', $doclist));
+        $this->listpan->add(new Paginator('pag', $doclist));
         $doclist->setPageSize(H::getPG());
 
         $this->add(new Panel("statuspan"))->setVisible(false);
 
         $this->statuspan->add(new Form('statusform'));
 
-        $this->statuspan->statusform->add(new SubmitButton('bttn'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bpos'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('binvoice'))->onClick($this, 'statusOnSubmit');
+        $this->statuspan->statusform->add(new SubmitButton('bwarranty'))->onClick($this, 'statusOnSubmit');
         $this->statuspan->statusform->add(new SubmitButton('bfin'))->onClick($this, 'statusOnSubmit');
 
         $this->statuspan->statusform->add(new SubmitButton('binproc'))->onClick($this, 'statusOnSubmit');
@@ -61,8 +69,34 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->add(new \App\Widgets\DocView('docview'));
 
-        $this->doclist->Reload();
-        $this->add(new ClickLink('csv', $this, 'oncsv'));
+        $this->listpan->doclist->Reload();
+        $this->listpan->add(new ClickLink('csv', $this, 'oncsv'));
+
+        $this->add(new Panel("editpan"))->setVisible(false);
+        $this->editpan->add(new Label('etotal'));
+
+        $this->editpan->add(new Form('sform'));
+        $this->editpan->sform->add(new DropDownChoice('sser', \App\Entity\Service::getList(), 0))->onChange($this, 'onChangeSer');
+        $this->editpan->sform->add(new TextInput('sdesc'));
+        $this->editpan->sform->add(new TextInput('sqty'));
+        $this->editpan->sform->add(new TextInput('sprice'));
+        $this->editpan->sform->add(new SubmitButton('ssubmit'))->onClick($this, 'saveSer');
+
+        $this->editpan->add(new Form('iform'));
+        $this->editpan->iform->add(new AutocompleteTextInput('iitem'))->onText($this, 'OnAutoItem');
+        $this->editpan->iform->iitem->onChange($this, 'OnChangeItem', true);
+        $this->editpan->iform->add(new TextInput('iqty'));
+        $this->editpan->iform->add(new TextInput('iprice'));
+        $this->editpan->iform->add(new TextInput('isn'));
+        $this->editpan->iform->add(new SubmitButton('isubmit'))->onClick($this, 'saveItem');
+
+
+        $this->editpan->add(new ClickLink('closeedit', $this, 'onCloseEdit'));
+        $this->editpan->add(new ClickLink('saveedit', $this, 'onSaveEdit'));
+        $this->editpan->add(new DataView('slist', new ArrayDataSource($this, "_serlist"), $this, 'slistOnRow'));
+        $this->editpan->add(new DataView('ilist', new ArrayDataSource($this, "_itemlist"), $this, 'ilistOnRow'));
+
+
     }
 
     public function filterOnSubmit($sender) {
@@ -70,33 +104,43 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->setVisible(false);
 
-        $this->doclist->Reload();
+        $this->listpan->doclist->Reload();
     }
 
     public function doclistOnRow(\Zippy\Html\DataList\DataRow $row) {
         $doc = $row->getDataItem();
 
-        $row->add(new Label('number', $doc->document_number));
+        $row->add(new ClickLink('number', $this, 'showOnClick'))->setValue($doc->document_number);
 
         $row->add(new Label('date', H::fd($doc->document_date)));
         $row->add(new Label('onotes', $doc->notes));
         $row->add(new Label('amount', H::fa($doc->amount)));
 
         $row->add(new Label('customer', $doc->customer_name));
+        $row->add(new Label('customerphone', $doc->headerdata['customerphone'] ?? ''));
 
         $row->add(new Label('state', Document::getStateName($doc->state)));
 
         $row->add(new ClickLink('show'))->onClick($this, 'showOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
-        if ($doc->state < Document::STATE_EXECUTED) {
+        if ($doc->state < Document::STATE_EXECUTED || ($doc->state == Document::STATE_INPROCESS && floatval($doc->payed) ==0)) {
             $row->edit->setVisible(true);
         } else {
             $row->edit->setVisible(false);
         }
-        if ($doc->document_id == @$this->_doc->document_id) {
+        if ($doc->document_id == ($this->_doc->document_id ??0)) {
             $row->setAttribute('class', 'table-success');
         }
-        
+         
+        $row->add(new Label('ispay'))->setVisible($doc->getHD('paytype') != 3);
+ 
+        if($doc->getHD('waitpay')==1){
+            $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
+            $row->ispay->setAttribute('title','До сплати');            
+        }   else {
+            $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
+            $row->ispay->setAttribute('title','Оплачено');            
+        }
     }
 
     public function statusOnSubmit($sender) {
@@ -105,27 +149,44 @@ class SerList extends \App\Pages\Base
         }
 
         $state = $this->_doc->state;
+     
 
-        $ttn = count($this->_doc->getChildren('GoodsIssue')) > 0;
+        $gi = count($this->_doc->getChildren('GoodsIssue')) > 0;
         $task = count($this->_doc->getChildren('Task')) > 0;
 
         if ($sender->id == "btask") {
             if ($task) {
 
-                $this->setWarn('task_exists');
+                $this->setWarn('Уже  существует документ Наряд');
             }
             App::Redirect("\\App\\Pages\\Doc\\Task", 0, $this->_doc->document_id);
+            return;
         }
-        if ($sender->id == "bttn") {
-            if ($ttn) {
-                $this->setWarn('goodsissue_exists');
+        if ($sender->id == "bpos") {
+            if (count($this->_doc->getChildren('POSCheck')) > 0) {
+                $this->setWarn('Уже  существует документ Чек');
             }
-            App::Redirect("\\App\\Pages\\Doc\\GoodsIssue", 0, $this->_doc->document_id);
+            App::Redirect("\\App\\Pages\\Service\\ARMPos", 0, $this->_doc->document_id);
+            return;
+
+        }
+        if ($sender->id == "binvoice") {
+            if (count($this->_doc->getChildren('Invoice')) > 0) {
+                $this->setWarn('Уже  существует документ Счет');
+            }
+            App::Redirect("\\App\\Pages\\Doc\\Invoice", 0, $this->_doc->document_id);
+            return;
+
+        }
+        if ($sender->id == "bwarranty") {
+ 
+            App::Redirect("\\App\\Pages\\Doc\\Warranty", 0, $this->_doc->document_id);
+            return;            
         }
         if ($sender->id == "bref") {
-            if ($ttn || $task) {
+            if ($gi || $task) {
 
-                $this->setWarn('created_task_gi');
+                $this->setWarn('Были созданы документы  Наряд и/или Расходная накладная');
             }
             $this->_doc->updateStatus(Document::STATE_REFUSED);
         }
@@ -136,18 +197,19 @@ class SerList extends \App\Pages\Base
         if ($sender->id == "bfin") {
             $this->_doc->updateStatus(Document::STATE_FINISHED);
 
-            if($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed)   {
-                $this->_doc->updateStatus(Document::STATE_WP);
-                
-            }         
-           
-            
-            
+            if($this->_doc->payamount > 0 && $this->_doc->payamount > $this->_doc->payed) {
+                if($pos==false){
+                  $this->_doc->updateStatus(Document::STATE_WP);
+                }
+            }
+
+
+
         }
 
-        
 
-        $this->doclist->Reload(false);
+
+        $this->listpan->doclist->Reload(false);
 
         $this->updateStatusButtons();
     }
@@ -159,11 +221,14 @@ class SerList extends \App\Pages\Base
 
         $this->statuspan->statusform->btopay->setVisible(false);
 
-        //новый     
+        $this->statuspan->statusform->bpos->setVisible(false);
+        $this->statuspan->statusform->binvoice->setVisible(false);
+
+        //новый
         if ($state < Document::STATE_EXECUTED) {
             $this->statuspan->statusform->binproc->setVisible(true);
+            $this->statuspan->statusform->bwarranty->setVisible(true);
 
-            $this->statuspan->statusform->bttn->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
@@ -175,7 +240,7 @@ class SerList extends \App\Pages\Base
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
-            $this->statuspan->statusform->bttn->setVisible(true);
+            $this->statuspan->statusform->bwarranty->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(true);
             $this->statuspan->statusform->btask->setVisible(true);
             $this->statuspan->statusform->bfin->setVisible(true);
@@ -186,41 +251,59 @@ class SerList extends \App\Pages\Base
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bwarranty->setVisible(true);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
         }
-      // ждет оплату
+        // ждет оплату
         if ($state == Document::STATE_WP) {
 
             $this->statuspan->statusform->binproc->setVisible(false);
 
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bwarranty->setVisible(false);
+      //      $this->statuspan->statusform->bpos->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
         }
 
         //к  оплате
-        if ($state == Document::STATE_WP) {
+        if ($state == Document::STATE_WP || $this->_doc->getHD('paytype',0) != 3) {
+
+            if($this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) {
+                $this->statuspan->statusform->btopay->setVisible(true);
+                $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList", array($this->_doc->document_id));
+            }
+
+        }
+        //закрыт
+      if ($state == Document::STATE_WP || $this->_doc->getHD('paytype',0) == 3) {
+
+                $this->statuspan->statusform->bpos->setVisible(true);
+                $this->statuspan->statusform->binvoice->setVisible(true);
             
-          if( $this->_doc->payamount > 0 &&  $this->_doc->payamount >  $this->_doc->payed) { 
-              $this->statuspan->statusform->btopay->setVisible(true);
-              $this->statuspan->statusform->btopay->setLink("App\\PAges\\Register\\PayBayList",array($this->_doc->document_id));
-          }
-          
+
         }
         //закрыт
         if ($state == Document::STATE_CLOSED) {
             $this->statuspan->statusform->binproc->setVisible(false);
 
-            $this->statuspan->statusform->bttn->setVisible(false);
+            $this->statuspan->statusform->bwarranty->setVisible(false);
+            $this->statuspan->statusform->bpos->setVisible(false);
+            $this->statuspan->statusform->binvoice->setVisible(false);
             $this->statuspan->statusform->bref->setVisible(false);
             $this->statuspan->statusform->btask->setVisible(false);
             $this->statuspan->statusform->bfin->setVisible(false);
             $this->statuspan->statusform->setVisible(false);
         }
+        
+        $pt= $this->_doc->getHD('paytype');
+        
+        if ($pt ==1 ||  $pt==2) {
+            $this->statuspan->statusform->bpos->setVisible(false);
+        }        
+        
     }
 
     //просмотр
@@ -235,7 +318,7 @@ class SerList extends \App\Pages\Base
         $this->statuspan->setVisible(true);
         $this->statuspan->docview->setDoc($this->_doc);
 
-        $this->doclist->Reload(false);
+        $this->listpan->doclist->Reload(false);
         $this->updateStatusButtons();
         $this->goAnkor('dankor');
     }
@@ -245,13 +328,224 @@ class SerList extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($doc, true)) {
             return;
         }
+        if($doc->state == Document::STATE_INPROCESS) {
+            $this->listpan->setVisible(false);
+            $this->statuspan->setVisible(false);
+            $this->editpan->setVisible(true);
+            $this->_doc = $doc->cast();
+            $this->_serlist =  $this->_doc->unpackDetails('detaildata') ;
+            $this->_itemlist =  $this->_doc->unpackDetails('detail2data') ;
 
+            $this->editpan->sform->sser->setValue(0) ;
+            $this->editpan->sform->sdesc->setText('') ;
+            $this->editpan->sform->sqty->setText('1') ;
+            $this->editpan->sform->sprice->setText('') ;
+
+            $this->editpan->iform->iitem->setKey(0) ;
+            $this->editpan->iform->iitem->setText('') ;
+            $this->editpan->iform->iqty->setText('1') ;
+            $this->editpan->iform->iprice->setText('') ;
+
+            $this->editpan->etotal->setText($doc->amount);
+            $this->editpan->slist->Reload();
+            $this->editpan->ilist->Reload();
+
+            return;
+        }
 
         App::Redirect("\\App\\Pages\\Doc\\ServiceAct", $doc->document_id);
     }
 
+    public function slistOnRow($row) {
+        $ser = $row->getDataItem();
+        $row->add(new Label('rsservice_name', $ser->service_name));
+        $row->add(new Label('rsdesc', $ser->desc));
+        $row->add(new Label('rsquantity', H::fqty($ser->quantity)));
+        $row->add(new Label('rsprice', H::fa($ser->price)));
+        $row->add(new Label('rsamount', H::fa($ser->price * $ser->quantity)));
+        $row->add(new Label('rsdisc', floatval($ser->disc) != 0 ? "-".H::fa1($ser->disc) : ''));
+        $row->add(new ClickLink('rsdel'))->onClick($this, 'sdelOnClick');
+
+    }
+
+    public function ilistOnRow($row) {
+        $item = $row->getDataItem();
+        $row->add(new Label('riname', $item->itemname));
+        $row->add(new Label('ricode', $item->item_code . ( strlen($item->snumber) >0 ? ' с/н: '. $item->snumber :'')  ));
+        $row->add(new Label('riquantity', H::fqty($item->quantity)));
+        $row->add(new Label('riprice', H::fa($item->price)));
+        $row->add(new Label('riamount', H::fa($item->price * $item->quantity)));
+        $row->add(new Label('ridisc', floatval($item->disc) != 0 ? "-".H::fa1($item->disc) : ''));
+        $row->add(new ClickLink('ridel'))->onClick($this, 'idelOnClick');
+
+    }
+
+    public function sdelOnClick($sender) {
+        $ser = $sender->owner->getDataItem();
+        $rowid =  array_search($ser, $this->_serlist, true);
+        $this->_serlist = array_diff_key($this->_serlist, array($rowid => $this->_serlist[$rowid]));
+        $this->ecalc()  ;
+    }
+
+    public function idelOnClick($sender) {
+        $item = $sender->owner->getDataItem();
+        $rowid =  array_search($item, $this->_itemlist, true);
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+        $this->ecalc() ;
+
+    }
+
+    private function ecalc() {
+        $this->editpan->ilist->Reload();
+        $this->editpan->slist->Reload();
+        $a = 0;
+        foreach($this->_serlist as $s) {
+            $a += ($s->price * $s->quantity);
+        }
+        foreach($this->_itemlist as $i) {
+            $a += ($i->price * $i->quantity);
+        }
+        $this->editpan->etotal->setText(H::fa($a)) ;
+
+
+    }
+
+    public function onSaveEdit($sender) {
+        $this->_doc->packDetails('detaildata', $this->_serlist) ;
+        $this->_doc->packDetails('detail2data', $this->_itemlist) ;
+
+        $this->_doc->amount =  H::fa($this->editpan->etotal->getText());
+        $this->_doc->payamount = floatval($this->_doc->amount)+ floatval($this->_doc->headerdata['bonus']) + floatval($this->_doc->headerdata['totaldisc']);
+
+
+        $this->_doc->headerdata['timeentry'] = time();
+        $this->_doc->save();
+        $this->_doc->DoStore();
+        $this->listpan->doclist->Reload();
+        $this->listpan->setVisible(true);
+        $this->editpan->setVisible(false);
+    }
+
+    public function onCloseEdit($sender) {
+        $this->listpan->setVisible(true);
+        $this->editpan->setVisible(false);
+
+    }
+    public function OnAutoItem($sender) {
+        $store_id = $this->_doc->headerdata['store'];
+        $text = trim($sender->getText());
+        return Item::findArrayAC($text, $store_id);
+    }
+
+    public function onChangeSer($sender) {
+        $id = $sender->getValue();
+        $ser = Service::load($id) ;
+        $price = $ser->getPrice($this->_doc->customer_id);
+        $this->editpan->sform->sprice->setText($price) ;
+
+
+    }
+    public function OnChangeItem($sender) {
+        $id = $sender->getKey();
+        $item = Item::load($id);
+        $store_id = $this->_doc->headerdata['store'];
+
+        $customer_id = $this->_doc->customer_id  ;
+        $price = $item->getPriceEx(array(
+           'store'=>$store_id,
+           'customer'=>$customer_id
+        ));
+
+        $this->editpan->iform->iprice->setText($price) ;
+
+    }
+
+    public function saveSer($sender) {
+        $id = intval($this->editpan->sform->sser->getValue());
+        $desc  =  $this->editpan->sform->sdesc->getText();
+        $qty  = floatval($this->editpan->sform->sqty->getText());
+        $price  = floatval($this->editpan->sform->sprice->getText());
+        if($id ==0 || $qty==0 || $price==0) {
+            $this->setError('Неверные данные')  ;
+            return;
+        }
+        $ser = Service::load($id) ;
+        $ser->quantity = $qty;
+        $ser->desc = $desc;
+        $ser->pureprice = $ser->getPurePrice();
+        $ser->price = $price;
+        if($ser->pureprice > $ser->price) {
+            $ser->disc = number_format((1 - ($ser->price/($ser->pureprice)))*100, 1, '.', '') ;
+        }
+
+        $this->_serlist[]=$ser;
+        $this->editpan->sform->sser->setValue(0) ;
+        $this->editpan->sform->sdesc->setText('') ;
+        $this->editpan->sform->sqty->setText('1') ;
+        $this->editpan->sform->sprice->setText('') ;
+
+        $this->ecalc()  ;
+
+    }
+
+    public function saveItem($sender) {
+        $id = intval($this->editpan->iform->iitem->getKey());
+
+        $snumber  = $this->editpan->iform->isn->getText();
+        $qty  = floatval($this->editpan->iform->iqty->getText());
+        $price  = floatval($this->editpan->iform->iprice->getText());
+        if($id ==0 || $qty==0 || $price==0) {
+            $this->setError('Неверные данные')  ;
+            return;
+        }
+ 
+        $common = System::getOptions("common");
+        
+        $item = Item::load($id) ;
+        $item->quantity = $qty;
+        $item->snumber = $snumber;
+
+        $item->pureprice = $item->getPurePrice();
+        $item->price = $price;
+        if($item->pureprice > $item->price) {
+            $item->disc = number_format((1 - ($item->price/($item->pureprice)))*100, 1, '.', '') ;
+        }
+         
+        if($common['usesnumber'] > 0 && $item->useserial == 1 ) {
+            
+            if (strlen($item->snumber) == 0  ) {
+
+                $this->setError("Нужен серийный номер");
+                return;
+            }
+            
+            $store_id = $this->_doc->headerdata['store'];
+
+            $slist = $item->getSerials($store_id);
+            
+            if (in_array($snumber, $slist) == false) {
+
+                $this->setError('Неверный серийный номер  ');
+                return;
+            }  
+      
+        }        
+         
+        
+        $this->_itemlist[]=$item;
+        $this->editpan->iform->iitem->setKey(0) ;
+        $this->editpan->iform->iitem->setText('') ;
+        $this->editpan->iform->isn->setText('') ;
+
+        $this->editpan->iform->iqty->setText('1') ;
+        $this->editpan->iform->iprice->setText('') ;
+
+        $this->ecalc()  ;
+
+    }
+
     public function oncsv($sender) {
-        $list = $this->doclist->getDataSource()->getItems(-1, -1, 'document_id');
+        $list = $this->listpan->doclist->getDataSource()->getItems(-1, -1, 'document_id');
 
         $header = array();
         $data = array();
@@ -276,7 +570,6 @@ class SerList extends \App\Pages\Base
  */
 class SerListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -290,7 +583,7 @@ class SerListDataSource implements \Zippy\Interfaces\DataSource
 
         $where = "   meta_name  in( 'ServiceAct'  ) ";
 
-        $status = $this->page->filter->status->getValue();
+        $status = $this->page->listpan->filter->status->getValue();
         if ($status == 0) {
             $where .= " and  state <>   " . Document::STATE_CLOSED;
         }
@@ -302,13 +595,13 @@ class SerListDataSource implements \Zippy\Interfaces\DataSource
         }
 
 
-        $st = trim($this->page->filter->searchtext->getText());
+        $st = trim($this->page->listpan->filter->searchtext->getText());
         if (strlen($st) > 2) {
             $st = $conn->qstr('%' . $st . '%');
 
             $where .= " and  (  notes like {$st} or    content like {$st}  )";
         }
-        $sn = trim($this->page->filter->searchnumber->getText());
+        $sn = trim($this->page->listpan->filter->searchnumber->getText());
         if (strlen($sn) > 1) { // игнорируем другие поля
             $sn = $conn->qstr('%' . $sn . '%');
             $where = " meta_name  in( 'ServiceAct'  )  and document_number like  {$sn} ";

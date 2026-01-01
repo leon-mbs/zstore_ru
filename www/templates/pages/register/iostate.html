@@ -8,32 +8,38 @@
             <div class="col-12  ">
 
                 <h3>Журнал доходов и расходов</h3>
+               
+                  
 
-
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline ">
 
-
-
-                        <label for="fuser"> автор </label>
-                        <select class="form-control mr-2" zippy="fuser">
-                            <option value="0">Не выбран</option>
-                        </select>
+                        <label for="from"> С </label>
+                        <input type="text" class="form-control    " zippy="from" style="width:110px">
+                        <label for="to"> По </label>
+                        <input type="text" class="form-control    " zippy="to" style="width:110px">
+                      
+                   
                         <label for="ftype"> тип </label>
                         <select class="form-control mr-2" zippy="ftype">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не выбрано</option>
                         </select>
-
+                   
 
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
 
                     </form>
+                    
+                
+                    
+                    
+                    
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-12 col-xl-8">
+            <div class="col-12 col-md-8 col-xl-6">
 
 
                 <br><a zippy="csv">Экспорт в Excel</a>
@@ -41,18 +47,14 @@
                 <table class="table   table-sm   ">
                     <tr>
 
-
                         <th>Дата</th>
-
                         <th>Номер</th>
-                        <th>Автор</th>
-
-
-                        <th>Тип прибыли/расхода</th>
-
-
-                        <th>Примечание</th>
+                        <th class="text-right">Доход</th>
+                        <th class="text-right">Расход</th>
+                      
+                        <th>Тип дохода/расхода</th>
                         <th></th>
+                        
 
 
                     </tr>
@@ -61,43 +63,45 @@
                         <td class="text-nowrap" zippy="date"></td>
 
                         <td zippy="number"></td>
-                        <td zippy="username"></td>
-
-
-                        <td zippy="paytype"></td>
-
-
-                        <td zippy="notes"></td>
-
+                        <td zippy="amountin"  class="text-right"> </td>
+                        <td zippy="amountout"  class="text-right"> </td>
+                        
+                        <td zippy="iotype"></td>
+                      
                         <td class="text-nowrap">
 
                             <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
-
+                            
 
                         </td>
 
 
                     </tr>
-
+    
                 </table>
 
-                <div zippy="pag"></div>
+                <div class="col-12 col-lg-8 mb-2" zippy="pag"></div>
 
-                <div class="row" id="dankor">
-
-                </div>
+              
 
             </div>
 
             <div class="col-12">
                 <div zippy="docview"></div>
             </div>
+            <div class="col-12">
+                <table   class="ctanle">
+                  
+                   <tr><td style="width:100px"  >Доход  </td><td class="text-right"><b> {{totalin}} </b> </td></tr>
+                   <tr><td style="width:100px"  >Расход </td><td class="text-right"><b>{{totalout}}</b></td></tr>
+                   <tr><td style="width:100px"  >Прибыль </td><td class="text-right"><b>{{totaldiff}}</b></td></tr>
+
+                </table>
+            </div>
 
         </div>
 
 
-
-
-
+     
     </body>
 </html>

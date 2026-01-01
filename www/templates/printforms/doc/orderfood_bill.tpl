@@ -1,7 +1,23 @@
 <table class="ctable" border="0" cellpadding="1" cellspacing="0" {{{printw}}}>
+    {{#ischeck}}
     <tr>
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
+    {{/ischeck}}    
+    {{^ischeck}}
+    <tr>
+        <td colspan="3">Счет {{document_number}}</td>
+    </tr>
+    {{/ischeck}}    
+    
+    {{#fiscalnumber}}
+    <tr>
+        <td colspan="3">Фискальный чек</td>
+    </tr>
+    <tr>
+        <td colspan="3">ФН чека {{fiscalnumber}}</td>
+    </tr>
+    {{/fiscalnumber}}
  
     <tr>
 
@@ -9,12 +25,20 @@
     </tr>
     <tr>
 
-        <td colspan="2"> {{firm_name}}</td>
+        <td colspan="3"> {{firm_name}}</td>
     </tr>
+  {{#inn}}
     <tr>
 
-        <td colspan="3">ІНН {{inn}}</td>
+        <td colspan="3">ИНН {{inn}}</td>
     </tr>
+ {{/inn}} 
+ {{#tin}}
+    <tr>
+
+        <td colspan="3">ОКПО {{tin}}</td>
+    </tr>
+ {{/tin}} 
     {{#shopname}}
     <tr>
         <td colspan="3"> {{shopname}}</td>
@@ -38,15 +62,34 @@
 
     {{/customer_name}}
 
+    {{#ischeck}}
+      <tr>
+       <td colspan="3">
+      {{#form1}}
+          Форма оплаты: наличные
+        {{/form1}}
+        {{#form2}}
+          Форма оплаты: безнал
+        {{/form2}}    
+    
+    </td>
+    </tr>    
+    
+  
+   {{#trans}}
+    <tr>
+       <td colspan="3" > 
+          № транзакции:  {{trans}}
+       </td>
+    </tr> 
+  {{/trans}}    
     <tr>
         <td colspan="3">Терминал: {{pos_name}}</td>
     </tr>
     <tr>
-        <td colspan="3">Кассир:</td>
+        <td colspan="3">Кассир: {{username}}</td>
     </tr>
-    <tr>
-        <td colspan="3"> {{username}}</td>
-    </tr>
+    {{/ischeck}}
 
 
     {{#_detail}}
@@ -69,23 +112,25 @@
 
     {{^prepaid}}
     {{#isdisc}}
-    <tr style="font-weight: bolder;">
+    <tr  >
         <td colspan="2" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
     {{/isdisc}}
-   {{#delbonus}}
+   {{#bonus}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">Списано бонусов::</td>
-        <td align="right">{{delbonus}}</td>
+        <td align="right">{{bonus}}</td>
     </tr>
-    {{/delbonus}}
+    {{/bonus}}
 
-    
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">К оплате:</td>
-        <td align="right">{{payamount}}</td>
+        <td style="font-size:larger" align="right">{{payamount}}</td>
     </tr>
+    
+    {{#ischeck}}    
+    
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
@@ -94,28 +139,35 @@
         <td colspan="2" align="right">Сдача:</td>
         <td align="right">{{exchange}}</td>
     </tr>
+    {{/ischeck}}
+    
     {{/prepaid}}
     {{#addbonus}}
     <tr >
-        <td colspan="2" align="right">Насчитано бонусов::</td>
+        <td colspan="2" align="right">Насчитано бонусов:</td>
         <td align="right">{{addbonus}}</td>
     </tr>
     {{/addbonus}}
     {{#allbonus}}
     <tr >
-        <td colspan="2" align="right">Всего бонусов::</td>
+        <td colspan="2" align="right">Всего бонусов:</td>
         <td align="right">{{allbonus}}</td>
     </tr>
     {{/allbonus}}
     
+    {{#promo}}   
+    <tr style="font-weight: bolder;">
+        <td colspan="3">Промокод {{promo}}</td>
+
+    </tr>
+   {{/promo}}   
+   {{#checkslogan}}   
     <tr style="font-weight: bolder;">
         <td colspan="3"><br>{{checkslogan}}</td>
 
     </tr>
-       <tr>                    
-                        <td colspan="3" > 
-                            {{{docqrcode}}}
-                        </td>
+   {{/checkslogan}}   
 
-                    </tr>      
+                      
+                    
 </table>

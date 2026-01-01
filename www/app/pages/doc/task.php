@@ -28,17 +28,21 @@ use App\Helper as H;
  */
 class Task extends \App\Pages\Base
 {
-
     private $_doc;
-    public  $_prodlist    = array();
-    public  $_servicelist = array();
-    public  $_eqlist      = array();
-    public  $_emplist     = array();
-    private $_basedocid   = 0;
-    private $_rowidser    = 0;
-    private $_rowidprod   = 0;
+    public $_prodlist    = array();
+    public $_servicelist = array();
+    public $_eqlist      = array();
+    public $_emplist     = array();
+    private $_basedocid  = 0;
 
-    public function __construct($docid = 0, $basedocid = 0, $date = null) {
+
+    /**
+    * @param mixed $docid      редактирование
+    * @param mixed $basedocid  создание на  основании
+    * @param mixed $date       дата  с  календаря
+
+    */
+    public function __construct($docid = 0, $basedocid = 0, $date = 0 ) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -51,20 +55,15 @@ class Task extends \App\Pages\Base
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
-        $this->docform->add(new DropDownChoice('parea', ProdArea::findArray("pa_name", ""), 0));
+        $this->docform->add(new DropDownChoice('parea', ProdArea::findArray("pa_name", "disabled<>1","pa_name"), 0));
 
-     //   $this->docform->add(new SubmitLink('addservice'))->onClick($this, 'addserviceOnClick');
-       // $this->docform->add(new SubmitLink('addprod'))->onClick($this, 'addprodOnClick');
-
-       // $this->docform->add(new SubmitLink('addeq'))->onClick($this, 'addeqOnClick');
-      //  $this->docform->add(new SubmitLink('addemp'))->onClick($this, 'addempOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
 
         //service
         $this->add(new Form('editdetail'));
-        $this->editdetail->add(new DropDownChoice('editservice', Service::findArray("service_name", "disabled<>1", "service_name")));
+        $this->editdetail->add(new DropDownChoice('editservice', Service::getList()));
 
         $this->editdetail->add(new TextInput('editqty'));
         $this->editdetail->add(new TextInput('editdesc'));
@@ -85,10 +84,10 @@ class Task extends \App\Pages\Base
 
         //equipment
         $this->add(new Form('editdetail4'));
-        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::getQuipment()));
+        $this->editdetail4->add(new DropDownChoice('editeq', Equipment::getList('',true)));
         $this->editdetail4->add(new SubmitButton('saverow4'))->onClick($this, 'saverow4OnClick');
 
-        if ($docid > 0) {    
+        if ($docid > 0) {
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->notes->setText($this->_doc->notes);
@@ -98,8 +97,8 @@ class Task extends \App\Pages\Base
 
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->document_time->setDateTime($this->_doc->headerdata['start']);
-            $this->docform->parea->setValue($this->_doc->headerdata['parea']);
-
+            $this->docform->parea->setValue($this->_doc->headerdata['pa_id']);
+                                                                            
             $this->_servicelist = $this->_doc->unpackDetails('detaildata');
             $this->_eqlist = $this->_doc->unpackDetails('eqlist');
             $this->_emplist = $this->_doc->unpackDetails('emplist');
@@ -117,18 +116,24 @@ class Task extends \App\Pages\Base
                 $basedoc = Document::load($basedocid);
                 if ($basedoc instanceof Document) {
                     $this->_basedocid = $basedocid;
-                    $this->_doc->customer_id = $basedoc->customer_id;
+                 //   $this->_doc->customer_id = $basedoc->customer_id;
+                    $this->docform->customer->setKey($basedoc->customer_id);
+                    $this->docform->customer->setText($basedoc->customer_name);
 
                     if ($basedoc->meta_name == 'ServiceAct') {
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                        $this->docform->notes->setText('Основание '. $basedoc->document_number);
                         $this->_servicelist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'Order') {
-                        $this->docform->notes->setText(H::l('basedon') . $basedoc->document_number);
+                        $this->docform->notes->setText('Основание '. $basedoc->document_number);
                         $this->_prodlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
             }
+       
+
+        
+        
         }
 
         $this->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_servicelist')), $this, 'detailOnRow'))->Reload();
@@ -141,11 +146,12 @@ class Task extends \App\Pages\Base
         }
     }
 
-   
+
     public function detailOnRow($row) {
         $service = $row->getDataItem();
 
         $row->add(new Label('service', $service->service_name));
+        $row->add(new Label('category', $service->category));
 
         $row->add(new Label('quantity', $service->quantity));
         $row->add(new Label('desc', $service->desc));
@@ -154,14 +160,15 @@ class Task extends \App\Pages\Base
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
     }
 
-    
+
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
         $service = $sender->owner->getDataItem();
+        $rowid =  array_search($service, $this->_servicelist, true);
 
-        $this->_servicelist = array_diff_key($this->_servicelist, array($service->_rowidser => $this->_servicelist[$service->_rowidser]));
+        $this->_servicelist = array_diff_key($this->_servicelist, array($rowid => $this->_servicelist[$rowid]));
         $this->detail->Reload();
 
     }
@@ -169,22 +176,20 @@ class Task extends \App\Pages\Base
     public function saverowOnClick($sender) {
         $id = $this->editdetail->editservice->getValue();
         if ($id == 0) {
-            $this->setError("noseljob");
+            $this->setError("Не выбрана  работа");
             return;
         }
         $service = Service::load($id);
 
-        $service->quantity = $this->editdetail->editqty->getText();
+        $service->quantity = $this->editdetail->editqty->getDouble();
         $service->desc = $this->editdetail->editdesc->getText();
         $service->price = $service->cost;
         if (strlen($service->price) == 0) {
             $service->price = 0;
         }
 
-        $next = count($this->_servicelist) > 0 ? max(array_keys($this->_servicelist)) : 0;
-        $service->_rowidser =  $next + 1 ;
-        $this->_servicelist[$service->_rowidser] = $service;
- 
+        $this->_servicelist[] = $service;
+
         $this->detail->Reload();
 
         $this->editdetail->clean();
@@ -192,11 +197,12 @@ class Task extends \App\Pages\Base
     }
 
     //prod
-    
+
     public function detailprodOnRow($row) {
         $item = $row->getDataItem();
 
         $row->add(new Label('prod', $item->itemname));
+        $row->add(new Label('item_code', $item->item_code));
 
         $row->add(new Label('quantityprod', $item->quantity));
         $row->add(new Label('descprod', $item->desc));
@@ -205,14 +211,15 @@ class Task extends \App\Pages\Base
         $row->add(new ClickLink('deleteprod'))->onClick($this, 'deleteprodOnClick');
     }
 
-    
+
     public function deleteprodOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
         $item = $sender->owner->getDataItem();
- 
-        $this->_prodlist = array_diff_key($this->_prodlist, array($item->_rowidprod => $this->_prodlist[$item->_rowidprod]));
+        $rowid =  array_search($item, $this->_prodlist, true);
+
+        $this->_prodlist = array_diff_key($this->_prodlist, array($rowid => $this->_prodlist[$rowid]));
 
         $this->detailprod->Reload();
     }
@@ -220,21 +227,21 @@ class Task extends \App\Pages\Base
     public function saverowprodOnClick($sender) {
         $id = $this->editdetailprod->editprod->getValue();
         if ($id == 0) {
-            $this->setError("noselprod");
+            $this->setError("Не выбрана  продукция");
             return;
         }
         $item = Item::load($id);
 
-        $item->quantity = $this->editdetailprod->editqtyprod->getText();
+        $item->quantity = $this->editdetailprod->editqtyprod->getDouble();
         $item->desc = $this->editdetailprod->editdescprod->getText();
 
- 
-        $next = count($this->_prodlist) > 0 ? max(array_keys($this->_prodlist)) : 0;
-        $item->_rowidprod = $next + 1;
-       
-        $this->_prodlist[$item->_rowidprod] = $item;
+        if ( doubleval($item->quantity) == 0) {
+            $this->setError("Не указано количество");
+            return;
+        }
 
-        $this->_rowidprod = 0;
+        $this->_prodlist[ ] = $item;
+
 
 
         $this->detailprod->Reload();
@@ -246,16 +253,16 @@ class Task extends \App\Pages\Base
     }
 
     //employee
- 
+
     public function saverow3OnClick($sender) {
         $id = $this->editdetail3->editemp->getValue();
         if ($id == 0) {
 
-            $this->setError("noselexecutor");
+            $this->setError("Не выбран исполнитель");
             return;
         }
         $emp = Employee::load($id);
-        $emp->ktu = $this->editdetail3->editktu->getText();
+        $emp->ktu = $this->editdetail3->editktu->getDouble();
         $this->_emplist[$emp->employee_id] = $emp;
         $this->detail3->Reload();
         $this->editdetail3->clean();
@@ -274,14 +281,14 @@ class Task extends \App\Pages\Base
         $this->_emplist = array_diff_key($this->_emplist, array($emp->employee_id => $this->_emplist[$emp->employee_id]));
         $this->detail3->Reload();
     }
-    
+
     //equipment
-   
+
     public function saverow4OnClick($sender) {
         $id = $this->editdetail4->editeq->getValue();
         if ($id == 0) {
 
-            $this->setError("noseleq");
+            $this->setError("Не выбрано оборудование");
             return;
         }
         $eq = Equipment::load($id);
@@ -314,9 +321,9 @@ class Task extends \App\Pages\Base
         $this->_doc->notes = $this->docform->notes->getText();
 
 
-        $this->_doc->headerdata['parea'] = $this->docform->parea->getValue();
-        $this->_doc->headerdata['pareaname'] = $this->docform->parea->getValueName();
-        $this->_doc->headerdata['start'] = $this->docform->document_time->getDateTime($this->_doc->document_date);;
+        $this->_doc->headerdata['pa_id'] = $this->docform->parea->getValue();
+        $this->_doc->headerdata['pa_name'] = $this->docform->parea->getValueName();
+        $this->_doc->headerdata['start'] = $this->docform->document_time->getDateTime($this->_doc->document_date);
         $this->_doc->headerdata['taskhours'] = $this->docform->taskhours->getText();
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->customer_id = $this->docform->customer->getKey();
@@ -333,7 +340,12 @@ class Task extends \App\Pages\Base
         $this->_doc->packDetails('eqlist', $this->_eqlist);
         $this->_doc->packDetails('emplist', $this->_emplist);
         $this->_doc->packDetails('prodlist', $this->_prodlist);
-
+        //для поиска
+        $this->_doc->headerdata['searchemp'] ='';
+        foreach($this->_emplist as $e){
+           $this->_doc->headerdata['searchemp'] .= "#{$e->employee_id}#" ;
+        }
+        
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -371,7 +383,7 @@ class Task extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }
@@ -382,22 +394,22 @@ class Task extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (strlen($this->_doc->document_date) == 0) {
 
-            $this->setError('enterdatedoc');
+            $this->setError('Введите дату документа');
         }
         if (count($this->_servicelist) == 0 && count($this->_prodlist) == 0) {
-            $this->setError("noenterpos");
+            $this->setError("Должны быть введены  работы  и/или продукциия");
         }
         if (count($this->_emplist) > 0) {
             $ktu = 0;
@@ -405,7 +417,7 @@ class Task extends \App\Pages\Base
                 $ktu += doubleval($emp->ktu);
             }
             if ($ktu != 1) {
-                $this->setError("ktu1");
+                $this->setError("Суммарный КТУ должен быть 1");
             }
 
         }

@@ -16,7 +16,6 @@ use Zippy\Html\Panel;
  */
 class Income extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('Income')) {
@@ -27,31 +26,33 @@ class Income extends \App\Pages\Base
         $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-        $this->filter->add(new DropDownChoice('type', array(1 => H::l('repbyitems'), 2 => H::l('repbysellers'), 3 => H::l('repbydates'),4 => H::l('repbyservices'),5 => H::l('repbysellersitem')) , 1))->onChange($this, "OnType");;
+        $this->filter->add(new DropDownChoice('type', array(1 => "По товарам", 2 => "По поставщикам", 3 => "По датам",4 => "Услуги, работы",5 => "Товары по  поставщикам",6=>'По категориям'), 1))->onChange($this, "OnType");
+        $this->filter->add(new DropDownChoice('cat', \App\Entity\Category::getList(false, false), 0))->setVisible(false);
 
-        
+
         $this->filter->add(new \Zippy\Html\Form\AutocompleteTextInput('cust'))->onText($this, 'OnAutoCustomer');
         $this->filter->cust->setVisible(false);
-        
-        
+
+
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
     }
-   
+
     public function OnAutoCustomer($sender) {
         $text = \App\Entity\Customer::qstr('%' . $sender->getText() . '%');
         return \App\Entity\Customer::findArray("customer_name", "status=0 and (customer_name like {$text}  or phone like {$text} )");
     }
-    
+
     public function OnType($sender) {
         $type = $this->filter->type->getValue();
- 
-        $this->filter->cust->setVisible($type == 5);
-      
 
-    }    
-    
+        $this->filter->cust->setVisible($type == 5);
+
+        $this->filter->cat->setVisible($type == 6);
+
+    }
+
     public function OnAutoItem($sender) {
         $r = array();
 
@@ -70,7 +71,7 @@ class Income extends \App\Pages\Base
         $this->detail->preview->setText($html, true);
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
 
- 
+
         $this->detail->setVisible(true);
     }
 
@@ -81,32 +82,40 @@ class Income extends \App\Pages\Base
         $from = $this->filter->from->getDate();
         $to = $this->filter->to->getDate();
         $cust_id = $this->filter->cust->getKey();
+        $cat_id = $this->filter->cat->getValue();
+
+        $cust = "";
+        $sql = "";
 
         $br = "";
         $brids = \App\ACL::getBranchIDsConstraint();
         if (strlen($brids) > 0) {
             $br = " and d.branch_id in ({$brids}) ";
         }
+        $cat = "";
+        if ($type == 6 && $cat_id > 0) {
+            $cat = " and cat_id=" . $cat_id;
+        }
 
         $detail = array();
         $conn = \ZDB\DB::getConnect();
 
-        if ($type == 1 || $type==5) {    //по товарам
-        
-           $cust = "";
-    
+        if ($type == 1 || $type==5 || strlen($cat) > 0) {    //по товарам
+
+            $cust = "";
+
             if (($type == 5) && $cust_id > 0) {
                 $cust = " and d.customer_id=" . $cust_id;
-          
-            }        
-            
+
+            }
+
             $sql = "
              select i.itemname,i.item_code,sum(e.quantity) as qty, sum(e.outprice * e.quantity) as summa
               from entrylist_view  e
 
               join items i on e.item_id = i.item_id
              join documents_view d on d.document_id = e.document_id
-               where e.item_id >0  and (e.tag = 0 or e.tag = -2 or e.tag = -8  )  {$cust} 
+               where e.item_id >0  and (e.tag = 0 or e.tag = -2 or e.tag = -8  ) {$cat}   {$cust} 
                and d.meta_name in ('GoodsReceipt','RetCustIssue')
                {$br}
               AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
@@ -150,20 +159,40 @@ class Income extends \App\Pages\Base
   order  by e.document_date
         ";
         }
-         if ($type == 4  ) {    //по сервисам
+        if ($type == 4) {    //по сервисам
             $sql = "
-         select s.service_name as itemname, sum(0-e.quantity) as qty, sum(0-e.outprice*e.quantity) as summa    ,0 as navar
+         select s.service_name as itemname, sum(e.quantity) as qty, sum(e.outprice*e.quantity) as summa    ,0 as navar
               from entrylist_view  e
 
               join services s on e.service_id = s.service_id
              join documents_view d on d.document_id = e.document_id
                where e.service_id >0  and e.quantity <>0      {$cust}  
               and d.meta_name in (  'IncomeService'  )
-               {$br} {$u} AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+               {$br}  AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
                    group by s.service_name
                order  by s.service_name      ";
         }
+
+        if ($type == 6 && strlen($cat) == 0) {    //по категориях
+            $sql = "
+            select  i.cat_name as itemname,sum(e.quantity) as qty, sum( e.quantity*e.partion) as summa, sum((e.outprice-e.partion )*(0-e.quantity)) as navar
+              from entrylist_view  e
+
+              join items_view i on e.item_id = i.item_id
+             join documents_view d on d.document_id = e.document_id
+               where  e.partion  is  not null and  e.item_id >0  and (e.tag = 0 or e.tag = -2 or e.tag = -8  ) 
+               and d.meta_name in ('GoodsReceipt','RetCustIssue' )
+                {$br} 
+              AND DATE(e.document_date) >= " . $conn->DBDate($from) . "
+              AND DATE(e.document_date) <= " . $conn->DBDate($to) . "
+                group by    i.cat_name
+               order  by i.cat_name
+        ";
+        }
+
+
+       
         $total = 0;
         $rs = $conn->Execute($sql);
 
@@ -186,30 +215,44 @@ class Income extends \App\Pages\Base
 
         $header['total'] = H::fa($total);
 
-        if ($type == 1 || $type==5) {
+        if ($type == 1 || $type==5 || strlen($cat) > 0) {
             $header['_type1'] = true;
             $header['_type2'] = false;
             $header['_type3'] = false;
             $header['_type4'] = false;
+            $header['_type5'] = false;
         }
         if ($type == 2) {
             $header['_type1'] = false;
             $header['_type2'] = true;
             $header['_type3'] = false;
             $header['_type4'] = false;
+            $header['_type5'] = false;
         }
         if ($type == 3) {
             $header['_type1'] = false;
             $header['_type2'] = false;
             $header['_type3'] = true;
-              $header['_type4'] = false;
-      }
+            $header['_type4'] = false;
+            $header['_type5'] = false;
+        }
         if ($type == 4) {
             $header['_type1'] = false;
             $header['_type2'] = false;
             $header['_type3'] = false;
             $header['_type4'] = true;
-      }
+            $header['_type5'] = false;
+        }
+
+
+        if ($type == 6 && strlen($cat) == 0) {
+            $header['_type1'] = false;
+            $header['_type2'] = false;
+            $header['_type3'] = false;
+            $header['_type4'] = false;
+            $header['_type5'] = true;
+        }
+
         $report = new \App\Report('report/income.tpl');
 
         $html = $report->generate($header);

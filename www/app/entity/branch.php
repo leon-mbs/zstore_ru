@@ -10,7 +10,6 @@ namespace App\Entity;
  */
 class Branch extends \ZCL\DB\Entity
 {
-
     protected function init() {
         $this->branch_id = 0;
         $this->disabled = 0;
@@ -48,24 +47,24 @@ class Branch extends \ZCL\DB\Entity
         $sql = "  select count(*)  from  documents where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "На  филиал есть  ссылки  в  документах";
+            return "Филиал  используется документами";
         }
 
         $sql = "  select count(*)  from  stores where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Филиал используется в складах";
+            return "Филиал  используется складами";
         }
 
         $sql = "  select count(*)  from  mfund where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Филиал используется в денежных счетах";
+            return "Филиал  используется денежными  счетами";
         }
         $sql = "  select count(*)  from  employees where   branch_id = {$this->branch_id}";
         $cnt = $conn->GetOne($sql);
         if ($cnt > 0) {
-            return "Филиал используется в сотрудниках";
+            return "Филиал  используется сотрудниками";
         }
 
         return "";
@@ -81,7 +80,7 @@ class Branch extends \ZCL\DB\Entity
         if ($user_id > 0) {
             $user = \App\Entity\User::load($user_id);
             if ($user->rolename != 'admins') {
-                if (strlen($user->aclbranch) == 0) {
+                if (strlen($user->aclbranch ??'') == 0) {
                     return array();
                 } else {
                     $where .= " and branch_id in ({$user->aclbranch}) ";

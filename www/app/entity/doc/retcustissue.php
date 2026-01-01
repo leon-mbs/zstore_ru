@@ -11,7 +11,6 @@ use App\Helper as H;
  */
 class RetCustIssue extends Document
 {
-
     public function generateReport() {
 
 
@@ -34,6 +33,7 @@ class RetCustIssue extends Document
                                   "quantity"   => H::fqty($item->quantity),
                                   "msr"        => $item->msr,
                                   "price"      => H::fa($item->price),
+                                  "pricenonds"      => H::fa($item->pricenonds),
                                   "amount"     => H::fa($item->quantity * $item->price)
                 );
             }
@@ -49,7 +49,8 @@ class RetCustIssue extends Document
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "total"           => H::fa($this->amount),
-                        "payed"           => H::fa($this->payed)
+                       
+                        "payed"           => H::fa($this->headerdata["payed"])
         );
 
         $report = new \App\Report('doc/retcustissue.tpl');
@@ -76,21 +77,53 @@ class RetCustIssue extends Document
                 $sc->save();
             }
         }
-        if ($this->headerdata['payment'] > 0 && $this->payed > 0) {
-            $payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->payed, $this->headerdata['payment'] );
-            if ($payed > 0) {
-                $this->payed = $payed;
-            }
-            \App\Entity\IOState::addIOState($this->document_id, $this->payed, \App\Entity\IOState::TYPE_BASE_INCOME);
 
-        }
+        $this->payed = \App\Entity\Pay::addPayment($this->document_id, $this->document_date, $this->headerdata['payed'], $this->headerdata['payment']);
+ 
+        \App\Entity\IOState::addIOState($this->document_id, $this->headerdata['payed'], \App\Entity\IOState::TYPE_BASE_OUTCOME,true);
+
+       $this->DoBalans() ;
+
 
 
         return true;
     }
 
     protected function getNumberTemplate() {
-        return 'ВП-000000';
+        return 'ВН-000000';
     }
+    /**
+    * @override
+    */
+    public function DoBalans() {
+       $conn = \ZDB\DB::getConnect();
+       $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
 
+        if(($this->customer_id??0) == 0) {
+            return;
+        }
+
+       foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where  paytype < 1000 and  coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount =  $p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->save();
+        }
+
+        if($this->payamount >0) {
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = 0-$this->payamount;
+            $b->optype = \App\Entity\CustAcc::SELLER;
+            $b->save();
+        }
+         
+
+    }
+    
+       
 }

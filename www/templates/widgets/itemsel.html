@@ -1,7 +1,7 @@
 <html>
     <body>
      <div   zippy="witempan" class="row">  
-        <div class="navbar nav">
+        <div class="card">
 
             <form zippy="wisfilter" class="form-inline">
 
@@ -10,17 +10,24 @@
                 <label for="wissearchcat">категория</label>
 
                 <select class="form-control mr-sm-2" zippy="wissearchcat">
-                    <option value="0">Не задана</option>
+                    <option value="0">Не задано</option>
                 </select>
                 <label for="wissearchmanufacturer">Бренд </label>
-                <input autocomplete="off" list="wissearchmanlist" class="form-control mr-sm-2" zippy="wissearchmanufacturer"/>
+                <input autocomplete="off" list="wissearchmanlist" class="form-control mr-2" zippy="wissearchmanufacturer"/>
                 <datalist id="wissearchmanlist">
                     {{#manlist}}
-                    <option label='{{mitem}}' value='{{mitem}}'> </option>
+                    <option label="{{mitem}}" value="{{mitem}}">  </option>
                         {{/manlist}}
                 </datalist>
-
-
+                  
+                 
+                  
+ <div class="form-check  mr-sm-2">
+   <label for="wissearchonstore" class="form-check-label">В наличии </label> 
+   <input type="checkbox" zippy="wissearchonstore" class="form-check-input  mr-2"  >
+  </div>                  
+                  
+                  
                 <input class="btn btn-outline-success  " type="submit" value="ОК">
 
             </form>

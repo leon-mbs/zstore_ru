@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12  col-xl-10">
                 <h3>Оплата по производству</h3>
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline">
 
                         <label for="from">С</label>
@@ -15,7 +15,11 @@
 
                         <label for="to">по</label>
                         <input class="form-control mr-sm-2" style="width: 120px" type="text" zippy="to">
-
+                        <label   for="emp">Исполнитель </label>
+                        <select class="form-control  mr-sm-2 " zippy="emp">
+                            <option value="0">По всем</option>
+                        </select>
+                   
 
                         <input class="btn btn-outline-primary  " type="submit" value="ОК">
 
@@ -25,10 +29,10 @@
 
 
                 <div zippy="detail">
-                    <div>
+
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/etareport" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></a>
-                        <a href="/showreport/pdf/etreport" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/etareport" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"> </i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/etreport" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
                                     
 
                     </div>
@@ -37,6 +41,6 @@
 
                 </div>
             </div>
-        </div>
+
     </body>
 </html>

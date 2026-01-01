@@ -4,33 +4,31 @@
     <tr>
         <td></td>
         <td valign="top"><b>Покупатель</b></td>
-        <td colspan="5"><b>{{customer_name}}</b></td>
+ 
+        <td colspan="6"> {{customer_name}}</b> 
+          {{#phone}} Тел. {{phone}}  {{/phone}} 
+        </td>
     </tr>
       {{/customer_name}} 
       
-    {{#phone}}
-    <tr>
-        <td></td>
-        <td valign="top">Телефон</td>
-        <td colspan="5">{{phone}}</td>
-    </tr>
-     {{/phone}} 
-   {{#address}}
-    <tr>
-        <td></td>
-        <td valign="top">Адрес</td>
-        <td colspan="5">{{address}}</td>
-    </tr>
-     {{/address}} 
+  
+ 
    {{#edrpou}}
     <tr>
         <td></td>
         <td valign="top">ОКПО</td>
-        <td colspan="5">{{edrpou}}</td>
+        <td colspan="6">{{edrpou}}</td>
     </tr>
      {{/edrpou}}       
       
-      
+      {{#iscustaddress}}
+    
+      <tr>
+        <td></td>
+        <td valign="top">Адрес</td>
+        <td colspan="6">{{custaddress}}</td>
+    </tr>    
+    {{/iscustaddress}}      
       
       
     {{#isfirm}}
@@ -38,40 +36,74 @@
         <td></td>
 
         <td valign="top"><b>Продавец</b></td>
-        <td colspan="5"><b>{{firm_name}}</b></td>
+       <td colspan="6"> {{firm_name}} 
+        {{#fphone}} Тел.  {{fphone}}  {{/fphone}} 
+          
+        </td>
 
     </tr>
    {{#fedrpou}}
     <tr>
         <td></td>
         <td valign="top">ОКПО</td>
-        <td colspan="5">{{fedrpou}}</td>
+        <td colspan="6">{{fedrpou}}</td>
     </tr>
      {{/fedrpou}}  
     {{#finn}}
     <tr>
         <td></td>
-        <td valign="top">ИНН</td>
-        <td colspan="5">{{finn}}</td>
+        <td valign="top">МНН</td>
+        <td colspan="6">{{finn}}</td>
     </tr>
      {{/finn}}           
+   
+      
+    {{/isfirm}}
+    {{#isfop}}
+    <tr>
+
+        <td></td>
+        <td><b> Продавец</b></td>
+        <td colspan="7"> {{fop_name}} </td>
+
+    </tr> 
+    <tr>
+        <td></td>
+        <td valign="top">ОКПО</td>
+        <td colspan="7">{{fop_edrpou}}</td>
+    </tr>       
+   {{/isfop}}    
+   
+     <tr>
+        <td></td>
+        <td valign="top">Адрес</td>
+        <td colspan="7">{{address}}</td>
+    </tr>      
     {{#isbank}}
     <tr>
 
         <td></td>
-        <td> р/с</td>
-        <td colspan="7">{{bankacc}}    {{bank}}</td>
+        <td> р/р</td>
+        <td colspan="8">{{bankacc}}    {{bank}}</td>
 
     </tr>
-    {{/isbank}}    
-    {{/isfirm}}
+    {{/isbank}}  
+     {{#iban}}
+    <tr>
+
+        <td></td>
+        <td> IBAN</td>
+        <td colspan="8">{{iban}}   </td>
+
+    </tr>
+    {{/iban}}     
     {{#iscontract}}
     <tr>
 
         <td></td>
 
         <td valign="top"><b>Договор</b></td>
-        <td colspan="5">{{contract}} от {{createdon}}</td>
+        <td colspan="6">{{contract}} от {{createdon}}</td>
 
 
     </tr>
@@ -80,24 +112,24 @@
     <tr>
         <td></td>
         <td valign="top"><br>Списано с</td>
-        <td colspan="5"><br>{{store_name}}</td>
+        <td colspan="6"><br>{{store_name}}</td>
     </tr>
  
     {{#order}}
     <tr>
         <td></td>
         <td><b>Заказ</b></td>
-        <td colspan="5">{{order}}</td>
+        <td colspan="6">{{order}}</td>
     </tr>
     {{/order}}
     <tr>
-        <td colspan="7">{{{notes}}}</td>
+        <td colspan="8">{{{notes}}}</td>
     </tr>
 
 
     <tr>
-        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="7" valign="middle">
-            Накладная № {{document_number}} от {{date}} <br>
+        <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
+            Расходная накладная № {{document_number}} от {{date}} <br>
         </td>
     </tr>
 
@@ -107,9 +139,10 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Ед.</th>
 
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
-        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сумма</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кол.</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Ск. %</th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Цена    </th>
+        <th style="text-align: right;border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сумма</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -119,41 +152,41 @@
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
+        <td align="right">{{disc}}</td>
+        <td align="right">{{price}}   </td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="2">{{weight}}</td>
 
-        <td style="border-top:1px #000 solid;" colspan="4" align="right">На сумму:</td>
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">На сумму:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 
-   
-    {{#isdisc}}
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td colspan="7" align="right">Скидка:</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/isdisc}}
-
+    {{/totaldisc}}
+ 
 
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Всего:</td>
+        <td colspan="7" align="right">Всего:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
      {{#isprep}}  
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Предоплата:</td>
+        <td colspan="7" align="right">Предоплата:</td>
         <td align="right">{{prepaid}}</td>
     </tr>
      {{/isprep}}      
    {{#payed}}  
     <tr style="font-weight: bolder;">
-        <td colspan="6" align="right">Оплата:</td>
+        <td colspan="7" align="right">Оплата:</td>
         <td align="right">{{payed}}</td>
     </tr>
      {{/payed}}  
@@ -161,7 +194,7 @@
    
    {{#totalstr}}
     <tr>
-        <td colspan="7">На сумму <b>{{totalstr}}</b></td>
+        <td colspan="8">На сумму <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}                    
 
@@ -170,30 +203,30 @@
                         <td colspan="4" > 
                             Продавец ___________
                         </td>
-                        <td colspan="3"> 
+                        <td colspan="4"> 
                             Покупатель ___________
                         </td>
 
                     </tr>
                     <tr>
                         <td> </td>
-                        <td colspan="6">
+                        <td colspan="7">
+                            {{#isstamp}}
+                            <img style="height:100px;" src="{{stamp}}"/>
+                            {{/isstamp}}
+
+                            {{^isstamp}}
+                        
                             <br><br>
-                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; МП
+                            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;    &nbsp; М.П.
                             <br><br>
+                            {{/isstamp}}
                         </td>
 
 
                     </tr>
-                     <tr>
-                        <td colspan="3" > 
-                            {{{docbarcode}}}
-                        </td>
-                        <td colspan="4"> 
-                            {{{docqrcode}}}
-                        </td>
-
-                    </tr>
-
+          
+              
+                          
                     </table>
 

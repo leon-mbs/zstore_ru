@@ -15,74 +15,98 @@
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
- 
                     <div class="form-group  ">
-                        <label for="notes">Примечание </label>
-
-                        <input class="form-control" type="text" zippy="notes">
-
-                    </div>
-
-                </div>
-
-                <div class="col-12 col-md-3">
-                     <div class="form-group  ">
                         <label for="store">Со склада</label>
                         <select class="form-control" zippy="store">
                         </select>
                     </div>
-                  <div class="form-group">
-                        <label for="fromitem">Исходящий ТМЦ </label>
-                        <input class="form-control" zippy="fromitem" placeholder="Начните вводить... ">
-
-                    </div>
-                    <div class="form-group">
-                        <label for="fromquantity">Количество</label>
-                        <div>
-                            <input style="width:100px;" type="text" zippy="fromquantity" class="form-control qtyprice"
-                                   required="required" pattern="[0-9,\.]+"/>
-                        </div>
-                    </div>
-                 </div>
-               <div class="col-12 col-md-3">
-                   <div class="form-group  ">
+                     <div class="form-group  ">
                         <label for="tostore">На склад</label>
                         <select class="form-control" zippy="tostore">
                         </select>
-                    </div>  
-                    <div class="form-group">
-                        <label for="toitem">Входящий ТМЦ</label>
-                        <input class="form-control" zippy="toitem" placeholder="Начните вводить... ">
-
+                    </div>                      
+                    <div class="form-group  ">
+                        <label for="notes">Примечание </label>
+                        <input class="form-control" type="text" zippy="notes">
                     </div>
-                    <div class="form-group">
-                        <label for="toquantity">Количество</label>
-                        <div>
-                            <input style="width:100px;" type="text" zippy="toquantity" class="form-control qtyprice"
-                                   required="required" pattern="[0-9,\.]+"/>
-                        </div>
-                    </div>
-                                    
 
+                </div>
+
+                <div class="col-12 col-md-8 col-xl-6">
+                 <div class="form-group row">
+                   <label class="col-2 col-form-label">  Входной ТМЦ     </label>
+                    <div class="col-auto">
+                      <input class="form-control" zippy="fromitem" placeholder="Начните вводить...">
+                       </div>
+                             <label class="col-auto col-form-label ml-2">  Кол.     </label>
+                                     
+                        <div class="col-auto">
+                            <input style="width:75px;" type="text" zippy="fromquantity" class="form-control qtyprice"
+                                       pattern="[0-9,\.]+"/>
+                        </div>                       
+                       <div class="col-auto">  <input zippy="addfrom" type="submit" value="Добавить" class="btn btn-success"> </div>                         
+                 </div>
+                   <table class="table table-sm">
+                       <tr zippy="fromlist">
+                          <td zippy="fromname"></td>  
+                          <td zippy="fromcode"></td>  
+                          <td zippy="fromqty"  class="text-right"></td>  
+                          <td zippy="fromprice" class="text-right"></td>
+                          <td style="width:30px;" ><a zippy="fromdel"><i class="fa fa-trash"></i></a></td>
+                       </tr>
+                       <tr >
+                           <th colspan="3" class="text-right">На сумму:</th>  <th class="text-right" zippy="fromtotal"></th>
+                           <td></td>
+                       </tr>
+                   </table>
+                  <div class="form-group row">
+                   <label class="col-2 col-form-label">  Выходной ТМЦ     </label>
+                    <div class="col-auto">
+                      <input class="form-control" zippy="toitem" placeholder="Начните вводить...">
+                       </div>
+                             <label class="col-auto col-form-label ml-2">  Кол.     </label>
+                                     
+                       <div class="col-auto">
+                            <input style="width:75px;" type="text" zippy="toquantity" class="form-control qtyprice"
+                                       pattern="[0-9,\.]+"/>
+                        </div>                       
+                          <div class="col-auto">  <input zippy="addto" type="submit" value="Добавить" class="btn btn-success"> </div>                         
+             </div>
+                 
+                  <table class="table table-sm">
+                       <tr zippy="tolist">
+                           <td zippy="toname"></td>  
+                           <td zippy="tocode"></td>  
+                           <td zippy="toqty"  class="text-right"></td>  
+                           <td   ><input onblur="calcTotal()" class="form-control   qtyprice" pattern="[0-9,\.]+" zippy="toprice" style="width:100px;"   ></td>
+                                               
+                            <td  style="width:30px;" ><a zippy="todel"><i class="fa fa-trash"></i></a></td>
+                       </tr>
+                       <tr >
+                       <td colspan="2"  ><a  zippy="autoprice" >Взять цены с  последних закупок</a></td> 
+                           <th   class="text-right">На сумму:</th>  <th class="text-right" zippy="tototal"></th>
+                            <td></td>
+                       </tr>
+                   </table>
+                    <small ><i class="fa fa-exclamation-triangle"> Суммы долны быть максимально  одинаковыми. Разница булет учтена  как  доход/расход соответственно</i><small>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary mr-2">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary mr-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>
             </div>
 
 
-        </p>
+
 
     </form>
-
-
+    
 </body>
 
 </html>

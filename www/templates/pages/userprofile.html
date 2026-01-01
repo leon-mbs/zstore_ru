@@ -7,87 +7,66 @@
     <body>
 
         <div class="row ">
-            <div class="col-10  col-md-8 col-lg-6">
-
+            <div class="col-10  col-md-8 col-lg-6 col-xl-5">
+            <div class="card">
+             
                 <h4>Мой профиль</h4>
                 <form role="form" zippy="profileform">
                     <div class="row ">
                         <div class="col-12 col-md-6 ">         
 
-
-                            <div class="form-group  ">
-                                <label for="defstore">Компания по умолчанию</label>
-
-                                <select class="form-control" zippy="deffirm">
-                                    <option value='0'>Не установлена</option>
-                                </select>
-                            </div>
+                      
                             <div class="form-group  ">
                                 <label for="defstore">Склад по умолчанию</label>
 
                                 <select class="form-control" zippy="defstore">
-                                    <option value='0'>Не установлено</option>
+                                    <option value="0">Не выбран</option>
                                 </select>
                             </div>
                             <div class="form-group  ">
-                                <label for="defmf">Денежный счет по умолчанию</label>
+                                <label for="defmf">Денежгый счет  по  умолчанию по умолчанию</label>
 
                                 <select class="form-control" zippy="defmf">
-                                    <option value='0'>Не установлено</option>
+                                    <option value="0">Не выбран</option>
                                 </select>
+                            </div>
+                        <div class="form-group  ">
+                                <label for="defpaytype">Тип оплаты по умолчанию</label>
+
+                                <select class="form-control" zippy="defpaytype">
+                                    <option value="0">Не выбран</option>
+                                </select>
+                                <small>Для Заказа и Акта  выполненных работ</small>
                             </div>
                             <div class="form-group  ">
                                 <label for="defsalesource">Источник продаж по умолчанию</label>
 
                                 <select class="form-control" zippy="defsalesource">
-                                    <option value='0'>Не установлено</option>
+                                    <option value="0">Не выбран</option>
                                 </select>
                             </div>
                             <div class="form-group  ">
-                                <label for="pagesize">Рядов в таблицах с постраничным выводом </label>
+                                <label for="pagesize">Строк в  талицах на страницу </label>
 
                                 <select class="form-control" zippy="pagesize" style="width:100px;">
 
                                 </select>
-
+                                 <small><i class="fa fa-exclamation-triangle"></i> Большое значение  может замедлить работу программы</small>
+                                 </div>
 
                                 <div class="form-group  ">
-                                    <label for="mainpage">Главная страница</label>
+                                    <label for="mainpage">Домашняя страница</label>
 
                                     <select class="form-control" zippy="mainpage">
-                                        <option value='\App\Pages\Main'>Дашборд (виджеты)</option>
+                                        <option value="\App\Pages\Blank">Не выбрана</option>
+                                        <option value="\App\Pages\Main">Дашборд  </option>
                                     </select>
                                 </div>
 
                               
                               
                                 
-                            </div>
-                           <div class="form-check">
-                                <input zippy="emailnotify" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="emailnotify">Отправлять уведомления на e-mail </label>
-
-                            </div>   
-                            
-                            <div class="form-check">
-                                <input zippy="hidesidebar" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="hidesidebar">Прятать боковое меню </label>
-
-                            </div>
-                            
-                           <div class="form-check">
-                                <input zippy="darkmode" type="checkbox" class="form-check-input">
-                                <label class="form-check-label" for="darkmode">Ночная тема </label>
-
-                            </div>
-                                  <div class="form-check">
-                                    <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
-                                    <label class="form-check-label" for="usemobileprinter">Открывать печать в новой вкладке  </label> 
-                                   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-                                   title="Для мобильных устройств чтобы печатать соответствующим приложением через меню Поделиться. 
-                                    Касается только системных принтеров"></i>
-
-                                </div>                              
+                             
                         </div>
 
 
@@ -109,6 +88,36 @@
                                 <input   class="form-control" zippy="viber">
                             </div>   
 
+                          
+                  
+                 
+                           <div class="form-check">
+                                <input zippy="hidesidebar" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="hidesidebar">Прятать боковое меню </label>
+
+                            </div>
+
+                           {{#usebot}}
+                             <div class="form-check">
+                                <input zippy="usebotfornotify" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="usebotfornotify">Дублировать  уведомления в  телеграмме </label>
+
+                            </div>
+                           {{/usebot}}
+
+                           <div class="form-check">
+                                <input zippy="darkmode" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="darkmode">Ночная  тема </label>
+
+                            </div>
+                                  <div class="form-check">
+                                    <input zippy="usemobileprinter" type="checkbox" class="form-check-input">
+                                    <label class="form-check-label" for="usemobileprinter">Открывать печать в новой вкдладке  </label> 
+                                   <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
+                                   title="Для мобильных устройств для печати  соответствующим приложением через меню Поделиться. Касается только системных принтеров"></i>
+
+                                </div>                             
+                            
                         </div>
 
 
@@ -125,10 +134,40 @@
                         </div>
                     </div>            
                 </form>
+            
             </div>
-        
+            </div>
             <div class="col-10 col-lg-3 col-md-3 col-xl-2">
+               <div class="card">
+               
+                <h4>Смена пароля</h4>
+                <form role="form" zippy="passwordform">
+
+                    <div class="form-group">
+                        <label for="userpassword">Новый пароль</label>
+                        <input type="password" class="form-control" zippy="userpassword"  required="on" >
+                        <small>Перед  вводом проверте  регистр клавиатуры </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userpassword">Подтвержедение</label>
+                        <input type="password" class="form-control " zippy="confirmpassword"  required="on" >
+                    </div>
+
+                    <button type="submit"   class="btn btn-primary">Сохранить</button>
+                </form>
+              
+            
+            </div>
+            </div>
+            <div class="col-10  col-md-4 col-xl-2">
+                         <div class="card">
+                       
+                        
+                          
+                         <small>  <a href="/index.php?p=App/Pages/Options#printer">Параметры для этикеток  и ценников</a> </small>
                          <h4>Принтер чеков</h4>
+                          <small><a href="https://ru.zippy.com.ua/ext#id10">Описание</a></small>
                          <form zippy="printer">
                             <div class="form-group  ">
                                 <label for="prtype">Тип подключения</label>
@@ -136,7 +175,7 @@
                                      <option value="0">Системный принтер</option>
                                      <option value="1">Print сервер</option>
                                 </select>
-                                <small data-label="pserver">Описание <a href="https://ru.zippy.com.ua/ext#10" target="_blank">здесь</a>  </small>
+                                <small data-label="pserver">Описание <a href="https://ru.zippy.com.ua/ext#id10" target="_blank">здесь</a>  </small>
                             </div>    
                                  
                                 
@@ -148,37 +187,126 @@
                              <div class="form-group  ">
                                 <label data-label="pwsym" for="pwsym">Ширина (кол. символов)</label>
                                 <input type="number"  style="width:100px"   class="form-control" zippy="pwsym">
-                                <a  data-label="pwsym" zippy="pstest" >Тест принтера</a>
                             </div>
-                                          
+                             <div class="form-group  ">
+                                <label for="pcp">Кодовая страница</label>
+                                <select class="form-control" zippy="pcp">
+                                     <option value="866">866</option>
+                                     <option value="1251">win-1251</option>
+                                </select>
+                                <small data-label="pcp">В зависимости от кодировки  принтера</small>    
+                            </div>    
+                                 
+                                         
                              <div class="form-group">
                                 <input zippy="savep" class="btn btn-primary" type="submit" value="Сохранить">
                             </div>                            
+                             <div class="form-group">
+                                <a    zippy="pstest" >Тест принтера</a>
+                            </div>                            
+                         </form> 
+                       
+                         
+                         
+         
+                         <h4>Принтер этикеток (наклеек)</h4>     
+                          <small><a href="https://ru.zippy.com.ua/ext#id10">Описание</a></small> 
+                             <small>Количество на  позицию задается в справочние ТМЦ </small>
+                         <form zippy="printerlabel">
+                            <div class="form-group  ">
+                                <label for="prtypelabel">Тип подключения</label>
+                                <select class="form-control" zippy="prtypelabel">
+                                     <option value="0">Системный принтер</option>
+                                     <option value="1">Print сервер (режим  receipt)</option>
+                                     <option value="2">Print сервер (режим  label)</option>
+                                </select>
+                                <small data-label="prtypelabel"  >Описание <a href="https://ru.zippy.com.ua/ext#id10" target="_blank">здесь</a>  </small>
+                            </div>    
+                                 
+                                
+                             <div class="form-group  ">
+                                <label data-label="pserverlabel" for="pserverlabel">Адреса серверу</label>
+                                <input class="form-control" zippy="pserverlabel">
+                                 
+                            </div>
+                             <div class="form-group  ">
+                                <label data-label="pwsymlabel" for="pwsymlabel">Ширина (кол. символов)</label>
+                                <input type="number"  style="width:100px"   class="form-control" zippy="pwsymlabel">
+                            </div>
+                             <div class="form-group  ">
+                                <label for="pcplabel">Кодова страница</label>
+                                <select class="form-control" zippy="pcplabel">
+                                     <option value="866">866</option>
+                                     <option value="1251">win-1251</option>
+                                </select>
+                                <small data-label="pcplabel">В зависимости от кодировки принтера</small>    
+                            </div>    
+                            
+                             <div class="form-group  ">
+                                <label for="prturn">Поворот изображения</label>
+                                <select style="width:100px" class="form-control" zippy="prturn">
+                                     <option value="0">0</option>
+                                     <option value="1">90%</option>
+                                     <option value="2">-90%</option>
+                                </select>
+                            </div>                                            
+                             <div class="form-group">
+                                <input zippy="saveplabel" class="btn btn-primary" type="submit" value="Сохранить">
+                            </div>                            
+                             <div class="form-group">
+                                <a   zippy="pstestlabel" >Тест принтера</a>
+                            </div>                            
                          </form>   
-            </div>
-            <div class="col-10 col-lg-3 col-md-3 col-xl-2">
+                          </div>
+                           
+                          
+                </div>
+                  {{#usescale}}   
+                <div class="col-10  col-md-4 col-xl-2">
+                   <div class="card">
+                          
+                         <h4>Электронные  веса</h4>
+                          <small><a href="https://ru.zippy.com.ua/ext#id17">Описание</a></small>
+                   
+                  
+                         <form zippy="scaleform">
+                           
+                             <div class="form-group  ">
+                                <label   for="scalescript">Скрипт</label>
+                                <textarea style="height:300px" class="form-control" zippy="scalescript"></textarea>
+                                 
+                            </div>
+                              <div class="form-group">
+                                <input   class="btn btn-primary" type="submit" value="Сохранить">
+                            </div>     
+                                               
+                             <div class="form-group">
+                                <a id="testscale" href="#"    >Тест </a>
+                            </div> 
+                                                                         
+                        </form>       
 
-                <h4>Смена пароля</h4>
-                <form role="form" zippy="passwordform">
-
-                    <div class="form-group">
-                        <label for="userpassword">Новый пароль</label>
-                        <input type="password" class="form-control" zippy="userpassword" required="required">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="userpassword">Подтверждение</label>
-                        <input type="password" class="form-control " zippy="confirmpassword" required="required">
-                    </div>
-
-                    <button type="submit"   class="btn btn-primary">Сохранить</button>
-                </form>
-                <br>
-
-
-            </div>
+                  </div>
+                </div>
+                {{/usescale}}    
         </div>
+       <script>
+         $(document).ready(function () {
+         
+            $('#testscale').click(function(event) {
+                event.preventDefault();
+                
+                callScale( (val)=>
+                {
+                    toastr.success("Вес "+ val )    
+                })
 
+               
+            });   
+  });          
+  
+        
+        </script> 
 
     </body>
 

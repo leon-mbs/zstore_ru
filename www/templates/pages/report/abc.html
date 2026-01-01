@@ -10,7 +10,7 @@
             <div class="col-12   col-xl-10">
                 <h3>АВС анализ</h3>
 
-                <div class="navbar nav">
+                <div class="card">
 
                     <form zippy="filter" class="form-inline ">
 
@@ -37,12 +37,12 @@
                     <div>
 
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/abc" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/showreport/pdf/abc" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/abc" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/abc" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i></a>
 
                     </div>
 
-                    <div zippy="preview" class="table-responsive-sm">
+                    <div zippy="preview"  >
                     </div>
 
                 </div>

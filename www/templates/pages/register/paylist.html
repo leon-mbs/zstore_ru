@@ -10,44 +10,96 @@
                 <h3>Журнал платежей </h3>
 
 
-                <div class="navbar nav">
-                    <form zippy="filter" class="form-inline ">
-                         <label for="from">С </label>
-                        <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
-
-
-                        <label for="to"> по </label>
-                        <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
-
-            
-
-                        <label for="fmfund"> счет </label>
-                        <select class="form-control mr-2" zippy="fmfund">
-                            <option value="0">Не выбран</option>
-                        </select>
-                        <label for="fuser"> создал </label>
-                        <select class="form-control mr-2" zippy="fuser">
+                <div class="card">
+                    <form zippy="filter" class="row   g-2 align-items-center">
+                      <div class="col-auto">
+                       <div class="  row no-gutters"> 
+                         <label class="col-auto mt-2" for="from">С </label>
+                          <div class="col-auto">
+                            <input type="text" class="form-control mr-sm-1  " zippy="from" style="width:110px">
+                         </div>
+                       </div>
+                      </div>     
+                       <div class="col-auto">
+                        <div class="  row no-gutters"> 
+ 
+                         <label class="col-auto mt-2" for="to"> по </label>
+                            <div class="col-auto">
+                           <input type="text" class="form-control mr-sm-1 " style="width:110px" zippy="to">
+                          </div>
+                       </div>
+                      </div>     
+                       <div class="col-auto">
+                        <div class="  row no-gutters"> 
+    
+                        <label class="col-auto mt-2" for="fmfund"> счет </label>
+                            <div class="col-auto">
+                      <select class="form-control mr-2" zippy="fmfund">
                             <option value="0">Не выбрано</option>
                         </select>
+                     </div>
+                      </div>   
+                     </div>     
+                       <div class="col-auto">
+                        <div class="  row no-gutters"> 
+                        
+                        <label class="col-auto mt-2" for="fuser"> создал </label>
+                               <div class="col-auto">
+                         <select class="form-control mr-2" zippy="fuser">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                        </div>
+                      </div>   
+                      </div>    
+                       <div class="col-auto">
+                        <div class="  row no-gutters"> 
 
-                        <label for="fcustomer"> контрагент </label>
-                        <input placeholder="Начните вводить..." type="text" class="form-control  mr-2 " zippy="fcustomer">
-
-
+                        <label class="col-auto mt-2" for="fcustomer"> контрагент </label>
+                               <div class="col-auto">
+                          <input placeholder="Начните вводить..." type="text" class="form-control  mr-2 " zippy="fcustomer">
+                       </div>
+                      </div>     
+                     </div>
+                       <div class="col-auto">
+                        <div class="  row no-gutters"> 
+                        
+                            <label class="col-auto mt-2" for="fiostate"> тип расхода  </label>
+                            <div class="col-auto">
+                               
+                              <select class="form-control" zippy="fiostate">
+                                <option value="0">Не выбрано</option>
+                             </select>
+                            </div>
+                      </div>   
+                      </div>    
+                       <div class="col-auto">
+                        <div class="  row no-gutters"> 
+                        
+                        <label class="col-auto mt-2" for="fsort"> сортировать </label>
+                           <div class="col-auto">
+                             <select class="form-control mr-2" zippy="fsort">
+                                <option value="0">По дате</option>
+                                <option value="1">По приходу</option>
+                                <option value="2">По расходу</option>
+                            </select>
+                        </div>
+                      </div>   
+                      </div>    
+                       <div class="col-auto">   
                         <input type="submit" class="  btn btn-outline-success  " value="ОК">
-
+                      </div> 
                     </form>
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" zippy="tpanel">
             <div class="col-12 col-xl-10">
+                <small>Отмена  платежа  производится  методом  сторно  пользователями  роли admins. Оплата кассовыми ордерами  отменяется отменый документа  </small>
 
-
-                <br><a zippy="csv">Экспорт в Excel</a>
-                <br><small>Отмена оплаты выполняется проведением оплаты со знаком минус </small>
-
+                <br><a zippy="csv"><i  class="fa fa-upload" ></i> Экспорт в Excel</a>
+                <a zippy="import" class="ml-4"><i  class="fa fa-download" ></i> Импорт выписок</a>
+      
                 <table class="table   table-sm   ">
                     <tr>
 
@@ -55,10 +107,10 @@
                         <th>Дата</th>
                         <th>Создал</th>
                         <th>Счет</th>
-                        <th class="text-right">Прибыль</th>
+                        <th class="text-right">Приход</th>
                         <th class="text-right">Расход</th>
                         <th>Номер</th>
-                        <th>Дата док.</th>
+                        <th>Дата. док.</th>
                         
 
                         <th>Контрагент</th>
@@ -88,7 +140,7 @@
                         <td class="text-nowrap">
                             <a zippy="print" title="Печатать квитанцию об оплате"><i class="fa fa-print"></i></a>&nbsp;&nbsp;
                             <a zippy="show" title="Просмотр"><i class="fa fa-eye"></i></a>
-                            &nbsp;&nbsp; <a href="javascript:void(0);" zippy="del" title="Отмена оплаты"><i class="fa fa-trash"></i></a>
+                            &nbsp;&nbsp; <a href="javascript:void(0);" zippy="del" title="Отмена  оплаты"><i class="fa fa-trash"></i></a>
 
 
                         </td>
@@ -100,9 +152,9 @@
 
                 <div zippy="pag"></div>
                  <table class="ctable" >
-                   <tr><td>Прибыль </td><td zippy="totp" class="text-right text-bold"></td></tr>
+                   <tr><td>Приход </td><td zippy="totp" class="text-right text-bold"></td></tr>
                    <tr><td>Расход </td><td zippy="totm" class="text-right text-bold"></td></tr>
-                   <tr><td class="text-bold">Вместе </td><td zippy="tottot" class="text-right text-bold"></td></tr>
+                   <tr><td class="text-bold">Разом </td><td zippy="tottot" class="text-right text-bold"></td></tr>
                  
                  </table>
                 <div class="row" id="dankor">
@@ -125,14 +177,14 @@
                         <form zippy="fnotes">
 
                             <div class="form-group">
-                                <label for="notes">Причина отмены</label>
+                                <label for="notes">Основание  отмены</label>
                                 <input type="hidden" zippy="pl_id"/>
-                                <input required="required" class="form-control" zippy="notes"/>
+                                <input  required="on"  class="form-control" zippy="notes"/>
                             </div>
                             <div class="form-group">
 
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Отменить</button>
-                                <input zippy="save" type="submit" value="Исполнить" class="btn btn-primary  ">
+                                <input   type="submit" value="Выполнить" class="btn btn-primary  ">
                             </div>
                         </form>
                     </div>
@@ -160,14 +212,113 @@
             </div>
         </div>
 
+   
+                
+                <form zippy="importform" enctype="multipart/form-data"  >
+                 
+                    <h4>Импорт банковских  выписок  </h4>
+                     <small>Для суммы з плюсом (покупатель) создается  приходный ордер, иначе  расходный </small>
+                        <div class="row">
+                         <div class="col-12 col-md-4 col-xl-3">
+                          
+                             <div class="form-group  ">
+                                <label for="bipayment">Банк</label>
+                                 <select   zippy="bipayment" class="form-control  ">
+                                    <option value="0">Не выбран</option>
+                                </select> 
+                             </div>
+                               
+                        
+                             <div class="form-group  ">
+                                <label for="filename">Файл импорта</label>
+                                <input type="file" zippy="filename" class="form-control  "/>
+                             </div>                  
+                             <div class="  form-check">
+                                <input zippy="passfirst" type="checkbox" class="form-check-input">
+                                <label class="form-check-label" for="passfirst">пропустить первую  строку строку</label>
+                            </div>
+                          
+                                   
+                      
+                             <div class="form-group  ">
+                                <label><b>Номери колонок Excel файла</b> </label>
 
+                            </div>
+                                              
+                              <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="coltran">Номер тран.  </label>
+                                <div class="col-4">
+                                    <select style="width:100px;" zippy="coltran" class="form-control  ">
+                                </select>   
+                                </div> 
+                            </div>                                                                                
+                             <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="coledrpou">ОКПО контрагента  </label>
+                                <div class="col-4">
+                                    <select style="width:100px;" zippy="coledrpou" class="form-control  ">
+                                </select>   
+                                </div> 
+                            </div>                                                                                
+                            <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="colsum">Сумма</label>
+                                <div class="col-4">
+                                    <select   zippy="colsum" class="form-control  ">
+                                </select> 
+                                 </div> 
+                            </div>                     
+                          <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="coldate">Дата</label>
+                                <div class="col-4">
+                                    <select   zippy="coldate" class="form-control  ">
+                                </select>  
+                                 </div> 
+                            </div>                     
+                                                                             
+                            <div class="form-group row">
+                                <label  class="col-8 col-form-label" for="colnotes">Назначение</label>
+                                <div class="col-4">
+                                    <select style="width:100px;" zippy="colnotes" class="form-control  ">
+                                </select>  
+                                 </div> 
+                            </div>                                                                                
+                                                                                                      
+                     
+                         <div class="form-group">
+                           <a zippy="biback" class="btn btn-secondary  mr-4 " >Отменить</a>                          
+                                
+                            <input zippy="bipreview"    type="submit" value="Загрузить" class="btn btn-primary  ">   
+                          
+                           </div>                                                                                                            
+                        </div> 
+                      
+                        <div class="col-12 col-md-8 col-xl-6">
+                           <a zippy="biload" class="btn btn-success  mr-4 " >Импортировать</a>                          
+                           <table class="ctable">
+                              {{#ilist}}
+                              <tr>
+                                 <td>{{tran}}</td>
+                                 <td>{{edrpou}}</td>
+                                 <td>{{customer_name}}</td>
+                                 <td align="right">{{sum}}</td>
+                                 <td>{{dates}}</td>
+                                 <td>{{notes}}</td>
+                              </tr>
+                               {{/ilist}}
+                           </table>
+                       </div>
+                        </div>  
+                 
+                 
+                 </form>
+            
+      
+      
         <script>
             function delpay(id) {
                 $('#pl_id').val(id);
                 $('#dform').modal()
             }
         </script>
-
-
+ 
     </body>
 </html>

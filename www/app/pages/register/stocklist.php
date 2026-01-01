@@ -12,6 +12,7 @@ use Zippy\Html\DataList\Paginator;
 use Zippy\Html\Form\AutocompleteTextInput;
 use Zippy\Html\Form\Date;
 use Zippy\Html\Form\DropDownChoice;
+use Zippy\Html\Form\TextInput;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
@@ -21,7 +22,6 @@ use Zippy\Html\Link\ClickLink;
  */
 class StockList extends \App\Pages\Base
 {
-
     private $_doc    = null;
     private $_ptlist = null;
 
@@ -32,7 +32,7 @@ class StockList extends \App\Pages\Base
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReg('StockList')) {
-            return;
+            \App\Application::RedirectHome() ;
         }
 
         $this->add(new Form('filter'))->onSubmit($this, 'filterOnSubmit');
@@ -40,7 +40,12 @@ class StockList extends \App\Pages\Base
         $this->filter->add(new Date('to', time() + (1 * 24 * 3600)));
         $this->filter->add(new DropDownChoice('fstore', Store::getList(), H::getDefStore()));
         $this->filter->add(new AutocompleteTextInput('fitem'))->onText($this, 'OnAutoItem');
-
+        $this->filter->fitem->onChange($this, "onItem");
+        $this->filter->add(new TextInput('fsnumber'))->setVisible(false);
+        $emplist = \App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name')  ;
+        
+        $this->filter->add(new DropDownChoice('searchemp', $emplist, 0));
+   
         $doclist = $this->add(new DataView('doclist', new StockListDataSource($this), $this, 'doclistOnRow'));
 
         $this->add(new Paginator('pag', $doclist));
@@ -52,7 +57,7 @@ class StockList extends \App\Pages\Base
     public function filterOnSubmit($sender) {
 
         if ($this->filter->fitem->getKey() == 0) {
-            $this->setError('noselitem');
+            $this->setError('Не выбран товар');
             return;
         }
         $this->docview->setVisible(false);
@@ -64,14 +69,8 @@ class StockList extends \App\Pages\Base
 
         $row->add(new Label('date', H::fd($doc->document_date)));
 
-        $row->add(new Label('partion', H::fa($doc->partion)));
+        //        $row->add(new Label('partion', H::fa($doc->partion)));
         $row->add(new Label('qty', H::fqty($doc->quantity)));
-        $price = $doc->quantity >= 0 ? H::fa($doc->outprice) : '';
-        if ($doc->meta_name == 'ReturnIssue') {
-            $price = H::fa((0 - $doc->outprice));
-        }
-
-        $row->add(new Label('price', $price));
 
         $row->add(new Label('dnumber', $doc->document_number));
         $row->add(new Label('snumber', $doc->snumber));
@@ -90,7 +89,19 @@ class StockList extends \App\Pages\Base
         }
         return $r;
     }
+     public function onItem($sender) {
+        $this->filter->fsnumber->setVisible(false);
 
+        $item = Item::load($sender->getKey());
+        if ($item != null) {
+            if ($item->useserial == 1) {
+                $this->filter->fsnumber->setVisible(true);
+
+            }
+
+        }
+
+    }
     //просмотр
     public function showOnClick($sender) {
 
@@ -111,7 +122,6 @@ class StockList extends \App\Pages\Base
  */
 class StockListDataSource implements \Zippy\Interfaces\DataSource
 {
-
     private $page;
 
     public function __construct($page) {
@@ -125,11 +135,19 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
 
         $store_id = $this->page->filter->fstore->getValue();
         $item_id = $this->page->filter->fitem->getKey();
+        $snumber = $this->page->filter->fsnumber->getText();
+        $emp = $this->page->filter->searchemp->getValue();
 
         $where = " s.item_id = {$item_id} and date(d.document_date) >= " . $conn->DBDate($this->page->filter->from->getDate()) . " and  date(d.document_date) <= " . $conn->DBDate($this->page->filter->to->getDate());
-
+        if (strlen($snumber) > 0) {
+            $where .= " and s.snumber=" . $conn->qstr($snumber);
+        }
         if ($store_id > 0) {
             $where .= " and s.store_id=" . $store_id;
+        }
+
+        if ($emp > 0) {
+            $where .= " and s.emp_id=" . $emp;
         }
 
 
@@ -153,13 +171,11 @@ class StockListDataSource implements \Zippy\Interfaces\DataSource
         $sql .= " join store_stock s on s.stock_id = e.stock_id ";
         $sql .= " where " . $this->getWhere() . " order  by  entry_id     ";
         if ($count > 0) {
-           
+
             $limit =" limit {$start},{$count}";
-            if($conn->dataProvider=="postgres") {
-                $limit =" limit {$count} offset {$start}";
-            }
-                  
-           
+        
+
+
             $sql .= $limit;
         }
 

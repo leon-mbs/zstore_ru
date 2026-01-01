@@ -1,30 +1,27 @@
 <html>
  <head>
-        <title>  Журнал системных сообщений  </title>
+        <title>  Системний лог  </title>
 
     </head>
 
     <body>
-        <style>
-        .dark-mode  pre  {
-           color:#fff; 
-         
-             
-        }
-        </style>
+ 
         <div class="row">
+             
             <div class="col-12 col-md-8 col-xl-6"  >
-                <h4>Журнал системных сообщений</h4>
-                <div class="navbar nav">
+                <h5>Системные  уведомления</h5>
+                <div class="card justify-content-start">
                     <form  zippy="filter" class="form-inline ">
 
 
                         <input   class="form-control mr-2" type="text" zippy="searchtext" placeholder="Поиск по контенту">
 
                         <input   type="submit" class="  btn btn-outline-success  " value="Искать">
-
-
+             
                     </form>
+
+
+
                 </div>
 
                 <table class="table table-sm    ">
@@ -33,7 +30,7 @@
                         <td><i class="fa fa-clock"> </i> <span zippy="ndate" > </span>
 
                             <p zippy="msg" >
-                            <p>
+                            </p>
                         </td>
                         <td><span  zippy="newn" class="badge badge-info">Новое</span></td>
 
@@ -45,15 +42,15 @@
       
             </div>
 
-         <div class="col-12 col-md-4 "  >
+             <div class="col-12 col-md-4 "  >
                 <h5>Файловый лог</h5>
                 <table class="table table-sm    ">
                     <tr  zippy="flist">
 
                         <td zippy="fname">                        </td>
                         <td> 
-                        <a zippy="fview"   title="Просмотр"> <i class="fa fa-eye"></i></a>
-                        &nbsp;&nbsp;<a zippy="fdown"   title="Загрузка"> <i class="fa fa-download"></i></a>
+                        <a zippy="fview"   title="Просмотреть"> <i class="fa fa-eye"></i></a>
+                        &nbsp;&nbsp;<a zippy="fdown"   title="Загрузить"> <i class="fa fa-download"></i></a>
                          </td>
 
 
@@ -65,10 +62,15 @@
                 </pre>
                
               </div>
-
         </div>
  
-    
+<script>
+
+   function check_delall() {
+       return confirm("Очистить?")
+   }
+
+</script>    
           
     </body>
 

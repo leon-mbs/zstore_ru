@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App;
 
 /**
  * вспомагательный  клас  для  работы  с датами
  */
-class  DateTime
+class DateTime
 {
-
     private $time;
 
     public function __construct($time = 0) {
@@ -24,12 +22,17 @@ class  DateTime
     }
 
     public function getISO() {
-        return date(\DateTime::ISO8601, $this->time);
+        return date(\DateTimeInterface::ISO8601, $this->time);
     }
 
 
     public function startOfMonth() {
         $this->time = strtotime(date('Y-m-01 00:00:00', $this->time));
+        return $this;
+    }
+    
+    public function startOfYear() {
+        $this->time = strtotime(date('Y-01-01 00:00:00', $this->time));
         return $this;
     }
 

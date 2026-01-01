@@ -1,20 +1,20 @@
-<table border="0" class="ctable" cellpadding="2" cellspacing="0">
-
+<table  class="ctable"  >
+ 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Финансовые результаты
+            Доходы и расходы
         </td>
     </tr>
+   
     <tr>
 
         <td align="center" colspan="3">
             Период с {{datefrom}} по {{dateto}} <br>
         </td>
     </tr>
-    <tr>
-
+     <tr>
         <td colspan="3">
-            <b>Прибыли</b>
+            <b>Доъоды</b>
         </td>
     </tr>
 
@@ -62,7 +62,7 @@
 
         <td align="right">{{out}}</td>
         <td></td>
-    </tr>
+    </tr>            
     {{#docdet}}
     
     <tr>
@@ -90,9 +90,30 @@
         <td></td>
     </tr>
 
-    <tr style="font-weight: bolder;">
+   {{#is3}}    
+    
+   
+     <tr> 
+        <td colspan="3"> <br>
+            <b>Детализация по ТМЦ </b>
+        </td>       
+    </tr>    
+    
+     {{#_detail3}}
+    <tr>
 
-        <td>Финансовые показатели</td>
+        <td>{{type}}</td>
+
+        <td align="right">{{out}}</td>
+        <td></td>
+    </tr>
+     {{/_detail3}}
+   {{/is3}}  
+   
+  {{#isfin}}  
+  <tr style="font-weight: bolder;">
+
+        <td> <br>Финансовые показатели</td>
 
         <td></td>
         <td></td>
@@ -103,15 +124,15 @@
         <td align="right"> {{tu}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Выручка (отпускная цена на количество) минус переменные расходы (себестоимость)"></i>
+               title="Выручка (отпускная цена на количество) минус расходы основной деятельности (расходы на закупку)"></i>
         </td>
     </tr>
     <tr>
-        <td>Переменные расходы :</td>
+        <td>Переменные  расходы :</td>
         <td align="right"> {{tvc}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Себестоимость"></i>
+               title="Расходы основной деятельности"></i>
         </td>
     </tr>
     <tr>
@@ -119,7 +140,7 @@
         <td align="right">{{OP}}  </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="Расходы минус переменные расходы (себестоимость)"></i>
+               title="Все расходы минус  переменные  расходы "></i>
         </td>
     </tr>
     <tr>
@@ -127,27 +148,28 @@
         <td align="right"> {{PR}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="проход минус расходы"></i>
+               title="Проход минус операционные расходы (выручка минус все расходы)"></i>
         </td>
     </tr>
-    {{#isinv}}
+   {{#isinv}}   
     <tr>
         <td>Инвестиции:</td>
         <td align="right"> {{inv}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
-               title="ТМЦ на складе и основные фонды на балансе"></i>
+               title="ТМЦ на складе и ОС на балансе"></i>
         </td>
     </tr>
     <tr>
-        <td>Отдача от инвестиций (ROI),%:</td>
+        <td>Отдача  от инвестиций (ROI),%:</td>
         <td align="right"> {{ROI}} </td>
         <td>
             <i class="fa fa-info-circle  " data-toggle="tooltip" data-placement="top"
                title="Проход на инвестиции"></i>
         </td>
     </tr>
-    {{/isinv}}
+    {{/isinv}}     
+    {{/isfin}}     
 </table>
 
 

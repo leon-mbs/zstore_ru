@@ -10,38 +10,14 @@
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
-                        <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number">
+                        <label for="document_number">Номер документа <small class="text-danger">*</small></label>
+                        <input style="width:150px" class="form-control"   zippy="document_number">
                     </div>
                     <div class="form-group">
-                        <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
-                    </div>
-                    <div class="form-group  ">
-                        <label for="store">Со склада</label>
-                        <select class="form-control" zippy="store">
-                            <option value="0">Не выбрано</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="mtype">Тип расходов</label>
-                        <select class="form-control" zippy="mtype">
-                            <option value="0">Не выбрано</option>
-                        </select>
+                        <label for="document_date"> Дата <small class="text-danger">*</small></label>
+                        <input style="width:150px" class="form-control"   zippy="document_date"  required="on" >
                     </div>
 
-                    {{#usebranch}}
-
-                    <div class="form-group  ">
-                        <label for="tostore">Оприходовать на склад другого филиала</label>
-                        <select class="form-control" zippy="tostore">
-                            <option value="0">Не выбрано</option>
-                        </select>
-                        <small class="form-text text-muted">При проведении будет создан документ 'Оприходование на склад'.
-                            Этот документ не будет проведен и ему не будет присвоен автор пока
-                            пользователь, который имеет право работы с целевым филиалом, не сохранит созданный документ. </small>
-                    </div>
-                    {{/usebranch}}
 
                     <div class="form-group  ">
                         <label for="notes">Примечание </label>
@@ -51,12 +27,42 @@
                     </div>
 
                 </div>
+                <div class="col-12 col-md-3">
+                    <div class="form-group  ">
+                        <label for="store">Со склада <small class="text-danger">*</small></label>
+                        <select class="form-control" zippy="store">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                    </div>
+                    {{#storeemp}}
+                     <div class="form-group  ">
+                        <label for="storeemp">С сотрудника</label>
+                        <select class="form-control  " zippy="storeemp">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                        <small> Материально-ответственное лицо</small>
+                    </div> 
+                      {{/storeemp}}           
+
+                    {{#usebranch}}
+
+                    <div class="form-group  ">
+                        <label for="tostore">Оприходовать на  склад другого  филиала</label>
+                        <select class="form-control" zippy="tostore">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                        <small class="form-text text-muted">При проведении будет создан документ 'Оприходование на склад'. 
+                            Этот документ не будет проведен и ему не будет присвоен автор, пока 
+                            пользователь, имеющий право работы с целевой филиалом, не сохранит новый документ. </small>
+                    </div>
+                    {{/usebranch}}                
+                </div>
             </div>
             <div class="row">
-                <div class="col-12 col-md-8 col-xl-6">
+                <div class="col-12 col-md-9 col-xl-7">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input  autofocus="on"   autocomplete="off"   type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
 
@@ -68,11 +74,15 @@
                             <th>Название</th>
                             <th>Код</th>
                             <th>Ед.</th>
-                            {{#usesnumber}}
-                            <th>Серия</th>
+                           
+                            <th> {{#usesnumber}}
+                            Серия
+                             {{/usesnumber}}
+                            </th>
 
-                            {{/usesnumber}}
-                            <th width="40" class="text-right">Кол.</th>
+                           
+                            <th   class="text-right">Кол.</th>
+                            <th   class="text-right">На сумму</th>
 
                             <th  ></th>
                         </tr>
@@ -80,16 +90,24 @@
                             <td zippy="item"></td>
                             <td zippy="item_code"></td>
                             <td zippy="msr"></td>
-                            {{#usesnumber}}
+                           
                             <td zippy="snumber"></td>
 
-                            {{/usesnumber}}
+                            
                             <td zippy="quantity" class="text-right"></td>
-                            <td zippy="price" class="text-right"></td>
+                            <td zippy="sum" class="text-right"></td>
+                           
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
                             </td>
 
 
+                        </tr>
+                        <tr>
+                          <td colspan="5"  class="text-right">Всего: </td>
+                          <td zippy="amount" class="text-right"></td>
+                          <td  ></td>
+                         
+                           
                         </tr>
                     </table>
 
@@ -108,26 +126,31 @@
             </div>
 
 
-        </p>
+
 
     </form>
-    <form zippy="editdetail">
-        <h4>Введение товара </h4>
+   
         <div class="row">
-            <div class="col-12 col-md-4">
-
+            <div class="col-12 col-md-4 col-xl-3">
+             <form zippy="editdetail">
+        <h4>Ввод товара </h4>
                 <div class="form-group">
                     <label for="edititem">Наименование</label>
-                    <input class="form-control" zippy="edititem" placeholder="Начните вводить... ">
-
-
+                    <input     class="form-control" zippy="edititem" placeholder="Начните вводить... ">
+                   <a zippy="openitemsel">Открыть справочник</a>
+                    <br>
                     Наличие: <span zippy="qtystock"></span>
 
 
                 </div>
                 {{#usesnumber}}
                 <div class="form-group">
-                    <label for="editsnumber">Партия поставщика</label>
+                   {{^usesnumberitem}}
+                        <label for="editsnumber">Серия (партия) производителя </label>
+                         {{/usesnumberitem}}
+                         {{#usesnumberitem}}
+                        <label for="editsnumber">Серийный номер </label>
+                         {{/usesnumberitem}}
 
                     <input type="text" zippy="editsnumber" class="form-control"/>
 
@@ -137,23 +160,32 @@
                     <label for="editquantity">Количество</label>
 
                     <input onkeydown="onItem()" style="width:100px;" type="text" zippy="editquantity" class="form-control qtyprice"
-                           required="required" pattern="[0-9,\.]+"/>
+                            required="on"  pattern="[0-9,\.]+"/>
 
                 </div>
 
                 <div class="form-group">
-                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">&nbsp;<input
-                        type="button" zippy="cancelrow" value="Отменить" class="btn   btn-outline-secondary">
+                    <input type="button" zippy="cancelrow" value="К списку" class="btn   btn-outline-secondary mr-2">
+                    <input zippy="saverow" type="submit" value="Сохранить" class="btn  btn-outline-primary">
+                    
                 </div>
+                  </form>
             </div>
+             <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>
+
+
+            </div>  
         </div>
 
-    </form>
+  
     <script>
         $(document).ready(function () {
-
-            $('#barcode').focus();
-        });
+      
+        
+         $("#edititem").focus()   
+        });    
+     
 
         function onBarCode(ele) {
 

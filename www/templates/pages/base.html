@@ -1,11 +1,12 @@
-<html>
+<!DOCTYPE html>
+<html  lang="uk">
     <head>
-        <meta charset="utf-8">
-        <meta lang="ru" >
-        <title>Zippy Склад</title>
+        <title>Zippy CRM</title>
+
+        <meta name="robots" content="noindex">     
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="uk">
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css">
 
         <link rel="stylesheet" href="/assets/css/adminlte.css">
@@ -15,33 +16,57 @@
         <link rel="stylesheet" href="/assets/css/select2.css">
         <link rel="stylesheet" href="/assets/css/select2-bootstrap.css">
         <link rel="stylesheet" href="/assets/js/summernote/summernote-bs4.css">
-        <link rel="stylesheet" href="/assets/css/app.css">
-
+        <link rel="stylesheet" href="/assets/css/app.css?t=1">
 
         <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"></script>
         <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
-        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle.js" type="text/javascript"></script>
+        <script src="/vendor/leon-mbs/zippy/assets/js/zippy-bundle-ua.js" type="text/javascript"></script>
         <script src="/assets/js/select2.js" type="text/javascript"></script>
         <script src="/assets/js/toastr.min.js" type="text/javascript"></script>
         <script src="/assets/js/printThis.js" type="text/javascript"></script>
         <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
         <script src="/assets/js/summernote/lang/summernote-ru-RU.js" type="text/javascript"></script>
         <script src="/assets/js/adminlte.js" type="text/javascript"></script>
+        <script src="/assets/js/app.js?t=2"></script>     
         <script src="/assets/js/vue/vue.min.js"></script>     
         <script src="/assets/js/vue/httpvueloader.js"></script>     
-           
-        <script src="/assets/js/app.js" type="text/javascript"></script>
+        
+
+
        
-        <!-- Google Font -->
-        <link rel="stylesheet"
-              href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        <!-- Google Font 
+        <link rel="stylesheet"               href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        -->
+      <script>
+      
+    
+     //округление  цен
+     function fa(v){
+          var d = {{amdigits}}     
+          var _v =  parseVal(v)
+          if(d>0) {
+             return  Number.parseFloat(_v.toFixed(2) )   
+          }
+          return   Number.parseFloat( _v.toFixed(0) )         
+          
+     }
+     //округление  количеств
+     function fqty(v){
+          var d = {{qtydigits}}
+          var _v =  parseVal(v)
+          
+          return   Number.parseFloat( _v.toFixed(d) )
+         
+     }  
+        
+     </script>
 
-
+  
     </head>
     <body class="{{hidesidebar}} ">
-        {{#usemobilescanner}}
-        <link rel="stylesheet" href="/assets/css/mscanner.css">
-        {{/usemobilescanner}}
+ 
+    
+   
         <div id="upbutton"><a href="#top" class="btn btn-secondary"><b><i class="fa  fa-angle-double-up"></i></b></a></div>
         <a id="top"></a>
         <div class="wrapper">
@@ -60,7 +85,7 @@
                <ul class="navbar-nav">
                 <li class="nav-item">   
                <a href="/index.php" class="brand-link">
-                    <span  > Zippy  Склад</span>
+                    <span  > Zippy CRM</span>
                 </a>     </li>
                </ul>   
                {{/showsidemenu}}   
@@ -79,39 +104,8 @@
                         </form>
                     </li>
                     {{/usebranch}}
-                    {{#showactiveusers}}     
-                    <li class="nav-item dropdown">
-                        <a title="Активные пользователи" class="nav-link" data-toggle="dropdown" href="#">
-                            <i class="fa fa-users"></i>
-                            <span  class="badge badge-success navbar-badge">{{activeuserscnt}}</span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                            <table class="table table-sm">
-                                {{#aulist}}
-                                <tr><td>{{ausername}}</td> 
-                                  <td>
-                                  {{#auserid}}
-                                  
-                                  <i onclick="openSendMsg({{auserid}},'{{ausername}}')" style="cursor:pointer" class="fa fa-comment-alt" title="Отправить сообщение" />
-                                  
-                                  {{/auserid}} 
-                                  </td>
-                                  </tr>
-                                {{/aulist}}
-                            </table>
-                        </div>
-                    </li>               
-                    {{/showactiveusers}}     
-                    {{#showchat}} 
-                    <li class="nav-item  ">
-                        <a class="nav-link  " href="/index.php?p=App/Pages/Chat">
-                            <i title="Общий чат" class="fa fa-comments "></i>
-                            {{#chatcnt}}
-                            <span class="badge badge-success  navbar-badge">{{chatcnt}}</span>
-                            {{/chatcnt}}
-                        </a>
-                    </li>
-                    {{/showchat}}
+                  
+                
 
                     {{#taskcnt}} 
                     <li class="nav-item  ">
@@ -150,7 +144,7 @@
                             {{#isemp}}
                             <li>
                                 <a class="dropdown-item  " href="/index.php?p=App/Pages/EmpAcc"><i
-                                        class="fa fa-money-bill-alt"></i> Личный счет</a>
+                                        class="fa fa-money-bill-alt"></i> Лицевой счет</a>
                             </li>
                             {{/isemp}}
                             <li>
@@ -175,7 +169,7 @@
                 <!-- Brand Logo -->
                 <a href="/index.php" class="brand-link">
 
-                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy  Склад</span>
+                    <span class="brand-text font-weight-light">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zippy CRM</span>
                 </a>
 
                 <!-- Sidebar -->
@@ -224,7 +218,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -232,12 +226,12 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -272,7 +266,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -280,12 +274,12 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -320,7 +314,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -328,12 +322,12 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -367,7 +361,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -375,12 +369,12 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -399,7 +393,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-project-diagram"></i>
                                     <p>
-                                        Сервисные страницы
+                                        Сервисные  страницы
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -417,7 +411,7 @@
                                         <ul class="nav nav-treeview">
                                             {{#items}}
                                             <li class="nav-item  has-treeview">
-                                                <a href='{{link}}' class="nav-link">
+                                                <a href="{{link}}" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
                                                     <p>&nbsp;&nbsp;&nbsp;&nbsp;{{name}}</p>
                                                 </a>
@@ -425,12 +419,12 @@
                                             {{/items}}
                                         </ul>
 
-                                        </il>
+                                        </li>
                                         {{/groups}}
 
                                         {{#items}}
                                     <li class="nav-item  has-treeview">
-                                        <a href='{{link}}' class="nav-link">
+                                        <a href="{{link}}" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;{{name}}</p>
                                         </a>
@@ -466,7 +460,7 @@
                                             <li class="nav-item">
                                                 <a href="/shop" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Перейти в каталог</p>
+                                                    <p>&nbsp;&nbsp;Перейти в  каталог</p>
                                                 </a>
                                             </li>
                                             <li class="nav-item">
@@ -478,7 +472,7 @@
                                             <li>
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/Admin/ProductList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Значения атрибутов</p>
+                                                    <p>&nbsp;&nbsp;Значенния атрибутов</p>
                                                 </a>
                                             </li>
                                             <li>
@@ -487,7 +481,12 @@
                                                     <p>&nbsp;&nbsp;Вариации товаров</p>
                                                 </a>
                                             </li>
-                                                
+                                             <li>
+                                                <a href="/index.php?p=App/Modules/Shop/Pages/Admin/RecList" class="nav-link">
+                                                    <i class="fa    nav-icon"></i>
+                                                    <p>&nbsp;&nbsp;Рекомендованые товары</p>
+                                                </a>
+                                            </li>               
                                            <li>
                                                 <a href="/index.php?p=App/Modules/Shop/Pages/Admin/Dashboard" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
@@ -517,7 +516,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Обмен з ОпенКарт
+                                            <p>Обмен с ОпенКарт
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -527,7 +526,7 @@
                                                <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/OCStore/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Настройки</p>
+                                                    <p>&nbsp;&nbsp;Настройка</p>
                                                 </a>
                                             </li>
                                                {{/isadmins}}
@@ -551,7 +550,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Обмін з Woocommerce
+                                            <p>Обмен с Woocommerce
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -561,7 +560,7 @@
                                                <li class="nav-item">
                                                 <a href="/index.php?p=App/Modules/WC/Options" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Настройки</p>
+                                                    <p>&nbsp;&nbsp;Настройка</p>
                                                 </a>
                                                  {{/isadmins}}
                                             </li>
@@ -593,7 +592,7 @@
                                     <li class="nav-item">
                                         <a href="#" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>Проекты и задачи
+                                            <p>Проекты и задания
                                                 <i class="right fas fa-angle-left"></i>
                                             </p>
 
@@ -606,7 +605,7 @@
                                                 </a>
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/IssueList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Задачи</p>
+                                                    <p>&nbsp;&nbsp;Задания</p>
                                                 </a>
                                                
                                                 <a href="/index.php?p=App/Modules/Issue/Pages/TimeSheet" class="nav-link">
@@ -621,36 +620,8 @@
 
                                     </li>
                                     {{/issue}}
-                       
-    
-                                    {{#np}}
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link">
-                                            <i class="fa    nav-icon"></i>
-                                            <p>Новая Почта
-                                                <i class="right fas fa-angle-left"></i>
-                                            </p>
-
-                                        </a>
-                                        <ul class="nav nav-treeview">
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/NP/TTNList" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Доставки</p>
-                                                </a>
-                                            </li>     {{#isadmins}}
-                                            <li class="nav-item">
-                                                <a href="/index.php?p=App/Modules/NP/Options" class="nav-link">
-                                                    <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;Настройки</p>
-                                                </a>
-                                            </li>      {{/isadmins}}
-
-                                        </ul>
-
-                                    </li>
-                                    {{/np}}
-  
+                                        
+                                  
                                 </ul>
 
                             </li>
@@ -661,7 +632,7 @@
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fa fa-cog"></i>
                                     <p>
-                                        Система
+                                        Системма
                                         <i class="right fas fa-angle-left"></i>
                                     </p>
                                 </a>
@@ -687,18 +658,29 @@
                                             <li class="nav-item">
                                                 <a href="/index.php?p=App/Pages/MenuList" class="nav-link">
                                                     <i class="fa    nav-icon"></i>
-                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Настройки меню</p>
+                                                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Настройка меню</p>
                                                 </a>
                                             </li>
+                                            
+                                                                         
+                                              <li class="nav-item">
+                                                    <a href="/index.php?p=App/Pages/Admin" class="nav-link">
+                                                        <i class="fa    nav-icon"></i>
+                                                        <p>&nbsp;&nbsp;&nbsp;&nbsp;Администратор</p>
+                                                    </a>
+                                              </li>
+                                               
+                                            
                                         </ul>
 
                                     </li>
 
-                                    <li class="nav-item">
-                                        <a href="/index.php?p=App/Pages/FirmList" class="nav-link">
+                               
+
+                                     <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/Firm" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;Компании</p>
-                                        </a>
+                                            <p>&nbsp;&nbsp;Данные компании</p>
                                         </a>
                                     </li>
 
@@ -729,7 +711,7 @@
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/PosList" class="nav-link">
                                             <i class="fa    nav-icon"></i>
-                                            <p>&nbsp;&nbsp;POS терминалы</p>
+                                            <p>&nbsp;&nbsp;Кассы (POS терминалы)</p>
                                         </a>
                                     </li>
 
@@ -739,20 +721,38 @@
                                             <p>&nbsp;&nbsp;Подписки</p>
                                         </a>
                                     </li>                            
+
+                                    <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/CronTab" class="nav-link ">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;Планировщик</p>
+                                        </a>
+                                    </li>                            
                                     <li class="nav-item">
                                         <a href="/index.php?p=App/Pages/SystemLog" class="nav-link">
                                             <i class="fa    nav-icon"></i>
                                             <p>&nbsp;&nbsp;Системный лог</p>
                                         </a>
                                     </li>
-                                     
+                                     {{#isadmin}}   
+                                    {{^noupdate}}                              
+                                   <li class="nav-item">
+                                        <a href="/index.php?p=App/Pages/Update" class="nav-link">
+                                            <i class="fa    nav-icon"></i>
+                                            <p>&nbsp;&nbsp;Обновления</p>
+                                        </a>
+                                    </li>
+                                      {{/noupdate}}     
+                                      
+                                     {{/isadmin}}  
+                                
                                 </ul>
 
                             </li>
-                  
+                        
                       
                             {{/isadmins}}
-                               <li class="nav-item  ">
+                          <li class="nav-item  ">
                                 <a target="_blank" href="https://ru.zippy.com.ua/zstoreusage" class="nav-link">
                                     <i class="nav-icon fa fa-info-circle"></i>
                                     <p>
@@ -761,6 +761,7 @@
                                     </p>
                                 </a>
                             </li>
+
                         </ul>
                     </nav>
                 </div>
@@ -770,7 +771,7 @@
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper mb-4">
                 <!-- Main content -->
-                <section class="content"> <a id="topankor" />
+                <section class="content"> <a id="topankor" ></a>
                     <div class="row justify-content-center mt-2 mb-1">
                         <div class="col-12 col-md-10 col-lg-9 col-xl-8   ">
 
@@ -780,21 +781,29 @@
                             </div>
                             {{/alerterror}}
 
+                            {{#alertinfo}}
+                            <div class="alert alert-info" role="alert">
+                                {{{alertinfo}}}
+                            </div>
+                            {{/alertinfo}}
+
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12    ">
                             {{#smart}}
 
-                            <div class=" card navbar nav justify-content-start d-none d-sm-block">
-                                {{{smart}}}
-    {{#isadmins}}
+                            <div style="justify-content: space-between" class="    card   d-none d-sm-block">
+                                {{{smart}}} 
+                                
+                                 {{#isadmins}}
                                  <small><a href="/index.php?p=App/Pages/Roles" title="Настройка оперативного меню"><i class="fa fa-cog"></i> </a> </small>
-                                 {{/isadmins}}                                
-                            </div>
-                         
+                                 {{/isadmins}}
                                  
+                            </div>
+                             
                             {{/smart}}
+                            
 
 
                             <childpage/>
@@ -808,51 +817,62 @@
         </div>
         <!-- ./wrapper -->
 
-           <div id="modalsendmsg" class="modal fade  " tabindex="-1"  
+       
+            <div id="modalcinfo" class="modal fade  " tabindex="-1"  
                  aria-hidden="true">
-                <div class="modal-dialog modal-sm">
+                <div class="modal-dialog  ">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Отправить сообщение</h5>
+                            <h5 class="modal-title">Информация о контрагенте</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                             <form id="sendmsgform"  >
-                               <div class="form-group">
-                                  <label  >Получатель</label>
-                                  <input  id="sendmsgrecname"  name="sendmsgrecname"  readonly class="form-control-plaintext"  />  
-                                  <input  id="sendmsgrecid" name="sendmsgrecid" type="hidden"     />  
-                               </div>
-                              <div class="form-group">
-                                  <label for="sendmsgtext">Сообщение</label>
-                                  <textarea required="required" class="form-control" name="sendmsgtext" id="sendmsgtext"  >  </textarea>
-                               </div>
+                        <div id="mcinfo" class="modal-body">
                              
-                             </form>
                         </div>
-                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                    <button onclick="sendSendMsg()" type="submit" class="btn btn-primary">Отправить</button>
-                  </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрить</button>
+
+                      </div>
                     </div>
                 </div>
             </div>
+             <div id="modalitinfo" class="modal fade  " tabindex="-1"  
+                 aria-hidden="true">
+                <div class="modal-dialog  ">
+                    <div class="modal-content">
+                        <div class="modal-header">
 
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="mitinfo" class="modal-body">
+                             
+                        </div>
+                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+
+                      </div>
+                    </div>
+                </div>
+            </div>
+           
+
+    <dialog id="dialogwait">
+                     
+           <div class="spinner-border" role="status">
+                              <span class="sr-only">Загрузка...</span>
+                            </div>
+                
+
+    </dialog>            
+    
+    
+         <script>
    
-        {{#toasts}}
-        <script>
-$(document).Toasts('create', {
-icon: 'fa fa-exclamation-triangle text-warning',
-        position:'bottomRight',
-{{{title}}}
-
-})
-        </script>
-        {{/toasts}}
-
-        <script>
+       
                     toastr.options = {
                     "closeButton": true,
                             "debug": false,
@@ -862,7 +882,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
                             "preventDuplicates": false,
                             "onclick": null,
                             "showDuration": "300",
-                            "hideDuration": "1000",
+                            "hideDuration": "500",
                             "timeOut": "2000",
                             "extendedTimeOut": "1000",
                             "showEasing": "swing",
@@ -870,12 +890,15 @@ icon: 'fa fa-exclamation-triangle text-warning',
                             "showMethod": "fadeIn",
                             "hideMethod": "fadeOut"
                     };
-            $(function () {
+        
+            
+            $(document).ready(function (){
                 $('[data-toggle="popover"]').popover();
                 $('[data-toggle="tooltip"]').tooltip();
                 $('.select2').select2({theme:'bootstarp4'});
-  
-            });
+     
+            })              
+ 
             $(window).scroll(function () {
                 if ($(this).scrollTop() > 600) {
                 if ($('#upbutton').is(':hidden')) {
@@ -891,32 +914,23 @@ icon: 'fa fa-exclamation-triangle text-warning',
             
             
             
-            function sendSendMsg() {
-                var f = document.getElementById('sendmsgform')  ;
-                   
-                let formdata = new FormData(f);
+            function sendSendMsg( ){
+                
                
                 $('#modalsendmsg').modal('hide') 
                    
-                callPageMethod('sendMsg',null,formdata,(data)=> 
+                callPMForm('sendMsg',null,'sendmsgform',(data)=> 
                 {
                          
-                     toastr.success('Отправлено','',{'timeOut':'2000'})     
+                     toastr.success('Вiдправлено','',{timeOut:2000})     
                     
          
                 } )
             }
-            function openSendMsg(id,name){
-                
-                
-              $('#modalsendmsg').modal('show')  
-              $('#sendmsgrecname').val(name)  
-              $('#sendmsgrecid').val(id)  
-              $('#sendmsgtext').val('')  
-            }
+            
             
              function  _getValue(id){
-                  var v = parseFloat($('#'+id).val()); 
+                  var v = Number.parseFloat($('#'+id).val()); 
                 
                   if(Number.isNaN(v)==false) {
                       return v;  
@@ -927,7 +941,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
             }
             
             {{#twodigit}}
-            //форматирует
+            //форматує
             function  _setText(id,v){
                $('#'+id).val( v.toFixed(2)  );         
             }
@@ -937,7 +951,7 @@ icon: 'fa fa-exclamation-triangle text-warning',
             {{/twodigit}}
         
             {{^twodigit}}
-            //форматирует
+            //форматує
             function  _setText(id,v){
                $('#'+id).val( v.toFixed(0)  );         
             }
@@ -946,35 +960,89 @@ icon: 'fa fa-exclamation-triangle text-warning',
             }
             {{/twodigit}}        
         
-       //автофокус на  модальном  окне
+       //автофокус на  модальном окне
        $(document).on('shown.bs.modal', '.modal', function() {
           $(this).find('input:visible:first').focus();
        });            
    
-       //замена  запятой
+       //замена  зарятой
         $(document).on('change', 'input.qtyprice', function() {
-          var val =   $(this).val().replace(/,/g, '.');
-          val =   val.replace(/\s/g, '');
+          var val =   $(this).val()
+          val= fixInput(val)
           $(this).val(val)
         });    
+          
+          
+      /*    
+      $(document).on("input", "input:file", function(e) {
+        let size = e.target.files[0].size;
+        if(size > 10000000){
+           alert("Файл бiльше  10МБ!");
+           e.target.value = "";
+        };
+        
+      });    
+       */
                    
        function check_execdoc(ele){
-            
-            $('#execdoc').attr('disabled','disabled')
+           if($('#docform').length){
+              if( checkFormInput('docform') ==false) {
+                  return false;
+              }
+           }
+           document.getElementById('dialogwait').showModal()
             return true;
        
         }
         function check_savedoc(ele){
-            
-            $('#savedoc').attr('disabled','disabled')
+           if($('#docform').length){
+              if( checkFormInput('docform') ==false) {
+                  return false;
+              }
+           }
+           document.getElementById('dialogwait').showModal()
+          
             return true;
        
         } 
    
-     
+        //принт  сервер   принтер  чеков
         function sendPS( buf){
           
            var url="{{psurl}}"  
+            
+   //  console.log(buf)     
+               
+    
+       var opt={
+           method: 'POST' ,
+  
+           body:   buf
+       };    
+             
+          fetch(url+"/print",opt)                                            
+  
+              .then((response) => {
+                  return response.text();
+              })
+              .then((data) => {
+                 if(data == ""){
+                     toastr.success("Вiдправлено на принтер" )   
+                 }   else {
+                    toastr.error(data )        
+                 }
+              })
+               .catch(function (error) {
+                    toastr.error(error )       
+                      });  
+            
+       
+        } 
+    
+      //принт  сервер принтер  этикеток
+       function sendPSlabel( buf){
+          
+           var url="{{psurllabel}}"  
             
    //  console.log(buf)     
                
@@ -1003,12 +1071,139 @@ icon: 'fa fa-exclamation-triangle text-warning',
             
        
         } 
-           
-        </script>
-        {{#usemobilescanner}}
-        <script src="/assets/js/quagga.min.js" type="text/javascript"></script>
-        <script src="/assets/js/mscanner.js" type="text/javascript"></script>
+        
+        //инфо о  контрагенте
+        function customerInfo(id){
+                callPM('getCustomerInfo',[id],null,(data)=> 
+                {
+                    
+                    $('#modalcinfo').modal('show')  
+                    $('#mcinfo').html(data)  
+                 
+                  
+         
+                } )          
+        }
+        
+      //инфо о  ТМЦ
+        function itemInfo(id){
+                callPM('getItemInfo',[id],null,(data)=> 
+                {
+                    
+                    $('#modalitinfo').modal('show')  
+                    $('#mitinfo').html(data)  
+                 
+                  
+         
+                } )          
+        }
+        
+       //ТМЦ в закупку
+       function addItemToCO(id,qty=0){
+                callPM('addItemToCO',[id,qty],null,(data)=> 
+                {
+                    
+                      if(data=="") {
+                         toastr.info('Добавлено' )              
+                      } else {
+                           toastr.error(data)   
+                      }         
+         
+                } )          
+        }
+             
 
-        {{/usemobilescanner}}
+        function sendSMSCust(phone,code) {
+            
+                callPM('sendSMSCode',[phone,code],null,(data)=> 
+                {
+                    
+                    
+                  if(data=="") {
+                     toastr.info('Отправлено' )              
+                  } else {
+                       toastr.error(data)   
+                  }
+         
+                } )              
+           
+        }
+ 
+ 
+       //  обработчмк весов
+        {{#usescale}}
+            function callScale(callback) {
+                {{{scalescript}}}   
+            }
+     
+        {{/usescale}}
+ 
+
+      //  фискальный регистратор
+        {{#freg}}
+            function callFR(check,callback) {
+                {{{scriptfreg}}}   
+            }
+     
+            function fiscFR(docid) {
+                toastr.info("Отправка на  фискальный регистратор","",{timeOut:2000}) 
+                
+                callPM('loadDocFR',[docid],null,(data)=> 
+                {
+                    
+                   callFR(data,(res)=>{
+                       
+                       if(isNonEmptyString(res.error)) {
+                           toastr.error(res.error,"",{timeOut:5000})
+                           callPM('saveDocFR',[docid]) ;
+                           return;
+                       }
+                       
+                       
+                        callPM('saveDocFR',[docid,res.fn],null,(data)=> 
+                        {
+                             $("#searchform").submit();
+                        } )
+                        
+                   })
+         
+                } )       
+                
+            }
+     
+        {{/freg}}
+  
+  
+    {{#smsscript}}
+    
+    function sendSMSCust(phone,sms ) {
+    
+           callSMSCust(phone,sms,(res)=>{
+              if(isNonEmptyString(res)) {
+                   toastr.error(res,"",{timeOut:5000})
+              }     
+              
+           })  
+    }   
+    function callSMSCust(phone,sms,callback) {
+              
+              
+                {{{smsscript}}}   
+    }   
+    
+    {{/smsscript}}
+ 
+ {{#cron}}
+ 
+  
+    setTimeout(() => fetch('/crontab.php')  , 5*1000);         
+ 
+ {{/cron}} 
+ 
+ 
+ 
+ 
+        </script>
+     
     </body>
 </html>

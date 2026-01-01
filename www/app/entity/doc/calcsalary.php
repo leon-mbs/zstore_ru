@@ -14,24 +14,84 @@ use App\System;
  */
 class CalcSalary extends Document
 {
-
     public function Execute() {
         $opt = System::getOptions("salary");
 
-        $code = "_c" . $opt['coderesult'];
-
-
+        $code     = "_c" . $opt['coderesult'];
+        $all      = "_c" . $opt['codeall'];
+     //   $bonus    = "_c" . $opt['codebonus'];
+     //   $fine     = "_c" . $opt['codefine'];
+     //   $advance  = "_c" . $opt['codeadvance'];
+   
+        $dt = new \App\DateTime(strtotime($this->headerdata["year"] . '-' . $this->headerdata["month"] . '-01'));
+        $to = $dt->endOfMonth()->getTimestamp();
+        if($this->document_date > $dt && $this->document_date < $to   ) {
+            $to = $this->document_date;
+        }
+         
         foreach ($this->unpackDetails('detaildata') as $emp) {
             $am = $emp->{$code};
+          
             $eacc = new  EmpAcc();
-
             $eacc->emp_id = $emp->employee_id;
             $eacc->document_id = $this->document_id;
             $eacc->optype = EmpAcc::SALARY;
             $eacc->amount = $am;
+            $eacc->createdon = $to;
             $eacc->save();
+           
+            /*
+           
+            $am = $emp->{$advance};
+            if($am > 0) {
+                $eacc = new  EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+                $eacc->optype = EmpAcc::ADVANCE;
+                $eacc->amount =  $am;
+                $eacc->createdon = $to;
+                $eacc->save();
+         
+            }
+         
+            $am = $emp->{$bonus};
+            if($am > 0) {
+                $eacc = new  EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+                $eacc->optype = EmpAcc::BONUS;
+                $eacc->amount = 0-$am;
+                $eacc->createdon = $to;
+                $eacc->save();
+         
+            }
+            
+            $am = $emp->{$fine};
+            if($am > 0) {
+                $eacc = new  EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+                $eacc->optype = EmpAcc::FINE;
+                $eacc->amount = $am;
+                $eacc->createdon = $to;
+                $eacc->save();
+          
+            }
+           
+           
+            if($emp->_tasksum > 0) {
+                $eacc = new  EmpAcc();
+                $eacc->emp_id = $emp->employee_id;
+                $eacc->document_id = $this->document_id;
+                $eacc->optype = EmpAcc::PRICE;
+                $eacc->amount = 0-$emp->_tasksum;
+                $eacc->createdon = $to;
+                $eacc->save();
+          
+            }
+           */  
         }
-
+         
         return true;
     }
 
@@ -61,6 +121,7 @@ class CalcSalary extends Document
             'date'    => H::fd($this->document_date),
             "notes"   => nl2br($this->notes),
             "month"   => $this->headerdata["monthname"],
+            "department"   => ($this->headerdata["department"] ?? "") == "" ? false : $this->headerdata["department"],
             "year"    => $this->headerdata["year"],
             "stnames" => array(),
             "colspan" => count($stlist) + 1,
@@ -84,5 +145,5 @@ class CalcSalary extends Document
     protected function getNumberTemplate() {
         return 'НЗ-000000';
     }
-
+  
 }

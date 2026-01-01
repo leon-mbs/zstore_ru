@@ -5,7 +5,7 @@
     </head>
   <body>
         <h2>Настройка меню</h2>
-        <small>Для возобновления состояния меню необходимо перейти на любую другую страницу</small>
+        <small>Для  обновления состояния меню нужно перейти на  любую другую страницу</small>
         <div class="row">
 
             <div class="col-12 col-lg-10 col-xl-8  ">
@@ -17,28 +17,36 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fdoc">
-                            <label class="form-check-label mr-sm-2" for="fdoc">Документы</label>
+                            <label class="form-check-label mr-2" for="fdoc">Документы</label>
                         </div>
 
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fref">
-                            <label class="form-check-label mr-sm-2" for="fref">Справочники</label>
+                            <label class="form-check-label mr-2" for="fref">Справочники</label>
                         </div>
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="frep">
-                            <label class="form-check-label mr-sm-2" for="frep">Отчеты</label>
+                            <label class="form-check-label mr-2" for="frep">Отчеты</label>
                         </div>
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="freg">
-                            <label class="form-check-label mr-sm-2" for="freg">Журналы</label>
+                            <label class="form-check-label  mr-2" for="freg">Журналы</label>
                         </div>
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="fser">
-                            <label class="form-check-label mr-sm-2" for="fser">Сервис</label>
+                            <label class="form-check-label   mr-2" for="fser">Сервис</label>
+                        </div>
+
+                         <div class="form-group ">
+                            <label class="form-check-label " for="fgr">Группа</label>
+              
+                            <select class="form-control  mr-2"   zippy="fgr">
+                               <option value="all"> Все </option>
+                            </select>
                         </div>
 
                         <button type="submit" class="btn btn-success   ">Обновить</button>
@@ -47,9 +55,9 @@
                     <table class="table table-sm table-striped  ">
                         <tr>
                             <th>Название</th>
-                            <th>Имя PHP класа</th>
+                            <th>Имя PHP класу</th>
                             <th>Тип</th>
-                            <th>Группа</th>
+                            <th>Група</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -58,10 +66,10 @@
                             <td><span zippy="meta_name"></span></td>
                             <td><span zippy="type"></span></td>
                             <td><span zippy="menugroup"></span></td>
-                            <td><a title="Деактивировать пункт меню" zippy="ton"><i class="fa fa-toggle-on text-success"></i></a> 
-                                <a title="Активировать пункт меню" zippy="toff"><i class="fa fa-toggle-off"></i></a>&nbsp;&nbsp;</td>
-                            <td style="white-space:   nowrap"><a zippy="rowedit"><i class="fa fa-edit"/></a>
-                                &nbsp;&nbsp;<a class="text-danger"   zippy="rowdelete"> <i class="fa fa-trash"/></a></td>
+                            <td><a title="Деактивувати пункт меню" zippy="ton"><i class="fa fa-toggle-on text-success"></i></a> 
+                                <a title="Активувати пункт меню" zippy="toff"><i class="fa fa-toggle-off"></i></a>&nbsp;&nbsp;</td>
+                            <td style="white-space:   nowrap"><a zippy="rowedit"><i class="fa fa-edit"></i></a>
+                                &nbsp;&nbsp;<a class="text-danger" zippy="rowdelete"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </table>
                 </div>
@@ -77,11 +85,11 @@
 
                         <div class="form-group">
                             <label for="edit_description">Наименование</label>
-                            <input class="form-control" zippy="edit_description" required="required">
+                            <input class="form-control" zippy="edit_description"  required="on" >
                         </div>
                         <div class="form-group">
-                            <label for="edit_meta_name">Имя PHP класа</label>
-                            <input class="form-control" zippy="edit_meta_name" required="required">
+                            <label for="edit_meta_name">Название PHP класса</label>
+                            <input class="form-control" zippy="edit_meta_name"  required="on" >
                         </div>
                         <div class="form-group">
                             <label for="edit_menugroup">Группа подменю</label>
@@ -97,8 +105,7 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="edit_disabled">
-                            <label class="form-check-label mr-sm-2" for="edit_disabled">Не показывать в
-                                меню</label>
+                            <label class="form-check-label mr-sm-2" for="edit_disabled">Не плказывать в   меню</label>
                         </div>
 
 
@@ -121,7 +128,7 @@
 
         <script>
             function check_rowdelete() {
-                return confirm("Удалить объект из системы?")
+                return confirm("Удалить обьект из системы?")
             }
         </script>
 

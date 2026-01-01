@@ -1,5 +1,5 @@
 <table class="ctable" cellspacing="0" cellpadding="1">
-    <tr colspan="4" style="font-weight: bolder;">
+    <tr   style="font-weight: bolder;">
         <td colspan="4">
             <h3 style="font-size: 16px;">АВС анализ '{{type}}' с {{from}} по {{to}}</h3>
         </td>
@@ -14,33 +14,33 @@
     {{#_detail}}
     <tr>
 
-        <td   style="background-color: {{color}} ;">{{name}}</td>
-        <td   style="background-color: {{color}} ;" align="right">{{value}} &nbsp;</td>
-        <td   style="background-color: {{color}} ;" align="right">{{perc}} &nbsp;</td>
-        <td   style="background-color: {{color}} ;">{{group}}</td>
+        <td    >{{name}}</td>
+        <td   class="{{color}}" align="right">{{value}} </td>
+        <td   class="{{color}}" align="right">{{perc}} </td>
+        <td   class="{{color}}">{{group}}</td>
 
     </tr>
     {{/_detail}}
     <tr>
 
         <td   align="right"><b>Всего A:</b></td>
-        <td   align="right"><b>{{totala}}</b> &nbsp;</td>
-        <td   align="right"> &nbsp;</td>
-        <td  ></td>
+        <td   align="right"><b>{{totala}}</b> </td>
+        <td   align="right"> </td>
+        <td  > </td>
 
     </tr>
     <tr>
 
         <td   align="right"><b>Всего B:</b></td>
-        <td   align="right"><b>{{totalb}}</b> &nbsp;</td>
-        <td   align="right"> &nbsp;</td>
+        <td   align="right"><b>{{totalb}}</b> </td>
+        <td   align="right"> </td>
         <td  ></td>
 
     </tr>
     <tr>
 
         <td   align="right"><b>Всего C:</b></td>
-        <td   align="right"><b>{{totalc}}</b> &nbsp;</td>
+        <td   align="right"><b>{{totalc}}</b> </td>
         <td   align="right"> &nbsp;</td>
         <td  ></td>
 
@@ -48,7 +48,7 @@
     <tr>
 
         <td   align="right"><b>Всего:</b></td>
-        <td   align="right"><b>{{total}}</b> &nbsp;</td>
+        <td   align="right"><b>{{total}}</b> </td>
         <td   align="right"> &nbsp;</td>
         <td  ></td>
 

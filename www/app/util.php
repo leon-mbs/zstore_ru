@@ -11,54 +11,41 @@ use Symfony\Polyfill\Uuid\Uuid;
  */
 class Util
 {
+    /**
+    * генерация  комманд для  чекового  принтера
+    *
+    * @param mixed $template
+    * @return mixed
+    */
+    public static function generateESCPOS($template) {
 
-  /**
-  * генерация  комманд для  чекового  принтера
-  *    
-  * @param mixed $template
-  * @return mixed
-  */
-  public  static function generateESCPOS($template){
-      
-      
-      return  [];
-  }  
-    
-  /**
-  * генерация QR кода  *   
-  * @param mixed $data
-  * @param mixed $size
-  * @param mixed $margin
-  */
-  public static function generateQR($data,$size,$margin=5){
-       $v = phpversion() ;
-       if(strpos($v,'7.2')===0){
-            $qrCode = new \Endroid\QrCode\QrCode($data);
-            $qrCode->setSize($size);
-            $qrCode->setMargin($margin);
-           
-          //  $qrCode->setEncoding('UTF-8'); 
-       
-            $dataUri = 'data:image/png;base64,' . base64_encode($qrCode->writeString()) ;            
-               
-            return $dataUri;
-           
-       }
+
+        return  [];
+    }
+
+    /**
+    * генерация QR кода  *
+    * @param mixed $data
+    * @param mixed $size
+    * @param mixed $margin
+    */
+    public static function generateQR($data, $size, $margin=5) {
+
         $writer = new \Endroid\QrCode\Writer\PngWriter();
- 
-      
+
+
         $qrCode = new \Endroid\QrCode\QrCode($data);
         $qrCode->setSize($size);
         $qrCode->setMargin($margin);
-       // $qrCode->setWriterByName('png');
+        // $qrCode->setWriterByName('png');
 
-        $result = $writer->write($qrCode );
-     
+        $result = $writer->write($qrCode);
+
         $dataUri = $result->getDataUri();
-       
+
         return $dataUri;
-  }  
-  
+    }
+
     /**
      * генерация  GUID
      *
@@ -89,13 +76,13 @@ class Util
     /**
      * Вставляет пробелы  между символами строки
      *
-     * @param mixed $data
+     * @param mixed $string
      */
     public static function addSpaces($string) {
         $_data = "";
         $strlen = mb_strlen($string);
         while($strlen) {
-            $_data .= (" " . mb_substr($string, 0, 1, 'UTF-8'));;
+            $_data .= (" " . mb_substr($string, 0, 1, 'UTF-8'));
             $string = mb_substr($string, 1, $strlen, 'UTF-8');
             $strlen = mb_strlen($string, 'UTF-8');
         }
@@ -108,38 +95,37 @@ class Util
      */
     public static function getYears() {
         $list = array();
-        for ($i = 2020; $i <= 2030; $i++)
+        for ($i = 2020; $i <= 2030; $i++) {
             $list[$i] = $i;
+        }
         return $list;
     }
-
-    /**
-     * вовращает  список  месяцев
-     */
+  
     public static function getMonth() {
         $list = array();
-        $list[1] = H::l('january');
-        $list[2] = H::l('february');
-        $list[3] = H::l('march');
-        $list[4] = H::l('april');
-        $list[5] = H::l('may');
-        $list[6] = H::l('june');
-        $list[7] = H::l('july');
-        $list[8] = H::l('august');
-        $list[9] = H::l('september');
-        $list[10] = H::l('october');
-        $list[11] = H::l('november');
-        $list[12] = H::l('december');
+        $list[1] = "Январь";
+        $list[2] = "Февраль";
+        $list[3] = "Март";
+        $list[4] = "Апрель";;
+        $list[5] = "Май";
+        $list[6] = "Июнь";
+        $list[7] = "Июль";
+        $list[8] = "Август";
+        $list[9] = "Сентябрь";
+        $list[10] = "Октябрь";
+        $list[11] = "Ноябрь";
+        $list[12] = "Декабрь";
         return $list;
     }
 
  
  
 
-    public static function money2str_ru($number) {
+    public static function money2str($number) {
 
         return money2str_ru($number, M2S_KOPS_MANDATORY + M2S_KOPS_DIGITS + M2S_KOPS_SHORT);
     }
+
 
     /**
      *     Преобразование  первого  символа   в   верхний  регистр
@@ -151,7 +137,7 @@ class Util
         return mb_ucfirst($str);
     }
 
-    //многобайтовая версия   
+    //многобайтовая версия
     public static function mb_split($str, $len = 1) {
 
         $arr = [];
@@ -169,12 +155,15 @@ class Util
     public static function handlePhone($tel) {
         $tel = str_replace(' ', '', $tel);
         $tel = preg_replace("/[^0-9.]/", "", $tel);
-        
+
         $phonel = System::getOption("common", 'phonel');
         if($phonel==12 && strlen($tel)==10) {
             $tel = '38'.$tel ;
         }
-        
+        if($phonel==10 && strlen($tel)==12) {
+            $tel = substr($tel,2) ;
+        }
+
         return $tel;
     }
 
@@ -193,7 +182,7 @@ class Util
         $dt = new \App\DateTime();
         $dt->subMonth(1);
         for ($i = 1; $i <= $num; $i++) {
-            $mon[] = $mlist[$dt->monthNumber()];
+            //   $mon[] = $mlist[$dt->month];
             $to = $dt->endOfMonth()->getTimestamp();
             $from = $dt->startOfMonth()->getTimestamp();
             $list[] = array('number' => $dt->monthNumber(), 'name' => $mlist[$dt->monthNumber()], 'start' => $from, 'end' => $to);
@@ -204,31 +193,55 @@ class Util
         return $list;
     }
 
-//массив  в  обьекты для  фронта 
-    public static function     tokv(array $a){
+    //массив  в  обьекты для  фронта
+    public static function tokv(array $a) {
         $r = array();
-        foreach($a as $k=>$v){
-           $r[]=array('key'=>$k,'value'=>$v) ;
+        foreach($a as $k=>$v) {
+            $r[]=array('key'=>$k,'value'=>$v) ;
         }
-        return  $r;           
-    }    
-  
+        return  $r;
+    }
     //парсит  строку на  слова
-    public static function  strtoarray($text){
+    public static function strtoarray($text) {
         $r = array();
-        
-        foreach(explode(' ',trim($text)) as $l ){
-           $l = trim($l) ;
-           if(strlen($l) > 0) {
-               $r[] = $l ;    
-           }
-           
+
+        foreach(explode(' ', trim($text)) as $l) {
+            $l = trim($l) ;
+            if(strlen($l) > 0) {
+                $r[] = $l ;
+            }
+
         }
-        return  $r;           
-    }    
+        return  $r;
+    }
+    
+    //разбивка  на строки  по пробелам
+    public static function splitstr($text,$length) {
+        $lines =[];
+        
+        $words = self::strtoarray($text) ;
+        
+        $line="";
+        foreach($words as $w ) {
+            
+            if(mb_strlen($line)  + mb_strlen($w)  <=$length ) {
+                $line =  $line . $w .' ';
+            } else {
+                 $lines[] = trim($line) ; 
+                  $line="";      
+            }
+            
+        }
+        if(strlen($line)>0) {
+           $lines[] = trim($line) ; 
+        }
+        
+        return $lines;
+    }
+    
+ 
     
 }
-
 
 
 define('M2S_KOPS_DIGITS', 0x01);    // digital copecks
@@ -614,7 +627,7 @@ function money2str_ua($money, $options = 0) {
 
     return trim($ret);
 }
-
+ 
 // service function to select the group of digits
 function dec_digits_group($number, $power, $digits = 1) {
                  
@@ -640,5 +653,3 @@ function sk_plural_form($d) {
         return 2;
     }
 }
-
-

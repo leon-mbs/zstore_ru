@@ -8,8 +8,8 @@
         </style>
         <div class="row">
             <div class="col-12">
-                <h3>Значения атрибутов товаров  </h3>
-                <small>Показываются категории, которые имеют товары</small>
+                <h3>Значения атрибутов  </h3>
+                <small>Показываются  категории с товарами</small>
 
             </div>
 
@@ -24,10 +24,10 @@
             <div class="col-12 col-md-6">
                 <div class="row">
                     <div zippy="listpanel" class="col-12   col-xl-10">
-                        <div class="navbar nav">
+                        <div class="card">
                             <form zippy="searchform" class="form-inline  ">
 
-                                <input style="width:150px;" zippy="skeyword" placeholder="Поиск по  коду" type="text" class="form-control mr-sm-2">
+                                <input style="width:150px;" zippy="skeyword" placeholder="Пошук по  коду" type="text" class="form-control mr-sm-2">
 
 
                                 <label> Бренд</label>
@@ -35,16 +35,18 @@
                
 
                                 <button type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
-                                &nbsp;<a title="Очистить форму поиска" zippy="sclear"><i class="fa fa-eraser"></i></a>
+                                &nbsp;<a title="Очистить форму  поиска" zippy="sclear"><i class="fa fa-eraser"></i></a>
 
                             </form>
                         </div>
 
                         <a zippy="addnew" class="btn btn-info">Добавить новый</a>
-
+                     
                         <table class="table table-sm">
                             <tr>
+                               {{#useimages}}
                                 <th style="width:75px;"></th>
+                                   {{/useimages}}
                                 <th>Название</th>
                                 <th  >Код</th>
 
@@ -55,7 +57,9 @@
 
                             </tr>
                             <tr zippy="plist">
+                               {{#useimages}}
                                 <td><img style="width:75px;" zippy="lphoto">
+                                   {{/useimages}}
                                 </td>
                                 <td><a zippy="lname" title="Редактировать"></a>
 
@@ -67,7 +71,9 @@
 
                                 <td class="text-right"><span zippy="lprice"></span></td>
                                 <td class="text-right"><span zippy="lcnt"></span></td>
+                                   {{#useimages}}
                                 <td>&nbsp;<a zippy="imedit" title="Редактировать фото"><i class="fa fa-images"></i></a></td>
+                                   {{/useimages}}
 
                             </tr>
                         </table>
@@ -77,7 +83,7 @@
 
 
                         <form zippy="editform">
-                            <h4>Редактирование</h4>
+                            <h4>Редактировать</h4>
 
                             <div class="form-group   ">
                                 <label   for="esef">ЧПУ ссылка</label>
@@ -89,21 +95,22 @@
                       
 
                             <div class="form-group  ">
-                                <label   for="edescdet">Описание </label>
+                                <label   for="edescdet">Опис  </label>
 
                                 <textarea style="height:200px" zippy="edescdet" class="form-control"></textarea>
-                                <small>По умолчанию используется описание из справочника</small>
+                                <small>По умолчанию используется  описание из справочника</small>
 
                             </div>
 
 
 
                             <div class="form-group">
+                                <a zippy="updatecust" >Обновить кастомные поля</a> 
                                 <table class="table table-sm">
                                     <tr zippy="attrlist">
-
+                                      
                                     <div zippy="attrdata"></div>
-
+                                     
 
                                     </tr>
                                 </table>
@@ -119,14 +126,14 @@
                     </div>
 
                     <div zippy="editimagepanel" class="col-12     col-xl-10 ">
-                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> К списку товаров</a>
-                        <h4>Список дополнительных изображений</h4>
+                        <a zippy="backtoproduct"><i class="fa fa-arrow-circle-left"></i> К перечню товаров</a>
+                        <h4>Перечень дополнительных изображений</h4>
 
                         <form class="form-inline" zippy="addimageform" enctype="multipart/form-data">
                             <input  accept="image/png,image/jpeg" zippy="photo" type="file" class="form-control mr-2">
 
-                            <input type="submit" class="btn btn-success   " value="Добавить">
-                            <small>Изображение должно быть приблизительно квадратным</small>
+                            <input type="submit" class="btn btn-success   " value="Додати">
+                            <small>Изображение должно быть примерно  квадратным и размером файла  не более 1M</small>
                         </form>
 
                         <div class="w-100">
@@ -149,15 +156,10 @@
 
                 $('#edescdet').summernote({
                     height: 400,
-                    lang: 'uk-RU',
+                    lang: 'ru-RU',
 
                     callbacks: {
-                        onEnter: function (e) {
-                            if (e.keyCode === key.code.ENTER) {
-                                e.shiftKey = true;
-                                context.triggerEvent('enter', e);
-                            }
-                        },
+                 
                         onPaste: function (e) {
 
                             var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');

@@ -2,13 +2,13 @@
  <head>
         <title>  Табель учета рабочего времени  </title>
 
-    
+ 
         <link rel="stylesheet" type="text/css" href="/assets/js/fullcalendar/main.css"/>
 
         <script language="javascript" src="/assets/js/moment/moment.min.js"></script>
-        <script language="javascript" src="/assets/js/moment/locale/ua.js"></script>
+        <script language="javascript" src="/assets/js/moment/locale/ru.js"></script>
         <script language="javascript" src="/assets/js/fullcalendar/main.js"></script>
-        <script language="javascript" src="/assets/js/fullcalendar/locales/ua.js"></script>
+        <script language="javascript" src="/assets/js/fullcalendar/locales/ru.js"></script>
 
 
     </head>
@@ -18,13 +18,13 @@
          <div class="row">
             <div class="col-12 col-lg-10" id="vapp" >
                 <h4>Табель учета рабочего времени</h4>
-                     <div class="navbar nav">
+                     <div class="card">
                     <form   class="form-inline ">
 
-                        <label for="from">С</label>
+                        <label for="from">З</label>
                         <input v-model="from"  class="form-control mr-2" style="width: 120px" type="date" >
 
-                        <label for="to">по</label>
+                        <label for="to">По</label>
                         <input v-model="to" class="form-control mr-2" style="width: 120px" type="date" >
 
 
@@ -38,7 +38,7 @@
 
                     </form>
                 </div>
-                       <a v-on:click.prevent="add"  class="btn  btn-success">Добавить</a>
+                       <a v-on:click.prevent="add(today)"  class="btn  btn-success">Добавить</a>
                 
                    <ul class="nav nav-tabs">
                   
@@ -83,10 +83,12 @@
                  
                     </div>
                    <div class="tab-pane    "  id="tstat" > 
-                      <table class="table table-sm" style="width:30%">
+                      <table class="table table-sm" style="width:40%">
+                            <tr><th></th><th  class="text-right">Часы</th><th class="text-right">Дни</th></tr>
                             <tr v-for="st in stat" >
                                 <td  >  {{st.name}}</td>   
-                                <td align="right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.cnt}} </span></td>
+                                <td class="text-right"><span :class="st.color">  {{st.days}} </span></td>
 
                             </tr>
                         </table>
@@ -116,26 +118,25 @@
                     
                     <div class="form-group">
                         <label for="editdate">Дата</label>
-                        <input v-model="editdate" required="required" class="form-control"  type="date" />
+                        <input v-model="editdate"  required="on"  class="form-control"  type="date" />
                     </div>
-                    <div class="form-group">
-                        <label for="editfrom">С</label>
-                        <input v-model="editfrom" required="required"                                  class="form-control"  type="time" />
-                    </div>
-                    <div class="form-group">
-                        <label for="editto">По</label>
-                        <input  v-model="editto" required="required" type="time"                                class="form-control" />
+                    <div class="form-group row">
+                         
+                       <div class="col-auto pt-1"> <label for="editfrom">З</label> </div>
+                       <div class="col-auto"> <input v-model="editfrom"  required="on"   class="form-control"  type="time" /></div>
+                       <div class="col-auto pt-1"> <label for="editto">По</label></div>
+                       <div class="col-auto"> <input  v-model="editto"  required="on"  type="time" class="form-control" /></div>
                     </div>
                     <div class="form-group">
                         <label for="edittype">Тип</label>
-                        <select v-model="edittype"  class="form-control">
-                            <option value="0">Не выбрано</option>
+                        <select v-on:change="ontype()" v-model="edittype"  class="form-control">
+                            <option value="0">Не выбран</option>
                             <option v-for="t in types" :value="t.key">{{t.value}}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="editbreak">Перерыв, мин</label>
-                        <input   v-model="editbreak" required="required" style="width:75px;" pattern="[0-9]+" class="form-control" />
+                        <label for="editbreak">Перерыв, хв.</label>
+                        <input   v-model="editbreak"  required="on"  style="width:75px;" pattern="[0-9]+" class="form-control" />
                     </div>
                     <div class="form-group">
                         <label for="editnote">Примечание</label>
@@ -171,6 +172,9 @@ var calendar
                   from:"",
                   to:"",
                   today:"",
+                  start:"",
+                  end:"",
+                  break:0,
                
                   stat:[] ,
                   times:[] ,
@@ -192,7 +196,7 @@ var calendar
            methods: {
                   init:function(){
                       
-                  callPageMethod('init',[], null,(data)=> 
+                  callPM('init',[], null,(data)=> 
                   {
                        let tmp =   JSON.parse(data)  
                        this.empid = tmp.empid; 
@@ -203,6 +207,9 @@ var calendar
                        this.to = tmp.to; 
                        this.from = tmp.from; 
                        this.today = tmp.today; 
+                       this.start = tmp.start; 
+                       this.end = tmp.end; 
+                       this.break = tmp.break; 
                  
                        this.loaddata() ;       
                       
@@ -214,7 +221,7 @@ var calendar
                 
                onFilter:function(){
                    if(Number.isNaN( Number.parseInt(this.empid)) ) {
-                      alert('Не выбран сотрудник');
+                      alert('Не выбран  сотрудник');
                       return;
                   }     
                     this.loaddata() ;       
@@ -222,7 +229,7 @@ var calendar
                } ,    
                del:function(id){
                 
-                  callPageMethod('del',[id], null,(data)=> 
+                  callPM('del',[id], null,(data)=> 
                   {
                        this.loaddata() ;  
                   
@@ -252,15 +259,28 @@ var calendar
                   $('#editmodal').modal('show')   
           
                } ,    
-               add:function(){
-                
+               add:function(date){
+                  console.log(date)
                   this.edited = 0;
                   this.edittype = 1;
-                  this.editbreak = 60;
-                  this.editdate = this.today;
-                  this.editfrom = "09:00";
-                  this.editto = "18:00";
+                  this.editdate = date;
+                  this.editfrom = this.start;
+                  this.editto = this.end;
+                  this.editbreak = this.break;
                   $('#editmodal').modal('show')   
+
+               } ,    
+               ontype:function(){
+                
+                  this.edited = 0;
+                  if(this.edittype == 1 || this.edittype == 3 ){
+                     this.editbreak = this.break;    
+                  }   else {
+                     this.editbreak=0  
+                  }
+                   
+                 
+                
 
                } ,    
                save:function(i){
@@ -283,14 +303,12 @@ var calendar
                      
                   } 
                      
-                  callPageMethod('save',[this.edited], JSON.stringify(body),(data)=> 
+                  callPM('save',[this.edited], body,(data)=> 
                   {
-                         if(data=="") {
+                          
                             this.loaddata() ;                               
                             $('#editmodal').modal('hide')   
-                         } else {
-                             toastr.error(data,'',{'timeOut':'5000'})
-                         }
+                          
                          
                       
 
@@ -308,9 +326,9 @@ var calendar
                      to:this.to 
                   } 
                      
-                  callPageMethod('loaddata',[], JSON.stringify(body),(data)=> 
+                  callPM('loaddata',[],  body,(data)=> 
                   {
-                       let tmp =   JSON.parse(data)  
+
                        this.stat = tmp.stat 
                        this.times = tmp.times 
  
@@ -365,8 +383,8 @@ var calendar
          
         }, 
          dateClick: function(info) {
-               
-             vapp.add()
+            
+             vapp.add(  formatDate(info.date) )
              
               
          

@@ -26,31 +26,34 @@ use Zippy\Html\Link\SubmitLink;
  */
 class ReturnIssue extends \App\Pages\Base
 {
-
-    public  $_tovarlist = array();
+    public $_itemlist = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
-    public function __construct($docid = 0, $basedocid = 0) {
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
+    public function __construct($docid = 0, $basedocid = 0,$pos_id=0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
 
-            $this->setWarn('return_basedon_goodsissue');
+            $this->setWarn('Возврат следует созлавать на  основании Расходной  накладной или  чекаы');
         }
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
 
         $this->docform->add(new TextInput('notes'));
-        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
+        $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), 0));
 
-        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' "), 0));
+        $this->docform->add(new DropDownChoice('pos', \App\Entity\Pos::findArray('pos_name', "details like '%<usefisc>1</usefisc>%' or details like '%<usefreg>1</usefreg>%'  "), 0))->setVisible($this->_tvars['fiscal']==1 || $this->_tvars['freg']==1 );
 
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
@@ -58,7 +61,11 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
+        $this->docform->add(new Label('totalnds'));
         $this->docform->add(new Label('total'));
+        $this->docform->add(new Label('discount'));
+        $this->docform->add(new Label('bonus'));
+        $this->docform->add(new Label('payamount'));
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
@@ -72,7 +79,7 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
         $this->editdetail->add(new SubmitButton('submitrow'))->onClick($this, 'saverowOnClick');
 
-        if ($docid > 0) {    //загружаем   содержимое  документа настраницу
+        if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
 
@@ -84,15 +91,20 @@ class ReturnIssue extends \App\Pages\Base
 
             $this->docform->notes->setText($this->_doc->notes);
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
-            if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-            $this->docform->editpayed->setText(H::fa($this->_doc->payed));
-            $this->docform->payed->setText(H::fa($this->_doc->payed));
+
+            $this->docform->editpayed->setText(H::fa($this->_doc->headerdata['payed']));
+            $this->docform->payed->setText(H::fa($this->_doc->headerdata['payed']));
 
             $this->docform->total->setText(H::fa($this->_doc->amount));
+            $this->docform->payamount->setText(H::fa($this->_doc->payamount));
 
-            $this->_tovarlist = $this->_doc->unpackDetails('detaildata');
+            $this->_itemlist = $this->_doc->unpackDetails('detaildata');
+
+            $this->_basedocid = $this->_doc->parent_id;
+
+
+
+
         } else {
             $this->_doc = Document::create('ReturnIssue');
             $this->docform->document_number->setText($this->_doc->nextNumber());
@@ -106,7 +118,7 @@ class ReturnIssue extends \App\Pages\Base
 
                     if (count($d) > 0) {
 
-                        $this->setError('return_exists');
+                        $this->setError('Уже  есть документ Возврат');
                         App::Redirect("\\App\\Pages\\Register\\DocList");
                         return;
                     }
@@ -117,28 +129,25 @@ class ReturnIssue extends \App\Pages\Base
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $item) {
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
+
                     }
                     if ($basedoc->meta_name == 'TTN') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
-                        $itemlist = $basedoc->unpackDetails('detaildata');
+                        $this->_itemlist = $basedoc->unpackDetails('detaildata');
 
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $item) {
-                            $this->_tovarlist[$item->item_id] = $item;
-                        }
+
                     }
                     if ($basedoc->meta_name == 'POSCheck') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->pos->setValue($basedoc->headerdata['pos']);
+                        if($pos_id >0) {
+                            $this->docform->pos->setValue($pos_id);                            
+                        }
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
 
@@ -146,15 +155,21 @@ class ReturnIssue extends \App\Pages\Base
 
                         $this->_itemlist = array();
                         foreach ($itemlist as $item) {
-                            $this->_tovarlist[$item->item_id] = $item;
+                            if($item->item_id >0) {
+                                $this->_itemlist[] = $item;
+                            }
+
                         }
+
+
+
                     }
                 }
-                $this->calcTotal();
+                
             }
         }
-
-        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_tovarlist')), $this, 'detailOnRow'))->Reload();
+        $this->calcTotal();
+        $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
         if (false == \App\ACL::checkShowDoc($this->_doc)) {
             return;
         }
@@ -170,7 +185,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $row->add(new Label('quantity', H::fqty($item->quantity)));
         $row->add(new Label('price', H::fa($item->price)));
-
+      
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
         $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
@@ -180,10 +195,11 @@ class ReturnIssue extends \App\Pages\Base
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-        $tovar = $sender->owner->getDataItem();
-        // unset($this->_tovarlist[$tovar->tovar_id]);
+        $item = $sender->owner->getDataItem();
 
-        $this->_tovarlist = array_diff_key($this->_tovarlist, array($tovar->item_id => $this->_tovarlist[$tovar->item_id]));
+        $rowid =  array_search($item, $this->_itemlist, true);
+
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -192,8 +208,10 @@ class ReturnIssue extends \App\Pages\Base
         $this->editdetail->setVisible(true);
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
+        $this->editdetail->edittovar->setKey(0);
+        $this->editdetail->edittovar->setText('');
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -206,8 +224,7 @@ class ReturnIssue extends \App\Pages\Base
 
         $this->editdetail->edittovar->setKey($item->item_id);
         $this->editdetail->edittovar->setText($item->itemname);
-
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
     }
 
     public function saverowOnClick($sender) {
@@ -216,17 +233,25 @@ class ReturnIssue extends \App\Pages\Base
         }
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не выбран товар");
             return;
         }
 
+
+
         $item = Item::load($id);
-        $item->quantity = $this->editdetail->editquantity->getText();
 
-        $item->price = $this->editdetail->editprice->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
-        unset($this->_tovarlist[$this->_rowid]);
-        $this->_tovarlist[$item->item_id] = $item;
+        $item->price = $this->editdetail->editprice->getDouble();
+    
+        $item->pricenonds= $item->price - $item->price * $item->nds(true);
+     
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+            $this->_itemlist[$this->_rowid] = $item;
+        }
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -265,31 +290,33 @@ class ReturnIssue extends \App\Pages\Base
             $customer = Customer::load($this->_doc->customer_id);
             $this->_doc->headerdata['customer_name'] = $this->docform->customer->getText();
         }
-        if ($this->checkForm() == false) {
-            return;
-        }
 
-
-        $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
+        $this->_doc->headerdata['nds'] = $this->docform->totalnds->getText();
+    
+        $firm = H::getFirmData(  $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
 
-        $this->_doc->packDetails('detaildata', $this->_tovarlist);
+        $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->amount = $this->docform->total->getText();
-        $this->_doc->payamount = $this->docform->total->getText();
+        $this->_doc->payamount = $this->docform->payamount->getText();
 
-        $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+        $this->_doc->payed = doubleval($this->docform->payed->getText());
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
+        $this->_doc->headerdata['bonus'] = $this->docform->bonus->getText();
+        $this->_doc->headerdata['discount'] = $this->docform->discount->getText();
 
+        if ($this->checkForm() == false) {
+            return;
+        }
+        
+        
         $isEdited = $this->_doc->document_id > 0;
 
         $pos_id = $this->docform->pos->getValue();
-
-    
-
 
         $conn = \ZDB\DB::getConnect();
         $conn->BeginTrans();
@@ -298,20 +325,32 @@ class ReturnIssue extends \App\Pages\Base
                 $this->_doc->parent_id = $this->_basedocid;
                 $this->_basedocid = 0;
             }
+
             $this->_doc->save();
             if ($sender->id == 'execdoc') {
                 if (!$isEdited) {
                     $this->_doc->updateStatus(Document::STATE_NEW);
                 }
-            if ($this->_doc->payamount > $this->_doc->payed) {
-                $this->_doc->updateStatus(Document::STATE_WP);
-            }
+                if ($this->_doc->payamount > $this->_doc->payed) {
+                    $this->_doc->updateStatus(Document::STATE_WP);
+                }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
             } else {
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
             }
-
+  
+            
+            
+            if ($pos_id > 0 && $sender->id == 'execdoc') {
+                $pos = \App\Entity\Pos::load($pos_id);
+                if($pos->usefreg == 1) {
+                    $this->_doc->headerdata["passfisc"] = 1;
+                    $this->_doc->save();
+                }    
+                 
+            }
+   
 
             $conn->CommitTrans();
             App::Redirect("\\App\\Pages\\Register\\GIList");
@@ -324,9 +363,15 @@ class ReturnIssue extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
+        if($pos !=null) {
+            if( $pos->usefreg == 1) {
+               $this->addJavaScript("fiscFR({$this->_doc->document_id})",true) ;
+            }         
+        }         
+        
     }
 
     /**
@@ -336,23 +381,63 @@ class ReturnIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        $nds = 0;
 
-        foreach ($this->_tovarlist as $item) {
+        foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
-
+            if($item->pricenonds < $item->price) {
+                $nds = $nds + doubleval($item->price - $item->pricenonds) * $item->quantity;                
+            }
+ 
             $total = $total + $item->amount;
         }
         $this->docform->total->setText(H::fa($total));
-        $this->docform->payed->setText(H::fa($total));
-        $this->docform->editpayed->setText(H::fa($total));
+        if($this->_tvars['usends'] != true) {
+           $nds=0; 
+        }
+      
+        if($nds>0) {
+            $this->docform->totalnds->setText(H::fa($nds));            
+        }
+ 
+        $payamount= $total + $nds ;
+
+        if($this->_basedocid >0) {
+            $parent = Document::load($this->_basedocid) ;
+            $k=1;
+            if($parent->amount >0) {
+                $k = 1 - ($parent->amount - $total) / $parent->amount;               
+            }
+
+            $parentbonus = intval($parent->getBonus(false));   //списано
+            if($parentbonus >0) {
+               $retbonus = intval($parentbonus * $k) ;// доля
+               $this->docform->bonus->setText($retbonus);
+               $payamount -= $retbonus;
+            }
+            
+            if($parent->headerdata["totaldisc"] >0) {
+               $disc= H::fa($parent->headerdata["totaldisc"] * $k);
+               $this->docform->discount->setText($disc);
+               $payamount -= $disc;
+            }
+            
+            
+        }
+        
+        
+        $this->docform->payamount->setText(H::fa($payamount));
+        //  $this->docform->discount->setText(H::fa($discount));
+        $this->docform->payed->setText(H::fa($payamount));
+        $this->docform->editpayed->setText(H::fa($payamount));
     }
 
     public function onPayed($sender) {
-        $this->docform->payed->setText(H::fa($this->docform->editpayed->getText()));
+        $this->docform->payed->setText(H::fa($this->docform->editpayed->getDouble()));
         $payed = $this->docform->payed->getText();
         $total = $this->docform->total->getText();
         if ($payed > $total) {
-            $this->setWarn('inserted_extrasum');
+            $this->setWarn('Внесена сумма больше необходимой');
         } else {
             $this->goAnkor("tankor");
         }
@@ -364,31 +449,33 @@ class ReturnIssue extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
-        if (count($this->_tovarlist) == 0) {
-            $this->setError("noenteritem");
+        if (count($this->_itemlist) == 0) {
+            $this->setError("Не введено товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не выбран склад");
         }
-
+        if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
+            $this->setError("Если внесена  сумма  больше  нуля  нужно указать денежный счет");
+        }
         $c = $this->docform->customer->getKey();
         if ($this->_doc->amount > 0 && $this->_doc->payamount > $this->_doc->payed && $c == 0) {
-            $this->setError("mustsel_cust");
+            $this->setError("Если долш предоплата или бонусы нужно выбрать контрагента");
         }
 
 
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Если внесена  сумма  больше  нуля  нужно указать денежный счет");
         }
 
 
@@ -400,7 +487,7 @@ class ReturnIssue extends \App\Pages\Base
 
             if (is_array($bt)) {
 
-                foreach ($this->_tovarlist as $t) {
+                foreach ($this->_itemlist as $t) {
                     $ok = false;
                     foreach ($bt as $b) {
                         if ($b->item_id == $t->item_id && $b->price == $t->price) {
@@ -409,7 +496,7 @@ class ReturnIssue extends \App\Pages\Base
                         }
                     }
                     if ($ok == false) {
-                        $this->setError("thesameitempriceret");
+                        $this->setError("Возврат должен соответсвовать проданным товарам с  той  же  ценой");
                         break;
                     }
 
@@ -425,13 +512,6 @@ class ReturnIssue extends \App\Pages\Base
         App::RedirectBack();
     }
 
-    public function OnChangeStore($sender) {
-        //очистка  списка  товаров
-        $this->_tovarlist = array();
-        $this->docform->detail->Reload();
-        $this->calcTotal();
-    }
-
     public function OnAutoCustomer($sender) {
         return Customer::getList($sender->getText(), 1);
     }
@@ -443,3 +523,4 @@ class ReturnIssue extends \App\Pages\Base
     }
 
 }
+

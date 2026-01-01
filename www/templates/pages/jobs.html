@@ -1,6 +1,6 @@
 <html>
   <head>
-        <title>  Мои  задания  </title>
+        <title>  Мои задания  </title>
 
     </head>
 
@@ -10,7 +10,7 @@
 
 
             <div class="col-12   col-xl-10" zippy="listpan">
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -24,24 +24,34 @@
                 </div>
                 <a zippy="addnew" class="btn btn-success">Добавить</a>
                 <table class="table table-sm table-bordered  ">
+                     <tr>
+                     <th>Дата</th>
+                     <th>Создал</th>
+                     <th>Исполнитель</th>
+                     <th>Статус</th>
+                     <th>Заголовок</th>
+                     <th>Контрагент</th>
+                     <th>Комментарий</th>
+                     </tr>
                     <tr zippy="nlist">
 
                         <td zippy="date" class="text-nowrap">    </td>
+                        <td zippy="createdby" >    </td>
+                        <td zippy="username" >    </td>
                         <td  class="text-nowrap"> 
                             <span zippy="stwait" class="badge badge-success">Ожидает</span>
                             <span zippy="sttoday" class="badge badge-warning">Сегодня</span>
-                            <span zippy="stpast" class="badge badge-danger">Просрочено</span>
-                            <span zippy="stdone" class="badge badge-secondary">Исполнено</span>
+                            <span zippy="stpast" class="badge badge-danger">Просрочен</span>
+                            <span zippy="stdone" class="badge badge-secondary">Выполнен</span>
 
                         </td>
 
                         <td   ><b zippy="title" ></b> </td>
                         <td >  <a zippy="customer" title="Открыть карточку"></a>  </td>
                         <td > <small zippy="description"></small>   </td>
-                        <td class="text-center"> <a zippy="toon"><i class="fa fa-toggle-on text-success"></i></a> 
-                            <a zippy="tooff"><i class="fa fa-toggle-off"></i></a> 
-                        </td>
-                        <td><a zippy="edit"><i class="fa fa-edit"/></a></td>
+                
+                        <td><a title="Виконано" zippy="done"><i class="fa fa-gavel"></i></a></td>
+                        <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
 
                     </tr>
                 </table>
@@ -51,20 +61,21 @@
        </div>   
        
                 <form zippy="addeventform" class="row" >
-                   <div class="col-12 col-md-4  col-xl-3">
+                   <div class="col-12 col-md-5  col-xl-4">
  
-                    <small>Задания, связанные с контрагентом следует задавать из справочника контрагентов</small>
-                    <div class="form-group">
-                        <label for="addeventdate">Дата, время</label>
-                        <div class="input-group">
-                            <input   class="form-control"   zippy="addeventdate" required="required">
-                            <span class="input-group-text">:</span>
-                            <input   class="form-control"   zippy="addeventtime" required="required">
+                    <small>Задания связанные с контрагентом, следует  задавать в  справочнике  контрагентов</small>
+                    <div class="form-group row">
+                        <label  class="col-3 col-form-label" for="addeventdate">Дата, время</label>
+                        <div class="col-4">
+                            <input   class="form-control"   zippy="addeventdate"  required="on" >
+                        </div>   
+                        <div class="col-3">    
+                            <input   class="form-control"   zippy="addeventtime"  required="on" >
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="addeventtitle">Заголовок, тип события</label>
-                        <input required="required" class="form-control" zippy="addeventtitle">
+                        <input  required="on"  class="form-control" zippy="addeventtitle">
                     </div>
                     <div class="form-group">
                         <label for="addeventdesc">Комментарий</label>
@@ -76,25 +87,27 @@
                     
                      </div>
                     
-                     <div class="col-12 col-md-4  col-xl-3">
-                      <div class="form-group">
-                        <label for="addeventnotify">Напомнить сообщением за</label>
-                        <select class="form-control" zippy="addeventnotify">
-                            <option value="0">Не напоминать</option>
-                            <option value="1">1 час</option>
-                            <option value="2">2 часа</option>
-                            <option value="4">4 часа</option>
-                            <option value="8">8 часов</option>
-                            <option value="16">16 часов</option>
-                            <option value="24">24 часа</option>
-                        </select>
-                    </div>
-                     <div class="form-group">
-                        <label for="adduser">Назначить пользователю</label>
-                        <select class="form-control  " zippy="adduser">
-                            <option value="0">Не указано</option>
-                        </select>
-                    </div>
+                     <div class="col-12 col-md-5  col-xl-4">
+                          <div class="form-group">
+                            <label for="addeventnotify">Напомнить уведомлением за</label>
+                            <select class="form-control" zippy="addeventnotify">
+                                <option value="0">Не напоминать</option>
+                                <option value="1">1 час</option>
+                                <option value="2">2 часа</option>
+                                <option value="4">4 часа</option>
+                                <option value="8">8 часов</option>
+                                <option value="16">16 часов</option>
+                                <option value="24">24 часов</option>
+                            </select>
+                        </div>
+                         {{#canevent}}
+                         <div class="form-group">
+                            <label for="adduser">Назначить пользователю</label>
+                            <select class="form-control  " zippy="adduser">
+                                <option value="0">Не указано (для себя)</option>
+                            </select>
+                        </div>
+                        {{/canevent}}
                     </div> 
                 </form>
                
@@ -105,16 +118,16 @@
   
                 <form zippy="editeventform" >
                     <div class="form-group">
-                        <label for="editeventdate">Дата, время</label>
+                        <label for="editeventdate">Дата, час</label>
                         <div class="input-group">
-                            <input   class="form-control"   zippy="editeventdate" required="required">
+                            <input   class="form-control"   zippy="editeventdate"  required="on" >
                             <span class="input-group-text">:</span>
-                            <input   class="form-control"   zippy="editeventtime" required="required">
+                            <input   class="form-control"   zippy="editeventtime"  required="on" >
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="editeventtitle">Заголовок, тип события</label>
-                        <input required="required" class="form-control" zippy="editeventtitle">
+                        <input  required="on"  class="form-control" zippy="editeventtitle">
                     </div>
                     <div class="form-group">
                         <label for="editeventdesc">Комментарий</label>
@@ -130,8 +143,16 @@
               </div>
            
              
+        <script>
 
-
+            function check_delete() {
+                return confirm("Удалить?")
+            }
+            
+            function check_done() {
+                return confirm("Выполнено?")
+            }
+    </script>        
 
     </body>
 </html>

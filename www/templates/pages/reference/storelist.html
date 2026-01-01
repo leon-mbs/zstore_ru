@@ -1,6 +1,6 @@
 <html>
     <head>
-            <title> Справочник складов </title>
+            <title> Справочник  складов </title>
 
     </head>
 
@@ -8,9 +8,9 @@
 
 
         <div class="row" zippy="storetable">
-            <div class="col-12 col-md-6">
-                <h2>Справочник складов</h2>
-                <a zippy="storeadd" class="btn btn-primary  ">Добавить</a>                
+            <div class="col-12 col-md-6  col-xl-5">
+                <h2>Справочник  складов</h2>
+                  <a zippy="storeadd" class="btn btn-primary  ">Добавить</a>
                 <table class="table table-bordered  table-sm">
                     <tr>
                         <th>Название</th>
@@ -30,8 +30,8 @@
  
                         <td zippy="storedesc"></td>
                         <td align="center">
-                            <a zippy="storeedit" title="Редагувати"><i class="fa fa-edit"></i></a>
-                        &nbsp;&nbsp;    <a zippy="storedelete" title="Изъять"><i class="fa fa-trash"></i></a></td>
+                            <a zippy="storeedit" title="Редактировать"><i class="fa fa-edit"></i></a>
+                        &nbsp;&nbsp;    <a zippy="storedelete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                     </tr>
                 </table>
 
@@ -44,7 +44,7 @@
 
                 <div class="form-group">
                     <label for="storeeditname"> Название</label>
-                    <input class="form-control" type="text" zippy="storeeditname" required="required">
+                    <input autofocus="on"   class="form-control" type="text" zippy="storeeditname"  required="on" >
                 </div>
                 {{#usebranch}}
                 <div class="form-group">
@@ -58,14 +58,14 @@
                     <label for="storeeditdesc"> Описание </label>
                     <textarea class="form-control" type="text" zippy="storeeditdesc"></textarea>
                 </div>
-                   <div class="form-check">
+                <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Не используется</label>
-                </div>
-                
+                </div>                
                 <div class="form-group">
-                    <input zippy="storesave" type="submit" value="Сохранить" class="btn btn-outline-primary  "> &nbsp;
-                    <input zippy="storecancel" type="button" value="Отменить" class="btn btn-outline-secondary ">
+                    <input zippy="storecancel" type="button" value="Отменить" class="btn btn-outline-secondary mr-2">
+                    <input zippy="storesave" type="submit" value="Сохранить" class="btn btn-outline-primary  "> 
+                    
                 </div>
 
 

@@ -10,38 +10,41 @@ use App\Helper as H;
  */
 class Invoice extends \App\Entity\Doc\Document
 {
-
     public function generateReport() {
 
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $mf = \App\Entity\MoneyFund::load($this->headerdata["payment"]);
-
+        $iban=$mf->iban??'';
+        
+        if(strlen($mf->payname ??'') > 0) $firm['firm_name']   = $mf->payname;
+        if(strlen($mf->address ??'') > 0) $firm['address']   = $mf->address;
+        if(strlen($mf->tin ??'') > 0) $firm['fedrpou']   = $mf->tin;
+        if(strlen($mf->inn ??'') > 0) $firm['finn']   = $mf->inn;
+        
+ 
         $i = 1;
         $detail = array();
 
         foreach ($this->unpackDetails('detaildata') as $item) {
 
-            if (isset($detail[$item->item_id])) {
-                $detail[$item->item_id]['quantity'] += $item->quantity;
-            } else {
-                $detail[] = array("no"         => $i++,
-                                  "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name,
-                                  "tovar_code" => $item->item_code,
-                                  "quantity"   => H::fqty($item->quantity),
-                                  "price"      => H::fa($item->price),
-                                  "msr"        => $item->msr,
-                                  "amount"     => H::fa($item->quantity * $item->price)
-                );
-            }
+              $detail[] = array("no"         => $i++,
+                              "tovar_name" => strlen($item->itemname) > 0 ? $item->itemname : $item->service_name,
+                              "tovar_code" => $item->item_code,
+                              "quantity"   => H::fqty($item->quantity),
+                              "price"      => H::fa($item->price),
+                            
+                              "msr"        => $item->msr,
+                              "amount"     => H::fa($item->quantity * $item->price)
+              );
         }
 
-        $totalstr =  \App\Util::money2str_ru($this->payamount);
+        $totalstr =  \App\Util::money2str($this->payamount);
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "customer_name"   => $this->customer_name,
                         "firm_name"       => $firm['firm_name'],
-                        "firm_address"    => $firm['address'],
+                       
                         "logo"            => _BASEURL . $firm['logo'],
                         "islogo"          => strlen($firm['logo']) > 0,
                         "stamp"           => _BASEURL . $firm['stamp'],
@@ -50,46 +53,69 @@ class Invoice extends \App\Entity\Doc\Document
                         "issign"          => strlen($firm['sign']) > 0,
                         "isfirm"          => strlen($firm["firm_name"]) > 0,
                         "iscontract"      => $this->headerdata["contract_id"] > 0,
+                        "iscustaddress"    => false,
                         "phone"           => $this->headerdata["phone"],
                         "customer_print"  => $this->headerdata["customer_print"],
-                        "bank"            => @$mf->bank,
-                        "bankacc"         => @$mf->bankacc,
-                        "isbank"          => (strlen($mf->bankacc) > 0 && strlen($mf->bank) > 0),
-                        "email"           => $this->headerdata["email"],
+                        "bank"            => $mf->bank ?? "",
+                        "bankacc"         => $mf->bankacc ?? "",
+                        "isbank"          => (strlen($mf->bankacc??'') > 0 && strlen($mf->bank) > 0),
+                        "iban"      => strlen($iban) > 0 ? $iban : false,
+                 
                         "notes"           => nl2br($this->notes),
                         "document_number" => $this->document_number,
                         "totalstr"        => $totalstr,
                         "total"           => H::fa($this->amount),
                         "payed"           => $this->payed > 0 ? H::fa($this->payed) : false,
-                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false,
-                        "paydisc"         => H::fa($this->headerdata["paydisc"])
+                        "totaldisc"           => $this->headerdata["totaldisc"] > 0 ? H::fa($this->headerdata["totaldisc"]) : false,
+                        "payamount"       => $this->payamount > 0 ? H::fa($this->payamount) : false
+
         );
         if (strlen($this->headerdata["customer_print"]) > 0) {
             $header['customer_name'] = $this->headerdata["customer_print"];
         }
 
+ 
+         
         $header["phone"] = false;
-        $header["address"] = false;
+        $header["fphone"] = false;
+        $header["isfop"] = false;
         $header["edrpou"] = false;
         $header["fedrpou"] = false;
         $header["finn"] = false;
         $cust = \App\Entity\Customer::load($this->customer_id);
 
+       
         if (strlen($cust->phone) > 0) {
             $header["phone"] = $cust->phone;
         }
         if (strlen($cust->address) > 0) {
-            $header["address"] = $cust->address;
+            $header["iscustaddress"] = true;
+            $header["custaddress"] = $cust->address;
         }
+     
         if (strlen($cust->edrpou) > 0) {
             $header["edrpou"] = $cust->edrpou;
         }
         if (strlen($firm['tin']) > 0) {
             $header["fedrpou"] = $firm['tin'];
         }
-        if (strlen($firm['inn']) > 0) {
-            $header["finn"] = $firm['inn'];
+        if (strlen($firm['phone']) > 0) {
+            $header["fphone"] = $firm['phone'];
         }
+                                           
+        $header["address"] = $firm['address'];        
+        
+        if ( ($this->headerdata["fop"] ??0) > 0) {
+            $header["isfirm"] = false;
+            $header["isfop"] = true;
+            
+            $fops=$firm['fops']??[];
+            $fop = $fops[$this->headerdata["fop"]] ;
+            $header["fop_name"] = $fop->name ??'';
+            $header["fop_edrpou"] = $fop->edrpou ??'';
+            $header["address"] = $fop->address ??'';
+        }
+     
 
 
         if ($this->headerdata["contract_id"] > 0) {
@@ -97,7 +123,6 @@ class Invoice extends \App\Entity\Doc\Document
             $header['contract'] = $contract->contract_number;
             $header['createdon'] = H::fd($contract->createdon);
         }
-
 
         $report = new \App\Report('doc/invoice.tpl');
 
@@ -118,26 +143,28 @@ class Invoice extends \App\Entity\Doc\Document
             }
         }
 
- 
+        $this->DoBalans() ;
+
         return true;
     }
 
     protected function getNumberTemplate() {
-        return 'РФ-000000';
+        return 'СФ-000000';
     }
 
     public function getRelationBased() {
         $list = array();
         $list['GoodsIssue'] = self::getDesc('GoodsIssue');
-      //  $list['Invoice'] = self::getDesc('Invoice');
+        //  $list['Invoice'] = self::getDesc('Invoice');
         $list['TTN'] = self::getDesc('TTN');
-        $list['ServiceAct'] = self::getDesc('ServiceAct');
+    //    $list['ServiceAct'] = self::getDesc('ServiceAct');
+   //     $list['POSCheck'] = self::getDesc('POSCheck');
 
         return $list;
     }
 
     protected function getEmailBody() {
-        $firm = H::getFirmData($this->firm_id, $this->branch_id);
+        $firm = H::getFirmData( $this->branch_id);
 
         $header = array();
         $header['customer_name'] = $this->customer_name;
@@ -154,11 +181,36 @@ class Invoice extends \App\Entity\Doc\Document
     }
 
     protected function getEmailSubject() {
-        return H::l('emailinvsub', $this->document_number);
+        return  "Рахунок до оплати номер ".$this->document_number ;
     }
 
     public function supportedExport() {
         return array(self::EX_EXCEL, self::EX_PDF, self::EX_MAIL);
     }
 
+    /**
+    * @override
+    */
+    public function DoBalans() {
+         $conn = \ZDB\DB::getConnect();
+         $conn->Execute("delete from custacc where optype in (2,3) and document_id =" . $this->document_id);
+
+         if(($this->customer_id??0) == 0) {
+            return;
+         }
+               
+       //платежи       
+        foreach($conn->Execute("select abs(amount) as amount ,paydate from paylist  where paytype < 1000 and   coalesce(amount,0) <> 0 and document_id = {$this->document_id}  ") as $p){
+            $b = new \App\Entity\CustAcc();
+            $b->customer_id = $this->customer_id;
+            $b->document_id = $this->document_id;
+            $b->amount = $p['amount'];
+            $b->createdon = strtotime($p['paydate']);
+            $b->optype = \App\Entity\CustAcc::BUYER;
+            $b->save();
+        }
+                     
+    }
+  
+        
 }

@@ -1,6 +1,6 @@
 <html>
       <head>
-        <title> Импорт номенклатуры  </title>
+        <title> Импорт    </title>
 
     </head>
 
@@ -10,31 +10,34 @@
                 <h3>Импорт номенклатуры
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-html="true" data-content="Импорт ТМЦ из Excel файла.
-                       Для указания размещения данных необходимо указать номера соответствующих колонок. Проверяется на уникальность артикулов и наименований.
-                       Может быть исполнен импорт номенклатуры в справочниках или если указано количество оприходования на складе. В этом случае создается документ Оприходование товара.
-                       <br>Также есть возможность предварительного просмотра данных. "></i>
-                </h3>
+                       data-placement="bottom" data-content="Импорт ТМЦ из Excel файла. 
+                        Для расположения данных нужно указать номера соответствующих колонок (проверяется на уникальность артикул и наименования). 
+                        Может быть выполнен импорт номенклатуры в справочник или если указано количество оприходования на склад, создается документ Оприходование товара. 
+                        Также есть возможность предварительного просмотра данных. Рекомендуется все данные в Экселе выставить как срочный тип"></i>
+                      </h3>
+         <small><i class="fa fa-exclamation-triangle"></i> 
+       Если при импорте больших файлов появляется ошибка 500 или просто пустая страница, это означает недостаточный объем памяти . 
+             Нужно или увеличить память или разбить файл импорта на меньшие части </small>
 
                 <br><br>
                 <form zippy="iform" class="row" enctype="multipart/form-data">
                     <div class="col-4">
 
                         <div class="form-group  ">
-                            <label for="itype">Тип импорта</label>
+                            <label for="itype">Тип Импорта</label>
                             <select zippy="itype" class="form-control  ">
                                 <option value="0">Только справочник</option>
-                                <option value="1">С оприходованием на склад</option>
+                                <option value="1">С  оприходованием  на склад</option>
                                 
                             </select>
                         </div>
                         <div class="form-group  ">
-                            <label for="icompare">Сопоставление при обновлении</label>
+                            <label for="icompare">Сопоставоение  при обновлении</label>
                             <select zippy="icompare" class="form-control  ">
                                 <option value="0">По артикулу</option>
                                 <option value="1">По наименованию</option>
                                 <option value="2">По наименованию и бренду</option>
-                                <option value="3">По артикулу и бренду</option>
+                                <option value="3">За артикулу и бренду</option>
                                
                                 
                             </select>
@@ -68,13 +71,13 @@
                         </div>
                         <div class="  form-check">
                             <input zippy="noshowshop" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="noshowshop">Не показывать в онлайн каталоге </label>
+                            <label class="form-check-label" for="noshowshop">Не артикулу в онлайн каталоге </label>
                         </div>
                         
 
                         <div class="  form-check">
                             <input zippy="preview" type="checkbox" class="form-check-input">
-                            <label class="form-check-label" for="preview">Предыдущий просмотр</label>
+                            <label class="form-check-label" for="preview">Предварительный просмотр</label>
                         </div>
 
                         <div class="form-group  ">
@@ -93,7 +96,7 @@
                             </select>   </div> 
                         </div>
                        <div class="form-group row">
-                            <label  class="col-8 col-form-label" for="colshortname">Короткое наименование</label>
+                            <label  class="col-8 col-form-label" for="colshortname">Короткое  наименование</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colshortname" class="form-control  ">
                             </select>   </div> 
@@ -105,7 +108,7 @@
                             </select>   </div> 
                         </div>
                         <div class="form-group row ">
-                            <label  class="col-8 col-form-label" for="colbarcode">Штрих-код</label>
+                            <label  class="col-8 col-form-label" for="colbarcode">Штрих код</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colbarcode" class="form-control  ">
                             </select>   </div> 
@@ -113,24 +116,29 @@
                         <div class="form-group row ">
                             <label  class="col-8 col-form-label" for="colcat">Категория</label>
                             <div class="col-4">
-                                <select style="width:100px;" zippy="colcat" class="form-control  ">
-                            </select>   </div> 
+                                <select style="width:100px;" zippy="colcat" class="form-control  ">                            </select>  
+                           </div> 
                         </div>
                         <div class="form-group  row">
                             <label  class="col-8 col-form-label" for="colbrand">Бренд</label>
                             <div class="col-4">
-                                <select style="width:100px;" zippy="colbrand" class="form-control  ">
-                                </select>  
+                                <select style="width:100px;" zippy="colbrand" class="form-control  ">                                </select>  
                            </div> 
                         </div>
-                      <div class="form-group  row">
+                         <div class="form-group  row">
                             <label  class="col-8 col-form-label" for="colimage">Фото (URL)</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colimage" class="form-control  ">
                                 </select>  
                            </div> 
                         </div>
-                      
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label"  data-label="colminqty" for="colminqty">Мин. кол.</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colminqty" class="form-control  ">
+                            </select>  
+                            </div> 
+                        </div>          
                    <div class="form-group  row">
                             <label  class="col-8 col-form-label" data-label="colqty" for="colqty">Количество</label>
                             <div class="col-4">
@@ -141,9 +149,13 @@
                             <label class="col-8 col-form-label"  data-label="colinprice" for="colinprice">Учетная цена</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colinprice" class="form-control  ">
-                            </select>  </div> 
+                            </select>  
+                            </div> 
                         </div>
-                  
+                         
+                                          
+                         
+                 
                     </div>
 
                     <div class="col-4">
@@ -171,10 +183,17 @@
                                 <select style="width:100px;" zippy="colcell" class="form-control  ">
                             </select>   </div> 
                         </div>
+                    
                        <div class="form-group  row">
                             <label class="col-8 col-form-label"  for="colwar">Гарантия</label>
                             <div class="col-4">
                                 <select style="width:100px;" zippy="colwar" class="form-control  ">
+                            </select>   </div> 
+                        </div>
+                      <div class="form-group  row">
+                            <label class="col-8 col-form-label"  for="colnotes">Примечание</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="colnotes" class="form-control  ">
                             </select>   </div> 
                         </div>
                         <div class="form-group  row">
@@ -217,27 +236,33 @@
                             <tr>
                                 <th>Наименование</th>
                                 <th>Код</th>
-                                <th>Группа</th>
+                                <th>Категория</th>
                                 <th>Бренд</th>
                                 <th>Ед.</th>
+                                {{#isstore}}
                                 <th class="text-right">Кол.</th>
-                                <th class="text-right">Учет. цена</th>
-                                <th class="text-right">Отп. цена1</th>
-                                <th class="text-right">Отп. цена2</th>
-                                <th class="text-right">Отп. цена3</th>
-                                <th class="text-right">Отп. цена4</th>
-                                <th class="text-right">Отп. цена5</th>
+                                <th class="text-right">Уч. цена</th>
+                                 {{/isstore}}
+                                <th class="text-right">Мин. кол.</th>
+                                <th class="text-right">Прод. цена1</th>
+                                <th class="text-right">Прод. цена2</th>
+                                <th class="text-right">Прод. цена3</th>
+                                <th class="text-right">Прод. цена4</th>
+                                <th class="text-right">Прод. цена5</th>
 
                             </tr>
                             {{#list}}
                             <tr>
                                 <td>{{colname}}</td>
                                 <td>{{colcode}}</td>
-                                <td>{{colgr}}</td>
+                                <td>{{colcat}}</td>
                                 <td>{{colbrand}}</td>
                                 <td>{{colmsr}}</td>
+                                 {{#isstore}}
                                 <td class="text-right">{{colqty}}</td>
                                 <td class="text-right">{{colinprice}}</td>
+                                 {{/isstore}}
+                                <td class="text-right">{{colminqty}}</td>
                                 <td class="text-right">{{colprice1}}</td>
                                 <td class="text-right">{{colprice2}}</td>
                                 <td class="text-right">{{colprice3}}</td>
@@ -253,15 +278,14 @@
             </div>
 
             <div class="col-12 col-lg-6  card">
-                <h3>Импорт накладной
+                <h3>Импорт приходной накладной
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-html="true" data-content="Импорт накладной из Excel файла.
-                       Для указания размещения данных необходимо указать номера соответствующих колонок. Проверяется на уникальность артикул и наименование.
-
-                       В результате создается документ Прибыльная накладная, котрый следует провести после ввода оплат и других атрибутов.
-                       <br>Также есть возможность предварительного просмотра данных. "></i>
-                </h3>
+                       data-placement="bottom"  data-content="Импорт накладной из файла Excel. 
+                        Для расположения данных нужно указать номера соответствующих колонок (проверяется на уникальность артикул и наименования). 
+                        В результате создается документ Прибыльная накладная, который следует произвести после ввода оплат и других атрибутов. 
+                        Также есть возможность предварительного просмотра данных. "></i>
+                                        </h3>
 
                 <br><br>
                 <form zippy="nform" class="row" enctype="multipart/form-data">
@@ -269,7 +293,7 @@
 
                         <div class="form-group  ">
                             <label for="ncust">Контрагент</label>
-                            <input zippy="ncust" class="form-control  "/>
+                            <input  placeholder="Начните вводить..." zippy="ncust" class="form-control  "/>
 
                         </div>
                         <div class="form-group  ">
@@ -293,7 +317,7 @@
                         </div>
 
                         <div class="form-group  ">
-                            <input class="btn btn-info" type="submit" value="Загрузить"/>
+                            <input class="btn btn-info" type="submit" value="Загрузка"/>
                         </div>
                     </div>
                     <div class="col-6">
@@ -314,7 +338,7 @@
                             </select>   </div>
                         </div>
                         <div class="form-group row ">
-                            <label  class="col-8 col-form-label" for="ncolbarcode">Штрих-код</label>
+                            <label  class="col-8 col-form-label" for="ncolbarcode">Штрих код</label>
                               <div class="col-4">
                              <select style="width:100px;" zippy="ncolbarcode" class="form-control  ">
                             </select>  </div>
@@ -326,6 +350,14 @@
                               <select style="width:100px;" zippy="ncolmsr" class="form-control  ">
                             </select>  </div>
                         </div>
+                       <div class="form-group  row">
+                            <label  class="col-8 col-form-label" for="ncolbrand">Бренд</label>
+                            <div class="col-4">
+                                <select style="width:100px;" zippy="ncolbrand" class="form-control  ">
+                                </select>  
+                           </div> 
+                        </div>
+  
                         <div class="form-group  row">
                             <label class="col-8 col-form-label" for="ncoldesc">Описание </label>
                               <div class="col-4">
@@ -340,7 +372,7 @@
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
-                            <label class="col-8 col-form-label" for="ncolprice">Входящая цена</label>
+                            <label class="col-8 col-form-label" for="ncolprice">Входная цена</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="ncolprice" class="form-control  ">
                             </select>  </div>
@@ -358,9 +390,10 @@
                             <tr>
                                 <th>Наименование</th>
                                 <th>Код</th>
-                                <th>Штрих-код</th>
-
+                                <th>Штрих код</th>
+                                <th>Бренд</th>
                                 <th>Ед.</th>
+                               
                                 <th class="text-right">Кол.</th>
                                 <th class="text-right">Цена</th>
 
@@ -371,6 +404,7 @@
                                 <td>{{colcode}}</td>
                                 <td>{{colbarcode}}</td>
 
+                                <td>{{colbrand}}</td>
                                 <td>{{colmsr}}</td>
                                 <td class="text-right">{{colqty}}</td>
                                 <td class="text-right">{{colprice}}</td>
@@ -388,11 +422,11 @@
                 <h3>Импорт контрагентов
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-html="true" data-content="Импорт контрагентов из Excel файла.
-                       Для указания размещения данных необходимо указать номера соответствующих колонок.
-                       Проверяется на уникальность телефона.
-                       <br>Также есть возможность предварительного просмотра данных. "></i>
-                </h3>
+                       data-placement="bottom"  data-content="Импорт контрагентов из файла Excel. 
+                    Для размещения данных необходимо указать номера соответствующих колонок. 
+                    Проверяется на уникальность телефона. 
+                    Также есть возможность предварительного просмотра данных. "></i>
+                                    </h3>
 
                 <br><br>
                 <form zippy="cform" class="row" enctype="multipart/form-data">
@@ -457,6 +491,12 @@
                             </select>  </div>
                         </div>
                         <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="coledrpou">ОКПО</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="coledrpou" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                         <div class="form-group  row">
                             <label class="col-8 col-form-label" for="colcity">Город</label>
                              <div class="col-4">
                               <select style="width:100px;" zippy="colcity" class="form-control  ">
@@ -479,7 +519,8 @@
                     <div class="col-12 col-lg-10 ">
                         <table class="table table-sm">
                             <tr>
-                                <th>Наименование</th>
+                                <th>Наименлоание</th>
+                                <th>ОКПО</th>
                                 <th>Тел.</th>
                                 <th>E-mail</th>
                                 <th>Город</th>
@@ -489,17 +530,150 @@
                             {{#list2}}
                             <tr>
                                 <td>{{colname}}</td>
+                                <td>{{coledrpou}}</td>
                                 <td>{{colphone}}</td>
                                 <td>{{colemail}}</td>
                                 <td>{{colcity}}</td>
                                 <td>{{coladdress}}</td>
-
+                              </tr>
                                 {{/list2}}
                         </table>
                     </div>
                 </div>
                 {{/preview2}}
             </div>
+            
+           <div class="col-12 col-lg-6  card">
+                <h3>Імпорт заказа
+                    <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
+                       data-toggle="popover"
+                       data-placement="bottom"  data-content="Импорт накладной из файла Excel. 
+                        Для расположения данных нужно указать номера соответствующих колонок (проверяется на уникальность артикул и наименования). 
+                        В результате создается документ Заказа.
+                       "></i>
+                </h3>
+
+                 
+                <form zippy="zform" class="row" enctype="multipart/form-data">
+                    <div class="col-6">
+
+                        <div class="form-group  ">
+                            <label for="zcust">Контрагент</label>
+                            <input placeholder="Начните вводить..." zippy="zcust" class="form-control  "/>
+
+                        </div>
+
+                        <div class="form-group  ">
+                            <label for="zfilename">Файл импорту</label>
+                            <input type="file" zippy="zfilename" class="form-control  "/>
+                        </div>
+                        <div class="  form-check">
+                            <input zippy="zpassfirst" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="zpassfirst">Пропустить первую строку</label>
+                        </div>
+                     
+                        <div class="  form-check">
+                            <input zippy="zpreview" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="zpreview">Предварительный просмотр</label>
+                        </div>
+
+                        <div class="form-group  ">
+                            <input class="btn btn-info" type="submit" value="Загрузить"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group  ">
+                            <label><b>Номера колонок Excel файла</b> </label>
+
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="zcolname">Наименование</label>
+                              <div class="col-4">
+                             <select style="width:100px;" zippy="zcolname" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="zcolcode">Код, артикул, штрих-код</label>
+                              <div class="col-4">
+                             <select style="width:100px;" zippy="zcolcode" class="form-control  ">
+                            </select>   </div>
+                        </div>
+
+                 
+
+
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" data-label="zcolqty" for="zcolqty">Кол.</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="zcolqty" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="zcolprice">Входная цена</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="zcolprice" class="form-control  ">
+                            </select>  </div>
+                        </div>
+
+
+                    </div>
+
+
+                </form>
+                {{#preview4}}
+                <div class="row">
+                    <div class="col-12 col-lg-10 ">
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Наименование</th>
+                                <th>Код</th>
+                               
+                                <th class="text-right">Кол.</th>
+                                <th class="text-right">Цена</th>
+
+                            </tr>
+                            {{#list}}
+                            <tr>
+                                <td>{{colname}}</td>
+                                <td>{{colcode}}</td>
+                              
+                                <td class="text-right">{{colqty}}</td>
+                                <td class="text-right">{{colprice}}</td>
+
+                            </tr>
+                            {{/list}}
+                        </table>
+                    </div>
+                </div>
+                {{/preview4}}
+            </div>
+           
+         <div class="col-12 col-lg-6  card">
+               
+               
+               <h3>Импорт настроек</h3>
+
+                <form zippy="oform" class="row" enctype="multipart/form-data">
+                    <div class="col-10 col-md-8 col-xl-6">
+                    
+                        <div class="form-group  ">
+                            <label for="ofilename">Файл импорта</label>
+                            <input type="file" zippy="ofilename" class="form-control  "/>
+
+                        </div>
+
+                        <div class="form-group  ">
+                            <input class="btn btn-info" type="submit" value="Загрузить"/>
+                        </div>
+                    </div>
+
+
+                </form>            
+            
+             </div>   
+            
+            
+            
         </div>
 
 

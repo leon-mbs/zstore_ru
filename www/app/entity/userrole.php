@@ -12,7 +12,6 @@ use ZCL\DB\Entity;
  */
 class UserRole extends Entity
 {
-
     /**
      * @see Entity
      *
@@ -27,25 +26,28 @@ class UserRole extends Entity
      *
      */
     protected function afterLoad() {
-        $this->createdon = strtotime($this->createdon);
+     
 
         $acl = @unserialize($this->acl);
         if (!is_array($acl)) {
-            $acl = array();
+            $acl = [];
         }
 
-        $this->noshowpartion = $acl['noshowpartion'];
-        $this->showotherstores = $acl['showotherstores'];
-        $this->aclview = $acl['aclview'];
-        $this->acledit = $acl['acledit'];
-        $this->aclexe = $acl['aclexe'];
-        $this->aclcancel = $acl['aclcancel'];
-        $this->aclstate = $acl['aclstate'];
-        $this->acldelete = $acl['acldelete'];
+        $this->custtype = $acl['custtype']??0;
+        $this->canevent = $acl['canevent']??0;
+        $this->dashboard = $acl['dashboard']??0;
+        $this->noshowpartion = $acl['noshowpartion']??0;
+        $this->showotherstores = $acl['showotherstores']??0;
+        $this->aclview = $acl['aclview']??'';
+        $this->acledit = $acl['acledit']??'';
+        $this->aclexe = $acl['aclexe']??'';
+        $this->aclcancel = $acl['aclcancel']??'';
+        $this->aclstate = $acl['aclstate']??'';
+        $this->acldelete = $acl['acldelete']??'';
 
-        $this->widgets = $acl['widgets'];
-        $this->modules = $acl['modules'];
-        $this->smartmenu = $acl['smartmenu'];
+
+        $this->modules = $acl['modules']??'';
+        $this->smartmenu = $acl['smartmenu']??'';
 
         parent::afterLoad();
     }
@@ -57,8 +59,11 @@ class UserRole extends Entity
     protected function beforeSave() {
         parent::beforeSave();
 
-        $acl = array();
+        $acl = [];
 
+        $acl['custtype'] = $this->custtype;
+        $acl['canevent'] = $this->canevent;
+        $acl['dashboard'] = $this->dashboard;
         $acl['noshowpartion'] = $this->noshowpartion;
         $acl['showotherstores'] = $this->showotherstores;
         $acl['aclview'] = $this->aclview;
@@ -68,13 +73,11 @@ class UserRole extends Entity
         $acl['aclstate'] = $this->aclstate;
         $acl['acldelete'] = $this->acldelete;
 
-        $acl['widgets'] = $this->widgets;
-        $acl['widgets'] = $this->widgets;
         $acl['modules'] = $this->modules;
         $acl['smartmenu'] = $this->smartmenu;
         $this->acl = serialize($acl);
 
         return true;
-    }
+    }    
 
 }

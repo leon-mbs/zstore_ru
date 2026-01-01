@@ -1,6 +1,5 @@
 <html>
-    <head>
-    </head>
+   
     <body>
         <div class="row">
             <div class="col-12 col-xl-10    ">
@@ -9,21 +8,21 @@
                   <a zippy="checkconn"><i class="fa   fa-sync"></i> Проверить соединение</a>
   
 
-                <div class="navbar nav">
+                <div class="navbar nav justify-content-start">
                     <form zippy="filter" class="form-inline ">
 
 
                         <label for="status">Статус в магазине </label>
 
                         <select class="form-control mr-2" zippy="status">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не выбран</option>
                         </select>
 
 
-                        <input onclick="$('#loader1').removeAttr('style')" type="submit" class=" mr-2 btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class=" mr-2 btn btn-outline-success  "
                                value="Загрузить">
-                        <img id="loader1" style="display:none" src="/assets/images/ajax-loader.gif">
 
+                      
                     </form>
                 </div>
 
@@ -55,25 +54,20 @@
                     </tr>
 
                 </table>
-                <div class="navbar nav">
-                    <a zippy="importbtn" class="  btn btn-outline-success  ">Импортировать</a>
-                    <form zippy="filter2" class="form-inline ">
+                <div class="navbar nav justify-content-start">
+                       <form zippy="filter2" class="form-inline ">
 
 
-                        <label for="store" data-label="store">склад</label>
+                        <label for="paytype"  >Тип оплаты</label>
 
-                        <select class="form-control mr-2" zippy="store">
-                            <option value="0">Не выбрано</option>
+                        <select class="form-control mr-2" zippy="paytype">
+                            
                         </select>
-                        <label for="kassa" data-label="kassa">касса </label>
-
-                        <select class="form-control mr-2" zippy="kassa">
-                            <option value="0">Не выбрано</option>
-                        </select>
+                     
 
 
                         <input type="submit" class=" mr-2 btn btn-outline-success  "
-                               value="Списать">
+                               value="Импортировать">
 
 
                     </form>
@@ -82,9 +76,9 @@
             </div>
             <div class="col-12 col-xl-10       ">
 
-                <h3>Экспорт статусов в магазин</h3>
-                <div class="navbar nav">
-                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Обновить</a>
+                <h3>Экспорт статусов  в магазин</h3>
+                <div class="navbar nav justify-content-start">
+                    <a zippy="refreshbtn" class="  btn btn-outline-success  ">Оновити</a>
 
                 </div>
                 <form zippy="updateform">
@@ -96,7 +90,7 @@
                             <th>Дата</th>
 
                             <th>Клиент</th>
-                            <th class="text-right">Сумма</th>
+                            <th class="text-right">Сума</th>
                             <th>Статус</th>
 
 
@@ -121,13 +115,13 @@
                         <label for="estatus">Статус в магазине </label>
 
                         <select class="  mr-2" zippy="estatus">
-                            <option value="0">Не выбрано</option>
+                            <option value="0">Не выбран</option>
                         </select>
               
 
-                        <input onclick="$('#loader3').removeAttr('style')" type="submit" class="  btn btn-outline-success  "
+                        <input onclick="document.getElementById('dialogwait').showModal()" type="submit" class="  btn btn-outline-success  "
                                value="Отправить">
-                        <img id="loader3" style="display:none" src="/assets/images/ajax-loader.gif">
+
                     </div>
                 </form>
 

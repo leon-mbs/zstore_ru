@@ -27,64 +27,62 @@ use App\Helper as H;
  */
 class Main extends \App\Pages\Base
 {
-
- 
-
     public function __construct() {
         parent::__construct();
 
 
     }
 
-    
-     public function onSearch($args,$post=null) {
+    public function onSearch($args, $post=null) {
         $cr = json_decode($post) ;
         $ret = array();
         $l = array();
-        if($cr->fav == true){
-           $l = TopicNode::searchFav();          
-        }  
-        if(strlen( $cr->tag) >0 ){
-           $l = TopicNode::searchByTag($cr->tag)    ;
+        if( ($cr->fav ?? false) == true) {
+            $l = TopicNode::searchFav();
         }
-        if(strlen($cr->text) > 0) {
-            $l =  TopicNode::searchByText($cr->text, $cr->type, $cr->title);    
+        if(strlen($cr->tag ?? '') >0) {
+            $l = TopicNode::searchByTag($cr->tag)    ;
         }
-        
-        
-        foreach($l as $t){
-           $ret[]=array(
-                "topic_id" =>$t->topic_id,
-                "node_id" =>$t->node_id,
-                "title" =>$t->title,
-                "nodes" =>$t->nodes()
-           );    
+        if(strlen($cr->text?? '') > 0) {
+            $l =  TopicNode::searchByText($cr->text, $cr->type, $cr->title);
         }
-        
-       return json_encode($ret , JSON_UNESCAPED_UNICODE);     
-          
-    }   
- 
- 
-    public function onDelFile($args,$post=null) {
 
-          Helper::deleteFile($args[0]);
-         
-        
-    }  
-    public function onAddFile($args,$post=null) {
 
-         $file =  @$_FILES['editfile']  ;
-     
-         if(strlen($file['tmp_name'])==0 ) return;
-          
-         Helper::addFile($file, $args[0]);
+        foreach($l as $t) {
+            $ret[]=array(
+                 "topic_id" =>$t->topic_id,
+                 "node_id" =>$t->node_id,
+                 "title" =>$t->title,
+                 "hash" =>md5($t->topic_id . \App\Helper::getSalt()),
+                 "nodes" =>$t->nodes()
+            );
+        }
+
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+
+    public function onDelFile($args, $post=null) {
+
+        Helper::deleteFile($args[0]);
+
+
+    }
  
-        
-    }  
-    
-     
-    public function onFav($args,$post=null) {
+    public function onAddFile($args, $post=null) {
+
+        $file =  $_FILES['editfile']  ;
+
+        if(strlen($file['tmp_name'] ?? '')==0) {
+            return;
+        }
+
+        Helper::addFile($file, $args[0]);
+
+
+    }
+
+    public function onFav($args, $post=null) {
 
 
         $conn = \ZCL\DB\DB::getConnect();
@@ -93,140 +91,165 @@ class Main extends \App\Pages\Base
         } else {
             $conn->Execute("delete from note_fav where topic_id={$args[0]} and  user_id= " . System::getUser()->user_id);
         }
-        
-    }   
-    
-   
-    public  function opTopic($args,$post=null) {
-         if($args[0] =="delete") {
-             Topic::delete($args[1]);
-         }
-         if($args[0] =="paste") {
-             $node = Node::Load($args[2] );
-             $topic = Topic::load($args[1] );
 
-             if ($topic->acctype > 0 && $node->ispublic != 1) {
-                $this->setError('tn_nopublictopic');
+    }
 
+    public function opTopic($args, $post=null) {
+        if($args[0] =="delete") {
+            if($args[3]=="true") {  //ссылка
+               $conn = \ZCL\DB\DB::getConnect();
+               $conn->Execute("delete from note_topicnode where topic_id={$args[1]} and node_id={$args[2]}" );
+ 
+            }
+            else {
+               Topic::delete($args[1]);
+            }
+        }
+        if($args[0] =="move") {    
+            $node = Node::Load($args[2]);
+            $topic = Topic::load($args[1]);
+
+            if ($topic->ispublic == 1 && $node->ispublic == 0) {
+                return "Нельзя добавлять публичный топик к приватному узлу" ;
+            }
+      
+            
+            $tn = TopicNode::getFirst("topic_id={$args[1]} and node_id={$args[3]}") ;
+            if($tn==null) return;
+            $topic->removeFromNode($args[3]);
+            $topic->addToNode($args[2],$tn->islink==1);
+
+        }
+        if($args[0] =="pastelink") {   //вставка  как  ссылка
+            $node = Node::Load($args[2]);
+            $topic = Topic::load($args[1]);
+            if($args[2]==$args[3]) {
                 return;
-             }
-             $topic->removeFromNode($this->clipboard[3]);
-             $topic->addToNode($this->tree->selectedNodeId());
-          
-         }
-         if($args[0] =="pastel") {
-             $node = Node::Load($args[2] );
-             $topic = Topic::load($args[1] );
+            }
+            if ($topic->ispublic == 1 && $node->ispublic == 0) {
+                return "Нельзя добавлять публичный топик к приватному узлу" ;
+            }
+            $topic->addToNode($node->node_id,true);
+  
+        }                                                 
+        if($args[0] =="pastecopy") {       //вставка  как  копия
+            $node = Node::Load($args[2]);
+            $topic = Topic::load($args[1]);
 
-             if ($topic->acctype > 0 && $node->ispublic != 1) {
-                $this->setError('tn_nopublictopic');
-
-                return;
-             }
+            if ($topic->ispublic ==1 && $node->ispublic != 1) {
+                return "Нельзя добавлять публичный топик к приватному узлу";
+            }
             $newtopic = new Topic();
             $newtopic->user_id = System::getUser()->user_id;
             $newtopic->title = $topic->title;
+            $newtopic->content = $topic->content;
+            $newtopic->ispublic = $topic->ispublic;
             if ($node->node_id == $topic->node_id) {
-                $newtopic->title = $topic->title . " (".H::l("thecopy").")";
+                $newtopic->title = $topic->title . " (Копия)";
             }
             $newtopic->detail = $topic->detail;
             $newtopic->save();
-            $newtopic->addToNode($node->node_id );
-           
-         }
-         if($args[0] =="new") {
+            $newtopic->addToNode($node->node_id);
 
-         }
-         if($args[0] =="edit") {
+        }
+        if($args[0] =="new") {
 
-         }
-           
-         return "";
-     }
-   
-    public  function saveTopic($args,$post=null) {
+        }
+        if($args[0] =="edit") {
 
-         $post = json_decode($post) ;
-         if($args[0] > 0)  {
-             $topic = Topic::load($args[0]);
-         }  else {
-             $topic = new  Topic();  
-             $topic->user_id = System::getUser()->user_id;
-                           
-         }
+        }
 
-      
-   
-   
+        return "";
+    }
+
+    public function saveTopic($args, $post=null) {
+
+        $post = json_decode($post) ;
+        if($args[0] > 0) {
+            $topic = Topic::load($args[0]);
+        } else {
+            $topic = new  Topic();
+            $topic->user_id = System::getUser()->user_id;
+
+        }
+
+
+
+
         $topic->title = $post->title;
         $topic->detail = $post->data;
-        $topic->acctype = $post->acctype;
+        if($topic->ispublic != ($post->ispublic ?1:0 ))    
+        {
+            $topic->accusers=[]; //сбрасываем  при смене  доступа
+        }
+        $topic->ispublic = $post->ispublic ?1:0;
 
         if (strlen($topic->title) == 0) {
-            return H::l('notitle');
+            return 'Не введен  заголовок';
         }
 
 
         $node = Node::load($args[1]);
-        if ($topic->acctype > 0 && $node->ispublic != 1) {
-             return  H::l('tn_nopublictopic') ;
+        if ($topic->ispublic == 1 && $node->ispublic == 0) {
+            return "Нельзя добавлять публичный топик к приватному узлу" ;
         }
+        $topic->updatedon = time();
 
         $topic->save();
         $tags = trim($post->tags) ;
         if(strlen($tags)>0) {
-           $topic->saveTags( explode(",", $tags) );    
+            $topic->saveTags(explode(";", $tags));
         }
-        
+
 
         if ($args[0] == 0) {
             $topic->addToNode($args[1]);
         }
-   
-   
-           
-         return "";
-     }
-     
-     public  function opTree($args,$post=null) {
-         if($args[0] =="new") {
+
+
+
+        return "";
+    }
+
+    public function opTree($args, $post=null) {
+        if($args[0] =="new") {
             $id = $args[3] ;
             $parent = Node::load($id);
             $node = new Node();
             $node->pid = $id;
             $node->user_id = System::getUser()->user_id;
             $node->title = $args[1];
-            $node->ispublic = $args[2]=="true"  ? 1:0;
+            $node->ispublic = $args[2]=="true" ? 1 : 0;
             if ($parent->ispublic == 0 && $node->ispublic == 1) {
 
-                return H::l("noaddprivate") ;
+                return "Нельзя добавлять публичный узел к приватному  " ;
             }
 
             $node->save();
-       
-         }
-         if($args[0] =="edit") {
+
+        }
+        if($args[0] =="edit") {
             $id = $args[3] ;
             $node = Node::load($id);
             $node->title = $args[1];
             $node->ispublic = $args[2]=="true" ? 1 : 0;
             $parent = Node::load($node->pid);
             if ($parent->ispublic == 0 && $node->ispublic == 1) {
-                 return H::l("noaddprivate") ;
+                return "Нельзя добавлять публичный узел к приватному" ;
             }
 
             $node->save();
-       
-         }
-         if($args[0] =="delete") {
-             Node::delete($args[1]);
-             Topic::deleteByNode($args[1]);
-             
-         }
-         if($args[0] =="paste") {
-              $id = $args[1] ;
-              $pid = $args[2] ;
-              $dest = Node::load($pid);
+
+        }
+        if($args[0] =="delete") {
+            Node::delete($args[1]);
+            Topic::deleteByNode($args[1]);
+
+        }
+        if($args[0] =="paste") {
+            $id = $args[1] ;
+            $pid = $args[2] ;
+            $dest = Node::load($pid);
 
             if ($pid == $id) {
                 return;
@@ -235,22 +258,22 @@ class Main extends \App\Pages\Base
             if (strpos($dest->mpath, $node->mpath) === 0) {
 
 
-                return H::l("nomovedesc");
+                return "Нельзя перемещать к своему наследнику";
             }
 
             $node->moveTo($dest->node_id);
-  
-             
-             
-         }
-         return "";
-    }  
-   
-     public  function getTree($args,$post=null) {
-        $expanded = strlen($args[0])>0 ? explode(",",$args[0]) : array();
+
+
+
+        }
+        return "";
+    }
+
+    public function getTree($args, $post=null) {
+        $expanded = strlen($args[0])>0 ? explode(",", $args[0]) : array();
         $tree = array();
-        
-        
+
+
         $user = System::getUser();
         $w = "ispublic = 1 or  user_id={$user->user_id}  ";
         if ($user->rolename == 'admins') {
@@ -263,98 +286,185 @@ class Main extends \App\Pages\Base
             $root->user_id = 0;
             $root->ispublic = 1;
             $root->state = array('expanded'=>true) ;
-      
+ 
             $root->save();
 
             $itemlist = Node::find($w, "pid,mpath,title");
-        } 
+        }
 
         $nodelist = array();
         foreach ($itemlist as $item) {
-          
-           
+
+
             $node = new Node2();
-            $node->id = $item->node_id; 
-            $node->pid = $item->pid; 
-            $node->text = $item->title; 
-            $node->ispublic = $item->ispublic; 
+            $node->id = $item->node_id;
+            $node->pid = $item->pid;
+            $node->text = $item->title;
+            $node->ispublic = $item->ispublic;
+            $node->isowner = $item->user_id==$user->user_id || $user->username=='admin';
 
             if ($node->ispublic == 1) {
                 $node->icon = 'fa fa-users fa-xs';
             } else {
                 $node->icon = 'fa fa-lock fa-xs';
+                if(!$node->isowner) {
+                    continue;
+                }
+            }
+            if ($node->pid==0  ) {
+                $node->icon='';
+                $node->isowner=false;
+            }
+            if(in_array($node->id, $expanded)) {    //восстанавливаем развернутые
+                $node->state = array('expanded'=>true) ;
+
             }
 
-            if(in_array($node->id,$expanded))  {    //восстанавливаем развернутые
-                $node->state = array('expanded'=>true) ;
-      
-            }
-            
-            if( ($nodelist[$node->pid] ??null) instanceof Node2 ) {
-                if(!is_array($nodelist[$node->pid]->nodes))  $nodelist[$node->pid]->nodes  = array();
-                $nodelist[$node->pid]->nodes[]=$node; 
+            if(( $nodelist[$node->pid] ??  null ) instanceof Node2) {
+                if(!is_array($nodelist[$node->pid]->nodes)) {
+                    $nodelist[$node->pid]->nodes  = array();
+                }
+                $nodelist[$node->pid]->nodes[]=$node;
             }
             $nodelist[$node->id] = $node;
-            
- 
-        }     
+
+
+        }
         foreach($nodelist as $n) {
-            if($n->pid==0) $tree[]=$n;
+            if($n->pid==0) {
+                $tree[]=$n;
+            }
+        }
+
+
+
+        return json_encode($tree, JSON_UNESCAPED_UNICODE);
+
+    }
+
+    public function loadTopic($args, $post=null) {
+        $t = Topic::load($args[0]) ;
+        $n = Node::load($args[1]) ;
+        $user = \App\System::getUser();
+  
+            
+        $ret = array();
+        $ret['ispublic'] = $t->ispublic == "1" ;
+        $ret['detail'] = $t->detail;
+        $ret['tags'] = $t->getTags();
+        $ret['files'] = [];
+        $ret['sugs'] = $t->getSuggestionTags();
+        foreach(Helper::findFileByTopic($t->topic_id) as $f) {
+            $ret['files'][] = array('file_id'=>$f->file_id,
+             'filename'=>$f->filename ,
+             'link'=>"/loadfile.php?id=" . $f->file_id
+             );
         }
      
-             
-           
-        return json_encode($tree , JSON_UNESCAPED_UNICODE);     
-    
-    }
-    
-     public  function loadTopic($args,$post=null) {
-         $t = Topic::load($args[0]) ;
-         
-         
-         $ret = array();
-         $ret['acctype'] = $t->acctype;
-         $ret['detail'] = $t->detail;
-         $ret['tags'] = $t->getTags();;
-         $ret['files'] = array();
-    
-         foreach(Helper::findFileByTopic($t->topic_id) as $f) {
-             $ret['files'][] = array('file_id'=>$f->file_id, 
-              'filename'=>$f->filename , 
-              'link'=>"/loadfile.php?id=" . $f->file_id  
-              ); 
-         }
-
-    
-         
-         return json_encode($ret , JSON_UNESCAPED_UNICODE);     
-    
-   }
-   public  function loadTopics($args,$post=null) {
+        $ret['canedit'] = $user->user_id==$t->user_id ;
         
+        if($ret['ispublic'] )  {
+            if(in_array( $user->user_id,$t->accusers)) {
+               $ret['canedit'] = true;
+            }
+        }     
+        
+        $ret['candelcut'] = ($user->user_id==$t->user_id  || $user->user_id==$n->user_id )  ;
+        $ret['canacc'] = $user->user_id==$t->user_id ;
+  
+       
+   
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+
+    }
+
+    public function loadTopics($args, $post=null) {
+        $user = \App\System::getUser();
+  
         $conn = \ZCL\DB\DB::getConnect();
         $res = $conn->Execute("select topic_id from note_fav where user_id= " . System::getUser()->user_id);
         $favorites = array();
         foreach ($res as $r) {
             $favorites[] = $r['topic_id'];
-        }        
-        
-        
-          $arr = array()  ;
-          foreach(Topic::findByNode($args[0]) as $t){
-             $t->fav = in_array($t->topic_id, $favorites)  ;
-             $arr[]=array("title"=>$t->title,"fav"=>$t->fav,"topic_id"=>$t->topic_id); 
-          };
- 
-          return json_encode($arr , JSON_UNESCAPED_UNICODE);     
-      
+        }
+        $links = [];
+        $res = $conn->Execute("select topic_id from note_topicnode where islink=1 and  node_id= ".$args[0] );
+        foreach ($res as $r) {
+            $links[] = $r['topic_id'];
+        }
+
+        $arr = array()  ;
+        foreach(Topic:: findYield("   topic_id in (select topic_id from note_topicnode where  node_id={$args[0]})" )  as $t) {
+                   
+            $a=array(
+             "title"=>$t->title,
+             "fav"=>in_array($t->topic_id, $favorites) ,
+             "topic_id"=>$t->topic_id,
+             "ispublic"=>$t->ispublic==1,
+           
+             'islink' =>in_array($t->topic_id, $links)  ,
+                 
+             "hash" =>md5($t->topic_id . \App\Helper::getSalt()),
+             'isowner' => $user->user_id==$t->user_id 
+            
+             );
+             
+             if($a['ispublic'] ==false && $a['isowner'] ==false ) {
+                 
+                 if(!in_array($user->user_id,$t->accusers??[]))  {
+                     continue;
+                 }
+                 
+             }
+             
+             
+             $arr[] = $a;
+             
+        }
+
+        return json_encode($arr, JSON_UNESCAPED_UNICODE);
+
     }
     
+    public function loadUsers($args, $post=null) {
+        $user = \App\System::getUser();
+     
+        $t = Topic::load($args[0]) ;
+        $ret = ['allUsers'=>[],'accUsers'=>[]] ;
+        
+        foreach( \App\Entity\User::findArray('username', 'disabled <> 1','username') as $id=>$name ){
+            if($id==$user->user_id) continue;
+            
+            if(  in_array($id,$t->accusers)  ) {
+               $ret['accUsers'][]  =['id'=>$id,'name'=>$name] ;
+            } else {
+               $ret['allUsers'][]  =['id'=>$id,'name'=>$name] ;
+            }
+            
+        }
+        
+        
+        return json_encode($ret, JSON_UNESCAPED_UNICODE);
+       
+    }
+ 
    
-    
+    public function saveUsers($args, $post=null) {
+        $post= json_decode($post)    ;
+        $t = Topic::load($args[0]) ;
+        $t->accusers=[];
+        foreach($post as $u){
+            $t->accusers[]=$u->id;  
+        }
+        
+        $t->save();
+        
+    }
+
 }
 
-class  Node2 {
+class Node2
+{
     public $id;
     public $pid;
     public $icon;
@@ -363,3 +473,4 @@ class  Node2 {
     public $nodes = null;
     public $state = array();
 }
+

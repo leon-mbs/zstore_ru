@@ -1,12 +1,28 @@
 <font bold="true">a</font>
+    {{#ischeck}}
 <text>Чек {{document_number}}</text>
+    {{/ischeck}}
+    {{^ischeck}}
+<text>Счет {{document_number}}</text>
+    {{/ischeck}}
+    
 <font >a</font>
 <text>от {{date}}</text>
 <align>left</align>
+
+    {{#fiscalnumber}}
+<text>Фискальный чек</text>
+<text>ФН чека {{fiscalnumber}}</text>
+    {{/fiscalnumber}}
  
 
 <text>{{firm_name}}</text>   
-<text>ІНН {{inn}}</text>   
+{{#inn}}  
+<text>ИНН {{inn}}</text>   
+{{/inn}}  
+{{#tin}}  
+<text>ОКПО {{tin}}</text>   
+{{/tin}}  
 <text>{{shopname}}</text>   
   {{#shopname}}
 <text>{{shopname}}</text>   
@@ -17,9 +33,23 @@
 <text>Покупатель: {{customer_name}}</text>    
 
     {{/customer_name}}
-<text>Терминал: {{pos_name}}</text>    
+    
+   {{#ischeck}}    
+   
+    
+        {{#form1}}
+ <text>Форма оплаты: наличные</text>        
+        {{/form1}}
+        {{#form2}}
+ <text>Форма оплаты: безнал</text>        
+        {{/form2}}    
+ 
+        {{#trans}}
+ <text>№ транзакци  {{trans}}</text>        
+          
+        {{/trans}}     
 <text>Кассир: {{username}}</text>    
-
+   {{/ischeck}}
  
 
 <separator>-</separator>
@@ -42,22 +72,28 @@
 
     {{^prepaid}}
     {{#isdisc}}
-<text>Скидка: {{paydisc}}</text>
+<text>Скидка: {{totaldisc}}</text>
  
     {{/isdisc}}
-   {{#delbonus}}
- <text>Списано бонусов: {{delbonus}}</text>
+   {{#bonus}}
+ <text>Списано бонусов: {{bonus}}</text>
  
-    {{/delbonus}}
+    {{/bonus}}
 
  <text>К оплате: {{payamount}}</text>
+ 
+    {{#ischeck}} 
+ 
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
  <text>Сдача: {{exchange}}</text>
  {{/exchange}} 
+ 
+    {{/ischeck}} 
+     
     {{/prepaid}}
     {{#addbonus}}
- <text>Насчитано бонусов: {{addbonus}}</text>
+ <text>Насчитано: {{addbonus}}</text>
  
     {{/addbonus}}
     {{#allbonus}}
@@ -66,15 +102,17 @@
  
     {{/allbonus}}
     
- 
+{{#promo}}
+<text> Промокод {{promo}}</text>  
+{{/promo}}  
 <font bold="true">a</font>
 <align>center</align>
 <newline ></newline>
-<text>  {{checkslogan}}</text>    
-{{#docqrcodeurl}}
-<font >a</font>
-<newline ></newline>
-<qrcode type="code128"> {{docqrcodeurl}}</qrcode>
-{{/docqrcodeurl}}
+
+{{#checkslogan}}
+<text>  {{checkslogan}}</text>
+{{/checkslogan}}
+
+ 
 <newline ></newline>
  

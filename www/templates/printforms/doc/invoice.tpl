@@ -4,31 +4,21 @@
     <tr>
 
         <td colspan="9">
-            <img style="height:100px;" src='{{logo}}'/>
+            <img style="height:100px;" src="{{logo}}"/>
         </td>
 
     </tr>
     {{/islogo}}
     <tr>
         <td></td>
-        <td><b>Покупатель</b></td>
-        <td colspan="7"><b>{{customer_name}}</b></td>
+        <td><b>Поекпатель</b></td>
+        <td colspan="7"> {{customer_name}}</b> 
+          {{#phone}} Тел. {{phone}}  {{/phone}} 
+        </td>
     </tr>
     
-    {{#phone}}
-    <tr>
-        <td></td>
-        <td valign="top">Телефон</td>
-        <td colspan="7">{{phone}}</td>
-    </tr>
-     {{/phone}} 
-   {{#address}}
-    <tr>
-        <td></td>
-        <td valign="top">Адрес</td>
-        <td colspan="7">{{address}}</td>
-    </tr>
-     {{/address}} 
+ 
+ 
    {{#edrpou}}
     <tr>
         <td></td>
@@ -37,39 +27,63 @@
     </tr>
      {{/edrpou}}       
           
+     {{#iscustaddress}}
     
+      <tr>
+        <td></td>
+        <td valign="top">Адрес</td>
+        <td colspan="7">{{custaddress}}</td>
+    </tr>    
+    {{/iscustaddress}}   
     
     {{#isfirm}}
     <tr>
 
         <td></td>
         <td><b> Продавец</b></td>
-        <td colspan="7"><b>{{firm_name}}</b></td>
+        <td colspan="7"> {{firm_name}} 
+        {{#fphone}} Тел.  {{fphone}}  {{/fphone}} 
+          
+        </td>
 
     </tr>
-    <tr>
-
-        <td></td>
-        <td> Адрес</td>
-        <td colspan="7">{{firm_address}}</td>
-
-    </tr>
+ 
     {{#fedrpou}}
     <tr>
         <td></td>
         <td valign="top">ОКПО</td>
         <td colspan="7">{{fedrpou}}</td>
     </tr>
-     {{/fedrpou}}     
+     {{/fedrpou}}  
+    
      {{#finn}}
     <tr>
         <td></td>
-        <td valign="top">IНН</td>
+        <td valign="top">ИНН</td>
         <td colspan="7">{{finn}}</td>
     </tr>
      {{/finn}}     
   
     {{/isfirm}}
+    {{#isfop}}
+    <tr>
+
+        <td></td>
+        <td><b> Продавец</b></td>
+        <td colspan="7"> {{fop_name}} </td>
+
+    </tr> 
+    <tr>
+        <td></td>
+        <td valign="top">ОКПО</td>
+        <td colspan="7">{{fop_edrpou}}</td>
+    </tr>       
+   {{/isfop}}   
+     <tr>
+        <td></td>
+        <td valign="top">Адрес</td>
+        <td colspan="7">{{address}}</td>
+    </tr>    
     {{#iscontract}}
     <tr>
 
@@ -83,11 +97,20 @@
     <tr>
 
         <td></td>
-        <td> р/р</td>
+        <td> р/с</td>
         <td colspan="7">{{bankacc}}    {{bank}}</td>
 
     </tr>
     {{/isbank}}
+     {{#iban}}
+    <tr>
+
+        <td></td>
+        <td> IBAN</td>
+        <td colspan="7">{{iban}}   </td>
+
+    </tr>
+    {{/iban}}
    <tr>
         <td colspan="9">{{{notes}}}</td>
     </tr>
@@ -106,7 +129,7 @@
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
 
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Кол.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Цена</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Цена    </th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right">Сумма</th>
     </tr>
     {{#_detail}}
@@ -117,7 +140,7 @@
         <td>{{msr}}</td>
 
         <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
+        <td align="right">{{price}}     </td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
@@ -125,12 +148,13 @@
         <td style="border-top:1px #000 solid;" colspan="8" align="right">Вместе:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
-    {{#paydisc}}
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/paydisc}}
+    {{/totaldisc}}
+ 
    {{#payamount}}
     <tr style="font-weight: bolder;">
         <td colspan="8" align="right">К оплате:</td>
@@ -149,22 +173,24 @@
         <td colspan="9">На сумму <b>{{totalstr}}</b></td>
    </tr>
    {{/totalstr}}      
-  {{/payamount}}                     
-                        <td colspan="5">
+  {{/payamount}}
+    <tr>                  <td colspan="5">
                             {{#isstamp}}
-                            <img style="height:100px;" src='{{stamp}}'/>
+                            <img style="height:100px;" src="{{stamp}}"/>
                             {{/isstamp}}
 
 
                         </td>
                         <td colspan="4">
                             {{#issign}}
-                            <img style="height:100px;" src='{{sign}}'/>
+                            <img style="height:100px;" src="{{sign}}"/>
                             {{/issign}}
 
 
                         </td>
 
                     </tr>
+          
+                             
                     </table>
 

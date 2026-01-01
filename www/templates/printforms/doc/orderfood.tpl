@@ -77,15 +77,15 @@
     {{#isdisc}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
     {{/isdisc}}  
-         {{#delbonus}}
+         {{#bonus}}
     <tr style="font-weight: bolder;">
         <td colspan="6" align="right">Списано бонусов::</td>
-        <td align="right">{{delbonus}}</td>
+        <td align="right">{{bonus}}</td>
     </tr>
-    {{/delbonus}}
+    {{/bonus}}
 
 
     <tr style="font-weight: bolder;">

@@ -12,7 +12,6 @@ use App\Helper as H;
  */
 class OutcomeItem extends Document
 {
-
     public function Execute() {
 
 
@@ -22,29 +21,23 @@ class OutcomeItem extends Document
 
             //списываем  со склада
 
-            $listst = Stock::pickup($this->headerdata['store'], $item);
+            $listst = Stock::pickup($this->headerdata['store'], $item,$this->headerdata['storeemp']??0);
             if (count($listst) == 0) {
-                \App\System::setErrorMsg(H::l('noenaughtovar', $item->itemname));
+                \App\System::setErrorMsg("Недостатньо товару"  . $item->itemname);
                 return false;
             }
             foreach ($listst as $st) {
                 $sc = new Entry($this->document_id, 0 - $st->quantity * $st->partion, 0 - $st->quantity);
                 $sc->setStock($st->stock_id);
+                $sc->tag=Entry::TAG_OUT;
                 $sc->save();
 
-                if ($this->headerdata['mtype'] > 0) {
-                    $io = new \App\Entity\IOState();
-                    $io->document_id = $this->document_id;
-                    $io->amount = 0 - $st->quantity * $st->partion;
-                    $io->iotype = $this->headerdata['mtype'];
-
-                    $io->save();
-                }
+           
 
 
             }
         }
-
+        
         return true;
     }
 
@@ -53,22 +46,30 @@ class OutcomeItem extends Document
         $i = 1;
         $detail = array();
         foreach ($this->unpackDetails('detaildata') as $item) {
-            $name = $item->itemname;
-
+           
             $detail[] = array("no"        => $i++,
-                              "item_name" => $name,
+                              "item_name" => $item->itemname,
+                              "item_code" => $item->item_code,
                               "snumber"   => $item->snumber,
                               "msr"       => $item->msr,
-                              "quantity"  => H::fqty($item->quantity));
+                              "quantity"  => H::fqty($item->quantity),
+                              "sum"  => H::fa($item->sum));
         }
 
         $header = array(
             "_detail"         => $detail,
             'date'            => H::fd($this->document_date),
+            'amount'            => H::fa($this->amount),
+            "emp"             => false,
             "from"            => $this->headerdata["storename"],
             "notes"           => nl2br($this->notes),
             "document_number" => $this->document_number
         );
+        
+        if (  ($this->headerdata["storeemp"] ?? 0)> 0  ) {
+            $header['storeemp'] = $this->headerdata["storeempname"];
+        }        
+        
         $report = new \App\Report('doc/outcomeitem.tpl');
 
         $html = $report->generate($header);
@@ -85,5 +86,6 @@ class OutcomeItem extends Document
         $list['IncomeItem'] = self::getDesc('IncomeItem');
         return $list;
     }
-
+  
 }
+ 

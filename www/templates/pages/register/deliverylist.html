@@ -13,12 +13,10 @@
                 </div>   
 
             </div>
-            <div class="w-100">  </div> 
+            <div class="w-100">
 
                 <div class="col-12 col-md-10 col-xl-8" >
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="navbar nav">
+                            <div class="card">
                                 <form zippy="searchform" class="form-inline ">
                                     <label for="searchnumber"> № </label>
 
@@ -29,8 +27,6 @@
 
 
                                 </form>
-                            </div>
-                        </div>
                     </div>
 
 
@@ -66,7 +62,7 @@
 
                             <td class="text-right" zippy="docamount"></td>
 
-                            <td   ><i   zippy="wp" class="fa fa-credit-card" /></td>
+                            <td   ><i   zippy="wp" class="fa fa-credit-card" ></i></td>
                             <td zippy="docnotes"></td>
                         </tr>
 
@@ -78,7 +74,7 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <div class="navbar nav">
+                                <div class="card">
                                     <form zippy="statusform" class="form-inline ">
                                         <button zippy="bdelivered" type="submit" class="  btn btn-success  mr-2 ">Доставлено</button>   
 
@@ -94,7 +90,7 @@
                                         <label data-label="payamount" for="payamount">К оплате</label>
                                         <input   style="width:100px;" pattern="[0-9,\.]+" zippy="payamount" class="form-control qtyprice mr-2">
 
-                                        <label data-label="mf" for="mf">Счет</label>
+                                        <label data-label="mf" for="mf">Рахунок</label>
                                         <select zippy="mf" class="form-control">
                                             <option value="0">Не указано</option>
                                         </select>
@@ -118,21 +114,22 @@
 
                 </div>
 
-          
-            </div> 
-            <script>
+
+            </div>
+        </div>
+        <script>
                 window.setInterval(onNewOrder, 5000);
 
               
                 function onNewOrder() {
-                        callPageMethod('getMessages',null,null,(data)=> 
+                        callPM('getMessages',null,null,(data)=> 
                         {
                            
                                var  answer = JSON.parse(data)  
                               
                                 if (answer.cnt > 0) {
                                     $('#newordersalert').show();
-                                    $('#neworderscnt').text('Новых доставок ' + answer.cnt);
+                                    $('#neworderscnt').text('Нових доставок ' + answer.cnt);
 
                                 }       
                             

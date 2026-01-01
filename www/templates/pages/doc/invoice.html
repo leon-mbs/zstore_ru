@@ -13,24 +13,30 @@
                   
                     <div class="form-group  ">
                         <label for="customer">Покупатель</label>
-                        <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
-                        <span zippy="discount" style="font-size:smaller"></span>
-
-                        <a style="display:block;font-size:smaller" zippy="addcust">Добавить нового</a>
+                        <div class="input-group  ">
+                          <input placeholder="Начните вводить..." class="form-control " zippy="customer"/>
+                             <div class="input-group-append">
+                                 <a title="Добавить нового" class="btn btn-success" zippy="addcust" >+</a>
+                            </div>                    
+                        </div>                               
+                        <span zippy="custdisc"> </span>
 
                     </div>
+                     <div class="form-group  ">
+                        <label for="contract" data-label="contract">Договор</label>
+                        <select class="form-control" zippy="contract">
+                            <option value="0">Не выбрано</option>
+                        </select>
+
+
+                    </div>                    
                     <div class="form-group  ">
                         <label for="phone">Телефон</label>
 
                         <input zippy="phone" class="form-control">
-
+                   
                     </div>
-                    <div class="form-group  ">
-                        <label for="email">E-mail</label>
-
-                        <input zippy="email" class="form-control">
-
-                    </div>
+                 
                     <div class="form-group  ">
                         <label for="customer_print">Альтернативное название</label>
 
@@ -38,46 +44,41 @@
                         <small>Альтернативное название для печатной формы, если у покупателя разные компании</small>
                     </div>
 
+                
                     <div class="form-group  ">
-                        <label for="firm">Продавец</label>
-                        <select class="form-control" zippy="firm">
-                            <option value="0">Не выбран</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group  ">
-                        <label for="contract" data-label="contract">Контракт</label>
-                        <select class="form-control" zippy="contract">
-                            <option value="0">Не выбран</option>
+                        <label for="fop" data-label="fop"  >Выбрать ИП</label>
+                        <select class="form-control" zippy="fop">
+                            <option value="0">Не выбрано</option>
                         </select>
 
 
-                    </div>
+                  </div>  
+                
 
 
                 </div>
                 <div class="col-12 col-md-3">
                    <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                    <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
-                        <label for="store">Со склада</label>
+                        <label for="store">Со  склада</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не установлено</option>
+                            <option value="0">Не выбран</option>
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="pricetype">Тип цены</label>
+                        <label for="pricetype">Тип цени</label>
                         <select class="form-control" zippy="pricetype">
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="payment">Счет к оплате</label>
+                        <label for="payment">Счет  к оплате</label>
                         <select class="form-control" zippy="payment">
                             <option value="0">Не выбрано</option>
 
@@ -96,14 +97,14 @@
                 <div class="col-10 col-lg-8">
                       {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input style="width:150px;" autocomplete="off" autofocus type="text" zippy="barcode"
+                        Штрих код &nbsp;<input style="width:150px;" autocomplete="off"  autofocus="on"   type="text" zippy="barcode"
                                                onkeydown="onBarCode()">
                         &nbsp; &nbsp; &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
           
                     </div>
                     {{/usescanner}}
                     <a zippy="addrow" class="btn btn-info  ">Добавить товар</a>   &nbsp;&nbsp;   <a zippy="addserrow" class="btn btn-info  ">Добавить услугу</a>
-                    <table class="table table-sm">
+                    <table class="table table-sm">                                                                                                      
                         <tr>
                             <th>Название</th>
                             <th>Код</th>
@@ -111,8 +112,9 @@
 
 
                             <th class="text-right">Кол.</th>
-                            <th class="text-right">Цена</th>
-
+                            <th class="text-right"><i class="fa fa-gift"></i>,%</th>
+                           <th class="text-right">Цена</th>
+                        
                             <th class="text-right">Сумма</th>
                             <th  ></th>
                         </tr>
@@ -123,7 +125,10 @@
 
 
                             <td zippy="quantity" class="text-right"></td>
+                            <td zippy="disc" class="text-right"></td>
+                          
                             <td zippy="price" class="text-right"></td>
+                             
 
                             <td zippy="amount" class="text-right"></td>
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
@@ -131,21 +136,23 @@
 
                         </tr>
                         <tr style="font-weight: bolder;">
-                            <td colspan="5" class="text-right">Всего:</td>
+                            <td colspan="6" class="text-right">Всего:</td>
                             <td zippy="total" class="text-right"></td>
                             <td></td>
                         </tr>
-                        <tr style="font-weight: bolder;">
-                            <td colspan="5" class="text-right"><span data-label="paydisc">Скидка:</span></td>
-                            <td zippy="paydisc" class="text-right"></td>
-                            <td><a data-label="paydisc" href="javascript:void(0);" data-toggle="modal" data-target="#modaldisc"><i
-                                        class="fa fa-edit"></i></a></td>
+                    
+                     
+                       <tr style="font-weight: bolder;">
+                            <td colspan="6" class="text-right">Скидка:</td>
+                            <td zippy="totaldisc" class="text-right"></td>
+                            <td><a data-label="totaldisc" href="javascript:void(0);" data-toggle="modal"
+                                   data-target="#modaltotaldisc"><i class="fa fa-edit"></i></a></td>
                         </tr>
+                     
                         <tr style="font-weight: bolder;">
-                            <td colspan="5" class="text-right"><span data-label="payamount">К оплате:</span></td>
+                            <td colspan="6" class="text-right"><span data-label="payamount">К оплате:</span></td>
                             <td zippy="payamount" class="text-right"></td>
-                            <td><a data-label="payamount" href="javascript:void(0);" data-toggle="modal"
-                                   data-target="#modalpayamount"><i class="fa fa-edit"></i></a></td>
+                            <td></td>
                         </tr>
                   
 
@@ -156,11 +163,13 @@
                 <div class="col-6">
                     <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  ">
                     &nbsp;<input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                    &nbsp;<input zippy="execdoc" type="submit" value="К оплате" class="btn btn-primary  ">
 
                 </div>
             </div>
-            <div id="modaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+          
+
+            <div id="modaltotaldisc" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered  modal-sm">
                     <div class="modal-content">
@@ -172,33 +181,9 @@
                         </div>
                         <div class="modal-body">
                             <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpaydisc" pattern="[0-9,\.]+">
+                                <input class="form-control qtyprice" type="text" zippy="edittotaldisc" pattern="[0-9,\.]+">
                                 <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpaydisc" class="ml-2 btn btn-info  ">
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div id="modalpayamount" class="modal fade  " tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered  modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">К оплате</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="input-group  ">
-                                <input class="form-control qtyprice" type="text" zippy="editpayamount" pattern="[0-9,\.]+">
-                                <div class="input-group-append">
-                                    <input type="submit" value="OK" zippy="bpayamount" class="ml-2 btn btn-info  ">
+                                    <input type="submit" value="OK" zippy="btotaldisc" class="ml-2 btn btn-info  ">
 
                                 </div>
                             </div>
@@ -209,15 +194,16 @@
             </div>
              
         </form>
-        <form zippy="editdetail">
-            <h4>Редактирование товара </h4>
+            
             <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
-
+                <form zippy="editdetail">
+                    <h4>Редактирование товара </h4>
                     <div class="form-group">
-                        <label for="edittovar">Назван</label>
-                        <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
-
+                        <label for="edittovar">Название</label>
+                        <input    placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
+                       <a zippy="openitemsel">Открыть справочник</a>
+                       <br>
                         Наличие: <span zippy="qtystock"></span>
                          {{^noshowpartion}}
                         <br>Учетная цена: <span zippy="pricestock"></span>
@@ -226,28 +212,31 @@
                     </div>
                     <div class="form-group">
                         <label for="editquantity">Количество</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity" required="required"
-                               pattern="[0-9,\.]+" style="width: 70px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editquantity"  required="on" 
+                               pattern="[0-9,\.]+" style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editprice">Цена </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice" required="required"
-                               pattern="[0-9,\.]+"
-                               style="width: 70px;">
-
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editprice"  required="on"   pattern="[0-9,\.]+"   style="width: 100px;">
                     </div>
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-outline-secondary  mr-2">
                         <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="Отменить" class="btn btn-outline-secondary ">
+                        
                     </div>
-
+                   </form>
 
                 </div>
+             
+              <div class="col-12 col-md-8 col-xl-8">
+                <div zippy="wselitem"></div>
+             </div>                
+            
             </div>
-        </form>
+       
         <form zippy="editserdetail">
             <h4>Редактирование услуги</h4>
             <div class="row">
@@ -256,27 +245,27 @@
                     <div class="form-group">
                         <label for="editservice">Работа, услуга </label>
                         <select zippy="editservice" class="form-control select2">
-                            <option value="0">Не выбрана</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="editserquantity">Количество</label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserquantity" required="required"
-                               pattern="[0-9,\.]+" style="width: 70px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserquantity"  required="on" 
+                               pattern="[0-9,\.]+" style="width: 100px;">
 
                     </div>
                     <div class="form-group">
                         <label for="editserprice">Цена </label>
-                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserprice" required="required"
-                               pattern="[0-9,\.]+"
-                               style="width: 70px;">
+                        <input autocomplete="off" class="form-control qtyprice" type="text" zippy="editserprice"  required="on" 
+                               pattern="[0-9,\.]+"                               style="width: 100px;">
 
                     </div>
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelserrow" value="Отменить" class="btn btn-outline-secondary  mr-2">
                         <input type="submit" zippy="submitserrow" value="Сохранить" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelserrow" value="Отменить" class="btn btn-outline-secondary ">
+                        
                     </div>
 
 
@@ -290,7 +279,7 @@
 
                     <div class="form-group">
                         <label for="editcustname">Название </label>
-                        <input class="form-control " zippy="editcustname" required="required"/>
+                        <input autofocus="on"   class="form-control " zippy="editcustname"  required="on" />
                     </div>
                     <div class="form-group">
                         <label for="editcustphone">Телефон</label>
@@ -299,15 +288,17 @@
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-outline-secondary  mr-2">
                         <input zippy="savecust" type="submit" value="Сохранить" class="btn btn-outline-primary">
-                        <input type="button" zippy="cancelcust" value="Отменить" class="btn btn-outline-secondary ">
+                        
                     </div>
                 </div>
             </div>
         </form>
         <script>
-            $(document).ready(function () {
-     
+         $(document).ready(function () {
+ 
+          
         
             $('#editquantity').on('input',function( ) {
                    if(editquantity.reportValidity()==false) return
@@ -317,15 +308,22 @@
                    var q = $('#editquantity').val()
                    
                    $('#submitrow').attr('disabled','disabled')                     
-                      callPageMethod('getPriceByQty',[id,q], null,(data)=> 
+                      callPM('getPriceByQty',[id,q], null,(data)=> 
                       {
-                               $('#editprice').val(data)
+                               if(parseVal(data)) {
+                                  $('#editprice').val(data)
+                               }
+                      
                                $('#submitrow').attr('disabled',null)                     
      
                           
                       });
                     
             })
+                 
+                $("#edittovar").focus()    
+ 
+                 
                  
           });   
           

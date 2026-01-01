@@ -1,0 +1,41 @@
+<html>
+   <head>
+        <title>  Комиссионные товары  </title>
+
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-12  col-xl-10">
+                <h3>Комиссионные товары</h3>
+                 <span>Чтобы не попадали старые товары – переведите соответствующие приходные накладные в статус Закрыто (в общем журнале)  </span>
+                 <div class="card">
+                    <form zippy="filter" class="form-inline">
+        
+                        <label for="customer">Комитент  </label>
+                        <select class="form-control mr-2" zippy="customer"> 
+                         <option value="0"> По всем </option>
+                        </select>
+                   
+                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+
+
+                    </form>
+                </div>
+
+
+
+                <div zippy="detail">
+                    <div>
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemcomission" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemcomission" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+
+                    </div>
+                    <div zippy="preview" class="table-responsive-sm">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

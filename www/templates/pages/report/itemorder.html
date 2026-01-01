@@ -9,17 +9,20 @@
                 <h3>Заказанные товары
                     <i class="fa fa-info-circle" style="cursor:pointer;font-size:16px;" data-container="body"
                        data-toggle="popover"
-                       data-placement="bottom" data-content="Товары в заказах покупателей со статусами 'Новый' и 'Исполняется' "></i>
+                       data-placement="bottom" data-content="Товары в заказах покупателей со статусами 'Новый' и 'Выполняется' "></i>
                 </h3>
 
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline">
 
                         <label for="cust">Покупатель</label>
                         <select class="form-control " zippy="cust">
                             <option value="0">По всем</option>
                         </select>
-
+                        <label for="emp">менеджер</label>
+                        <select class="form-control mr-sm-2" zippy="emp">
+                            <option value="0">Не выбрано</option>
+                        </select>
                         <input class="btn btn-outline-primary ml-2 " type="submit" value="ОК">
 
                     </form>
@@ -29,8 +32,8 @@
                 <div zippy="detail">
                     <div>
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/itemorder" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
-                        <a href="/showreport/pdf/itemorder" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemorder" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemorder" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
                                                                     
 
                     </div>

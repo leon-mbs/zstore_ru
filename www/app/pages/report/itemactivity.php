@@ -13,6 +13,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Label;
 use Zippy\Html\Link\RedirectLink;
 use Zippy\Html\Panel;
@@ -22,25 +23,28 @@ use Zippy\Html\Panel;
  */
 class ItemActivity extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
         if (false == \App\ACL::checkShowReport('ItemActivity')) {
             return;
         }
 
-        $this->add(new Form('filter'))->onSubmit($this, 'OnSubmit');
+        $this->add(new Form('filter'));
         $this->filter->add(new Date('from', time() - (7 * 24 * 3600)));
         $this->filter->add(new Date('to', time()));
-       
+
         $this->filter->add(new TextInput('snumber'))->setVisible(false);
         $this->filter->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
-
+        $emplist = \App\Entity\Employee::findArray('emp_name','disabled<>1','emp_name')  ;
+        
+        $this->filter->add(new DropDownChoice('searchemp', $emplist, 0));
+   
         $this->filter->add(new AutocompleteTextInput('item'))->onText($this, 'OnAutoItem');
         $this->filter->item->onChange($this, "onItem");
-
+        $this->filter->add(new SubmitButton('show'))->onClick($this, 'OnSubmit');
+   
         $this->add(new Panel('detail'))->setVisible(false);
- 
+
         $this->detail->add(new Label('preview'));
         \App\Session::getSession()->issubmit = false;
     }
@@ -72,15 +76,14 @@ class ItemActivity extends \App\Pages\Base
 
     public function OnSubmit($sender) {
 
- 
+
         $this->detail->setVisible(true);
 
         $html = $this->generateReport();
         \App\Session::getSession()->printform = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
         $this->detail->preview->setText($html, true);
 
-        // $this->addJavaScript("loadRep()",true) ;
-
+       
     }
 
     private function generateReport() {
@@ -88,6 +91,7 @@ class ItemActivity extends \App\Pages\Base
         $storeid = $this->filter->store->getValue();
         $itemid = $this->filter->item->getKey();
         $snumber = $this->filter->snumber->getText();
+        $emp = $this->filter->searchemp->getValue();
 
 
         $it = "1=1";
@@ -105,10 +109,8 @@ class ItemActivity extends \App\Pages\Base
         $detail = array();
         $conn = \ZDB\DB::getConnect();
         $gd = " GROUP_CONCAT(distinct dc.document_number) ";
-        if($conn->dataProvider=="postgres") {
-           $gd = " string_agg(  dc.document_number,',') ";  
-        } 
-        
+     
+
         $sql = "
          SELECT  t.*,
           
@@ -124,6 +126,7 @@ class ItemActivity extends \App\Pages\Base
               WHERE st2.item_id = t.item_id  
               
               " . ($storeid > 0 ? " AND st2.store_id = {$storeid}  " : "") . "  
+              " . ($emp > 0 ? " AND st2.emp_id = {$emp}  " : "") . "  
               AND sc2.document_date  < t.dt   
               GROUP BY st2.item_id 
                                  
@@ -140,6 +143,7 @@ class ItemActivity extends \App\Pages\Base
             ON sc3.document_id = dc3.document_id
               WHERE st3.item_id = t.item_id  
              " . ($storeid > 0 ? " AND st3.store_id = {$storeid}  " : "") . "  
+             " . ($emp > 0 ? " AND st3.emp_id = {$emp}  " : "") . "  
               AND sc3.document_date  < t.dt   
               GROUP BY st3.item_id 
                                  
@@ -150,8 +154,8 @@ class ItemActivity extends \App\Pages\Base
           st.item_id,
           st.itemname,
           st.item_code,
-          st.storename,
-           st.snumber,  
+         
+    
           date(sc.document_date) AS dt,
           SUM(CASE WHEN quantity > 0 THEN quantity ELSE 0 END) AS obin,
           SUM(CASE WHEN quantity < 0 THEN 0 - quantity ELSE 0 END) AS obout,
@@ -165,16 +169,17 @@ class ItemActivity extends \App\Pages\Base
             ON sc.document_id = dc.document_id
               WHERE {$it}  
            " . ($storeid > 0 ? " AND st.store_id = {$storeid}  " : "") . "  
+           " . ($emp > 0 ? " AND st.emp_id = {$emp}  " : "") . "  
              AND DATE(sc.document_date) >= " . $conn->DBDate($from) . "
               AND DATE(sc.document_date) <= " . $conn->DBDate($to) . "
               GROUP BY st.store_id,st.item_id,
           st.itemname,
-          st.item_code,  st.storename,
-          st.snumber,
+          st.item_code,   
+
                        DATE(sc.document_date) ) t
               ORDER BY t.dt  
         ";
-
+        //  H::log($sql)  ;
         $rs = $conn->Execute($sql);
         $ba = 0;
         $bain = 0;
@@ -186,23 +191,22 @@ class ItemActivity extends \App\Pages\Base
 
         foreach ($rs as $row) {
 
-            if (strlen($row['snumber']) > 0) {
-                $row['itemname'] = $row['itemname'] . " (с/н " . $row['snumber'] . ")";
-            }
+            $row['begin_quantity'] = doubleval($row['begin_quantity'])  ;
+            $row['obin'] = doubleval($row['obin'])  ;
+            $row['obout'] = doubleval($row['obout'])  ;
+
             $r = array(
                 "code"  => $row['item_code'],
                 "name"  => $row['itemname'],
-                "store" => $row['storename'],
 
                 "date"      => \App\Helper::fd(strtotime($row['dt'])),
                 "documents" => '',
-                "in"        => H::fqty(strlen($row['begin_quantity']) > 0 ? $row['begin_quantity'] : 0),
+                "in"        => H::fqty($row['begin_quantity']),
                 "obin"      => H::fqty($row['obin']),
                 "obout"     => H::fqty($row['obout']),
                 "out"       => H::fqty($row['begin_quantity'] + $row['obin'] - $row['obout'])
             );
 
-          
             $detail[] = $r;
             $ba = $ba + $row['begin_amount'];
             $bain = $bain + $row['obinamount'];
@@ -210,6 +214,11 @@ class ItemActivity extends \App\Pages\Base
             $bq = $bq + $row['begin_quantity'];
             $bqin = $bqin + $row['obin'];
             $bqout = $bqout + $row['obout'];
+
+
+
+
+
         }
 
 
@@ -219,6 +228,7 @@ class ItemActivity extends \App\Pages\Base
                         'dateto'        => \App\Helper::fd($to),
                         "store"         => Store::load($storeid)->storename
         );
+
         $header['ba'] = H::fa($ba);
         $header['bain'] = H::fa($bain);
         $header['baout'] = H::fa($baout);

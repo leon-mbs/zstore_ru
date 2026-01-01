@@ -1,14 +1,14 @@
 <html>
  <head>
-        <title> Сообщение   </title>
+        <title> Уведомление   </title>
 
     </head>
 
     <body>
         <div class="row">
             <div class="col-12 col-md-8 col-xl-6">
-                <h4>Сообщение</h4>
-                <div class="navbar nav">
+                <h4>Уведомление</h4>
+                <div class="card justify-content-start">
                     <form zippy="filter" class="form-inline ">
 
 
@@ -16,8 +16,9 @@
 
                         <input type="submit" class="  btn btn-outline-success  " value="Искать">
 
-
+                        
                     </form>
+
                 </div>
 
                 <table class="table table-sm    ">
@@ -26,8 +27,8 @@
                         <td><i class="fa fa-clock"> </i> <span zippy="ndate"></span>
                             &nbsp;&nbsp;&nbsp;<i zippy="sendericon" ></i> <span zippy="sender"></span>
                             <p zippy="msg">
-                            <p>
-                            <span zippy="nanswer"  style="cursor:pointer" >Ответить</span>
+                            </p>
+                            <a zippy="nanswer"  >Ответить</a>
     
                         </td>
                         <td><span zippy="newn" class="badge badge-info">Новое</span></td>
@@ -38,9 +39,38 @@
                 <div zippy="pag"></div>
 
             </div>
-                     
-        </div>
+            <div class="col-12 col-md-4 col-xl-3">
+              <h4>Отправить сообщение</h4> 
+                <form zippy="msgform"  >
 
+                     <div class="form-group  ">
+                        <label for="msguser">Получатель</label>
+
+                        <select class="form-control" zippy="msguser">
+                            <option value="0">Не выбран</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="msgtext">Сообщение</label>
+                        <textarea class="form-control"   zippy="msgtext"    ></textarea>
+                    </div>
+
+                 
+                     <div class="form-group  "> 
+                        <input type="submit" class="  btn btn-outline-success  " value="Отправить">
+                       </div>
+                        
+                    </form>            
+        </div>
+        </div>
+  
+<script>
+
+   function check_delall() {
+       return confirm("Очистить?")
+   }
+
+</script>   
     </body>
 
 </html>

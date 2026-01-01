@@ -5,13 +5,11 @@ namespace App\Modules\OCStore;
 use App\System;
 use App\Helper as H;
 
-
 /**
  * Вспомагательный  класс
  */
 class Helper
 {
-
     /**
      * Функция для  работы  с  API опенкарта
      *
@@ -51,9 +49,9 @@ class Helper
         $data = json_decode($result, true);
         if ($data === null) {
             if (strlen($result) > 0) {
-                \App\System::setErrorMsg($result,true);
+                \App\System::setErrorMsg($result, true);
             } else {
-                \App\System::setErrorMsg(H::l("nodataresponse",true));
+                \App\System::setErrorMsg("Нет даанных ответа", true);
             }
 
 
@@ -77,7 +75,9 @@ class Helper
         $ssl = $modules['ocssl'];
 
         $url = $site . '/index.php?route=api/login';
-
+        if($modules['ocv4']==1) {
+            $url = $site . '/index.php?route=api/account/login';
+        }
         $fields = array(
             'username' => $apiname,
             'key'      => $key
@@ -97,14 +97,14 @@ class Helper
         }
         if (is_array($data) && count($data) == 0) {
 
-            System::setErrorMsg(H::l('nodataresponse'));
+            System::setErrorMsg('Нет данных ответа');
             return;
         }
 
-        if (is_array($data['error'])) {
+        if (is_array($data['error'] ?? null)) {
             System::setErrorMsg(implode(' ', $data['error']));
         } else {
-            if (strlen($data['error']) > 0) {
+            if (strlen($data['error']?? null) > 0) {
                 System::setErrorMsg($data['error']);
             }
         }
@@ -114,15 +114,18 @@ class Helper
             if (strlen($data['api_token']) > 0) { //версия 3
                 System::getSession()->octoken = "api_token=" . $data['api_token'];
             }
-            if (strlen($data['token']) > 0) { //версия 2.3
+            if (strlen($data['token']?? null) > 0) { //версия 2.3
                 System::getSession()->octoken = "token=" . $data['token'];
             }
 
 
-            System::setSuccessMsg(H::l('connected'));
+            System::setSuccessMsg("Соединение  успешно");
 
             //загружаем список статусов
             $url = $site . '/index.php?route=api/zstore/statuses&' . System::getSession()->octoken;
+            if($modules['ocv4']==1) {
+                $url = $site . '/index.php?route=api/zstore.statuses&' . System::getSession()->octoken;
+            }
             $json = Helper::do_curl_request($url, array());
             $data = json_decode($json, true);
 
@@ -134,6 +137,9 @@ class Helper
             }
             //загружаем список категорий
             $url = $site . '/index.php?route=api/zstore/cats&' . System::getSession()->octoken;
+            if($modules['ocv4']==1) {
+                $url = $site . '/index.php?route=api/zstore.cats&' . System::getSession()->octoken;
+            }
             $json = Helper::do_curl_request($url, array());
             $data = json_decode($json, true);
 

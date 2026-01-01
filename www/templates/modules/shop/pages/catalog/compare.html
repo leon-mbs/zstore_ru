@@ -2,9 +2,32 @@
     <body>
         <div class="row">
             <div class="col-12 col-lg-10">
-                <a zippy="backtolist" class="btn btn-outline-success mb-3 mt-2"><i class="fa fa-arrow-alt-circle-left"></i> к списку</a>
-                <h3>Сравнение товаров</h3>
+                <a zippy="backtolist" class="btn btn-outline-success mb-3 mt-2"><i class="fa fa-arrow-alt-circle-left"></i> к перечню</a>
+                <h3>Сравнение  товаров</h3>
 
+                <small>Выодятся только характеристики что отличаются</small>
+                <table class="ctable">
+                <tr ><td> </td>
+                   <td zippy="plist" class="pb-4">
+                     <img style="width:200px" zippy="pim" >
+                      <br><br><a zippy="pname" class="mt-2 text-dark" ></a>
+                      <br>   <b zippy="pprice"></b> {{currencyname}}&nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                      <a zippy="pdel"><i class="fa fa-trash text-danger" ></i></a>
+                      
+                    </td>
+                </tr>
+                {{#cattr}}
+                <tr>
+                  <td><b>{{name}} </b></td>
+                  {{#values}}
+                    <td>{{value}} </td>
+                  {{/values}}
+                  
+                </tr>
+                {{/cattr}}
+                
+                </table>
+                
                 <div zippy="comparegrid"></div>
 
             </div>

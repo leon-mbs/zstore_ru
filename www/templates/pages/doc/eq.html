@@ -1,0 +1,101 @@
+<html>
+    <head>
+          <title> Операции с  ОС и  НМА</title>
+    </head>
+    <body>
+
+
+        <form zippy="docform">
+            <h3> Операции с  ОС и  НМА</h3>
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3">
+                    <div class="form-group">
+                        <label for="document_number">Номер документа</label>
+                        <input class="form-control" type="text" zippy="document_number">
+                    </div>
+                    <div class="form-group">
+                        <label for="document_date"> Дата</label>
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
+                    </div>
+                     <div class="form-group  ">
+                        <label for="optype">Тип операции</label>
+                        <select class="form-control" zippy="optype">
+                               <option value="0">Не выбрано</option>
+                           
+                    
+                        </select>
+                        <small zippy="tip"></small>
+                    </div>                    
+                     <div class="form-group">
+                        <label for="eq"> ОЗ</label>
+                        <input placeholder="Начните вводить" class="form-control" type="text" zippy="eq"    >
+                    </div>
+
+             
+                  
+                      
+
+                </div>
+           
+                 <div class="col-12 col-md-4 col-xl-3">
+               
+                     <div class="form-group  ">
+                        <label data-label="parea" for="parea">Приозводственный участок</label>
+                        <select class="form-control" zippy="parea">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                    </div>
+                  
+                     <div class="form-group  ">
+                        <label data-label="emp" for="emp">Ответственный</label>
+                        <select class="form-control" zippy="emp">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                    </div>
+                    <div class="form-group  ">
+                        <label data-label="customer" for="customer">Контрагент</label>
+                        <input placeholder="Начните вводить"   class="form-control  " type="text" zippy="customer">
+                   
+                    </div>
+                    <div class="form-group  ">
+                        <label data-label="store" for="store">Склад</label>
+                        <select class="form-control" zippy="store">
+                        </select>
+                    </div>
+                  
+                    <div class="form-group  ">
+                        <label data-label="item" for="item">ТМЦ</label>
+                        <input placeholder="Начните вводить"   class="form-control  " type="text" zippy="item">
+                   
+                    </div>
+                     <div class="form-group">
+                        <label data-label="amount" for="amount">Сумма</label>
+                        <input style="width:120px" pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="amount">
+                    </div>                 
+                    <div class="form-group  ">
+                        <label for="notes">Примечание </label>
+
+                        <textarea class="form-control"   zippy="notes"></textarea>
+
+                    </div>        
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary mr-2">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary mr-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+
+                </div>
+            </div>
+
+
+        </form>
+
+
+    </body>
+
+</html>

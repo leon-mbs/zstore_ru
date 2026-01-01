@@ -2,7 +2,6 @@
 
 namespace App\Pages;
 
-
 use App\Entity\Event;
 use App\Helper as H;
 use App\System;
@@ -20,7 +19,9 @@ use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\RedirectLink;
 
-
+/**
+* мои  задания
+*/
 class Jobs extends \App\Pages\Base
 {
     public $_event;
@@ -30,6 +31,7 @@ class Jobs extends \App\Pages\Base
         $user = System::getUser();
         if ($user->user_id == 0) {
             App::Redirect("\\App\\Pages\\Userlogin");
+            return;
         }
 
         $this->add(new Panel('listpan'));
@@ -40,7 +42,7 @@ class Jobs extends \App\Pages\Base
         $this->listpan->add(new  ClickLink('addnew', $this, 'onAddNew'));
 
 
-        $this->ds = new \ZCL\DB\EntityDataSource("\\App\\Entity\\Event", "  user_id=" . $user->user_id, " isdone asc,  (date(eventdate) > date(now( )))  asc, eventdate desc");
+        $this->ds = new \ZCL\DB\EntityDataSource("\\App\\Entity\\Event", " event_type in(0,2) and ( user_id={$user->user_id} or createdby={$user->user_id}  ) ", " isdone asc,  (date(eventdate) > date(now( )))  asc, eventdate desc");
 
         $this->listpan->add(new DataView("nlist", $this->ds, $this, 'OnRow'));
         $this->listpan->nlist->setPageSize(H::getPG());
@@ -78,10 +80,11 @@ class Jobs extends \App\Pages\Base
 
         $row->add(new Label("description"))->setText($event->description);
         $row->add(new Label("title"))->setText($event->title);
+        $row->add(new Label("createdby"))->setText($event->createdname);
+        $row->add(new Label("username"))->setText($event->username);
         $row->add(new Label("date", \App\Helper::fdt($event->eventdate)));
-        $row->add(new ClickLink('toon', $this, 'onDoneClick'))->setVisible($event->isdone != 1);
-        $row->add(new ClickLink('tooff', $this, 'onDoneClick'))->setVisible($event->isdone == 1);
-        $row->add(new ClickLink('edit', $this, 'onEditClick'));
+        $row->add(new ClickLink('edit', $this, 'onEditClick'))->setVisible(($event->createdby ?? 0) ==0  ||  $event->createdby==System::getUser()->user_id);
+        $row->add(new ClickLink('done', $this, 'onDoneClick'));
         $row->add(new Label("stwait"))->setVisible(false);
         $row->add(new Label("sttoday"))->setVisible(false);
         $row->add(new Label("stpast"))->setVisible(false);
@@ -106,6 +109,7 @@ class Jobs extends \App\Pages\Base
             $row->stwait->setVisible(false);
             $row->sttoday->setVisible(false);
             $row->stpast->setVisible(false);
+            $row->done->setVisible(false);
         }
 
 
@@ -114,7 +118,7 @@ class Jobs extends \App\Pages\Base
     public function onDoneClick($sender) {
         $item = $sender->getOwner()->getDataItem();
 
-        $item->isdone = strpos($sender->id, "toon") === 0 ? 1 : 0;
+        $item->isdone = 1;
         $item->save();
         $this->listpan->nlist->Reload();
 
@@ -133,12 +137,13 @@ class Jobs extends \App\Pages\Base
     }
 
     public function onSave($sender) {
-        $event = new \App\Entity\Event();
+        $event = new Event();
         $event->title = $this->addeventform->addeventtitle->getText();
         $event->description = $this->addeventform->addeventdesc->getText();
         $event->eventdate = $this->addeventform->addeventdate->getDate();
         $event->eventdate = $this->addeventform->addeventtime->getDateTime($event->eventdate);
         $event->user_id = System::getUser()->user_id;
+        $event->createdby = System::getUser()->user_id;
         $user = $this->addeventform->adduser->getValue();
         if ($user > 0) {
             $event->user_id = $user;
@@ -147,6 +152,7 @@ class Jobs extends \App\Pages\Base
         if (strlen($event->title) == 0) {
             return;
         }
+        $event->event_type=Event::TYPE_JOB ;
         $event->save();
 
         $nt = $this->addeventform->addeventnotify->getValue();
@@ -169,6 +175,7 @@ class Jobs extends \App\Pages\Base
 
     public function onEditClick($sender) {
         $this->_event = $sender->getOwner()->getDataItem();
+        $this->_event->isdone = 0 ;       
         $this->editeventform->editeventtitle->setText($this->_event->title);
         $this->editeventform->editeventdesc->setText($this->_event->description);
         $this->editeventform->editeventdate->setDate($this->_event->eventdate);
@@ -217,18 +224,19 @@ class Jobs extends \App\Pages\Base
 
 
     public function filterOnSubmit($sender) {
-        $where = 'user_id=' . System::getUser()->user_id;
+        $user_id =  System::getUser()->user_id;
+        $where = " event_type in(0,2) and ( user_id={$user_id} or createdby={$user_id}  ) ";
         $text = trim($sender->searchtext->getText());
         if (strlen($text) > 0) {
             $text = Event::qstr('%' . $text . '%');
-            $where = " ( description like {$text} or title like {$text} or customer_name like {$text}) and user_id=" . System::getUser()->user_id;
+            $where .= " and  ( description like {$text} or title like {$text} )  " ;
         }
 
         $this->ds->setWhere($where);
         $this->listpan->nlist->Reload();
     }
-    
-    
-     
-    
+
+
+
+
 }

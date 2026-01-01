@@ -17,6 +17,12 @@
     </tr>
     <tr>
         <td></td>
+        <td> Тип оплаты</td>
+        <td colspan="8">{{paytypename}}</td>
+        
+    </tr>
+   <tr>
+        <td></td>
         <td> Доставка</td>
         <td>{{delivery}}</td>
         <td colspan="7">Адрес: {{ship_address}}</td>
@@ -29,6 +35,27 @@
     </tr>
 
     {{/isoutnumber}}
+   
+    {{#isfirm}}
+    <tr>
+
+        <td></td>
+        <td><b> Продавец</b></td>
+        <td colspan="8"><b>{{firm_name}}</b></td>
+
+    </tr>  
+     {{#iban}}
+    <tr>
+
+        <td></td>
+        <td> IBAN</td>
+        <td colspan="8">{{iban}}   </td>
+
+    </tr>
+    {{/iban}}    
+     
+    {{/isfirm}}   
+    
      <tr>
         <td colspan="10">{{{notes}}}</td>
     </tr>
@@ -42,8 +69,7 @@
 
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование
-        </th>
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование        </th>
         <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Код</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Ед.</th>
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;"> </th>
@@ -71,12 +97,13 @@
     </tr>
 
 
-    {{#isdisc}}
+
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
         <td colspan="9" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/isdisc}}
+    {{/totaldisc}}
     {{#delbonus}}
     <tr style="font-weight: bolder;">
         <td colspan="9" align="right">Списано бонусов::</td>
@@ -87,7 +114,7 @@
 
    {{#payamount}}
     <tr style="font-weight: bolder;">
-        <td colspan="9" align="right">Всего:</td>
+        <td colspan="9" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
     </tr>
     {{/payamount}} 
@@ -98,7 +125,6 @@
     </tr>
      {{/payed}}  
  
-
 
     
 </table>

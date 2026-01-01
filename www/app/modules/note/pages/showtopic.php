@@ -13,35 +13,42 @@ use Zippy\Html\Link\ClickLink;
  */
 class ShowTopic extends \App\Pages\Base
 {
-
     public $_topic;
 
-    public function __construct($topic_id) {
+    public function __construct($topic_id,$hash="") {
 
         parent::__construct();
         $topic_id = intval($topic_id);
- 
+
         $this->_topic = \App\Modules\Note\Entity\Topic::load($topic_id);
         if ($this->_topic == null) {
-            App::Redirect404();
-            return;
+            http_response_code(404) ;
+            die;
         }
 
-        if ($this->_topic->acctype == 0) {   //приватный
-            App::Redirect404();
-            return;
+        if ($this->_topic->ispublic == 0) {   //приватный
+            http_response_code(404) ;
+            die;
         }
+        
+        $h=md5($topic_id . \App\Helper::getSalt())  ;
+        if($h !== $hash) {
+            http_response_code(404) ;
+            die;
+        }
+        
+        /*
         if ($this->_topic->isout == 0) {
             $user_id = System::getUser()->user_id;
             if ($user_id == 0) { //незалогиненый
-                App::Redirect404();
-                return;
+                http_response_code(404) ;
+                die;
             }
         }
-
+        */
         $this->add(new Label("title", $this->_topic->title, true));
         $this->add(new Label("detail", $this->_topic->detail, true));
     }
 
-     
+
 }

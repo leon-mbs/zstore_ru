@@ -10,12 +10,11 @@ use ZCL\DB\DB;
 //класс  вспомагательных функций
 class Helper
 {
-
     public static function getBreadScrumbs($id) {
 
         $bs = "<li class=\"breadcrumb-item\"><a href='/shop'>Каталог</a></li>";
-        if ($id > 0) {
-            $g = Category::load($id);
+        $g = Category::load($id);
+        if ($g != null) {
             $gl = $g->getParents();
             $gl = array_reverse($gl);
             $all = Category::find('');
@@ -28,7 +27,7 @@ class Helper
         return $bs;
     }
 
-    //список  производителей в  данной группе  товаров 
+    //список  производителей в  данной группе  товаров
     public static function getManufacturers($cat_id = 0) {
         $cat = '';
         if ($cat_id > 0) {
@@ -55,7 +54,7 @@ class Helper
     public static function getAttributeValuesByProduct($product, $all = true) {
         $list = array();
         $conn = DB::getConnect();
-        $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.item_id=  " . $product->item_id;
+        $sql = "select v.attribute_id ,a.attributename,a.attributetype,a.valueslist,a.valueslist,v.attributevalue  from  shop_attributes_view a  join shop_attributevalues v on a.attribute_id = v.attribute_id where v.item_id={$product->item_id} order  by a.ordern ";
 
         $rs = $conn->Execute($sql);
         foreach ($rs as $row) {
@@ -106,9 +105,13 @@ class Helper
         if ($cat_id == 0) {
             return $list;
         }
-        $conn = DB::getConnect();
-
+ 
         $cat = \App\Entity\Category::load($cat_id);
+        if ($cat == null) {
+            return $list;
+        }
+        $conn = DB::getConnect();
+        
         $plist = $cat->getParents();
         $plist[] = $cat_id;
         $grlist = implode(',', $plist);
@@ -127,11 +130,12 @@ class Helper
     // список  типов  атрибутов товара
     public static function getAttributeTypes() {
 
-        return array(1 => \App\Helper::l("shopattrynname"),
-            //  2 => \App\Helper::l("shopattrnumname")  , 
-                     3 => \App\Helper::l("shopattrlistname"),
-                     4 => \App\Helper::l("shopattrsetname"),
-                     5 => \App\Helper::l("shopattrstrname")
+        return array(1 => "Есть/Нет",
+            //  2 => "Число"  ,
+                     3 => "Список",
+                     4 => "Набор",
+                     5 => "Строка",
+                     6 => "Кастомный"
         );
     }
 
@@ -142,46 +146,48 @@ class Helper
         return $conn->GetCol($sql);
     }
 
-    public  static function getPages(){
+    public static function getPages() {
         $shop = \App\System::getOptions("shop");
         $pages = $shop['pages'] ;
-        if(!is_array($pages)) $pages = array();
-        
+        if(!is_array($pages)) {
+            $pages = array();
+        }
+
         return  array_keys($pages);
     }
-    
-  
+
+
     //список атрибутов для  вариации
-    public static function getAttrVar($cat_id ) {
+    public static function getAttrVar($cat_id) {
         $conn = DB::getConnect();
         $sql = "select attribute_id,   attributename   from  shop_attributes   
                     where   cat_id = {$cat_id} and attributetype = 3  order  by  attributename ";
         $rs =  $conn->Execute($sql);
         $attr  = array();
-        foreach($rs as $row){
-           $attr[ $row['attribute_id']]= $row['attributename'] ;
+        foreach($rs as $row) {
+            $attr[ $row['attribute_id']]= $row['attributename'] ;
         }
-        
+
         return $attr;
     }
-  
+
     /**
     * подпись для wayforpay
-    * 
+    *
     */
-    public static function signWP( ) {
-        
+    public static function signWP() {
+
     }
 
     /**
     * подпись для liqpay
-    * 
+    *
     */
-    public static function signLQ( ) {
-        
+    public static function signLQ() {
+
     }
-  
-    
+
+
     /*
       //формирование  условий отбора   по  выбранным  критериям
       private static function _getWhere($filter) {

@@ -1,6 +1,6 @@
 <html>
  <head>
-        <title> Пользователи системы   </title>
+        <title> Пользоватеди системы   </title>
 
     </head>
 
@@ -9,8 +9,8 @@
 
 
             <div zippy="listpan" class="col-12 col-md-10 col-xl-8">
-                <h3>Пользователи системы</h3>
-                <div class="navbar nav">
+                <h3>Пользоватеди системы</h3>
+                <div class="card">
 
                     <form zippy="filter" class="form-inline">
 
@@ -32,10 +32,10 @@
                             <th>Логин</th>
                             <th>Роль</th>
                             <th>Сотрудник</th>
-                            <th>Дата регистр.</th>
+                            <th>Создано</th>
 
                             <th>E-mail</th>
-                 {{#showactiveusers}}     <th>Ост. акт.</th>   {{/showactiveusers}}
+                            <th>Посл. логiн</th>   
 
 
                             <th width="24">&nbsp;</th>
@@ -51,7 +51,7 @@
                             <td zippy="created" align="center" style="white-space:nowrap"></td>
 
                             <td zippy="email"></td>
-            {{#showactiveusers}}     <td zippy="lastactive" align="center" style="white-space:nowrap"></td>  {{/showactiveusers}}
+             <td zippy="lastactive" align="center" style="white-space:nowrap"></td>  
 
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a></td>
                             <td><a zippy="remove"><i class="fa fa-trash"></i></a></td>
@@ -63,23 +63,23 @@
 
 
             <div zippy="editpan" class="col-12 col-sm-10  col-md-8  col-lg-6 col-xl-4">
-                <h4> Редактирование пользователя</h4>
+                <h4> Ондпктирование пользователя</h4>
                 <form zippy="editform" role="form">
                     <div class="form-group">
-                        <label for="editlogin">Логін</label>
+                        <label for="editlogin">Логин</label>
                         <input pattern="[_a-zA-Z0-9]+" style="width:200px" class="form-control" zippy="editlogin"
-                               required="required">
-                        <small>Допускаются латинские буквы, цифры и подчеркивания</small>
+                                required="on" >
+                        <small>Допускаются латинськие буквы, цифри и подчеркивания</small>
                     </div>
                     <div class="form-group">
                         <label for="editpass">Пароль</label>
                         <input style="width:200px" class="form-control" zippy="editpass">
-                        <span style="font-size:12px">Если не изменяется пароль существующего пользователя, оставьте пустым</span>
+                        <span style="font-size:12px">Если  пароль не меняется  оставте пустым</span>
                     </div>
                     <div class="form-group">
                         <label for="editrole">Роль</label>
                         <select class="form-control" zippy="editrole">
-                            <option value='0'>Не указана</option>
+                            <option value="0">Не указана</option>
                         </select>
                     </div>
 
@@ -92,7 +92,7 @@
 
 
                     <div class="form-group">
-                        <label for="acl">Настройка доступа к филиалам</label>
+                        <label for="acl">Доступ к  филиалам</label>
                         <table class="table table-sm table-striped">
                             <tr zippy="brow">
                                 <td zippy="branch_name"></td>
@@ -106,7 +106,7 @@
                         <div class="form-check   ">
 
                             <input class="form-check-input" type="checkbox" zippy="editonlymy">
-                            <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ иолько к собственным документам</label>
+                            <label class="form-check-label mr-sm-2" for="editonlymy"> Доступ только  к  собственным документам</label>
                         </div>
                         <div class="form-check   ">
 
@@ -117,7 +117,7 @@
                     <div class="form-group">
                         <div class="form-check   ">
                             <input class="form-check-input" type="checkbox" zippy="editdisabled">
-                            <label class="form-check-label mr-sm-2 text-danger" for="editdisabled"> Деактивировано</label>
+                            <label class="form-check-label mr-sm-2 text-danger" for="editdisabled"> Не активный</label>
                         </div>
                   </div>
 

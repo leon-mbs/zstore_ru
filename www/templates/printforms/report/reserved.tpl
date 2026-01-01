@@ -1,4 +1,4 @@
-<table    border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0"   cellpadding="2" cellspacing="0">
 
 
     <tr style="font-size:larger; font-weight: bolder;">
@@ -9,6 +9,7 @@
    
     <tr style="font-weight: bolder;">
         <th style="border: solid black 1px">Товар</th>
+        <th style="border: solid black 1px">Код</th>
         <th style="border: solid black 1px">Склад</th>
         <th style="border: solid black 1px">Документ</th>
         <th style="border: solid black 1px">Покупатель</th>
@@ -20,6 +21,7 @@
     <tr>
 
         <td>{{itemname}}</td>
+        <td>{{item_code}}</td>
 
         <td>{{store}}</td>
         <td>{{document_number}}</td>
@@ -29,4 +31,4 @@
 
     </tr>
     {{/_detail}}
-</table>
+    </table>

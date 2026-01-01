@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12   ">
                 <h3>Движение по складу</h3>
-                <div class="navbar nav">
+                <div class="card">
                     <form zippy="filter" class="form-inline">
 
                         <label for="from">С</label>
@@ -20,17 +20,27 @@
                         <select class="form-control mr-sm-2" zippy="store"> 
                          
                         </select>
-
+                        {{#storeemp}}
+             
+                       <label class="col-auto mt-2" for="searchemp">Сотрудник</label>
+                
+                        <select class="form-control mr-sm-2" zippy="searchemp">
+                            <option value="0">Не указано</option>
+                        </select>
+        
+                       {{/storeemp}}                        
+                        
+             
                         <label for="item">ТМЦ</label>
                         <input placeholder="Начните вводить..." class="form-control mr-sm-2" zippy="item">
                              {{#usesnumber}}
                
-                        <label data-label="snumber" for="snumber">Серія, с/н </label>
+                        <label data-label="snumber" for="snumber">Серия, с/н </label>
                         <input class="form-control mr-sm-2" zippy="snumber">
                              {{/usesnumber}}
                    
 
-                        <input class="btn btn-outline-primary  " type="submit" value="ОК">
+                        <input zippy="show" class="btn btn-outline-primary  " type="submit" value="ОК">
 
 
                     </form>
@@ -39,34 +49,27 @@
                 <div zippy="detail">
                     <div>
                         <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/itemactivity" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></a>
-                        <a href="/showreport/pdf/itemactivity" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/itemactivity" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/itemactivity" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i> </a>
                                                                          
 
                     </div>
 
 
-                    <div zippy="preview" class="table-responsive-sm">
-                     <div class="spinner-border m-3" role="status">
-                      <span class="sr-only">Loading...</span>
-                    </div>                 
+                    <div zippy="preview"  >
+                                  
                     </div>
 
                 </div>
             </div>
         </div>
    <script>
-                    function loadRep(){
-                        
-                        callPageMethod('getData',null,null,(data)=> 
-                        {
-                           
-                              
-                               $('#preview').html(data);  
-
-
-                        });
-                    }
+           function check_show(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        }              
         </script>        
     </body>
 </html>

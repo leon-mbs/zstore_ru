@@ -2,7 +2,7 @@
 
     <tr>
         <td style="font-weight: bolder;font-size: larger;" align="center" colspan="8" valign="middle">
-            Оприходование по производству № {{document_number}} от {{date}} <br>
+            Оприходование  с  производства № {{document_number}} от {{date}} <br>
         </td>
     </tr>
     <tr>
@@ -15,6 +15,14 @@
             На склад <b>{{storename}}</b><br>
         </td>
     </tr>
+    {{#emp}}
+    <tr>
+        <td colspan="6">
+            <b>Исполгнитель:</b> {{emp}}
+        </td>
+    </tr>
+ 
+    {{/emp}}      
     <tr>
         <td colspan="8" valign="middle">
             {{{notes}}}<br>
@@ -43,7 +51,7 @@
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
-        <td style="border-top:1px #000 solid;" colspan="8" align="right">Вместе:</td>
+        <td style="border-top:1px #000 solid;" colspan="8" align="right">Всего:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
     </tr>
 

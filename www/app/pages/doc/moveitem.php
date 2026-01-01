@@ -16,6 +16,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -25,21 +26,26 @@ use Zippy\Html\Link\SubmitLink;
  */
 class MoveItem extends \App\Pages\Base
 {
-
-    public  $_itemlist = array();
+    public $_itemlist = array();
     private $_doc;
-    private $_rowid    = 0;
+    private $_rowid    = -1;
 
-    public function __construct($docid = 0,$basedocid=0) {
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
+    public function __construct($docid = 0, $basedocid=0) {
         parent::__construct();
 
         $this->add(new Form('docform'));
         $this->docform->add(new TextInput('document_number'));
         $this->docform->add(new Date('document_date', time()));
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
-
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))   ;
+        $this->docform->add(new DropDownChoice('tostore', Store::getList(), H::getDefStore())) ;
+        $this->docform->add(new DropDownChoice('storeemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+        $this->docform->add(new DropDownChoice('tostoreemp', \App\Entity\Employee::findArray("emp_name", "disabled<>1", "emp_name"))) ;
+ 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new TextInput('barcode'));
         $this->docform->add(new SubmitLink('addcode'))->onClick($this, 'addcodeOnClick');
@@ -49,6 +55,8 @@ class MoveItem extends \App\Pages\Base
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
+        $this->add(new \App\Widgets\ItemSel('wselitem', $this, 'onSelectItem'))->setVisible(false);
+        
         $this->add(new Form('editdetail'))->setVisible(false);
 
         $this->editdetail->add(new AutocompleteTextInput('edititem'))->onText($this, 'OnAutocompleteItem');
@@ -61,12 +69,26 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->add(new SubmitButton('saverow'))->onClick($this, 'saverowOnClick');
         $this->editdetail->add(new Button('cancelrow'))->onClick($this, 'cancelrowOnClick');
 
+        $this->add(new Form('editsnitem'))->setVisible(false);
+        $this->editsnitem->add(new AutocompleteTextInput('editsnitemname'))->onText($this, 'OnAutocompleteItem');
+        $this->editsnitem->editsnitemname->onChange($this, 'OnChangeItem', true);
+        $this->editsnitem->add(new TextArea('editsn'));
+        $this->editsnitem->add(new Button('cancelsnitem'))->onClick($this, 'cancelrowOnClick');
+        $this->editsnitem->add(new SubmitButton('savesnitem'))->onClick($this, 'savesnOnClick');
+        $this->editdetail->add(new ClickLink('openitemsel', $this, 'onOpenItemSel'));
+
+        $this->docform->add(new ClickLink('opensn', $this, "onOpensn"));
+       
+        
+        
         if ($docid > 0) {    //загружаем   содержимое  документа на страницу
             $this->_doc = Document::load($docid)->cast();
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->store->setValue($this->_doc->headerdata['store']);
             $this->docform->tostore->setValue($this->_doc->headerdata['tostore']);
+            $this->docform->storeemp->setValue($this->_doc->headerdata['storeemp']);
+            $this->docform->tostoreemp->setValue($this->_doc->headerdata['tostoreemp']);
 
             $this->docform->notes->setText($this->_doc->notes);
 
@@ -81,21 +103,21 @@ class MoveItem extends \App\Pages\Base
                     if ($basedoc->meta_name == 'ProdReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
-                    
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                     if ($basedoc->meta_name == 'GoodsReceipt') {
                         $this->docform->store->setValue($basedoc->headerdata['store']);
 
-                    
+
                         $this->_itemlist = $basedoc->unpackDetails('detaildata');
                     }
                 }
-                 
+
             }
-        
-        
-        
+
+
+
         }
 
         $this->docform->add(new DataView('detail', new \Zippy\Html\DataList\ArrayDataSource(new \Zippy\Binding\PropertyBinding($this, '_itemlist')), $this, 'detailOnRow'))->Reload();
@@ -109,6 +131,7 @@ class MoveItem extends \App\Pages\Base
         $item = $row->getDataItem();
 
         $row->add(new Label('item', $item->itemname));
+        $row->add(new Label('item_code', $item->item_code));
         $row->add(new Label('msr', $item->msr));
         $row->add(new Label('snumber', $item->snumber));
 
@@ -124,20 +147,16 @@ class MoveItem extends \App\Pages\Base
             return;
         }
         $item = $sender->owner->getDataItem();
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $rowid =  array_search($item, $this->_itemlist, true);
 
-        $this->_itemlist = array_diff_key($this->_itemlist, array($item->rowid => $this->_itemlist[$item->rowid]));
-      $this->docform->detail->Reload();
+        $this->_itemlist = array_diff_key($this->_itemlist, array($rowid => $this->_itemlist[$rowid]));
+
+        $this->docform->detail->Reload();
     }
 
     public function addrowOnClick($sender) {
         if ($this->docform->store->getValue() == 0) {
-            $this->setError("noselstore");
+            $this->setError("Не выбран склад");
             return;
         }
         $this->editdetail->setVisible(true);
@@ -146,8 +165,8 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->edititem->setValue('');
         $this->editdetail->qtystock->setText('');
         $this->editdetail->editsnumber->setText('');
-        $this->_rowid = 0;
-         
+        $this->_rowid = -1;
+
     }
 
     public function editOnClick($sender) {
@@ -163,14 +182,8 @@ class MoveItem extends \App\Pages\Base
 
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-        if ($item->rowid > 0) {
-            ;
-        }               //для совместимости
-        else {
-            $item->rowid = $item->item_id;
-        }
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
 
-        $this->_rowid = $item->rowid;
     }
 
     public function saverowOnClick($sender) {
@@ -179,15 +192,16 @@ class MoveItem extends \App\Pages\Base
         }
         $id = $this->editdetail->edititem->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не выбран товар");
             return;
         }
 
         $item = Item::load($id);
+
         $item->snumber = trim($this->editdetail->editsnumber->getText());
-        $item->quantity = $this->editdetail->editquantity->getText();
+        $item->quantity = $this->editdetail->editquantity->getDouble();
         if (strlen($item->snumber) == 0 && $item->useserial == 1 && $this->_tvars["usesnumber"] == true) {
-            $this->setError("needs_serial");
+            $this->setError("Нужна  партия производителя");
             return;
         }
 
@@ -195,23 +209,18 @@ class MoveItem extends \App\Pages\Base
             $slist = $item->getSerials($this->docform->store->getValue());
 
             if (in_array($item->snumber, $slist) == false) {
-                $this->setWarn('invalid_serialno');
+                $this->setWarn('Неверный номер  серии');
             }
         }
 
 
-        if ($this->_rowid > 0) {
-            $item->rowid = $this->_rowid;
-             
-            
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
         } else {
-            $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
-            $item->rowid = $next + 1;
+            $this->_itemlist[$this->_rowid] = $item;
         }
-        $this->_itemlist[$item->rowid] = $item;
 
-        $this->_rowid = 0;
-
+        $this->wselitem->setVisible(false);
         $this->editdetail->setVisible(false);
         $this->docform->setVisible(true);
         $this->docform->detail->Reload();
@@ -229,6 +238,9 @@ class MoveItem extends \App\Pages\Base
         $this->editdetail->edititem->setText('');
 
         $this->editdetail->editquantity->setText("1");
+        $this->wselitem->setVisible(false);
+        
+        $this->editsnitem->setVisible(false);        
     }
 
     public function savedocOnClick($sender) {
@@ -239,20 +251,24 @@ class MoveItem extends \App\Pages\Base
 
         $this->_doc->notes = $this->docform->notes->getText();
 
-        $this->_doc->headerdata['tostore'] = $this->docform->tostore->getValue();
+        $this->_doc->headerdata['tostore'] =  intval( $this->docform->tostore->getValue());
         $this->_doc->headerdata['tostorename'] = $this->docform->tostore->getValueName();
-        $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+        $this->_doc->headerdata['store'] = intval( $this->docform->store->getValue() );
         $this->_doc->headerdata['storename'] = $this->docform->store->getValueName();
+        $this->_doc->headerdata['storeemp'] = intval( $this->docform->storeemp->getValue() );
+        $this->_doc->headerdata['storeempname'] = $this->docform->storeemp->getValueName();
+        $this->_doc->headerdata['tostoreemp'] = intval( $this->docform->tostoreemp->getValue() );
+        $this->_doc->headerdata['tostoreempname'] = $this->docform->tostoreemp->getValueName();
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
 
         $this->_doc->document_number = $this->docform->document_number->getText();
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
-        
+
         if ($this->checkForm() == false) {
             return;
-        }        
-        
+        }
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -272,7 +288,7 @@ class MoveItem extends \App\Pages\Base
                     foreach ($this->_itemlist as $item) {
                         $qty = $item->getQuantity($this->_doc->headerdata['store']);
                         if ($qty < $item->quantity) {
-                            $this->setError("nominus", H::fqty($qty), $item->itemname);
+                            $this->setError("На складе  всего ".H::fqty($qty)." ТМЦ {$item->itemname}. Списание  в  минус запрещено");
                             return;
                         }
                     }
@@ -292,7 +308,7 @@ class MoveItem extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -307,28 +323,35 @@ class MoveItem extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen(trim($this->docform->document_number->getText())) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
 
 
-        if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+        if ( $this->_doc->headerdata['store'] == 0) {
+            $this->setError("Не выбран склад");
         }
-        if (($this->docform->tostore->getValue() > 0) == false) {
-            $this->setError("noselstore");
+        if ( $this->_doc->headerdata['tostore'] == 0) {
+            $this->setError("Не выбран склад");
         }
-
+        if ( $this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store']) {
+            $this->setError("Тот самый склад");
+        }
+        if ( $this->_doc->headerdata['tostoreemp'] > 0 && ($this->_doc->headerdata['tostore'] == $this->_doc->headerdata['store'] ) && ($this->_doc->headerdata['tostoreemp'] == $this->_doc->headerdata['storeemp'] )  ) {
+            $this->setError("Тот самый склад");
+        }
+    
+      
 
         return !$this->isError();
     }
@@ -343,16 +366,10 @@ class MoveItem extends \App\Pages\Base
         $item = Item::load($item_id);
         $this->editdetail->qtystock->setText(H::fqty($item->getQuantity($this->docform->store->getValue())));
 
-      
+
     }
 
-    public function OnChangeStore($sender) {
-        if ($sender->id == 'store') {
-            //очистка  списка  товаров
-            $this->_itemlist = array();
-            $this->docform->detail->Reload();
-        }
-    }
+ 
 
     public function OnItemType($sender) {
         $this->editdetail->edititem->setKey(0);
@@ -369,22 +386,21 @@ class MoveItem extends \App\Pages\Base
 
     public function addcodeOnClick($sender) {
         $code = trim($this->docform->barcode->getText());
-         $code0 = $code;
-         $code = ltrim($code,'0');
+       
 
         $this->docform->barcode->setText('');
         $store_id = $this->docform->store->getValue();
         if ($store_id == 0) {
-            $this->setError('noselstore');
+            $this->setError('Не выбран склад');
             return;
         }
 
-        $code = Item::qstr($code);
-        $code0 = Item::qstr($code0);
+   
 
-        $item = Item::getFirst(" item_id in(select item_id from store_stock where store_id={$store_id}) and     (item_code = {$code} or bar_code = {$code} or item_code = {$code0} or bar_code = {$code0}  )");
+        $item = Item::findBarCode($code,$store_id);
+ 
         if ($item == null) {
-            $this->setError('noitem');
+            $this->setError('Товар не найден');
             return;
         }
 
@@ -416,4 +432,72 @@ class MoveItem extends \App\Pages\Base
         $this->docform->detail->Reload();
     }
 
+    
+  public function onOpensn($sender) {
+        $this->docform->setVisible(false) ;
+        $this->editsnitem->setVisible(true) ;
+        $this->editsnitem->editsnitemname->setKey(0);
+        $this->editsnitem->editsnitemname->setText('');
+
+        $this->editsnitem->editsn->setText("");
+
+
+    }
+    
+    public function savesnOnClick($sender) {
+
+        $id = $this->editsnitem->editsnitemname->getKey();
+        $name = trim($this->editsnitem->editsnitemname->getText());
+        if ($id == 0) {
+            $this->setError("Не выбран товар");
+            return;
+        }
+
+        $sns =  $this->editsnitem->editsn->getText();
+
+        $list = [];
+        foreach(explode("\n", $sns) as $s) {
+            if(strlen($s) > 0) {
+                $list[] = $s;
+            }
+        }
+        if (count($list) == 0) {
+
+            $this->setError("Не указаны серийные  номера");
+            return;
+        }
+        $next = count($this->_itemlist) > 0 ? max(array_keys($this->_itemlist)) : 0;
+
+        foreach($list as $s) {
+            ++$next;
+            $item = Item::load($id);
+
+            $item->quantity = 1;
+            $item->snumber = trim($s);
+            $item->rowid = $next;
+            $this->_itemlist[$next] = $item;
+
+        }
+  
+        $this->docform->detail->Reload();
+ 
+        $this->editsnitem->setVisible(false);
+        $this->docform->setVisible(true);
+
+
+    }    
+
+    public function onOpenItemSel($sender) {
+        $this->wselitem->setVisible(true);
+        $this->rowid  = 1;
+
+        $this->wselitem->Reload();
+    }
+
+    public function onSelectItem($item_id, $itemname) {
+        $this->editdetail->edititem->setKey($item_id);
+        $this->editdetail->edititem->setText($itemname);
+        $this->OnChangeItem($this->editdetail->edititem);
+    } 
+    
 }

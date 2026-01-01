@@ -8,7 +8,7 @@
             <div class="col-12 col-md-8 col-xl-6">
                 <div zippy="servicetable">
                     <h3>Услуги, работы </h3>
-                    <div class="navbar nav">
+                    <div class="card">
 
                         <form zippy="filter" class="form-inline">
 
@@ -19,7 +19,7 @@
 
                             <div class="form-check">
 
-                                <input title="Показать неактуальные" class="form-check-input" type="checkbox" zippy="showdis">
+                                <input title="Показать неиспользуемые" class="form-check-input" type="checkbox" zippy="showdis">
                                 <label class="form-check-label mr-sm-3" for="showdis">Все</label>
                             </div>
 
@@ -27,27 +27,46 @@
 
                         </form>
                     </div>
-                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a>
+                    <a zippy="addnew" class="btn btn-outline-primary  ">Добавить</a> 
+                    <a zippy="toexport" class="ml-3 ">   Экспорт (прайс) <i class="fa fa-upload"></i></a> 
+                    <a zippy="toimport" class="ml-3 ">   Импорт <i class="fa fa fa-download"></i></a> 
                     <table class="table table-bordered   table-sm">
                         <tr>
                             <th>Название</th>
-                            <th> </th>    
-                            <th style="text-align: right;">Стоимость</th>
-                            <th style="text-align: right;">Расценки</th>
-                            <th style="text-align: right;">Нормо-часы</th>
-
+                            <th>Ед. </th>    
+                            <th  ></th>
+                            <th class="text-right">Стоимость</th>
+                            <th class="text-right">Расценки</th>
+                            <th class="text-right">Часы</th>
+                            
+                            <th></th>
+                            <th></th>
                             <th></th>
                         </tr>
                         <tr zippy="servicelist">
-                            <td zippy="service_name"></td>
-                            <td  class="text-right"><i title="Акция" zippy="hasaction" class="fa fa-gift"/></td>
-                            <td style="text-align: right;" zippy="price"></td>
-                            <td style="text-align: right;" zippy="cost"></td>
-                            <td style="text-align: right;" zippy="hours"></td>
+                            <td  > <a zippy="service_name"  > </a></td>
+                            <td zippy="msr"></td>
+                            <td  ><i title="Акцiя" zippy="hasaction" class="fa fa-gift"></i></td>
+                            <td class="text-right" zippy="price"></td>
+                            <td class="text-right" zippy="cost"></td>
+                            <td class="text-right" zippy="hours"></td>
+                            <td    >
+                          
+                              <small zippy="notes"  > </small>
+                              
+                            </td>  <td    >
+                          
+                              <a zippy="hascard" title="Тех. карта" >  <i class="fa fa-wrench"></i></a>
+                              
+                            </td>
 
 
-                            <td style="width:75px"><a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> <a
-                                    zippy="delete" title="Изъять"><i class="fa fa-trash"></i></a></td>
+                            <td   class="text-nowrap" >
+                            
+                                <a zippy="itemset" title="Материалы и уомплектующие"><i class="fa fa-cogs"></i></a> 
+                                &nbsp; 
+                              &nbsp;  <a zippy="edit" title="Редактировать"><i class="fa fa-edit"></i></a> 
+                              &nbsp;  <a  zippy="delete" title="Удалить"><i class="fa fa-trash"></i></a></td>
                         </tr>
                     </table>
                     <div zippy="pag"></div>
@@ -58,42 +77,235 @@
             </div>
         </div>
         <div class="row">
-            <form class="col-6 col-md-4" zippy="servicedetail">
-                <div class="form-group">
-                    <label for="editservice_name">Название</label>
-                    <input required="required" class="form-control" zippy="editservice_name"/>
+            <form class="  col-md-6  col-xl-4 " zippy="servicedetail">
+                <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editservice_name">Название</label>
+                   <div class="col-7"> 
+                    <input autofocus="on"    required="on"  class="form-control" zippy="editservice_name"/>
+                  </div>
                 </div>
-                <div class="form-group">
-                    <label for="editcat">Категория</label>
-                    <input   class="form-control" zippy="editcat"/>
-                </div>
-                <div class="form-group  ">
-                    <label for="editprice">Стоимость</label>
-                    <div class="form-group">
-                        <input zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editcat">Категория</label>
+                   <div class="col-7"> 
+                     <input   class="form-control" zippy="editcat"/>
                     </div>
                 </div>
-                <div class="form-group  ">
-                    <label for="editcost">Расценки</label>
-                    <div class="form-group">
-                        <input zippy="editcost" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                <div class="form-group row ">
+                    <label class="col-5 col-form-label" for="editprice">Стоимость</label>
+                    <div class="col-7">
+                        <input required="on" zippy="editprice" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
-                <div class="form-group  ">
-                    <label for="edithours">Нормо-часы</label>
-                    <div class="form-group">
+                <div class="form-group  row">
+                    <label class="col-5 col-form-label" for="editcost">Расценки (себестоимлсть)</label>
+                    <div class="col-7">
+                        <input required="on" zippy="editcost" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group  row">
+                    <label class="col-5 col-form-label" for="edithours">Нормо-часы</label>
+                    <div class="col-7">
                         <input zippy="edithours" style="width: 100px" pattern="[0-9\.\%]+" class="form-control"/>
                     </div>
                 </div>
-                <div class="form-check">
+                      
+                
+                <div class="form-group row">
+                    <label class="col-5 col-form-label" for="editmsr">Ед. измерения</label>
+                    <div class="col-7">
+                        <input class="form-control" style="width: 100px" zippy="editmsr"/>
+                    </div>
+                </div>    
+                 <div class="form-group  ">
+                    <label  for="editnotes">Примечание</label>
+                    
+                        <input class="form-control"   zippy="editnotes"/>
+                    
+                    <small>Например для  прайса</small>
+                </div>    
+                 <div class="form-check">
+                        <input zippy="editnoprice" type="checkbox" class="form-check-input">
+                        <label class="form-check-label" for="editnoprice">Не показывать в  прайсе</label>
+                 </div>                             
+                  <div class="form-check">
                     <input zippy="editdisabled" type="checkbox" class="form-check-input">
                     <label class="form-check-label" for="editdisabled">Не используется</label>
                 </div>
-                <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  ">&nbsp;&nbsp;
-                <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  ">
+                <input zippy="cancel" type="button" value="Отменить" class="btn btn-outline-primary  mr-2">
+                <input zippy="save" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
+                
 
             </form>
         </div>
+        <div class="row">
 
+            <div class="col-12 col-md-7 col-xl-5" zippy="setpanel">
+                <a zippy="backtolist"><i class="fa fa-arrow-alt-circle-left"></i> К справочнику</a>
+                <h4 zippy="stitle"></h4>
+                <small>Комплектующие и материалы, необходимые для  выполнения работы</small>
+                <form zippy="setform" class="form-inline mt-2 mb-2">
+                    <label for="editsname">ТМЦ</label>
+                    <input placeholder="Начните вводить.." class="form-control  mr-sm-2" zippy="editsname"/>
+
+                    <label for="editsqty">Кол.</label>
+                    <input autocomplete="off" class="form-control  qtyprice  mr-sm-2" type="text" zippy="editsqty"  required="on" 
+                           pattern="[0-9,\.]+" style="width:60px">
+                    <input zippy="setformbtn" class="btn btn-outline-success  " type="submit" value="Добавить">
+                </form>
+                <table class="table   table-sm  ">
+                    <tr>
+                        <th>Наименование</th>
+                        <th>Код</th>
+                        <th class="text-right">Кол.</th>
+                        <th></th>
+                    </tr>
+                    <tr zippy="setlist">
+                        <td zippy="sname"></td>
+                        <td zippy="scode"></td>
+                        <td class="text-right" zippy="sqty"></td>
+                        <td><a zippy="sdel"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                </table>
+           
+    
+                 <br>
+                 <h5>Тех. карта</h5>
+                 <form zippy="cardform" >
+                    <textarea style="height:250px" class="form-control" zippy="editscard"></textarea> 
+                           
+                
+                    <input class="btn btn-outline-success  " type="submit" value="Сохранить">
+                 </form>
+                
+            </div>
+        </div>
+         <div class="row" zippy="exportform" >
+             <div class="col-12 col-md-8 col-xl-6" >
+                 <a zippy="eback"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>  <br>
+                        <div>
+
+                        <a style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/servicelist" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i></a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/servicelist" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i></a>
+
+                    </div>
+
+                    <div zippy="preview"  >
+                    </div>                 
+                 
+            </div>
+        </div>
+    <div class="row" zippy="importform" >
+             <div class="col-12 col-md-8 col-xl-6" >
+                 <a zippy="iback"><i class="fa fa-arrow-alt-circle-left"></i> Назад</a>  <br>
+                        <div>
+                  <form zippy="cform" class="row" enctype="multipart/form-data">
+                    <div class="col-6">
+                    
+
+                        <div class="form-group  ">
+                            <label for="cfilename">Файл импорта</label>
+                            <input type="file" zippy="cfilename" class="form-control  "/>
+
+                        </div>
+                        <div class="  form-check">
+                            <input zippy="cpassfirst" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="cpassfirst">Пропустить первую строку</label>
+                        </div>
+
+                        <div class="  form-check">
+                            <input zippy="cpreview" type="checkbox" class="form-check-input">
+                            <label class="form-check-label" for="cpreview">Предварительный просмотр</label>
+                        </div>
+
+                        <div class="form-group  ">
+                            <input class="btn btn-info" type="submit" value="Загрузить"/>
+                        </div>
+
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group  ">
+                            <label><b>Номера колонок Excel файла</b> </label>
+
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colname">Наименование</label>
+                            <div class="col-4">
+                              <select style="width:100px;" zippy="colname" class="form-control  ">
+                            </select> </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colcat">Категория</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="colcat" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colprice">Цена</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="colprice" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                        <div class="form-group  row">
+                            <label class="col-8 col-form-label" for="colnotes">Примечание</label>
+                             <div class="col-4">
+                              <select style="width:100px;" zippy="colnotes" class="form-control  ">
+                            </select>  </div>
+                        </div>
+                       
+
+
+                    </div>
+
+
+                </form>
+                {{#preview2}}
+                <div class="row">
+                    <div class="col-12 col-lg-8 col-xl-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Наименование</th>
+                                <th>Категория</th>
+                                <th class="text-right">Цена</th>
+                                <th>Примечание</th>
+                               
+
+                            </tr>
+                            {{#list2}}
+                            <tr>
+                                <td>{{colname}}</td>
+                                <td>{{colcat}}</td>
+                                <td  class="text-right">{{colprice}}</td>
+                                <td>{{colnotes}}</td>
+                                
+                              </tr>
+                                {{/list2}}
+                        </table>
+                    </div>
+                </div>
+                {{/preview2}}
+                                   
+                 
+            </div>
+        </div>
+        
+         <div id="idesc" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog  ">
+                <div  class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Тех. карта</h5>
+                   
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="idesccontent" class="modal-body">
+                        
+
+                    </div>       
+                </div>
+            </div>
+        </div>        
     </body>
 </html>

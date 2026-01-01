@@ -10,7 +10,6 @@ use App\Helper as H;
  */
 class Warranty extends Document
 {
-
     public function generateReport() {
 
         $detail = array();
@@ -21,19 +20,21 @@ class Warranty extends Document
                 "quantity"   => H::fqty($item->quantity),
                 "price"      => H::fa($item->price),
                 "amount"     => H::fa($item->quantity * $item->price),
-                "sn"         => $item->sn,
+                "sn"         => $item->snumber,
                 "msr"        => $item->msr,
                 "warranty"   => $item->warranty
             );
             $total += $item->quantity * $item->price;
         }
 
+         
 
         $header = array('date'            => H::fd($this->document_date),
                         "_detail"         => $detail,
                         "notes"           => nl2br($this->notes),
                         "firm_name"       => $this->headerdata["firm_name"],
-                        "customer_name"   => $this->customer_name,
+                        "customer_name"   => $this->headerdata["customer_name"],
+                        "basedon"         => $this->getHD('basedon','')== '' ? false : $this->getHD('basedon'),
                         "document_number" => $this->document_number
         );
 

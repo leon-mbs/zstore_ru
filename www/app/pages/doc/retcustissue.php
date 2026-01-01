@@ -17,6 +17,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -26,17 +27,20 @@ use Zippy\Html\Link\SubmitLink;
  */
 class RetCustIssue extends \App\Pages\Base
 {
-
-    public  $_itemlist  = array();
+    public $_itemlist  = array();
     private $_doc;
     private $_basedocid = 0;
-    private $_rowid     = 0;
+    private $_rowid     = -1;
 
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $basedocid  создание на  основании
+    */
     public function __construct($docid = 0, $basedocid = 0) {
         parent::__construct();
         if ($docid == 0 && $basedocid == 0) {
 
-            $this->setWarn('return_basedon_receiptisssue');
+            $this->setWarn('Возврат следует делать на основании приходной накладной');
         }
 
         $this->add(new Form('docform'));
@@ -44,13 +48,14 @@ class RetCustIssue extends \App\Pages\Base
 
         $this->docform->add(new Date('document_date'))->setDate(time());
 
-        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()))->onChange($this, 'OnChangeStore');
+        $this->docform->add(new DropDownChoice('store', Store::getList(), H::getDefStore()));
 
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
 
         $this->docform->add(new TextInput('notes'));
         $this->docform->add(new SubmitLink('addrow'))->onClick($this, 'addrowOnClick');
+        $this->docform->add(new CheckBox('comission', 0));
 
         $this->docform->add(new SubmitButton('savedoc'))->onClick($this, 'savedocOnClick');
         $this->docform->add(new SubmitButton('execdoc'))->onClick($this, 'savedocOnClick');
@@ -58,11 +63,12 @@ class RetCustIssue extends \App\Pages\Base
         $this->docform->add(new Button('backtolist'))->onClick($this, 'backtolistOnClick');
 
         $this->docform->add(new Label('total'));
-
+        
         $this->docform->add(new TextInput('editpayed', "0"));
         $this->docform->add(new SubmitButton('bpayed'))->onClick($this, 'onPayed');
         $this->docform->add(new Label('payed', 0));
-
+        $this->docform->add(new SubmitLink('delete'))->onClick($this, 'deleteOnClick');
+         
         $this->add(new Form('editdetail'))->setVisible(false);
         $this->editdetail->add(new TextInput('editquantity'))->setText("1");
         $this->editdetail->add(new TextInput('editprice'));
@@ -89,7 +95,8 @@ class RetCustIssue extends \App\Pages\Base
             if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
                 $this->_doc->payed = $this->_doc->headerdata['payed'];
             }
-      
+            $this->docform->comission->setChecked($this->_doc->headerdata['comission']);
+
             $this->docform->editpayed->setText(H::fa($this->_doc->payed));
             $this->docform->payed->setText(H::fa($this->_doc->payed));
 
@@ -108,13 +115,17 @@ class RetCustIssue extends \App\Pages\Base
                         $this->docform->store->setValue($basedoc->headerdata['store']);
                         $this->docform->customer->setKey($basedoc->customer_id);
                         $this->docform->customer->setText($basedoc->customer_name);
-
-                        $itemlist = $basedoc->unpackDetails('detaildata');
-
-                        $this->_itemlist = array();
-                        foreach ($itemlist as $item) {
-                            $this->_itemlist[$item->item_id] = $item;
+                        $this->docform->comission->setChecked($basedoc->headerdata['comission']);
+                        $rate = $basedoc->headerdata["rate"] ?? '';
+                        $rate = $rate == '' ? 1 : doubleval($rate) ;  
+  
+                        $this->_itemlist = [];
+                        foreach($basedoc->unpackDetails('detaildata') as $i){
+                            $i->price = $i->price * $rate;
+                            $this->_itemlist[]=$i;
                         }
+
+
                     }
                 }
                 $this->calcTotal();
@@ -140,19 +151,37 @@ class RetCustIssue extends \App\Pages\Base
         $row->add(new Label('price', H::fa($item->price)));
 
         $row->add(new Label('amount', H::fa($item->quantity * $item->price)));
-        $row->add(new ClickLink('delete'))->onClick($this, 'deleteOnClick');
+        
         $row->add(new ClickLink('edit'))->onClick($this, 'editOnClick');
+        $row->add(new CheckBox('seldel', new \Zippy\Binding\PropertyBinding($item, 'seldel')));
+        
     }
 
     public function deleteOnClick($sender) {
         if (false == \App\ACL::checkEditDoc($this->_doc)) {
             return;
         }
-
-        $tovar = $sender->owner->getDataItem();
-        // unset($this->_itemlist[$tovar->tovar_id]);
-
-        $this->_itemlist = array_diff_key($this->_itemlist, array($tovar->item_id => $this->_itemlist[$tovar->item_id]));
+        $items = array();
+        foreach ($this->docform->detail->getDataRows() as $row) {
+            $item = $row->getDataItem();
+            if ($item->seldel == true) {
+                $items[] = $item->item_id;
+            }
+        }
+        if (count($items) == 0) {
+            return;
+        }
+        
+        $tmp= $this->_itemlist;
+        $this->_itemlist=[];
+        foreach($tmp as $item) {
+            if(in_array($item->item_id,$items))  {
+                continue;
+            }
+            $this->_itemlist[]= $item;
+        }
+        
+        
         $this->docform->detail->Reload();
         $this->calcTotal();
     }
@@ -162,8 +191,10 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
         $this->editdetail->editprice->setText("0");
         $this->editdetail->qtystock->setText("");
+        $this->editdetail->edittovar->setKey(0);
+        $this->editdetail->edittovar->setText('');
         $this->docform->setVisible(false);
-        $this->_rowid = 0;
+        $this->_rowid = -1;
     }
 
     public function editOnClick($sender) {
@@ -180,35 +211,38 @@ class RetCustIssue extends \App\Pages\Base
         $qty = $item->getQuantity();
         $this->editdetail->qtystock->setText(H::fqty($qty));
 
-        $this->_rowid = $item->item_id;
+        $this->_rowid =  array_search($item, $this->_itemlist, true);
+
     }
 
     public function saverowOnClick($sender) {
 
         $id = $this->editdetail->edittovar->getKey();
         if ($id == 0) {
-            $this->setError("noselitem");
+            $this->setError("Не выбран товар");
             return;
         }
 
         $item = Item::load($id);
-        $item->quantity = $this->editdetail->editquantity->getText();
 
-        $item->price = $this->editdetail->editprice->getText();
 
-        unset($this->_itemlist[$this->_rowid]);
-        $this->_itemlist[$item->item_id] = $item;
-      //  $this->editdetail->setVisible(false);
-     //   $this->docform->setVisible(true);
- 
-        //очищаем  форму
-        $this->editdetail->edittovar->setKey(0);
-        $this->editdetail->edittovar->setText('');
+        $item->quantity = $this->editdetail->editquantity->getDouble();
 
-        $this->editdetail->editquantity->setText("1");
+        $item->price = $this->editdetail->editprice->getDouble();
+       
+        if($this->_rowid == -1) {
+            $this->_itemlist[] = $item;
+        } else {
+            $this->_itemlist[$this->_rowid] = $item;
+        }
 
-        $this->editdetail->editprice->setText("");
+        $this->docform->detail->Reload();
+        $this->calcTotal();
         
+        
+         $this->docform->setVisible(true);
+         $this->editdetail->setVisible(false);
+
     }
 
     public function cancelrowOnClick($sender) {
@@ -221,9 +255,6 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editquantity->setText("1");
 
         $this->editdetail->editprice->setText("");
-        $this->docform->detail->Reload();
-       
-        $this->calcTotal();        
     }
 
     public function savedocOnClick($sender) {
@@ -234,6 +265,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->_doc->document_date = $this->docform->document_date->getDate();
         $this->_doc->notes = $this->docform->notes->getText();
         $this->_doc->headerdata['payment'] = $this->docform->payment->getValue();
+        $this->_doc->headerdata['comission'] = $this->docform->comission->isChecked() ? 1:0;
 
         $this->_doc->customer_id = $this->docform->customer->getKey();
         if ($this->_doc->customer_id > 0) {
@@ -242,23 +274,24 @@ class RetCustIssue extends \App\Pages\Base
         }
 
         //  $this->calcTotal();
-        $firm = H::getFirmData($this->_doc->firm_id, $this->branch_id);
+        $firm = H::getFirmData(  $this->branch_id);
         $this->_doc->headerdata["firm_name"] = $firm['firm_name'];
 
         $this->_doc->headerdata['store'] = $this->docform->store->getValue();
+         
 
         $this->_doc->packDetails('detaildata', $this->_itemlist);
-               if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
-                $this->_doc->payed = $this->_doc->headerdata['payed'];
-            }
-     
+        if ($this->_doc->payed == 0 && $this->_doc->headerdata['payed'] > 0) {
+            $this->_doc->payed = $this->_doc->headerdata['payed'];
+        }
 
 
         $this->_doc->amount = $this->docform->total->getText();
         $this->_doc->payamount = $this->docform->total->getText();
-     
-       $this->_doc->payed = $this->docform->payed->getText();
-        $this->_doc->headerdata['payed'] = $this->docform->payed->getText();
+      
+
+        $this->_doc->payed = doubleval($this->docform->payed->getText());
+        $this->_doc->headerdata['payed'] = $this->_doc->payed;
 
         if ($this->checkForm() == false) {
             return;
@@ -285,10 +318,10 @@ class RetCustIssue extends \App\Pages\Base
                 }
 
                 $this->_doc->updateStatus(Document::STATE_EXECUTED);
-           if ($this->_doc->payamount > $this->_doc->payed) {
-                $this->_doc->updateStatus(Document::STATE_WP);
-            }
-                
+                if ($this->_doc->payamount > $this->_doc->payed && $this->_doc->headerdata['comission'] != 1) {
+                    $this->_doc->updateStatus(Document::STATE_WP);
+                }
+
             } else {
 
                 $this->_doc->updateStatus($isEdited ? Document::STATE_EDITED : Document::STATE_NEW);
@@ -306,7 +339,7 @@ class RetCustIssue extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
             return;
         }
     }
@@ -318,15 +351,34 @@ class RetCustIssue extends \App\Pages\Base
     private function calcTotal() {
 
         $total = 0;
+        
 
         foreach ($this->_itemlist as $item) {
             $item->amount = $item->price * $item->quantity;
+         
 
             $total = $total + $item->amount;
         }
+
+        $payed=  $total;
+        
+        if($this->_basedocid >0) {
+            $parent = Document::load($this->_basedocid) ;
+            
+            $payed = $parent->payamount;
+            
+            
+            $k = 1 - ($parent->amount - $total) / $parent->amount;
+ 
+            $payed  = $payed*$k;           
+        }        
+      
+
+   
+       
         $this->docform->total->setText(H::fa($total));
-        $this->docform->payed->setText(H::fa($total));
-        $this->docform->editpayed->setText(H::fa($total));
+        $this->docform->payed->setText(H::fa($payed));
+        $this->docform->editpayed->setText(H::fa($payed));
     }
 
     public function onPayed($sender) {
@@ -334,7 +386,7 @@ class RetCustIssue extends \App\Pages\Base
         $payed = $this->docform->payed->getText();
         $total = $this->docform->total->getText();
         if ($payed > $total) {
-            $this->setWarn('inserted_extrasum');
+            $this->setWarn('Внесена сумма больше необходимой');
         } else {
             $this->goAnkor("tankor");
         }
@@ -346,24 +398,27 @@ class RetCustIssue extends \App\Pages\Base
      */
     private function checkForm() {
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError('enterdocnumber');
+            $this->setError('Введите номер документа');
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
         if (count($this->_itemlist) == 0) {
-            $this->setError("noenteritem");
+            $this->setError("Не введено товар");
         }
         if (($this->docform->store->getValue() > 0) == false) {
-            $this->setError("noselstore");
+            $this->setError("Не выбран склад");
         }
         if ($this->docform->payment->getValue() == 0 && $this->_doc->payed > 0) {
-            $this->setError("noselmfp");
+            $this->setError("Если внесена  сумма  больше  нуля  нужно указать денежный счет");
+        }
+        if ($this->_doc->headerdata['comission']==1 && $this->_doc->payed > 0) {
+            $this->setError("Оплата не  вносится если  комиссия ");
         }
 
         return !$this->isError();
@@ -373,11 +428,6 @@ class RetCustIssue extends \App\Pages\Base
         App::RedirectBack();
     }
 
-    public function OnChangeStore($sender) {
-        //очистка  списка  товаров
-        $this->_itemlist = array();
-        $this->docform->detail->Reload();
-    }
 
     public function OnChangeItem($sender) {
         $id = $sender->getKey();
@@ -398,7 +448,7 @@ class RetCustIssue extends \App\Pages\Base
         $this->editdetail->editprice->setText(H::fa($e->partion));
 
 
-       
+
     }
 
     public function OnAutoCustomer($sender) {

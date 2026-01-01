@@ -1,7 +1,7 @@
 <align>center</align>
 <font bold="true">a</font>
 <text>
-   {{#isfinished}}  Акт выполненных работ {{/isfinished}} 
+   {{#isfinished}}  Акт выполненых работ {{/isfinished}} 
           {{^isfinished}}  Квитанция к {{/isfinished}} 
          {{document_number}}
 </text>
@@ -19,7 +19,7 @@
     {{#isdevice}}
 <text>Принято от клиента:</text>       
 <text>{{device}}</text>       
-<text>С/Н {{serial}}</text>       
+<text>с/н {{serial}}</text>       
     {{/isdevice}}
     {{#iswork}}
 <text>Работы:</text>       

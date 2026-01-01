@@ -13,6 +13,7 @@ use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\AutocompleteTextInput;
 use App\Entity\Customer;
 use App\Entity\Employee;
@@ -22,10 +23,16 @@ use App\Entity\Employee;
  */
 class IncomeMoney extends \App\Pages\Base
 {
-
     private $_doc;
 
-    public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0) {
+    /**
+    * @param mixed $docid     редактирование
+    * @param mixed $pcustomer_id  контрагент (для  нового документа)
+    * @param mixed $pamount       сума
+    * @param mixed $det           детализация
+    * @return mixed
+    */
+    public function __construct($docid = 0, $pcustomer_id = 0, $pamount = 0,$det=-1) {
         parent::__construct();
 
         $this->add(new Form('docform'));
@@ -33,13 +40,13 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->add(new Date('document_date', time()));
 
         $this->docform->add(new DropDownChoice('detail', array(), 1))->onChange($this, 'OnDetail');
-        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeList(1), 0));
+        $this->docform->add(new DropDownChoice('mtype', \App\Entity\IOState::getTypeListInM(), \App\Entity\IOState::TYPE_FIN));
 
         $this->docform->add(new DropDownChoice('contract', array(), 0));
         $this->docform->add(new DropDownChoice('emp', Employee::findArray('emp_name', 'disabled<>1', 'emp_name'), 0));
 
         $this->docform->add(new DropDownChoice('payment', MoneyFund::getList(), H::getDefMF()));
-        $this->docform->add(new TextInput('notes'));
+        $this->docform->add(new TextArea('notes'));
         $this->docform->add(new TextInput('amount'));
         $this->docform->add(new AutocompleteTextInput('customer'))->onText($this, 'OnAutoCustomer');
         $this->docform->customer->onChange($this, 'OnCustomer');
@@ -52,11 +59,15 @@ class IncomeMoney extends \App\Pages\Base
             $this->docform->document_number->setText($this->_doc->document_number);
             $this->docform->document_date->setDate($this->_doc->document_date);
             $this->docform->mtype->setValue($this->_doc->headerdata['type']);
-
-            $this->docform->emp->setValue($this->_doc->headerdata['emp']);
             $this->docform->detail->setValue($this->_doc->headerdata['detail']);
-            $this->docform->customer->setKey($this->_doc->customer_id);
-            $this->docform->customer->setText($this->_doc->customer_name);
+
+            if($this->_doc->headerdata['detail']==1 || $this->_doc->headerdata['detail']==2 ) {
+               $this->docform->customer->setKey($this->_doc->customer_id);
+               $this->docform->customer->setText($this->_doc->customer_name);
+            }
+            if($this->_doc->headerdata['detail']==3) {
+               $this->docform->emp->setValue($this->_doc->headerdata['emp']);
+            }
 
             $this->docform->payment->setValue($this->_doc->headerdata['payment']);
 
@@ -71,7 +82,7 @@ class IncomeMoney extends \App\Pages\Base
                 $this->docform->customer->setText($c->customer_name);
                 $this->docform->amount->setText(H::fa($pamount));
                 $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_BASE_INCOME);
-                $this->docform->detail->setValue(1);
+                $this->docform->detail->setValue($det ==-1 ?1:$det);
             }
         }
 
@@ -100,17 +111,17 @@ class IncomeMoney extends \App\Pages\Base
         $this->_doc->headerdata['emp'] = $this->docform->emp->getValue();
         $this->_doc->headerdata['emp_name'] = $this->docform->emp->getValueName();
 
-        $this->_doc->amount = H::fa($this->docform->amount->getText());
+        $this->_doc->amount = H::fa($this->docform->amount->getDouble());
         $this->_doc->document_number = trim($this->docform->document_number->getText());
         $this->_doc->document_date = strtotime($this->docform->document_date->getText());
         $this->_doc->customer_id = $this->docform->customer->getKey();
-        $this->_doc->payed = $this->_doc->amount;
-        $this->_doc->headerdata['payed'] = $this->_doc->amount;        
-        $this->_doc->payment = 0;
+        $this->_doc->payed = 0;
+        $this->_doc->payamount = $this->_doc->amount;
 
         if ($this->checkForm() == false) {
             return;
         }
+
         $isEdited = $this->_doc->document_id > 0;
 
         $conn = \ZDB\DB::getConnect();
@@ -137,7 +148,7 @@ class IncomeMoney extends \App\Pages\Base
             }
             $this->setError($ee->getMessage());
 
-            $logger->error($ee->getMessage() . " Документ " . $this->_doc->meta_desc);
+            $logger->error('Line '. $ee->getLine().' '.$ee->getFile().'. '.$ee->getMessage()  );
 
             return;
         }
@@ -150,37 +161,37 @@ class IncomeMoney extends \App\Pages\Base
     private function checkForm() {
 
         if (strlen($this->_doc->document_number) == 0) {
-            $this->setError("enterdocnumber");
+            $this->setError("Введите номер документа");
         }
         if (false == $this->_doc->checkUniqueNumber()) {
             $next = $this->_doc->nextNumber();
             $this->docform->document_number->setText($next);
             $this->_doc->document_number = $next;
             if (strlen($next) == 0) {
-                $this->setError('docnumbercancreated');
+                $this->setError('Не создан уникальный номер документа');
             }
         }
 
         if (($this->_doc->amount > 0) == false) {
 
-            $this->setError("noentersum");
+            $this->setError("Не введено сумму");
         }
-        if ($this->docform->mtype->getValue() == 0 ) {
+        if ($this->docform->mtype->getValue() == 0) {
 
-            $this->setError("noselincome");
+            $this->setError("Не выбран тип дохода");
         }
 
         if ($this->docform->detail->getValue() == 1 || $this->docform->detail->getValue() == 2) {
 
-            if ($this->_doc->customer_id == 0 ) {
-                $this->setError("noselcust");
+            if ($this->_doc->customer_id == 0) {
+                $this->setError("Не выбран контрагент");
             }
         }
 
         if ($this->docform->detail->getValue() == 3) {
 
-            if ($this->_doc->headerdata['emp'] == 0 ) {
-                $this->setError("noempselected");
+            if ($this->_doc->headerdata['emp'] == 0) {
+                $this->setError("Не выбран сотрудник");
             }
         }
         return !$this->isError();
@@ -205,13 +216,23 @@ class IncomeMoney extends \App\Pages\Base
         $this->docform->emp->setVisible(false);
         $this->docform->customer->setVisible(false);
         $this->docform->contract->setVisible(false);
+        $this->docform->mtype->setVisible(false);        
         if ($sender->getValue() == 1 || $sender->getValue() == 2) {
             $this->docform->contract->setVisible(true);
             $this->docform->customer->setVisible(true);
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_BASE_INCOME) ;            
         }
         if ($sender->getValue() == 3) {
             $this->docform->emp->setVisible(true);
+            $this->docform->mtype->setValue(\App\Entity\IOState::TYPE_OTHER_INCOME) ;            
+       }
+       
+        if ($sender->getValue() == 0   ) {
+            $this->docform->mtype->setVisible(true);
+            $this->docform->mtype->setValue(0) ;            
         }
+         
+        
     }
 
 }

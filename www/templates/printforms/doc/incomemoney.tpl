@@ -1,7 +1,7 @@
 <table class="ctable" border="0" cellspacing="0" cellpadding="2">
     <tr>
         <td colspan="4" align="center">
-            <b> Доходный ордер № {{document_number}} от {{date}}</b> <br>
+            <b> Приходный ордер № {{document_number}} от {{date}}</b> <br>
         </td>
     </tr>
 
@@ -18,7 +18,7 @@
     </tr>
     <tr>
         <td colspan="4">
-            <b>Тип дохода:</b> {{type}}
+              {{totalstr}}   
         </td>
     </tr>
 

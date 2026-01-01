@@ -10,14 +10,13 @@ namespace App\Modules\Issue\Entity;
  */
 class Project extends \ZCL\DB\Entity
 {
-
-    const STATUS_NEW         = 1;
-    const STATUS_INPROCESS   = 2;
-    const STATUS_REOPENED    = 3;
-    const STATUS_WA          = 4;
-    const STATUS_SHIFTED     = 5;
-    const STATUS_WAITPAIMENT = 6;
-    const STATUS_CLOSED      = 12;
+    public const STATUS_NEW         = 1;
+    public const STATUS_INPROCESS   = 2;
+    public const STATUS_REOPENED    = 3;
+    public const STATUS_WA          = 4;
+    public const STATUS_SHIFTED     = 5;
+    public const STATUS_WAITPAIMENT = 6;
+    public const STATUS_CLOSED      = 12;
 
     protected function init() {
         $this->project_id = 0;
@@ -42,7 +41,7 @@ class Project extends \ZCL\DB\Entity
 
     protected function beforeSave() {
         parent::beforeSave();
-        //упаковываем  данные  
+        //упаковываем  данные
         $this->details = "<details>";
         $this->details .= "<desc><![CDATA[{$this->desc}]]></desc>";
         $this->details .= "<creator><![CDATA[{$this->creator}]]></creator>";
@@ -57,7 +56,7 @@ class Project extends \ZCL\DB\Entity
     protected function afterLoad() {
 
 
-        //распаковываем  данные из  
+        //распаковываем  данные из
         $xml = simplexml_load_string($this->details);
         $this->desc = (string)($xml->desc[0]);
         $this->creator = (string)($xml->creator[0]);
@@ -83,19 +82,19 @@ class Project extends \ZCL\DB\Entity
         foreach ($users as $u) {
             $conn->Execute("insert into issue_projectacc  (project_id,user_id) value ({$this->project_id},{$u}) ");
         }
-        $conn->Execute("insert into issue_projectacc  (project_id,user_id) value ({$this->project_id},". \App\System::getUser()->user_id  .")  ");        
+        $conn->Execute("insert into issue_projectacc  (project_id,user_id) value ({$this->project_id},". \App\System::getUser()->user_id  .")  ");
     }
 
     public static function getStatusList() {
         $list = array();
-        $list[self::STATUS_NEW] = \App\Helper::l('pr_new');
+        $list[self::STATUS_NEW] = "Новый";
 
-        $list[self::STATUS_INPROCESS] = \App\Helper::l('pr_inp');
-        $list[self::STATUS_WA] = \App\Helper::l('pr_wa');
-        $list[self::STATUS_SHIFTED] = \App\Helper::l('pr_shifted');
-        $list[self::STATUS_WAITPAIMENT] = \App\Helper::l('pr_wp');
-        $list[self::STATUS_REOPENED] = \App\Helper::l('pr_reopened');
-        $list[self::STATUS_CLOSED] = \App\Helper::l('pr_closed');
+        $list[self::STATUS_INPROCESS] = "В работе";
+        $list[self::STATUS_WA] = "На утверждении";
+        $list[self::STATUS_SHIFTED] = "Отложен";
+        $list[self::STATUS_WAITPAIMENT] = "Ждет оплату";
+        $list[self::STATUS_REOPENED] = "Переоткрыт";
+        $list[self::STATUS_CLOSED] = "Закрыт";
         return $list;
     }
 

@@ -1,0 +1,173 @@
+<html>
+  <head>
+     <title>  Обновление программы  </title>
+ 
+</head>
+<body>
+ <div class="row">
+        
+    <div class="col-12 col-lg-10 col-xl-6 ml-2"   >
+        <h2>Обновление программы</h2>
+  
+           <div class="row  mb-4  ">
+            
+             <div class="col-12  "  >
+             <span>  Текущая версия программы <b>{{curversion}}</b>. </span>
+             {{#actual}}
+             &nbsp; <span> Версия   актуальна</span>
+             {{/actual}}       
+            </div>
+            <div class="col-12  "  >
+                Текущая версия БД <b>{{curversiondb}}</b> 
+               &nbsp;  <span class="text-danger"> {{{reqversion}}} </span>
+                 {{#actualdb}}
+                  <span>Версия   актуальна</span>
+                 {{/actualdb}}    
+            </div>
+            
+          <div class="col-12  "  >
+                Текущая версия PHP <b> {{phpv}}</b> 
+                   
+            </div>
+            
+          </div>
+           
+      <div class="row  ">
+  
+         {{#tooold}}
+       <div class="col-12 col-xl-8 mb-4">
+         <small>
+        <i class="fa fa-exclamation-triangle text-danger" ></i>   Если пропушено несколько  версий может понадобится  ручное  обновление.
+            Для этого перейдите на  <a href="https://ru.zippy.com.ua/update">тстория обновлений </a> 
+            и выполните  посдледовательное  обновление  структуры базы данных в соответствии с  инятрукциями, начиная с  текущей версии.
+            Выполните  полное обновление  с    <a class="link" href="https://ru.zippy.com.ua/download/fullzstore.zip"> архива</a> (кроме config.php). 
+           
+          </small>
+     </div>  
+         {{/tooold}}
+        
+         
+
+ 
+   
+    
+      {{#show}}
+      <div class="col-12  ">
+
+  
+     <i class="fa fa-info-circle text-info"></i> <h5 style="display:inline">    Доступна  версия <b>{{newver}}</b></h5>
+         <br><br><b>Перечень изменений</b>
+           <p>
+          <ul style=" line-height: 1.4em;"  >
+            {{#list}}
+            <li >{{item}}</li>
+            {{/list}}
+         </ul>
+         </p>
+         <p>
+           {{{notes}}}
+          </p>
+          {{#warn}}
+          <i class="fa fa-exclamation-triangle"></i> {{warn}}
+          <br>
+          {{/warn}}
+        <small>    <a href="https://ru.zippy.com.ua/update">Детальнее...</a>  </small>                  
+          
+      
+           <br><br><a zippy="updatefile"><i class="fa fa-download"></i> <b>Обновить файлы  автоматически</b></a>
+
+           <br> <br>Для обновления вручную скачать <a href="{{archive}}" >архив</a>  или  перейти на  <a href="{{github}}">GitHib</a>
+            
+           <br><small><i class="fa fa-exclamation-triangle"></i>  
+                В  случае ошибки обновить вручную с  архива
+           </small> 
+            {{#showdb}}  
+            <br><small><i class="fa fa-exclamation-triangle"></i>  
+                Желательно обновить сначала  структуру БД 
+           </small>       
+            {{/showdb}}  
+           
+                     
+           <br><br>         
+      
+         
+         
+   </div>   
+               
+            
+        {{/show}}
+    
+          {{#showdb}}       
+  
+     <div class="col-12 mt-2 ">  
+
+           <b>Обновление  структуры  базы данных</b>
+           <br><small><i class="fa fa-exclamation-triangle"></i>  
+              Перед обновлением рекомендуется произвести бакап БД. 
+                Пользователи "коробочных" версий могут просто скопировать или заархивировать папку с сервером 
+                (Предварительно его нужно остановить).
+                               
+           </small>
+     
+           <br><br><a zippy="updatesql"><i class="fa fa-download"></i>  <b>Обновить структуру БД автоматически</b></a>
+           <br>Загрузить  <a href="{{sqlurl}}" >sql скрипт</a>  для ручного обновления
+                    
+           <br><br>
+   </div>  
+            {{/showdb}}       
+         
+       
+       <div class="col-12  mt-2">
+          {{#reinstall}}    
+        <i class="fa fa-redo"></i> <a zippy="reload"><b>Повторити оновлення </b>  </a> 
+        <br><small>Повторить обновления файлов.  Например  после  оперативного исправоления ошибки (хотфикса)</small>
+           {{/reinstall}}    
+          {{#rollback}}
+        <br>  <br> 
+        <i class="fa fa-undo"></i> <a zippy="rollback"><b>Откатить код  к  предыдущей версии </b> </a> 
+        <br><small>На случай проблем  после  обновления</small>
+          {{/rollback}}        
+         {{^oldphp}}
+        <br>  <br> 
+         <a zippy="updatevendor"><i class="fa fa-download"></i> <b>Обновить папку  vendor</b> </a> 
+        <br><small>Если были обновлены  сторонние  библиотеки</small>
+          {{/oldphp}}        
+     </div>  
+                   
+                      
+    </div>         
+  </div>        
+</div>        
+ <script>
+       
+       function check_updatefile(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        } 
+        
+       function check_updatesql(ele){
+            
+           document.getElementById('dialogwait').showModal()
+            return true;
+       
+        } 
+        function check_rollback(ele){
+           return confirm("Откатить версию?")
+        } 
+        function check_reload(ele){
+           return confirm("Повторить обновление?")
+        } 
+        function check_updatevendor(ele){
+            var b = confirm("Обновить vendor?")
+            if(b==true) {     
+              document.getElementById('dialogwait').showModal()
+              return true; 
+            }          
+            return false;
+        } 
+        
+ </script> 
+</body>
+</html>

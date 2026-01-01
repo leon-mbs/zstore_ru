@@ -11,15 +11,15 @@
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number">
+                        <input style="width:100px" class="form-control" type="text" zippy="document_number">
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
 
                     <div class="form-group  ">
-                        <label for="payment">Из кассы, счета</label>
+                        <label for="payment">С  кассы, счета</label>
                         <select class="form-control" zippy="payment">
                         </select>
                     </div>
@@ -27,12 +27,7 @@
                         <label for="amount">Сумма</label>
                         <input pattern="[0-9,\.]+" class="form-control qtyprice" type="text" zippy="amount">
                     </div>
-                    <div class="form-group  ">
-                        <label for="mtype">Тип расхода</label>
-                        <select class="form-control" zippy="mtype">
-                            <option value="0">Не выбрано</option>
-                        </select>
-                    </div>
+                 
 
 
                 </div>
@@ -41,10 +36,10 @@
                     <div class="form-group">
                         <label for="detail">Тип операции</label>
                         <select class="form-control" zippy="detail">
-                            <option value="0">Обычная оплата</option>
-                            <option value="1">Возврат покупателю</option>
+                            <option value="0">Выдача  средств </option>
+                            <option value="1">Возврат  покупателю</option>
                             <option value="2">Оплата поставщику</option>
-                            <option value="3">Выдача сотруднику</option>
+                            <option value="3">Сотруднику в  подотчет</option>
                         </select>
                     </div>
 
@@ -61,15 +56,20 @@
                     <div class="form-group">
                         <label data-label="emp" for="emp">Сотрудник</label>
                         <select class="form-control  " zippy="emp">
-                            <option value="0">Не выбран</option>
+                            <option value="0">Не выбрано</option>
                         </select>
                     </div>
-    
-
+            
+                   <div class="form-group  ">
+                        <label  data-label="mtype" for="mtype">Тип расходов</label>
+                        <select class="form-control" zippy="mtype">
+                            <option value="0">Не выбрано</option>
+                        </select>
+                    </div>
                     <div class="form-group  ">
                         <label for="notes">Примечание </label>
 
-                        <input class="form-control" type="text" zippy="notes">
+                         <textarea class="form-control"   zippy="notes"></textarea>
 
                     </div>
                 </div>
@@ -77,9 +77,9 @@
 
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary mr-2">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-outline-primary mr-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
                 </div>
             </div>

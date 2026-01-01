@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="3">
-            Отчет о зароботной плате
+            Отчет по зарплате
         </td>
     </tr>
     <tr>
@@ -39,7 +39,7 @@
      <tr >
 
         <td style="font-weight: bolder;" colspan="3">
-         <br>   Начисление и удержание
+         <br>   Начисления и удержания
         </td>
     </tr>
     {{#_detail2}}

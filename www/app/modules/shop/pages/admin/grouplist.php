@@ -16,6 +16,7 @@ use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\Form;
 use Zippy\Html\Form\TextArea;
 use Zippy\Html\Form\TextInput;
+use Zippy\Html\Form\DropDownChoice;
 use Zippy\Html\Label;
 use Zippy\Html\Link\ClickLink;
 use Zippy\Html\Link\SubmitLink;
@@ -23,17 +24,16 @@ use Zippy\Html\Panel;
 
 class GroupList extends \App\Pages\Base
 {
-
     private $group      = null;
-    public  $_grouplist = array();
-    public  $attrlist   = array();
+    public $_grouplist = array();
+    public $attrlist   = array();
     private $mm;
 
     public function __construct() {
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'shop') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg('noaccesstopage');
+            System::setErrorMsg("НЕт права доступа  к странице");
             App::RedirectError();
             return;
         }
@@ -42,7 +42,7 @@ class GroupList extends \App\Pages\Base
 
         $this->_grouplist = Category::findFullData($clist);
 
-        usort($this->_grouplist, function($a, $b) {
+        usort($this->_grouplist, function ($a, $b) {
             return $a->full_name > $b->full_name;
         });
 
@@ -56,6 +56,7 @@ class GroupList extends \App\Pages\Base
         //$this->UpdateAttrList();
 
         $attrpanel->add(new ClickLink('addattr'))->onClick($this, 'OnAddAttribute');
+     
         $form = $attrpanel->add(new Form('attreditform'));
         $form->setVisible(false);
         $form->onSubmit($this, 'OnSaveAttribute');
@@ -63,7 +64,7 @@ class GroupList extends \App\Pages\Base
         $form->add(new TextInput('attrid'));
         $form->add(new \Zippy\Html\Form\DropDownChoice('attrtype', Helper::getAttributeTypes()))->onChange($this, 'OnAttrType');
         $form->add(new Label('attrtypename'));
-        $form->add(new Label('tt'))->setAttribute("title", "Атрибут 'Есть/Нет' указывает наличие или  отсутствие какойго либо параметра. Наприме FM-тюнер");
+        $form->add(new Label('tt'))->setAttribute("title", "Атрибут `Есть/Нет указывает на  наличие  или отсутсвие характеристики (например, FM-тюнер)");
 
         $form->add(new Panel('attrvaluespanel'));
         $form->attrvaluespanel->add(new TextArea('attrvalues'));
@@ -72,12 +73,16 @@ class GroupList extends \App\Pages\Base
         $form->add(new Panel('meashurepanel'));
         $form->meashurepanel->add(new TextInput('meashure'));
         $form->meashurepanel->setVisible(false);
+    
+        $form->add(new Panel('cfpanel'));
+        $form->cfpanel->add(new DropDownChoice('attrcf'));
+        $form->cfpanel->setVisible(false);
     }
 
     public function OnGroupRow($row) {
         $group = $row->getDataItem();
         $row->add(new ClickLink('groupname', $this, 'onGroup'))->setValue($group->full_name);
-        if ($group->cat_id == $this->group->cat_id) {
+        if ($group->cat_id == ($this->group->cat_id ??0)) {
             $row->setAttribute('class', 'table-success');
         }
     }
@@ -88,6 +93,16 @@ class GroupList extends \App\Pages\Base
         $this->grouplist->Reload(false);
         $this->UpdateAttrList();
         $this->attrpanel->attreditform->setVisible(false);
+        
+        $cflist = [];
+        foreach($this->group->cflist as $c=>$n){
+             $cflist[$c]=$n;
+        }
+     
+         
+        $this->attrpanel->attreditform->cfpanel->attrcf->setOptionList($cflist);
+        
+        $this->attrpanel->attreditform->cfpanel->attrcf->setValue(0);
     }
 
     //обновить атрибуты
@@ -105,8 +120,8 @@ class GroupList extends \App\Pages\Base
         $attrlist = Helper::getAttributeTypes();
         $datarow->add(new Label("itemtype", $attrlist[$item->attributetype]));
         $datarow->add(new Label("itemvalues", $item->valueslist));
-        $datarow->add(new ClickLink("itemdel", $this, 'OnDeleteAtribute'))->setVisible($this->group->cat_id == $item->cat_id);
-        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->cat_id == $item->cat_id);
+        $datarow->add(new ClickLink("itemdel", $this, 'OnDeleteAtribute'))->setVisible($this->group->cat_id == $item->cat_id );
+        $datarow->add(new ClickLink("itemedit", $this, 'OnEditAtribute'))->setVisible($this->group->cat_id == $item->cat_id && $item-> attributetype != 6);
         $datarow->add(new ClickLink("orderup", $this, 'OnUp'))->setVisible($item->ordern > $this->mm["mi"]);
         $datarow->add(new ClickLink("orderdown", $this, 'OnDown'))->setVisible($item->ordern < $this->mm["mm"]);
 
@@ -116,6 +131,7 @@ class GroupList extends \App\Pages\Base
     public function OnAddAttribute($sender) {
         $form = $this->attrpanel->attreditform;
         $form->setVisible(true);
+        $form->tt->setVisible(true);
         $form->attrtype->setVisible(true);
         $form->attrvaluespanel->setVisible(false);
         $form->attrvaluespanel->attrvalues->setValue('');
@@ -133,6 +149,7 @@ class GroupList extends \App\Pages\Base
         $type = $sender->getValue();
         $this->attrpanel->attreditform->attrvaluespanel->setVisible(false);
         $this->attrpanel->attreditform->meashurepanel->setVisible(false);
+        $this->attrpanel->attreditform->cfpanel->setVisible(false);
         if ($type == 2) {
             $this->attrpanel->attreditform->meashurepanel->setVisible(true);
         }
@@ -140,20 +157,25 @@ class GroupList extends \App\Pages\Base
             $this->attrpanel->attreditform->attrvaluespanel->setVisible(true);
         }
         if ($type == 1) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattryn"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Атрибут `Есть/Нет указывает на  наличие  или отсутсвие характеристики (например, FM-тюнер)");
         }
         if ($type == 2) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrnum"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Число` - числовий параметр (например, емкость аккумулятора). Перечень для фильтра ормирцктся  на основе значений отрибута товара.");
         }
         if ($type == 3) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrlist"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Список`   для перечня с  которого  можно  выбрать одно значение (например, цвет). Задается  через запятую");
         }
         if ($type == 4) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", \App\Helper::l("shopattrset"));
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут `Набор`   для перечня, с  которого  можно  выбрать несколько значений (например, типы  питания). Задается  через запятую. ");
         }
         if ($type == 5) {
-            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовый параметр (например тип процессора). Значени не  используется в фильтре. ");
+            $this->attrpanel->attreditform->tt->setAttribute("title", "Атрибут 'Строка'- просто текстовый параметр (например тип процессора). Значение не  используется  в  фильтрах. ");
         }
+        if ($type == 6) {
+            $this->attrpanel->attreditform->tt->setAttribute("title", " Атрибут для кастомных (если заданы в данной категории). Задается  как  код  кастомного  поля  ");
+            $this->attrpanel->attreditform->cfpanel->setVisible(true);
+     
+        }        
     }
 
     public function OnEditAtribute($sender) {
@@ -167,6 +189,7 @@ class GroupList extends \App\Pages\Base
         $form->attrvaluespanel->attrvalues->setValue($item->valueslist);
 
         $form->attrtype->setVisible(false);
+        $form->tt->setVisible(false);
         $form->attrvaluespanel->setVisible(false);
         $form->meashurepanel->setVisible(false);
         $form->attrtypename->setVisible(true);
@@ -181,6 +204,7 @@ class GroupList extends \App\Pages\Base
         if ($item->attributetype == 3 || $item->attributetype == 4) {
             $form->attrvaluespanel->setVisible(true);
         }
+
     }
 
     public function OnSaveAttribute($sender) {
@@ -197,7 +221,7 @@ class GroupList extends \App\Pages\Base
         $attr->attributename = $form->attrname->getText();
 
         if (strlen($attr->attributename) == 0) {
-            $this->setError("entername");
+            $this->setError("Не введено название");
 
             return;
         }
@@ -206,10 +230,41 @@ class GroupList extends \App\Pages\Base
         }
         if ($attr->attributetype == 3 || $attr->attributetype == 4) {
             $attr->valueslist = $form->attrvaluespanel->attrvalues->getText();
-            $attr->valueslist = preg_replace('/\s+/', "", $attr->valueslist);
-        }
 
-        $attr->Save();
+            $r = array();
+
+            foreach(explode(',', trim($attr->valueslist)) as $l) {
+                $l = trim($l) ;
+                $l = trim($l) ;
+                if(strlen($l) > 0) {
+                    $r[] = $l ;
+                }
+
+            }
+
+
+            $attr->valueslist = implode(",", $r);
+            
+            
+            if (strlen (trim($attr->valueslist)) == 0) {
+                $this->setError("Не введено значение");
+
+                return;
+            }            
+            
+        }
+        if ($attr->attributetype == 6) {
+           
+            $fcode = $form->cfpanel->attrcf->getValue();
+            if ( $fcode == "0") {
+                $this->setError("Не выбрано значение");
+
+                return;
+            }             
+            $attr->valueslist = $fcode;
+        }
+    
+        $attr->save();
 
         if ($attrid == "0") {
             $conn = \ZCL\DB\DB::getConnect();
@@ -263,4 +318,5 @@ class GroupList extends \App\Pages\Base
         }
     }
 
+    
 }

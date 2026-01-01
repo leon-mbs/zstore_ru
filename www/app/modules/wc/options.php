@@ -8,18 +8,17 @@ use Zippy\Html\Form\Form;
 use Zippy\Html\Form\SubmitButton;
 use Zippy\Html\Form\CheckBox;
 use Zippy\Html\Form\TextInput;
-use Zippy\WebApplication as App;
+use App\Application as App;
 
 class Options extends \App\Pages\Base
 {
-
     public function __construct() {
         parent::__construct();
 
         if (strpos(System::getUser()->modules, 'woocomerce') === false && System::getUser()->rolename != 'admins') {
-            System::setErrorMsg(\App\Helper::l('noaccesstopage'));
+            System::setErrorMsg("Нет праа доступа  к  странице");
 
-           
+            App::RedirectError();
             return;
         }
 
@@ -29,12 +28,21 @@ class Options extends \App\Pages\Base
         $form->add(new TextInput('site', $modules['wcsite']));
         $form->add(new TextInput('keyc', $modules['wckeyc']));
         $form->add(new TextInput('keys', $modules['wckeys']));
-        
+        $form->add(new CheckBox('insertcust', $modules['wcinsertcust']));
         $form->add(new DropDownChoice('defpricetype', \App\Entity\Item::getPriceTypeList(), $modules['wcpricetype']));
         $form->add(new DropDownChoice('api', array('v3' => 'v3', 'v2' => 'v2', 'v1' => 'v1'), $modules['wcapi']));
         $form->add(new CheckBox('ssl', $modules['wcssl']));
-        $form->add(new CheckBox('setpayamount', $modules['wcsetpayamount']));
-        $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['wcsalesource']));
+         $form->add(new DropDownChoice('salesource', \App\Helper::getSaleSources(), $modules['wcsalesource']));
+        $form->add(new DropDownChoice('defmf',\App\Entity\MoneyFund::getList(), $modules['wcmf']??0));
+        $form->add(new DropDownChoice('defstore',\App\Entity\Store::getList(), $modules['wcstore']??0));
+      
+        $pt=[];
+        $pt[1] = 'Оплата сразу (предоплата)';
+        $pt[2] = 'Постооплата';
+        $pt[3] = 'Оплата в Чеке или  РН';
+        
+        $form->add(new DropDownChoice('defpaytype',$pt, $modules['wcpaytype']??0));
+
 
         $form->add(new SubmitButton('save'))->onClick($this, 'saveOnClick');
 
@@ -47,13 +55,27 @@ class Options extends \App\Pages\Base
         $keys = $this->cform->keys->getText();
         $api = $this->cform->api->getValue();
         $ssl = $this->cform->ssl->isChecked() ? 1 : 0;
-        $setpayamount = $this->cform->setpayamount->isChecked() ? 1 : 0;
-        
+   
+        $insertcust = $this->cform->insertcust->isChecked() ? 1 : 0;
+
         $pricetype = $this->cform->defpricetype->getValue();
-        $salesource = $this->cform->salesource->getValue();
-     
+        $mf = $this->cform->defmf->getValue();
+        $store = $this->cform->defstore->getValue();
+        $paytype = intval($this->cform->defpaytype->getValue() );
+         $salesource = $this->cform->salesource->getValue();
+
         if (strlen($pricetype) < 2) {
-            $this->setError('noselpricetype');
+            $this->setError('Не указан тип цен');
+            return;
+        }
+      if ( $paytype==0) {
+
+            $this->setError('Не указан тип оплаты');
+            return;
+        }
+        if ( $paytype==1 && $mf==0) {
+
+            $this->setError('Не указан денежный счет');
             return;
         }
 
@@ -65,14 +87,19 @@ class Options extends \App\Pages\Base
         $modules['wckeyc'] = $keyc;
         $modules['wckeys'] = $keys;
         $modules['wcapi'] = $api;
+        $modules['wcinsertcust'] = $insertcust;
 
         $modules['wcpricetype'] = $pricetype;
+        $modules['wcpaytype'] = $paytype;
+        $modules['wcmf'] = $mf;
+        $modules['wcstore'] = $store;
+
         $modules['wcsalesource'] = $salesource;
         $modules['wcssl'] = $ssl;
-        $modules['wcsetpayamount'] = $setpayamount;
+
 
         System::setOptions("modules", $modules);
-        $this->setSuccess('saved');
+        $this->setSuccess('Сохранено');
 
         \App\Modules\WC\Helper::connect();
 
@@ -80,3 +107,4 @@ class Options extends \App\Pages\Base
     }
 
 }
+ 

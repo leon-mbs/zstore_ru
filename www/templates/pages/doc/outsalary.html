@@ -15,11 +15,11 @@
                     </div>
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-check">
                          <input zippy="advance" type="checkbox" class="form-check-input">
-                         <label class="form-check-label" for="advance">Выплата аванса</label>
+                         <label class="form-check-label" for="advance">Выплата  аванса</label>
                     </div>
               
 
@@ -33,12 +33,12 @@
                 </div>
                 <div class="col-12 col-md-4 col-xl-3">
                     <div class="form-group  ">
-                        <label for="payment">Из кассы, счета </label>
+                        <label for="payment">Касса, счет </label>
                         <select class="form-control" zippy="payment">
                         </select>
                     </div>
                     <div class="form-group  ">
-                        <label for="year">Год</label>
+                        <label for="year">Рiк</label>
                         <select class="form-control" zippy="year">
                         </select>
                     </div>
@@ -52,8 +52,8 @@
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="tolist" type="submit" value="Дальше " class="btn   btn-outline-primary">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn   btn-outline-secondary  mr-2">
+                     <input zippy="tolist" type="submit" value="Далее " class="btn   btn-outline-primary">
            
                 </div>
             </div>
@@ -71,7 +71,7 @@
                 </div>
                <div class="col-auto">
                   <select class="form-control"  zippy="newemp" >
-                     <option value="0">Не выбран</option>
+                     <option value="0">Не выбрано</option>
                         </select>
                 </div>
                <div class="col-auto pt-2">
@@ -84,20 +84,22 @@
 
              <table class="table table-sm">
                    <tr>
-                      <th></th>
+                    <th style="width:20px"><i onclick=" $('.seldel').prop('checked', $('.seldel').prop('checked') == false);"
+                                style=";cursor:pointer" title="Снять/Выставить флаг"
+                                    class="fa fa-check-double "></i></th>
                       <th>ФИО</th>
                                   
                       <th  >Сумма</th>
                     
                    </tr>
                   <tr zippy="elist">
-                      <td style="width:20px" >
-                       <input  type="checkbox" zippy="emp_ch">
+                      <td   >
+                       <input tabindex="-1" class="seldel" type="checkbox" zippy="emp_ch">
                       </td>
                       <td zippy="emp_name"></td>
                                 
                     
-                      <td  ><input onblur="calcTotal()" class="salsum" zippy="amount" style="width:100px;"   ></td>
+                      <td  ><input onblur="calcTotal()" class="form-control salsum" zippy="amount" style="width:100px;"   ></td>
                             
                           
                   </tr>
@@ -113,9 +115,9 @@
              
              
              <div class="col-12 col-md-6 mt-4">
-                    <input type="submit" value="Назад" zippy="todoc" class="btn   btn-outline-secondary">
-                    &nbsp; <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-info">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
+                    <input type="submit" value="Назад" zippy="todoc" class="btn   btn-outline-secondary  mr-2">
+                     <input zippy="savedoc" type="submit" value="Сохранить" class="btn   btn-info  mr-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-primary  ">
 
              </div>
          </div> </div>
@@ -128,10 +130,9 @@
 
                 $('.salsum').each(function (index, value) {
                     var a = $(this).val();
-                    a = parseFloat(a);
-                    if (Number.isNaN(a) == false) {
-                        total = total + a;
-                    }
+                    a = parseVal(a);
+                    total = total + a;
+
 
 
                 });

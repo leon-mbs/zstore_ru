@@ -7,7 +7,6 @@ namespace App;
  */
 class Report
 {
-
     private $_template;
 
     /**
@@ -22,31 +21,33 @@ class Report
     /**
      * Генерация  простой формы
      *
-     * @param mixed $header Массив  с даннымы  шапки
-     * @param mixed $detail Двумерный массив  табличной  части
-     * @param mixed $summary Список  полей  по  которым  вычисляются  итоговые  данные табличной части
+     * @param array $header Массив  с даннымы  шапки
+     * @param mixed $removeendline  убирать перевод  строки
      */
-    public function generate(array $header) {
-      
+    public function generate(array $header,$removeendline=true) {
+        gc_enable();
+        gc_collect_cycles();
+        
         $dir = 'templates';
-    
+
         $fp = _ROOT . $dir . '/printforms/' . $this->_template ;
-        $fp_c = str_replace(".tpl","_custom.tpl",$fp) ;    //кастомный  шаблон
+        $fp_c = str_replace(".tpl", "_custom.tpl", $fp) ;    //кастомный  шаблон
         if(file_exists($fp_c)) {
             $template = @file_get_contents($fp_c);
-        }   else {
+        } else {
             $template = @file_get_contents($fp);
         }
-        
-        
+
+
         if (strlen($template) == 0) {
-            return "Файл  печатной формы " . $this->_template . " не найден";
+            return "Файл печатной формы " . $this->_template . " не найден";
         }
         $m = new \Mustache_Engine();
         $html = $m->render($template, $header);
-
-        $html = str_replace("\n", "", $html);
-        $html = str_replace("\r", "", $html);
+        if($removeendline) {
+          $html = str_replace("\n", "", $html);
+          $html = str_replace("\r", "", $html);
+        }
         return $html;
     }
 

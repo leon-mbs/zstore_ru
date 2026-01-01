@@ -3,14 +3,16 @@
 
     <tr style="font-weight: bolder;">
         <td></td>
-        <td colspan="4">
-            Гарантийный талон {{document_number}}
-        </td>
-        <td colspan="3">
-            от {{date}}
+        <td colspan="8">
+            Гарантийный талон {{document_number}}  &nbsp;     от {{date}}
         </td>
     </tr>
+    {{#basedon}}
    <tr>
+        <td colspan="8">Основание {{basedon}}</td>
+    </tr>
+    {{/basedon}}    
+  <tr>
         <td colspan="8">{{{notes}}}</td>
     </tr>
     
@@ -19,12 +21,12 @@
     </tr>
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2" width="230" style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="50">Кол.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="70">Сумма</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="140">Сер. номер</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="70">Гар., Мес</th>
+        <th colspan="2"   style="border-top:1px #000 solid;border-bottom:1px #000 solid;">Наименование</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Кол.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Цена</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" align="right" >Сумма</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сер. номер</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Гар., мес.</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -50,14 +52,14 @@
             <b> Покупатель</b> {{customer_name}}
         </td>
         <td colspan="4">
-            <b> Продавец</b> {{firmname}}
+            <b> Продавец</b> {{firm_name}}
         </td>
 
     </tr>
     <tr>
         <td></td>
         <td colspan="8">
-            Подпись
+            Подписи
         </td>
 
 

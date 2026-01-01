@@ -10,19 +10,22 @@ namespace App\Entity;
  */
 class User extends \ZCL\DB\Entity
 {
-
     /**
      * @see Entity
      *
      */
     protected function init() {
         $this->userlogin = "Гость";
+        $this->rolename = "Гость";
         $this->user_id = 0;
         $this->defstore = 0;
         $this->defmf = 0;
+        $this->defpaytype = 0;
         $this->defsalesource = 0;
-        $this->deffirm = 0;
         $this->hidesidebar = 0;
+        $this->usebotfornotify = 0;
+        $this->prturn = 0;
+
         $this->usemobileprinter = 0;
         $this->pagesize = 25;
         $this->createdon = time();
@@ -50,8 +53,8 @@ class User extends \ZCL\DB\Entity
      *
      */
     protected function afterLoad() {
-        $this->createdon = strtotime($this->createdon);
-        $this->lastactive = strtotime($this->lastactive);
+        $this->createdon = strtotime($this->createdon ?? '');
+        $this->lastactive = strtotime($this->lastactive ?? '');
 
         //доступы  уровня  роли
         $acl = @unserialize($this->roleacl);
@@ -68,8 +71,11 @@ class User extends \ZCL\DB\Entity
         }
 
 
-        $this->noshowpartion = $acl['noshowpartion'];
-        $this->showotherstores = $acl['showotherstores'];
+        $this->custtype = $acl['custtype']??0;
+        $this->canevent = $acl['canevent']??0;
+        $this->dashboard = $acl['dashboard']??0;
+        $this->noshowpartion = $acl['noshowpartion']??0;
+        $this->showotherstores = $acl['showotherstores']??0;
 
         $this->aclview = $acl['aclview'];
         $this->acledit = $acl['acledit'];
@@ -78,37 +84,49 @@ class User extends \ZCL\DB\Entity
         $this->aclstate = $acl['aclstate'];
         $this->acldelete = $acl['acldelete'];
 
-        $this->widgets = $acl['widgets'];
+      
         $this->modules = $acl['modules'];
         $this->smartmenu = $acl['smartmenu'];
 
         $this->aclbranch = $acl['aclbranch'];
         $this->onlymy = $acl['onlymy'];
-        $this->hidemenu = $acl['hidemenu'];
+        $this->hidemenu = $acl['hidemenu']?? null;
 
         $options = @unserialize($this->options);
         if (!is_array($options)) {
             $options = array();
         }
 
-        $this->deffirm = (int)$options['deffirm'];
+
         $this->defstore = (int)$options['defstore'];
         $this->defmf = (int)$options['defmf'];
-        $this->defsalesource = (int)$options['defsalesource'];
-        $this->pagesize = (int)$options['pagesize'];
-        $this->phone = (string)$options['phone'];
-        $this->viber = (string)$options['viber'];
+        $this->defpaytype = $options['defpaytype']??0;
+        $this->defsalesource = $options['defsalesource'] ??0 ;
+        $this->pagesize = $options['pagesize'] ??0;
+        $this->phone = $options['phone']?? '';
+        $this->viber = $options['viber']?? '';
+     
+        $this->darkmode = $options['darkmode']?? 0;
 
-        $this->darkmode = (int)$options['darkmode'];
-        $this->emailnotify = (int)$options['emailnotify'];
         $this->hidesidebar = (int)$options['hidesidebar'];
-        $this->usemobileprinter = (int)$options['usemobileprinter'];
-        $this->prtype = (int)$options['prtype'];
-        $this->pwsym = (int)$options['pwsym'];
-        $this->pserver = $options['pserver'];
-        $this->mainpage = $options['mainpage'];
-        $this->favs = $options['favs'];
-        $this->chat_id = $options['chat_id'];
+        $this->usemobileprinter = $options['usemobileprinter']?? 0;
+        $this->usebotfornotify = $options['usebotfornotify']?? 0;
+
+        $this->prtype = $options['prtype'] ?? 0;
+        $this->pwsym = $options['pwsym']?? 0;
+        $this->pserver = $options['pserver']?? '';
+        $this->prtypelabel = $options['prtypelabel']?? 0;
+        $this->pwsymlabel = $options['pwsymlabel']?? 0;
+        $this->pserverlabel = $options['pserverlabel']?? '';
+        $this->prturn = $options['prturn']?? 0;
+        $this->pcplabel = $options['pcplabel']?? '';
+        $this->pcp = $options['pcp']?? '';
+
+        $this->mainpage = $options['mainpage']??'';
+        $this->favs = $options['favs']?? '';
+        $this->chat_id = $options['chat_id']?? '';
+
+        $this->scalescript = base64_decode( $options['scalescript']?? '');
 
         parent::afterLoad();
     }
@@ -131,23 +149,36 @@ class User extends \ZCL\DB\Entity
         $options = array();
 
         $options['defstore'] = $this->defstore;
-        $options['deffirm'] = $this->deffirm;
 
+
+        $options['defpaytype'] = $this->defpaytype;
         $options['defmf'] = $this->defmf;
         $options['defsalesource'] = $this->defsalesource;
         $options['pagesize'] = $this->pagesize;
         $options['hidesidebar'] = $this->hidesidebar;
+        $options['usebotfornotify'] = $this->usebotfornotify;
         $options['darkmode'] = $this->darkmode;
-        $options['emailnotify'] = $this->emailnotify;
+
         $options['usemobileprinter'] = $this->usemobileprinter;
+
         $options['pserver'] = $this->pserver;
         $options['prtype'] = $this->prtype;
         $options['pwsym'] = $this->pwsym;
+        $options['pserverlabel'] = $this->pserverlabel;
+        $options['prtypelabel'] = $this->prtypelabel;
+        $options['pwsymlabel'] = $this->pwsymlabel;
+        $options['prturn'] = $this->prturn;
+        $options['pcplabel'] = $this->pcplabel;
+        $options['pcp'] = $this->pcp;
+
         $options['mainpage'] = $this->mainpage;
         $options['phone'] = $this->phone;
         $options['viber'] = $this->viber;
+         
         $options['favs'] = $this->favs   ;
         $options['chat_id'] = $this->chat_id   ;
+
+        $options['scalescript'] = base64_encode($this->scalescript )   ;
 
         $this->options = serialize($options);
 
@@ -163,7 +194,7 @@ class User extends \ZCL\DB\Entity
         $conn = \ZDB\DB::getConnect();
         $sql = "  select count(*)  from  documents where   user_id = {$this->user_id}";
         $cnt = $conn->GetOne($sql);
-        return ($cnt > 0) ? "Нельзя удалять пользователя с документами" : '';
+        return ($cnt > 0) ? "У пользователя есть  документы" : '';
     }
 
     /**
@@ -173,7 +204,9 @@ class User extends \ZCL\DB\Entity
      */
     public static function getByLogin($login) {
         $conn = \ZDB\DB::getConnect();
-        return User::getFirst('userlogin = ' . $conn->qstr($login));
+        $user = User::getFirst('userlogin = ' . $conn->qstr($login));
+  
+        return $user;
     }
 
     public static function getByEmail($email) {
@@ -227,7 +260,7 @@ class User extends \ZCL\DB\Entity
         $users = array();
 
         foreach (User::find('disabled <> 1', 'username') as $u) {
-            if ($u->userrole == 'admins' || $branch_id == 0) {
+            if ($u->rolename == 'admins' || $branch_id == 0) {
                 $users[$u->user_id] = $u->username;
                 continue;
             }

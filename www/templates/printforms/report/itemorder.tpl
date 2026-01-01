@@ -1,14 +1,14 @@
-<table   border="0" class="ctable" cellpadding="2" cellspacing="0">
+<table class="ctable" border="0"   cellpadding="2" cellspacing="0">
 
     <tr style="font-size:larger; font-weight: bolder;">
-        <td align="center" colspan="3">
-            Заказанные товары на {{date}}
+        <td align="center" colspan="4">
+            Заказанные  товары на {{date}}
         </td>
     </tr>
     {{#cust}}
     <tr>
 
-        <td colspan="3">
+        <td colspan="4">
             <b> Покупатель:</b> {{customer_name}}
         </td>
     </tr>
@@ -17,6 +17,7 @@
 
 
         <th style="border: solid black 1px"> Наименование</th>
+        <th style="border: solid black 1px"> Артикул</th>
 
         <th style="border: solid black 1px">Ед.</th>
         <th align="right" style="border: solid black 1px">Кол.</th>
@@ -39,11 +40,11 @@
 
     <tr>
 
-        <td colspan="3">
+        <td colspan="4">
             <b> На сумму:</b> {{total}}
         </td>
     </tr>
 
 </table>
 <br> <br>
- 
+

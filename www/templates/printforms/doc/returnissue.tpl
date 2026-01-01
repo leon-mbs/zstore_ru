@@ -6,7 +6,14 @@
             <br><br> Возврат № {{document_number}} от {{date}} <br><br><br>
         </td>
     </tr>
+    {{#fiscalnumber}}    
     <tr>
+        <td></td>
+        <td>Фискальный номер</td>
+        <td colspan="5">{{fiscalnumber}}</td>
+    </tr>
+    {{/fiscalnumber}}    
+   <tr>
         <td></td>
         <td>Покупатель</td>
         <td colspan="5">{{customer_name}}</td>
@@ -17,10 +24,12 @@
     
     <tr style="font-weight: bolder;">
         <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="30">№</th>
-        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Кол.</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="60">Цена</th>
-        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;" width="80">Сумма</th>
+        <th colspan="2" style="border-top:1px #000 solid;border-bottom:1px #000 solid;text-align: left;">Наименование
+        </th>
+
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Кол.</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Цена  {{#nds}} (без ПДВ)  {{/nds}}</th>
+        <th style="border-top:1px #000 solid;border-bottom:1px #000 solid;"  >Сумма</th>
     </tr>
     {{#_detail}}
     <tr>
@@ -28,13 +37,23 @@
         <td colspan="2">{{tovar_name}}</td>
 
         <td align="right">{{quantity}}</td>
-        <td align="right">{{price}}</td>
+        <td align="right">{{price}}  {{#nds}} ({{pricenonds}})  {{/nds}}</td>
         <td align="right">{{amount}}</td>
     </tr>
     {{/_detail}}
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Вместе:</td>
         <td style="border-top:1px #000 solid;" align="right">{{total}}</td>
+    </tr>
+       {{#nds}}
+    <tr style="font-weight: bolder;">
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">В т.ч. НДС:</td>
+        <td style="border-top:1px #000 solid;" align="right">{{nds}}</td>
+    </tr>
+       {{/nds}}
+    <tr style="font-weight: bolder;">
+        <td style="border-top:1px #000 solid;" colspan="5" align="right">К оплате:</td>
+        <td style="border-top:1px #000 solid;" align="right">{{payamount}}</td>
     </tr>
     <tr style="font-weight: bolder;">
         <td style="border-top:1px #000 solid;" colspan="5" align="right">Оплачено:</td>

@@ -2,7 +2,12 @@
     <tr style="font-weight: bolder;">
         <td colspan="3">Чек {{document_number}}</td>
     </tr>
+    {{#fiscalnumber}}
  
+    <tr>
+        <td colspan="3">ФН чека {{fiscalnumber}}</td>
+    </tr>
+    {{/fiscalnumber}}
  
    
 
@@ -12,12 +17,21 @@
     </tr>
     <tr>
 
-        <td colspan="2"> {{firm_name}}</td>
+        <td colspan="3"> {{firm_name}}</td>
     </tr>
+  {{#inn}}
     <tr>
 
-        <td colspan="3">ІНН {{inn}}</td>
+        <td colspan="3">ИНН {{inn}}</td>
     </tr>
+ {{/inn}} 
+ {{#tin}}
+    <tr>
+
+        <td colspan="3">ОКПО {{tin}}</td>
+    </tr>
+ {{/tin}} 
+    
     {{#shopname}}
     <tr>
         <td colspan="3"> {{shopname}}</td>
@@ -39,20 +53,38 @@
     </tr>
 
     {{/customer_name}}
+    <tr>
+       <td colspan="3" > 
+        {{#form1}}
+          Форма оплаты: наличные
+        {{/form1}}
+        {{#form2}}
+          Форма оплаты: безнал
+        {{/form2}}
+        {{#form3}}
+          Форма оплати: Прочее
+        {{/form3}}
 
+       </td>
+    </tr>  
+       
+   {{#trans}}
+    <tr>
+       <td colspan="3" > 
+          № транзакции:  {{trans}}
+       </td>
+    </tr> 
+  {{/trans}}   
     <tr>
         <td colspan="3">Терминал: {{pos_name}}</td>
     </tr>
     <tr>
-        <td colspan="3">Кассир:</td>
-    </tr>
-    <tr>
-        <td colspan="3"> {{username}}</td>
+        <td colspan="3">Кассир: {{username}}</td>
     </tr>
     {{#_detail}}
     <tr>
-        <td  >{{tovar_name}}</td>
-     </tr>   
+        <td  colspan="3">{{tovar_name}}</td> 
+    </tr>
     <tr>
         <td    align="right">{{quantity}}</td>
         <td    align="right">{{price}}</td>
@@ -64,19 +96,25 @@
         <td align="right">{{total}}</td>
     </tr>
 
-    {{^prepaid}}
-    {{#isdisc}}
+ 
+    {{#totaldisc}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">Скидка:</td>
-        <td align="right">{{paydisc}}</td>
+        <td align="right">{{totaldisc}}</td>
     </tr>
-    {{/isdisc}}
+    {{/totaldisc}}
     {{#delbonus}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">Списано бонусов:</td>
         <td align="right">{{delbonus}}</td>
     </tr>
     {{/delbonus}}
+   {{#prepaid}}
+    <tr style="font-weight: bolder;">
+        <td colspan="2" align="right">Предоплата:</td>
+        <td align="right">{{prepaid}}</td>
+    </tr>
+    {{/prepaid}}
     <tr style="font-weight: bolder;">
         <td colspan="2" align="right">К оплате:</td>
         <td align="right">{{payamount}}</td>
@@ -90,25 +128,11 @@
         <td align="right">{{exchange}}</td>
     </tr>
   
-    <tr>
-       <td colspan="3" > 
-        {{#nal}}
-          Форма оплаты: наличные
-        {{/nal}}
-        {{^nal}}
-          Форма оплаты: банковская карта
-        {{/nal}}
 
-       </td>
-    </tr>  
-    <tr>
-       <td colspan="3" > 
-        {{#trans}}
-          № транзакции {{trans}}
-        {{/trans}}
-       
-       </td>
-    </tr>       
+  
+
+  
+         
    {{#addbonus}}
    <tr  >
         <td colspan="2" align="right">Насчитано бонусов:</td>
@@ -122,20 +146,20 @@
     </tr>
    {{/allbonus}}          
      
-  
-    {{/prepaid}}
-    
-    
-    
+    {{#promo}}   
+    <tr style="font-weight: bolder;">
+        <td colspan="3">Промокод {{promo}}</td>
+
+    </tr>
+   {{/promo}}   
+   
+   {{#checkslogan}}   
     <tr style="font-weight: bolder;">
         <td colspan="3"><br>{{checkslogan}}</td>
 
     </tr>
-                
-       <tr>                    
-                        <td colspan="3"> 
-                            {{{docqrcode}}}
-                        </td>
-
-                    </tr>    
+   {{/checkslogan}}   
+ 
+    
+                   
 </table>

@@ -1,17 +1,14 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html  lang="uk">
 
     <head>
-        <meta charset="utf-8">
-        <meta lang="ua" >
-
+      
         <title>Онлайн каталог</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" lang="uk">
 
         <link rel="stylesheet" href="/assets/fontawesome/css/all.css">
-
     
         <link rel="stylesheet" href="/assets/css/bootstrap.css">
         <link rel="stylesheet" href="/vendor/leon-mbs/zippy/assets/css/zippy-bundle.css">
@@ -23,9 +20,8 @@
         <link rel="stylesheet" href="/assets/css/bootstrap-rating.css">
         <link rel="stylesheet" href="/assets/css/ekko-lightbox.css">
         <link rel="stylesheet" href="/assets/css/shop.css">
-        <link rel="stylesheet" href="/assets/js/summernote/summernote-bs4.css">
 
-        <script src="/assets/assets/fontawesome/js/all.js" ></script>
+         
         <script src="/vendor/leon-mbs/zippy/assets/js/jquery.js" type="text/javascript"></script>
         <script src="/assets/js/bootstrap.bundle.js" type="text/javascript"></script>
 
@@ -36,32 +32,67 @@
         <script src="/assets/js/bootstrap-rating.js" type="text/javascript"></script>
         <script src="/assets/js/ekko-lightbox.js" type="text/javascript"></script>
         <script src="/assets/js/app.js" type="text/javascript"></script>
-        <script src="/assets/js/summernote/summernote-bs4.js" type="text/javascript"></script>
-        <script src="/assets/js/summernote/lang/summernote-ru-RU.js" type="text/javascript"></script>
+      
+
     </head>
     <body>
         <div class="  container-fluid">
-            <div class="content">
-                    
-                <div class="row mt-2">
-                            <div class="col-12 col-sm-4 d-flex align-items-center">
-                                <a class="container-fluid-img" zippy="logo" href="/"> <img></a> 
-                                <a  class="container-fluid-img logo-text ml-2 text-dark" href="/" style="font-family: 'Georgia';"> {{shopname}} </a>
-                            </div>
-                            <div class="col-12 col-sm-8 d-flex align-items-center justify-content-end">
-                                <nav class="main-header navbar navbar-expand ">
-                                   <ul class="navbar-nav ml-auto">
-                                    {{#phone}}
-                                    <li class="nav-item pt-2">
-                                       <i class="fa fa-phone"></i> {{phone}} &nbsp;&nbsp;
-                                   </li>
-                                     {{/phone}}
-                                    <li class="nav-item">
+        
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topnavbar" aria-controls="topnavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fa fa-bars"></i>
+  </button>               
+         
+                                {{#logo}}
+                                <a class="container-fluid-img d-none  d-lg-block"  href="/"> <img src="{{logo}}"/> </a>
+                                {{/logo}}
+                                {{^logo}}
+                                <a  class="container-fluid-img logo-text ml-2 text-dark d-none  d-lg-block" href="/" style="font-family: Georgia;"> {{shopname}} </a>
+                                   {{/logo}}
                                    
-                                    <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0">
+                                 
+                         <div class="collapse navbar-collapse navbar-collapse-absolute bg-light" id="topnavbar">
+
+                                <ul class="navbar-nav  px-3 px-lg-0">
+                             <li class="nav-item active">
+                                <a class="nav-link" href="/shop">Каталог  </a>
+                              </li>  
+                              
+                                  
+                                     
+                                {{#pages}} 
+                        
+                            
+                                    <li class="nav-item   ">
+                                       <a class="nav-link" href="{{link}}" >{{title}} </a>  
+                                   </li>
+                                 {{/pages}}    
+                                 {{#isblog}} 
+                        
+                            
+                                    <li class="nav-item  ">
+                                       <a class="nav-link" href="/blog" >Блог </a>  
+                                   </li>
+                                 {{/isblog}}   
+                                    
+                                    
+                                   
+                              
+                                     
+                                 
+                                     
+                               
+                                 </ul>    
+                         
+                        </div>
+                            
+                          <ul class="navbar-nav display-inline flex-row mobile-gap">
+                            <li class="nav-item">
+                                   
+                                    <form zippy="searchform" class="form-inline justify-content-end my-2 my-lg-0 d-none  d-lg-block">
                                         
                                        <div class="input-group mr-3">
-                                          <input zippy="searchitem"   class="form-control" type="search" placeholder="Начните вводить...">
+                                          <input    zippy="searchitem"   class="form-control" type="search" placeholder="Начните  вводить...">
                                           <div class="input-group-append">
                                             <span class="input-group-text"  ><i class="fas fa-search"></i></span>
                                           </div>
@@ -69,20 +100,23 @@
                                         
                                     </form>
                                    </li>
-                                 
+                                          {{#phone}}
+                                    <li class="nav-item  d-none  d-lg-block ">
+                                      <a class="nav-link" href="tel:{{phone}} " >  <i class="fa fa-phone"></i>  {{phone}}  </a>
+                                   </li>
+                                     {{/phone}} 
+                               <li class="nav-item">
+                                       <a class="nav-link" title="Сравнение"  zippy="showcompare"><i class="fas fa-balance-scale "></i></a> 
+                                        
+                                   </li>   
                                   <li class="nav-item">
-                                     <a class="btn btn-outline-info   mr-sm-2" zippy="shopcart"><i class="fa fa-shopping-cart"></i>
-                                            Крзина <span class="badge badge-danger  navbar-badge">{{basketcnt}}</span> </a>
+                                     <a class="nav-link" title="Корзина"  zippy="shopcart"><i class="fa fa-shopping-cart"></i></a>  
                                       
                                    </li>
-                                  <li class="nav-item">
-                                       <a class="btn btn-outline-info  " zippy="showcompare"><i class="fas fa-balance-scale "></i>
-                                            Сравнить <span class="badge badge-danger  navbar-badge">{{comparecnt}}</span></a>
-                                        
-                                   </li>
+                                 
                                    {{^islogined}}
-                                   <li class="nav-item">
-                                       <a    href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin"> Мой кабинет</a>
+                                   <li class="nav-item ">
+                                       <a  class="nav-link   "  href="/index.php?p=App/Modules/Shop/Pages/Catalog/Userlogin" title="Мой кабинет"> <i class="fa fa-user"></i> </a>
                                         
                                    </li>
                                    {{/islogined}}    
@@ -91,7 +125,7 @@
                                                                      
                                 <li class="nav-item dropdown  ">
                                   <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <span> {{custname}} </span></a>
-                                    <ul class="dropdown-menu">                                         
+                                    <ul class="dropdown-menu dropdown-menu-right">                                         
                                         <li>
                                             <a class="dropdown-item  " href="/index.php?p=App/Modules/Shop/Pages/Catalog/Orders"> Мои заказы</a>
                                         </li>
@@ -106,12 +140,21 @@
                                     </ul>
                                 </li>
                                   {{/islogined}}  
-                                 </ul>    
-                                </nav>
-                            </div>
-                        </div>
-                    
-             
+                            </ul>   
+                        </nav>
+          <div class="nabvar nav justify-content-start  d-block  d-lg-none">                 
+       <form zippy="searchformmob" class="form-inline   ">
+                                        
+                                       <div class="input-group mr-3">
+                                          <input    zippy="searchitemmob"   class="form-control" type="search" placeholder="Начните вводить...">
+                                          <div class="input-group-append">
+                                            <span class="input-group-text"  ><i class="fas fa-search"></i></span>
+                                          </div>
+                                        </div> 
+                                        
+                                    </form> 
+                                    </div>              
+              <div class="content">   
                 
                     <childpage/>
                 
@@ -121,15 +164,13 @@
             <div class="footer mt-4">
                 <div class=" ">
                     <div class="row">
-                        <div class="col-12 text-center mt-2">
-                        {{#pages}} 
                         
-                             <a href="{{link}}" >{{title}} </a>  
-                           
-                           {{/pages}}  
-                        </div> 
                         <div  class="col-12 text-center mt-2 mb-2">
-                            <span style="color:#fff"> <a href="https://ru.zippy.com.ua/zstore" target="_blank">ZStore</a> @ 2019</span>
+                            <span style="color:#fff"> <a href="https://ru.zippy.com.ua/" target="_blank">Zippy CRM</a> @ 2025</span>
+                             &nbsp;&nbsp;&nbsp;
+                            <span style="color:#fff"> <a href="/"  >Каталог</a> </span>
+                             &nbsp;&nbsp;&nbsp;
+                            <span style="color:#fff"> <a href="/admin" target="_blank">Админ панель</a> </span>
                         </div>
                     </div>
                 </div>
@@ -157,7 +198,7 @@ toastr.options = {
 };
 
 $(function () {
-    $('[data-toggle="popover"]').popover()
+   // $('[data-toggle="popover"]').popover()
 })
 
 

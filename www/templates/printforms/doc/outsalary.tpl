@@ -31,7 +31,7 @@
     </tr>
     <tr>
         <td>
-            <b>ФИО</b>
+            <b>П I Б</b>
         </td>
         <td class="text-right">
             <b>Сумма</b>

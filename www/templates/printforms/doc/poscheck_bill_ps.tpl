@@ -4,8 +4,19 @@
 <text>от {{date}}</text>
 <align>left</align>
 
-<text>{{firm_name}}</text>   
-<text>ІНН {{inn}}</text>   
+    {{#fiscalnumber}}
+< 
+<text>ФН чека {{fiscalnumber}}</text>
+    {{/fiscalnumber}}
+ 
+
+<text>{{firm_name}}</text> 
+{{#inn}}  
+<text>ИНН {{inn}}</text>   
+{{/inn}}  
+{{#tin}}  
+<text>ОКПО {{tin}}</text>   
+{{/tin}}  
 <text>{{shopname}}</text>   
   {{#shopname}}
 <text>{{shopname}}</text>   
@@ -16,6 +27,25 @@
 <text>Покупатель: {{customer_name}}</text>    
 
     {{/customer_name}}
+    
+    
+    
+    
+        {{#form1}}
+ <text>Форма оплаты: Наличные</text>        
+        {{/form1}}
+        {{#form2}}
+ <text>Форма оплаты: Безнал</text>        
+        {{/form2}}    
+        {{#form3}}
+ <text>Форма оплати: Прочее</text>        
+        {{/form3}}    
+     
+        {{#trans}}
+ <text>№ транзакции {{trans}}</text>        
+          
+        {{/trans}}      
+    
 <text>Терминал: {{pos_name}}</text>    
 <text>Кассир: {{username}}</text>    
 
@@ -40,39 +70,32 @@
 <font >a</font>
  
 
-    {{^prepaid}}
-    {{#isdisc}}
-<text>Скидка: {{paydisc}}</text>
+  
+    {{#totaldisc}}
+<text>Скидка: {{totaldisc}}</text>
  
-    {{/isdisc}}
+    {{/totaldisc}}
    {{#delbonus}}
  <text>Списано бонусов: {{delbonus}}</text>
  
     {{/delbonus}}
+   {{#prepaid}}
+ <text>Предоплата: {{prepaid}}</text>
+ 
+    {{/prepaid}}
 
- <text>К оплате: {{payamount}}</text>
+ <text>До сплати: {{payamount}}</text>
  <text>Оплата: {{payed}}</text>
  {{#exchange}}
  <text>Сдача: {{exchange}}</text>
  {{/exchange}} 
-    {{/prepaid}}
-    
-    
-        {{#nal}}
- <text>Форма оплаты: нал</text>        
+ 
 
-        {{/nal}}
-        {{^nal}}
- <text>Форма оплаты: безнал</text>        
-
-        {{/nal}}    
-    
-        {{#trans}}
- <text>№ транзакции  {{trans}}</text>        
+ 
+        
           
-        {{/trans}}    
     {{#addbonus}}
- <text>Насчитано бонусов: {{addbonus}}</text>
+ <text>Насчитано бонуслв: {{addbonus}}</text>
  
     {{/addbonus}}
     {{#allbonus}}
@@ -81,16 +104,21 @@
  
     {{/allbonus}}
     
+{{#promo}}
+<text> Промокод {{promo}}</text>  
+{{/promo}}  
  
 <font bold="true">a</font>
 <align>center</align>
 <newline ></newline>
-<text>  {{checkslogan}}</text>    
-{{#docqrcodeurl}}
-<font >a</font>
-<newline ></newline>
-<qrcode type="code128"> {{docqrcodeurl}}</qrcode>
-{{/docqrcodeurl}}
+
+{{#checkslogan}}
+<text>  {{checkslogan}}</text>
+{{/checkslogan}}
+
+
+
+ 
 <newline ></newline>
  
    

@@ -2,7 +2,7 @@
 
     <tr style="font-size:larger; font-weight: bolder;">
         <td align="center" colspan="6">
-            Движение по денежным счетам
+            Движение по денежным  счетам
         </td>
     </tr>
     <tr>
@@ -38,7 +38,7 @@
     {{/_detail}}
     <tr style="font-weight: bolder;">
 
-        <td align="right">Вместе:</td>
+        <td align="right">Всего:</td>
 
 
         <td align="right"></td>

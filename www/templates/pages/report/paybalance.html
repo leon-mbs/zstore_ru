@@ -1,13 +1,14 @@
 <html>
    <head>
-        <title> Финансовые результаты   </title>
+        <title> Доходы и расходы   </title>
 
     </head>
     <body>
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-12  col-lg-10 col-xl-8">
-                <h3>Финансовые результаты  </h3>
-                <div class="navbar nav">
+                <h3>Доходы и расходы  </h3>
+                <small>Отчет носит управленческий  характер</small>
+                <div class="card">
                     <form zippy="filter" class="form-inline">
 
                         <label for="from">С</label>
@@ -17,7 +18,7 @@
                         <input class="form-control mr-sm-2" style="width: 110px" type="text" zippy="to">
                         <div class="form-check">
 
-                            <input title="Показать неактуальные" class="form-check-input" type="checkbox" zippy="showdet">
+                            <input   class="form-check-input" type="checkbox" zippy="showdet">
                             <label class="form-check-label mr-3" for="showdet">Детализация</label>
                         </div>
  
@@ -31,8 +32,8 @@
                 <div zippy="detail">
                     <div>
                         <a  style="cursor:pointer" onclick=" $('#preview').printThis();" title="Печать"><i class="fa fa-print mr-2"></i></a>
-                        <a href="/showreport/xls/pbreport" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i> </a>
-                        <a href="/showreport/pdf/pbreport" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i>  </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=xls/pbreport" target="_blank" title="Экспорт в Excel"><i class="fa fa-file-excel mr-2"></i> </a>
+                        <a href="/index.php?p=App/Pages/ShowReport&arg=pdf/pbreport" target="_blank" title="Экспорт в PDF"><i class="fa fa-file-pdf mr-2"></i>  </a>
                         
 
                     </div>

@@ -1,23 +1,23 @@
 <html>
    <head>
-          <title> Списание на производство</title>
+          <title> Списание на  производство</title>
     </head>
 
     <body>
 
 
         <form zippy="docform">
-            <h3>Списание на производство </h3>
+            <h3>Списание на  производство </h3>
             <div class="row">
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_number">Номер документа</label>
-                        <input class="form-control" type="text" zippy="document_number" required="required">
+                        <input class="form-control" type="text" zippy="document_number"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="store">Со склада</label>
                         <select class="form-control" zippy="store">
-                            <option value="0">Не установлено</option>
+                            <option value="0">Не встановлено</option>
                         </select>
                     </div>
                     <div class="form-group  ">
@@ -31,7 +31,7 @@
                 <div class="col-12 col-md-3">
                     <div class="form-group">
                         <label for="document_date"> Дата</label>
-                        <input class="form-control" type="text" zippy="document_date" required="required">
+                        <input class="form-control" type="text" zippy="document_date"  required="on" >
                     </div>
                     <div class="form-group  ">
                         <label for="parea">Производственный участок</label>
@@ -39,7 +39,14 @@
                             <option value="0">Не выбрано</option>
                         </select>
                     </div>
-
+                   <div class="form-group  ">
+                        <label data-label="emp" for="emp">Ответственный </label>
+                        <select class="form-control  " zippy="emp">
+                            <option value="0">Не указано</option>
+                        </select>
+                        
+                    </div>                    
+            
 
                 </div>
             </div>
@@ -47,7 +54,7 @@
                 <div class="col-12 col-md-10 col-xl-8">
                     {{#usescanner}}
                     <div class="navbar nav justify-content-start">
-                        Штрих-код &nbsp;<input autocomplete="off" autofocus type="text" zippy="barcode" onkeydown="onBarCode()">
+                        Штрих код &nbsp;<input autofocus="on" autocomplete="off"  type="text" zippy="barcode" onkeydown="onBarCode()">
                         &nbsp; &nbsp;<a zippy="addcode" class="btn btn-info btn-sm">+</a>
 
                     </div>
@@ -59,13 +66,13 @@
                             <th>Название</th>
                             <th>Код</th>
                             <th>Ед.</th>
-                            {{#usesnumber}}
-                            <th>Серия</th>
-                            <th>Дата</th>
-                            {{/usesnumber}}
+                            <th>Ком.</th>
+                 <th>{{#usesnumber}}Серия, дата{{/usesnumber}}</th>
+                 
 
 
                             <th class="text-right">Кол.</th>
+                            <th class="text-center">Наличие</th>
 
 
                             <th  ></th>
@@ -74,13 +81,16 @@
                             <td zippy="tovar"></td>
                             <td zippy="code"></td>
                             <td zippy="msr"></td>
+                            <td zippy="cell"></td>
 
-                            {{#usesnumber}}
-                            <td zippy="snumber"></td>
-                            <td zippy="sdate"></td>
-                            {{/usesnumber}}
+                           <td ><span zippy="snumber"></span> <span zippy="sdate" ></span> </td>
+                      
 
                             <td zippy="quantity" class="text-right"></td>
+                            <td  class="text-right text-nowrap">
+                               <span zippy="qtyon"></span> &nbsp;&nbsp;  <small zippy="toorder" title="Добавить в  заявку поставщику" style="cursor:pointer"></small> 
+                               &nbsp;&nbsp;
+                            </td>
 
 
                             <td><a zippy="edit"><i class="fa fa-edit"></i></a> &nbsp;&nbsp;&nbsp;<a zippy="delete"><i class="fa fa-trash"></i></a>
@@ -94,29 +104,30 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  ">
-                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary  ">
-                    &nbsp;<input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
+                    <input type="button" value="Отменить" zippy="backtolist" class="btn btn-outline-secondary  mr-2 ">
+                    <input zippy="savedoc" type="submit" value="Сохранить" class="btn btn-outline-primary   mr-2">
+                    <input zippy="execdoc" type="submit" value="Провести" class="btn btn-outline-primary  ">
 
 
                 </div>
             </div>
         </form>
         <form zippy="editdetail">
-            <h4>Введение товара </h4>
-            <div class="row">
+            <h4>Введення ТМЦ </h4>
+           <small>ТМЦ  должно иметь Тип Материалы и комплектующие или  Полуфабрикаты </small>
+          <div class="row">
                 <div class="col-12 col-md-4 col-xl-3">
 
                     <div class="form-group">
                         <label for="edittovar">Название</label>
-                        <input placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
+                        <input   placeholder="Начните вводить..." class="form-control " zippy="edittovar"/>
 
-                        Наличие: <span zippy="qtystock"></span>
+                        Наличие : <span zippy="qtystock"></span>
 
                     </div>
                     {{#usesnumber}}
                     <div class="form-group">
-                        <label for="editserial">Серия производителя </label>
+                        <label for="editserial">Серия </label>
                         <input class="form-control " zippy="editserial"/>
 
                     </div>
@@ -124,15 +135,16 @@
                     {{/usesnumber}}
                     <div class="form-group">
                         <label for="editquantity">Количество</label>
-                        <input class="form-control qtyprice" type="text" zippy="editquantity" required="required" pattern="[0-9,\.]+"
+                        <input class="form-control qtyprice" type="text" zippy="editquantity"  required="on"  pattern="[0-9,\.]+"
                                style="width: 70px;">
 
                     </div>
 
 
                     <div class="form-group">
+                        <input type="button" zippy="cancelrow" value="К списку" class="btn btn-outline-secondary  mr-2">
                         <input type="submit" zippy="submitrow" value="Сохранить" class="btn btn-outline-primary ">
-                        &nbsp; <input type="button" zippy="cancelrow" value="В список" class="btn btn-outline-secondary ">
+                        
                     </div>
 
 
@@ -141,10 +153,7 @@
         </form>
         {{#usescanner}}
         <script>
-            $(document).ready(function () {
-
-                $('#barcode').focus();
-            });
+        
 
             function onBarCode(ele) {
 
