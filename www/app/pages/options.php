@@ -340,7 +340,7 @@ class Options extends \App\Pages\Base
         $common['usescanner'] = $this->business->usescanner->isChecked() ? 1 : 0;
         $common['usescale'] = $this->business->usescale->isChecked() ? 1 : 0;
  
-        $common['usesnumber'] = $this->business->usesnumber->GetValue() ;
+        $common['usesnumber'] = $this->business->usesnumber->getValue() ;
         
         $common['deliverytype'] = $this->business->deliverytype->getValue() ;
  

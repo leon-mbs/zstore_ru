@@ -67,7 +67,7 @@ class ProdReceipt extends Document
             if ($item->autooutcome == 1) {  //списание  комплектующих
                 $set = \App\Entity\ItemSet::find("pitem_id=" . $item->item_id);
                 foreach ($set as $part) {
-                    $lost = 0;
+                    
 
                     $itemp = \App\Entity\Item::load($part->item_id);
                     if($itemp==null) {
