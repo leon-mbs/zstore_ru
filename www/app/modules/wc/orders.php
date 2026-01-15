@@ -174,8 +174,11 @@ class Orders extends \App\Pages\Base
 
     public function onImport($sender) {
         $modules = System::getOptions("modules");
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
 
-        foreach ($this->_neworders as $shoporder) {
+        try{
+            foreach ($this->_neworders as $shoporder) {
 
             $shoporder->document_number = $shoporder->nextNumber();
             if (strlen($shoporder->document_number) == 0) {
@@ -209,7 +212,17 @@ class Orders extends \App\Pages\Base
  
 
         }
+         } catch(\Throwable $ee){
+            global $logger;
+            $conn->RollbackTrans();
+           
+            $this->setError($ee->getMessage());
 
+            $logger->error( $ee->getMessage() . " WC " );
+                                                       
+           
+            return;
+        }
         $this->setInfo("Импортировано ".count($this->_neworders)." заказов");
 
 

@@ -152,7 +152,12 @@ class Orders extends \App\Pages\Base
         $defmf=intval($modules['ocmf']);
  
         $i = 0;
-        foreach ($this->_neworders as $shoporder) {
+        $conn = \ZDB\DB::getConnect();
+        $conn->BeginTrans();
+
+        try{     
+        
+          foreach ($this->_neworders as $shoporder) {
 
 
             $neworder = Document::create('Order');
@@ -287,7 +292,20 @@ class Orders extends \App\Pages\Base
 
             $i++;
         }
-        $this->setInfo("Импортовано {$i} заказов");
+          $conn->CommitTrans();
+          
+        } catch(\Throwable $ee){
+            global $logger;
+            $conn->RollbackTrans();
+           
+            $this->setError($ee->getMessage());
+
+            $logger->error( $ee->getMessage() . " OCStore " );
+                 
+           
+            return;
+        }   
+        $this->setInfo("Импортировано {$i} заказов");
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
@@ -368,7 +386,7 @@ class Orders extends \App\Pages\Base
                     $tovar = Item::getFirst('item_code=' . $code);
                     if ($tovar == null) {
 
-                        $this->setWarn("Не знайден  артикул товара {$product['name']} в заказе номер " . $shoporder['order_id']);
+                        $this->setWarn("Не найден  артикул товара {$product['name']} в заказе номер " . $shoporder['order_id']);
                         continue;
                     }
                     $tovar->quantity = $product['quantity'];
@@ -407,7 +425,7 @@ class Orders extends \App\Pages\Base
                     $neworder->notes .= " Тел:" . $shoporder->telephone . ";";
                 }
                 $neworder->notes .= " Адрес:" . $shoporder->shipping_city . ' ' . $shoporder->shipping_address_1 . ";";
-                $neworder->notes .= " Коментарий:" . $shoporder->comment . ";";
+                $neworder->notes .= " Комментарий:" . $shoporder->comment . ";";
                 $neworder->save();
                 $neworder->updateStatus(Document::STATE_NEW);
                 $neworder->updateStatus(Document::STATE_EXECUTED);
@@ -430,7 +448,7 @@ class Orders extends \App\Pages\Base
             return;
         }
 
-        $this->setInfo("Импортовано {$i} заказов");
+        $this->setInfo("Импортировано {$i} заказов");
 
         $this->_neworders = array();
         $this->neworderslist->Reload();
