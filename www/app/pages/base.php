@@ -241,7 +241,10 @@ class Base extends \Zippy\Html\WebPage
             \App\Helper::logerror($msg) ;
         }
         $msg = str_replace("'", "`", $msg) ;
-        System::setErrorMsg($msg);
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+         System::setErrorMsg($msg);
     }
 
     public function setErrorTopPage($msg) {
@@ -250,19 +253,28 @@ class Base extends \Zippy\Html\WebPage
 
     public function setSuccess($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+ 
         System::setSuccessMsg($msg);
     }
 
     public function setWarn($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+ 
         System::setWarnMsg($msg);
     }
 
     public function setInfo($msg ) {
         $msg = str_replace("'", "`", $msg) ;
-
+        $msg = str_replace("\"", "`", $msg) ;
+        $msg = str_replace("\n", " ", $msg) ;
+        $msg = str_replace("\r", " ", $msg) ;
+ 
         System::setInfoMsg($msg);
     }
  
