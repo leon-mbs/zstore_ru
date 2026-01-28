@@ -152,7 +152,8 @@ class OrderList extends \App\Pages\Base
         
         if($doc->getHD('waitpay')==1){
             $row->ispay->setAttribute('class','fa fa-credit-card text-warning');
-            $row->ispay->setAttribute('title','До сплати');            
+            $row->ispay->setAttribute('title','К оплате');            
+         
         }   else {
             $row->ispay->setAttribute('class','fa fa-credit-card text-success');            
             $row->ispay->setAttribute('title','Оплачено');            

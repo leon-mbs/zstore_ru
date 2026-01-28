@@ -275,12 +275,8 @@ class Order extends Base
             $order->headerdata['contact'] = trim($firstname.' '.$lastname) . ', ' . $phone;
             $order->headerdata['salesource'] = $shop['salesource'];
             $order->headerdata['shoporder'] = 1;
-            if($shop['defmf']>0) {
-                $order->headerdata['payment'] = $shop['defmf'];
-            }
-            if($shop['defmf']>0) {
-                $order->headerdata['payment'] = $shop['defmf'];
-            }
+            $order->headerdata['waitpay'] = 1;
+           
            
             $order->notes = trim($this->orderform->notes->getText());
             $order->amount = $amount;
@@ -307,12 +303,12 @@ class Order extends Base
             $order->updateStatus(Document::STATE_NEW);
 
             if ($shop['ordertype'] == 1) {  //Кассовый чек
-                $order->updateStatus(Document::STATE_EXECUTED);
+              //  $order->updateStatus(Document::STATE_EXECUTED);
             } else {
-                $order->updateStatus(Document::STATE_INPROCESS);
+               // $order->updateStatus(Document::STATE_INPROCESS);
             }
 
-
+            /*
             if ($shop['ordertype'] == 2) {  //уведомление  в арм  кухни
                 $n = new \App\Entity\Notify();
                 $n->user_id = \App\Entity\Notify::ARMFOOD;
@@ -322,7 +318,7 @@ class Order extends Base
 
                 $n->save();
             }
-
+            */
             $conn->CommitTrans();
 
         } catch(\Exception $ee) {

@@ -51,7 +51,9 @@ class UserProfile extends \App\Pages\Base
         $form->add(new DropDownChoice('defsalesource', H::getSaleSources(), $this->user->defsalesource));
 
         $pages = array();
-
+        $pages["\\App\\Pages\\Blank"] =  'Не выбрано' ;
+        $pages["\\App\\Pages\\Main"] =  'Дашборд' ;
+ 
         foreach (\App\Entity\MetaData::find("meta_type<>1", "meta_type,description") as $m) {
             $p = "";
             $n = "";
