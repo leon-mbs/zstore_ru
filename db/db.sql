@@ -108,10 +108,9 @@ CREATE TABLE documents (
   KEY user_id (user_id),
   KEY branch_id (branch_id),
   KEY parent_id (parent_id),
-  
   KEY document_number (document_number),
-  KEY state (state),
-  CONSTRAINT documents_ibfk_1 FOREIGN KEY (user_id) REFERENCES users (user_id)
+  KEY state (state) 
+
 ) ENGINE = INNODB  DEFAULT CHARSET = utf8;
 
 CREATE TABLE items (
@@ -1591,4 +1590,5 @@ INSERT INTO `options` (`optname`, `optvalue`) VALUES('version', '7.0.0');
 
 INSERT INTO keyval  (  keyd,vald)  VALUES ('cron','true');
 INSERT INTO keyval  (  keyd,vald)  VALUES ('migration700','done');
+INSERT INTO keyval  (  keyd,vald)  VALUES ('migration701','done');
  

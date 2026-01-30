@@ -1423,6 +1423,31 @@ class Helper
             }           
            
         }   
+       
+    
+        $migration701 = \App\Helper::getKeyVal('migration701'); 
+        if($migration701 != "done"  ) {
+            Helper::log("Миграция 701");
+         
+            \App\Helper::setKeyVal('migration701', "done");           
+        
+            try {
+       
+                 $w=  $conn->Execute("SHOW CREATE  TABLE documents");
+                           
+                 foreach($w as $e){
+                     if( strpos($e['Create Table'],'documents_ibfk_1') >0 ){
+                         $conn->Execute("ALTER TABLE documents DROP FOREIGN KEY documents_ibfk_1 ");                     
+                     }             
+                 }
+                  
+
+            } catch(\Throwable $ee) {
+                $logger->error($ee->getMessage());
+            }           
+           
+        }        
+       
           
     }
 
