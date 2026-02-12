@@ -163,7 +163,7 @@ class GoodsReceipt extends Document
         $this->DoBalans() ;
 
          $io= $this->payamount;
-         $del = $this->headerdata['delivery'] * $rate;
+         $del = doubleval($this->headerdata['delivery'] ) * $rate;
          if($del > 0) {
            if($this->headerdata['deliverytype']  < 4 ) { 
                \App\Entity\IOState::addIOState($this->document_id, 0- $del, \App\Entity\IOState::TYPE_BASE_OUTCOME);

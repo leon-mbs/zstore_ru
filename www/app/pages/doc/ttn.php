@@ -337,6 +337,8 @@ class TTN extends \App\Pages\Base
                         }
                         $this->calcTotal();
                     }
+                    $this->_doc->headerdata["payamount"]   = $basedoc->payamount;
+                  
                 }
             }
         }
