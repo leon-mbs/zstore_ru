@@ -289,16 +289,8 @@ class Base extends \Zippy\Html\WebPage
         $user = System::getUser();
         $this->_tvars['notcnt'] = \App\Entity\Notify::isNotify($user->user_id);
         $this->_tvars['taskcnt'] = \App\Entity\Event::isNotClosedTask($user->user_id);
-        $this->_tvars['alerterror'] = "";
-        if (strlen(System::getErrorMsgTopPage() ?? '') > 0) {
-            $this->_tvars['alerterror'] = System::getErrorMsgTopPage();
-            $this->goAnkor('topankor');
-        }       
-        $this->_tvars['alertinfo'] = "";
-        if (strlen(System::getInfoMsgTopPage() ?? '') > 0) {
-            $this->_tvars['alertinfo'] = System::getInfoMsgTopPage();
-            $this->goAnkor('topankor');
-        }       
+     
+              
     }
 
     protected function afterRender() {
