@@ -49,7 +49,8 @@ class Update extends \App\Pages\Base
          
         $this->_tvars['curversion'] = System::CURR_VERSION;
         $this->_tvars['curversiondb'] =   System::getOptions('version',true );
-      
+        $this->_tvars['phpv']  =   phpversion() ;    
+        
  
         
  
@@ -58,11 +59,11 @@ class Update extends \App\Pages\Base
         $this->_tvars['show']  = false   ; 
     
         $data = System::checkVersion() ;
-       
+        
     
          
         if(!is_array($data)){
-            $this->setErrorTopPage('Ошибка загрузки version.json') ;
+            $this->setError('Ошибка загрузки version.json') ;
             return  ;
         }
    
@@ -152,8 +153,6 @@ class Update extends \App\Pages\Base
              $this->_tvars['reinstall']  = false;
          } 
          
-         $phpv =   phpversion()  ;
-         $this->_tvars['phpv']  = $phpv;    
                       
        
          \App\Session::getSession()->migrationcheck = false; 

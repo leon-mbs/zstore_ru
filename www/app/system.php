@@ -161,20 +161,16 @@ class System
     }
 
     public static function setErrorMsg($msg, $toppage=false) {
-        if($toppage) {
-            Session::getSession()->emsgtp = $msg;
-        } else {
+    
             Session::getSession()->emsg = $msg;
-        }
+       
     }
 
     public static function getErrorMsg() {
         return Session::getSession()->emsg;
     }
 
-    public static function getErrorMsgTopPage() {
-        return Session::getSession()->emsgtp;
-    }
+     
 
     public static function setWarnMsg($msg) {
         Session::getSession()->wmsg = $msg;
@@ -302,19 +298,7 @@ class System
     * 
     */
     public static function checkVersion() {
-        /*
-        $phpv =   phpversion()  ;
-        $phpv = substr(str_replace('.','',$phpv),0,2) ;
-       
-        $nocache= "?t=" . time()."&s=". \App\Helper::getSalt() .'&phpv='. System::CURR_VERSION .'_'.$phpv   ;
-    
-        $v = @file_get_contents("https://zippy.com.ua/update.php".$nocache);
-        $data = @json_decode($v, true);
-        if(!is_array($data)) {
-            $v = @file_get_contents("https://zippy.com.ua/updates/version.json");
-            $data = @json_decode($v, true);
-        }   
-        */
+ 
         $v = @file_get_contents("https://ru.zippy.com.ua/updates/version.json");
         $data = @json_decode($v, true);
    
