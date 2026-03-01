@@ -116,7 +116,9 @@ class EmployeeList extends \App\Pages\Base
         $this->employeetable->employeelist->Reload();
 
     }
-
+    public function OnFilter($sender) {
+           $this->employeetable->employeelist->Reload();
+    }
 
     public function onType($sender) {
         $t = $sender->getValue();
