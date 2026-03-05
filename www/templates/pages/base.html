@@ -1084,7 +1084,7 @@
         
        //ТМЦ в закупку
        function addItemToCO(id,qty=0){
-                callPM('addItemToCO',[id,qty],null,(data)=> 
+                callPageMethod('addItemToCO',[id,qty],null,(data)=> 
                 {
                     
                       if(data=="") {

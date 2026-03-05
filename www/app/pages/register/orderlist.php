@@ -423,7 +423,7 @@ class OrderList extends \App\Pages\Base
         $this->statuspan->resform->setVisible(false);
 
 
-        $this->statuspan->statusform->bscan->setAttribute('onclick', "openscan({$this->_doc->document_id})");
+    //    $this->statuspan->statusform->bscan->setAttribute('onclick', "openscan({$this->_doc->document_id})");
 
 
         //новый
@@ -882,7 +882,11 @@ class OrderList extends \App\Pages\Base
    
     public function editOnSubmit($sender) {
 
-
+            if ($sender->id == "editcancel") {
+                 $this->editpanel->setVisible(false);
+                 $this->listpanel->setVisible(true);
+                 return;
+            }
             $conn = \ZDB\DB::getConnect();
             $conn->BeginTrans();
 

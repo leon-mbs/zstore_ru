@@ -13,8 +13,13 @@ class CustItem extends \ZCL\DB\Entity
 {
     protected function init() {
         $this->custitem_id = 0;
+        $this->cust_name = '';
+        $this->cust_code = '';
+        $this->brand = '';
+        $this->store = '';
+        $this->bar_code = '';
         $this->item_id = 0;
-        $this->updatedon = time();        
+        $this->updatedon = time();     
     }
  
 
