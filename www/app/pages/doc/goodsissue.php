@@ -335,8 +335,9 @@ class GoodsIssue extends \App\Pages\Base
 
 
                         foreach ($basedoc->unpackDetails('detaildata') as $item) {
-                            $item->price = $item->getPrice(); //последние  цены
-                            $this->_itemlist[ ] = $item;
+                              $it = \App\Entity\Item::load($item->item_id);
+                              $item->price = $it->getPrice(); //последние  цены
+                              $this->_itemlist[ ] = $item;
                         }
                         $this->calcTotal();
                         $this->calcPay();
