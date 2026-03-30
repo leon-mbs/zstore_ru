@@ -85,13 +85,15 @@ class Menu extends \Zippy\Html\WebPage
             $items = [];
             foreach(Item::findYield($iw,"itemname") as $item) {
                 if($item->noshop ==1)  continue;
-            
+                $imgurl= $item->getImageUrl(true) ;
                 $it=array(
                     'itemname'=>$item->itemname ,
-                    'imglink'=>$item->getImageUrl(true) ,
+                    'imglink'=>$imgurl,
+                    'isimg'=> strlen($imgurl)>0 ,
                     'desc'=>  $item->description ,
                     'price'=>$item->getPrice($options['pricetype']) ,
                     'priceout'=>false ,
+                    'hasvar'=>count($item->foodvars ??[]) > 0  ,
                     'customsize'=> $item->customsize 
                 );
                 if(strlen ($options['pricetypeout']??'')>1) {
