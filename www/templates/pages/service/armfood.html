@@ -810,7 +810,8 @@
                 callPM('getMessages',null,null,(answer)=> 
                 {
                  
-                  
+                    if(!answer)  return
+                 
                     if (answer.cntorder > 0) {
                         $('#newordersalert').show();
                         $('#neworderscnt').text('Новых заказоы ' + answer.cntorder);

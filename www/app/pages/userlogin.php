@@ -93,8 +93,8 @@ class UserLogin extends \Zippy\Html\WebPage
                     System::getSession()->defbranch = $_COOKIE['branch_id'];
                 }
              
-                \App\System::checkUpdate()  ;
-                
+                Helper::log('Логин '.$login) ;
+                 
                 
                 App::RedirectHome();
                 /* 

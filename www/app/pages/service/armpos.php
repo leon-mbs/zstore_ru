@@ -1157,7 +1157,7 @@ class ARMPos extends \App\Pages\Base
 
     
     //оплатить
-    public function ($sender) {
+    public function savedocOnClick($sender) {
 
         if($this->_doc->document_id >0) {
             if($this->_doc->hasStore() || $this->_doc->hasPayments()) {
