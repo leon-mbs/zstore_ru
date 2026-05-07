@@ -293,15 +293,54 @@ class System
             }                                                     
         }        
     }
-    /**
+
+
+  /**
     * проверка   версии
     * 
     */
-    public static function checkVersion() {
+   public static function checkVersion() {
  
-        $v = @file_get_contents("https://ru.zippy.com.ua/updates/version.json");
-        $data = @json_decode($v, true);
+        $url = "https://ru.zippy.com.ua/updates/version.json";
+        
+        $ch = curl_init($url);
+
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+       
+            CURLOPT_SSL_VERIFYPEER => false 
+         
+            
+        ]);
+
+        $response = curl_exec($ch);
+        $err = curl_error($ch);
+        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
    
+        if ($err) {
+           \App\Helper::logerror("cURL Error #:" . $err) ;
+       
+            return false;
+        }     
+        if ($status_code >= 400) {
+           \App\Helper::logerror("cURL HTTP code #:" . $status_code) ;
+       
+            return false;
+        }     
+   
+        $data = @json_decode($response, true);
+        if(!is_array($data)) {
+           \App\Helper::logerror("Неверный формат  файла '{$url}'") ;
+           \App\Helper::logerror($response) ;
+           return false;
+        }
+ 
         return $data;     
-    }
+    }    
+    
 }
