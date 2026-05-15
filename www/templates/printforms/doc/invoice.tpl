@@ -11,7 +11,7 @@
     {{/islogo}}
     <tr>
         <td></td>
-        <td><b>Поекпатель</b></td>
+        <td><b>Покупатель</b></td>
         <td colspan="7"> {{customer_name}}</b> 
           {{#phone}} Тел. {{phone}}  {{/phone}} 
         </td>
