@@ -128,9 +128,12 @@
             </div>
             <div class="row">
                 <div class="col-10">
-                <input placeholder="Штрих код" style="width:150px;" autofocus="on"  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
+               
+                   {{#usescanner}}
+                  <input placeholder="Штрих код" style="width:150px;" autofocus="on"  autocomplete="off"   type="text" zippy="barcode"  onkeydown="onBarCode()">
                                          <a zippy="addcode" class="btn btn-info btn-sm">+</a>
-                     &nbsp; &nbsp; 
+                     &nbsp; &nbsp;  
+                   {{/usescanner}}
                     <a zippy="addrow" class="btn btn-info  ">Добавить товар</a>
                     <table class="table table-sm">
                         <tr>
