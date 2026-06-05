@@ -129,8 +129,6 @@ class UserProfile extends \App\Pages\Base
         $form = new Form('printerlabel');
         $form->add(new DropDownChoice('prtypelabel', [],0))->onChange($this, "onPSTypelabel");
         $form->prtypelabel->setValue($this->user->prtypelabel);
-        $form->add(new DropDownChoice('prturn'));
-        $form->prturn->setValue($this->user->prturn);
         $form->add(new DropDownChoice('pcplabel',[], $this->user->pcplabel));
 
         $form->add(new TextInput('pserverlabel', $this->user->pserverlabel));
@@ -277,8 +275,7 @@ class UserProfile extends \App\Pages\Base
         $this->printerlabel->pstestlabel->setVisible($prtype!=0) ;
         $this->printerlabel->pcplabel->setVisible($prtype!=0) ;
         $this->printerlabel->pwsymlabel->setVisible($prtype>0) ;
-        $this->printerlabel->prturn->setVisible($prtype==0) ;
-
+       
 
     }
     public function onPSTestlabel($sender) {
@@ -318,7 +315,7 @@ class UserProfile extends \App\Pages\Base
 
         $this->user->prtypelabel = $this->printerlabel->prtypelabel->getValue() ;
         $this->user->pcplabel = $this->printerlabel->pcplabel->getValue() ;
-        $this->user->prturn = $this->printerlabel->prturn->getValue() ;
+
         $this->user->pwsymlabel = trim($this->printerlabel->pwsymlabel->getText());
         $this->user->pserverlabel = trim($this->printerlabel->pserverlabel->getText());
         $this->user->pserverlabel  = rtrim($this->user->pserverlabel, "/") ;
