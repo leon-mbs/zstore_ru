@@ -1,5 +1,5 @@
 body {
-    font-family: "Segoe UI","Roboto", "Helvetica Neue"; 
+    font-family: system-ui,"Segoe UI","Roboto", "Helvetica Neue"; 
      
 }
       
@@ -20,7 +20,7 @@ body {
 .ctable  {
    color:#000; 
    background-color: #fff;
-   font-family:"Segoe UI","Arial";
+   font-family:system-ui,"Segoe UI","Arial";
 }
 
 .dark-mode .ctable  {
