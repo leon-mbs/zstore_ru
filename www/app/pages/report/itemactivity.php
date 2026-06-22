@@ -46,7 +46,8 @@ class ItemActivity extends \App\Pages\Base
         $this->add(new Panel('detail'))->setVisible(false);
 
         $this->detail->add(new Label('preview'));
-        \App\Session::getSession()->issubmit = false;
+         
+        $this->OnSubmit($this->filter->show);
     }
 
     public function OnAutoItem($sender) {
