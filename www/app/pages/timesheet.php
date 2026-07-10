@@ -206,8 +206,9 @@ class TimeSheet extends \App\Pages\Base
         $time->description = $post->desc;
         $time->emp_id = intval( $post->empid);
         if ($time->emp_id == 0) {
-
-            return json_encode("Не выбран  сотрудник", JSON_UNESCAPED_UNICODE);
+            
+            return $this->jsonError("Не выбран  сотрудник") ;
+            
         }
         $time->t_type = $post->type;
 
@@ -227,15 +228,16 @@ class TimeSheet extends \App\Pages\Base
 
         $v = $time->isValid();
         if (strlen($v) > 0) {
-            return  $v;
-
+          
+            return $this->jsonError($v) ;
+       
         }
 
         if ($this->_tvars["usebranch"]) {
             if ($this->branch_id == 0) {
-
-                return "Выберите  филиал";
-
+           
+             return $this->jsonError("Выберите  филиал") ;
+     
             }
             $time->branch_id = $this->branch_id;
         }
