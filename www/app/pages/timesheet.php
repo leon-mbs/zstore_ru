@@ -71,7 +71,7 @@ class TimeSheet extends \App\Pages\Base
 
         $conn = \ZDB\DB::getConnect();
 
-        $emp_id = $post->empid;
+        $emp_id = intval( $post->empid);
         $t_start = $conn->DBDate(strtotime($post->from));
         $t_end = $conn->DBDate(strtotime($post->to));
 
@@ -169,6 +169,7 @@ class TimeSheet extends \App\Pages\Base
              "to"=> date('H:i', $tm->t_end),
              "desc"=> $tm->description,
              "type"=> $tm->t_type,
+             "emp_id"=> $emp_id,
              "break"=> $tm->t_break,
              "dur"=> $diff,
              "color"=> $color,

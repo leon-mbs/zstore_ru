@@ -29,10 +29,10 @@
 
 
                         <label v-show="isadmin==true" >Сотрудник</label>
-                        <select2     v-model="empid" :options="emps"   >
-
-                        </select2>
-
+                          <select class="form-control me-2"  v-model="empid" >
+                              <option value="0">Не выбрано</option>
+                              <option v-for="emp in emps"  :value="emp.key">{{emp.value}}</option>
+                          </select>
                         <input v-on:click.prevent="onFilter"  type="button" class="ml-2  btn btn-success  " value="ОК">
 
 
@@ -110,9 +110,11 @@
                     <div    class="form-group">
                     
                      <label  >Сотрудник</label>
-                        <select2     v-model="editempid" :options="emps"   >
-
-                       </select2>
+                       <select class="form-control "  v-model="editempid" >
+                              <option value="0">Не выбрано</option>
+                       
+                              <option v-for="emp in emps"  :value="emp.key">{{emp.value}}</option>
+                          </select>
                     </div>
 
                     
@@ -253,8 +255,8 @@ var calendar
                   this.editdate = tm.date;
                   this.editfrom = tm.from;
                   this.editto = tm.to;
-                  this.editempid = tm.to;
-                  
+                  this.editempid = this.empid;    
+              
                    
                   $('#editmodal').modal('show')   
           
@@ -267,6 +269,8 @@ var calendar
                   this.editfrom = this.start;
                   this.editto = this.end;
                   this.editbreak = this.break;
+                  this.editempid = this.empid;    
+                             
                   $('#editmodal').modal('show')   
 
                } ,    
